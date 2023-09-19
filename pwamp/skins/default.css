@@ -1,0 +1,926 @@
+:root {
+  /* Please keep this in sync with about.css */
+  --back: #181c25;
+  --secondary: #444;
+  --text: #fefefe;
+  --text-disabled: #8c8c8c;
+  --primary: #ffbb50;
+}
+
+@media (forced-colors: active) {
+  button {
+    background-color: CanvasText !important;
+    --primary: Canvas;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 14pt;
+}
+
+@media (max-width: 600px) {
+  html {
+    font-size: 12pt;
+  }
+}
+
+@media (max-width: 400px) {
+  html {
+    font-size: 11pt;
+  }
+}
+
+input,
+button {
+  font-size: inherit;
+  font-family: inherit;
+}
+
+ul,
+ol,
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+::-webkit-scrollbar, ::-webkit-scrollbar-track {
+  background: transparent;
+  width: .5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 100vh;
+}
+
+body {
+  background: var(--back);
+  color: var(--text);
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+}
+
+.visualizing body {
+  grid-template-rows: 1fr;
+  place-items: end stretch;
+}
+
+.dropping-songs {
+  outline: .5rem dashed var(--primary);
+  outline-offset: -.5rem;
+}
+
+.main-button {
+  border: none;
+  background: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  place-content: center;
+}
+
+button span {
+  color: transparent;
+  display: block;
+  overflow: hidden;
+  width: 1rem;
+  height: 1rem;
+  font-size: 0;
+}
+
+.main-button:active {
+  box-shadow: inset 0 0 0 .25rem var(--back);
+}
+
+.player {
+  z-index: 1;
+  padding: 1rem;
+  /* If WCO is enabled, push the player down a little to avoid overlapping the titlebar area */
+  padding-top: env(titlebar-area-height, 1rem);
+}
+
+.player-controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-block-end: 1rem;
+  position: relative;
+}
+
+.player-controls #playpause {
+  background: var(--primary);
+}
+
+.player-controls #playpause span {
+  position: relative;
+  left: 0.125rem;
+
+  background-color: var(--text);
+  /* Draw the 2 pause bars */
+  background-image: linear-gradient(
+    to right,
+    transparent 40%,
+    var(--primary) 40%,
+    var(--primary) 60%,
+    transparent 0
+  );
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 0 100%;
+
+  /* Hide the central part between the 2 bars */
+  transition: all 0.3s;
+}
+
+@media (forced-colors: active) {
+  .player-controls #playpause span  {
+    --primary: CanvasText;
+    --text: Canvas;
+  }
+}
+
+.player-controls #playpause.playing span {
+  background-size: 100% 100%;
+  left: 0;
+}
+
+.player-controls #playpause span::before,
+.player-controls #playpause span::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: var(--primary);
+  transform-origin: top left;
+
+  /* And transitioned to the right angle to transform the square into a
+     triangle */
+  transition: transform 0.3s;
+}
+
+.player-controls #playpause span::before {
+  transform: skew(64deg);
+}
+
+.player-controls #playpause span::after {
+  transform: skew(117deg);
+  transform-origin: bottom left;
+}
+
+.player-controls #playpause.playing span::before,
+.player-controls #playpause.playing span::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: var(--primary);
+  /* Before and after are skewed at 90deg to be invisible */
+  transform: skew(90deg);
+  transform-origin: top left;
+}
+
+.player-controls #playpause.playing span::after {
+  transform-origin: bottom left;
+}
+
+.player-controls #previous,
+.player-controls #next {
+  position: relative;
+  background: #0004;
+}
+
+.player-controls #previous span {
+  width: 0;
+  height: 0;
+  border-top: 0.5rem solid transparent;
+  border-right: 1rem solid var(--primary);
+  border-bottom: 0.5rem solid transparent;
+}
+
+.player-controls #previous::before,
+.player-controls #next::before {
+  content: "";
+  display: block;
+  background: var(--primary);
+  width: 0.2rem;
+  height: 1rem;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
+
+.player-controls #next::before {
+  left: unset;
+  right: 1rem;
+}
+
+.player-controls #next span {
+  width: 0;
+  height: 0;
+  border-top: 0.5rem solid transparent;
+  border-left: 1rem solid var(--primary);
+  border-bottom: 0.5rem solid transparent;
+}
+
+.playlist .empty-playlist {
+  text-align: center;
+  font-style: italic;
+  color: var(--text-disabled);
+  width: max-content;
+}
+
+.playlist.has-songs .empty-playlist {
+  display: none;
+}
+
+.playlist-song {
+  padding: .75rem 0;
+  border-radius: 1rem;
+  width: max-content;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2rem 2rem 30vw calc(30vw - 2rem) 20vw 2rem 2rem;
+  grid-template-rows: 1fr;
+  column-gap: 1rem;
+  background-color: var(--back);
+  transition: background-color .1s linear;
+}
+
+@media (max-width: 400px) {
+  .playlist-song {
+    padding: .5rem 0;
+  }
+}
+
+.playlist-song:nth-child(2n) {
+  background: #ffffff04;
+}
+
+.playlist-song > span {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.playlist-song button {
+  font-size: inherit;
+  font-family: inherit;
+  color: inherit;
+  background-color: transparent;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  width: min-content;
+}
+
+.playlist-song.playing {
+  background-color: var(--primary);
+  color: var(--back);
+}
+
+@media (forced-colors: active) {
+  .playlist-song.playing {
+    background-color: Highlight;
+  }
+}
+
+.playlist-song .artist {
+  grid-column: 4;
+  font-size: 0.8rem;
+  color: var(--text-disabled);
+}
+
+html:not(.visualizing) .playlist-song.playing .artist {
+  color: var(--back);
+}
+
+.playlist-song .album {
+  grid-column: 5;
+  align-self: center;
+}
+
+.playlist-song.playing .album {
+  color: var(--back);
+}
+
+.playlist-song .title {
+  grid-column: 3;
+}
+
+.playlist-song .artwork {
+  grid-column: 2;
+  width: 100%;
+}
+
+.dropping-artwork .playlist-song .artwork {
+  outline: .2rem dashed var(--primary);
+  outline-offset: -.2rem;
+}
+
+.playlist-song .play {
+  grid-column: 1;
+  place-self: center;
+  color: transparent;
+  width: 0;
+  height: 0;
+  border-left: 1rem solid var(--primary);
+  border-top: 0.5rem solid transparent;
+  border-bottom: 0.5rem solid transparent;
+  cursor: pointer;
+}
+
+.playlist-song.playing .play {
+  border-left-color: var(--back);
+}
+
+@media (forced-colors: active) {
+  .playlist-song .play {
+    border-color: Canvas !important;
+    border-left-color: CanvasText !important;
+  }
+  
+  .playlist-song.playing .play {
+    border-color: Highlight !important;
+    border-left-color: CanvasText !important;
+  }
+}
+
+.playlist-song .play:hover,
+.playlist-song.playing .play {
+  border-left-color: var(--text);
+}
+
+.playlist-song .duration {
+  grid-column: 6;
+  place-self: center;
+  font-size: .7rem;
+  padding-left: .25rem;
+  color: var(--text-disabled);
+}
+
+.playlist-song.playing .duration {
+  color: var(--back);
+}
+
+.playlist-song .actions {
+  grid-column: 7;
+  width: 1rem;
+  height: 1rem;
+  overflow: hidden;
+  color: transparent;
+  font-size: 0;
+  place-self: center;
+  display: grid;
+  align-content: center;
+  cursor: pointer;
+}
+
+@media (forced-colors: active) {
+  .playlist-song .actions {
+    background: Canvas !important;
+    /* --text: CanvasText !important;
+    --primary: CanvasText !important; */
+  }
+}
+
+.playlist-song .actions::before {
+  content: '...';
+  color: var(--primary);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.playlist-song .actions:hover::before,
+.playlist-song.playing .actions::before {
+  color: var(--text);
+}
+
+.playlist-song.loading-placeholder .artist,
+.playlist-song.loading-placeholder .album,
+.playlist-song.loading-placeholder .title {
+  background: var(--text-disabled);
+  box-shadow: inset 0 0 0 2px var(--back);
+  background-image: linear-gradient(-45deg, transparent 30%, #fff5, transparent 70%);
+  background-repeat: no-repeat;
+  animation: loading-field 2s linear infinite;
+}
+
+.playlist-song.remote .title::before {
+  content: '☁ ';
+  font-size: .9rem;
+}
+
+.playlist-song.remote.error {
+  color: var(--text-disabled);
+}
+
+.playlist-song.loading-placeholder .duration {
+  display: none;
+}
+
+@keyframes loading-field {
+  from {
+    background-position: -10em 0;
+  }
+  to {
+    background-position: 10em 0;
+  }
+}
+
+@media (max-width: 1300px) {
+  .playlist-song {
+    grid-template-columns: 2rem 2rem 15rem 10rem 2rem 2rem;
+    grid-template-rows: auto auto;
+    border-bottom: 0;
+  }
+
+  .playlist-song .play {
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  .playlist-song .artwork {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+  }
+
+
+  .playlist-song .artist {
+    grid-row: 2;
+    grid-column: 3;
+  }
+  
+  .playlist-song .album {
+    grid-row: 1;
+    grid-column: 4;
+  }
+  
+  .playlist-song .title {
+    grid-row: 1;
+    grid-column: 3;
+  }
+
+  .playlist-song .duration {
+    grid-row: 1;
+    grid-column: 5;
+  }
+
+  .playlist-song .actions {
+    grid-row: 1;
+    grid-column: 6;
+  }
+}
+
+@media (max-width: 800px) {
+  .playlist-song {
+    grid-template-columns: 2rem  2rem 17rem 2rem 2rem;
+    grid-template-rows: 1fr 1fr 1fr;
+  }
+
+  .playlist-song .play {
+    grid-row: 1 / span 3;
+  }
+
+  .playlist-song .artwork {
+    grid-row: 1 / span 3;
+    grid-column: 2;
+    place-self: center;
+  }
+
+  .playlist-song .duration {
+    grid-row: 1 / span 3;
+    grid-column: 4;
+  }
+
+  .playlist-song .title {
+    grid-row: 1;
+    grid-column: 3;
+  }
+
+  .playlist-song .artist {
+    grid-row: 2;
+    grid-column: 3;
+  }
+
+  .playlist-song .album {
+    grid-row: 3;
+    grid-column: 3;
+  }
+
+  .playlist-song .actions {
+    grid-row: 1 / span 3;
+    grid-column: 5;
+  }
+}
+
+@media (max-width: 600px) {
+  .playlist-song {
+    width: unset;
+    margin: 0;
+    grid-template-columns: 2rem 2rem 1fr 2rem;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    column-gap: .5rem;
+  }
+
+  .playlist-song .play {
+    grid-row: 1 / span 4;
+  }
+
+  .playlist-song .artwork {
+    grid-row: 1 / span 4;
+    grid-column: 2;
+  }
+
+  .playlist-song .duration {
+    grid-row: 4;
+    grid-column: 3;
+    justify-self: start;
+    padding-left: unset;
+  }
+
+  .playlist-song .title {
+    grid-row: 1;
+    grid-column: 3;
+  }
+
+  .playlist-song .artist {
+    grid-row: 2;
+    grid-column: 3;
+  }
+
+  .playlist-song .album {
+    grid-row: 3;
+    grid-column: 3;
+  }
+
+  .playlist-song .actions {
+    grid-row: 1 / span 4;
+    grid-column: 4;
+  }
+}
+
+.visualizing .playlist,
+.visualizing .playhead-control {
+  display: none;
+}
+
+.playhead-control {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+  font-size: .8rem;
+}
+
+#currenttime, #duration {
+  width: 2rem;
+  text-align: right;
+}
+
+#duration {
+  text-align: left;
+}
+
+@media (forced-colors: active) {
+  input[type="range"] {
+    --secondary: CanvasText;
+  }
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  background: none;
+  margin: 0;
+  cursor: ew-resize;
+}
+
+input[type="range"]::-webkit-slider-container {
+  -webkit-user-modify: read-write !important;
+  margin: 0;
+  height: .5rem;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  margin: 0;
+  -webkit-appearance: none;
+  height: .5rem;
+  background: var(--secondary);
+  border-radius: 100vh;
+}
+
+/* Note: we have to repeat the entire rule for Firefox as combining the selectors
+   makes the rule not apply at all on chromium */
+input[type="range"]::-moz-range-track {
+  margin: 0;
+  appearance: none;
+  height: .5rem;
+  background: var(--secondary);
+  border-radius: 100vh;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  cursor: ew-resize;
+  background: var(--primary);
+  position: relative;
+  top: -.25rem;
+}
+
+/* Note: we have to repeat the entire rule for Firefox as combining the selectors
+   makes the rule not apply at all on chromium */
+input[type="range"]::-moz-range-thumb {
+  appearance: none;
+  border: none;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  cursor: ew-resize;
+  background: var(--primary);
+  position: relative;
+  top: -.25rem;
+}
+
+@media (forced-colors: active) {
+  input[type="range"]::-webkit-slider-thumb {
+    border: 1px solid;
+  }
+  input[type="range"]::-moz-range-thumb {
+    border: 1px solid;
+  }
+}
+
+input[type="range"]:active::-webkit-slider-thumb,
+input[type="range"]:hover::-webkit-slider-thumb {
+  background: var(--text);
+}
+
+/* Note: we have to repeat the entire rule for Firefox as combining the selectors
+   makes the rule not apply at all on chromium */
+input[type="range"]:active::-moz-range-thumb,
+input[type="range"]:hover::-moz-range-thumb {
+  background: var(--text);
+}
+
+#playhead {
+  width: 50%;
+}
+
+.visualizing .volume {
+  display: none;
+}
+
+.volume {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  position: relative;
+  inset-inline-start: -.7rem;
+  padding-block-start: 1rem;
+}
+
+.volume label {
+  width: 1rem;
+  height: 1rem;
+  color: transparent;
+  overflow: hidden;
+  border-radius: 50%;
+  
+  background-image:
+  linear-gradient(45deg, var(--back) 50%, transparent 0),
+  linear-gradient(135deg, var(--back) 50%, transparent 0),
+  radial-gradient(var(--primary) 10%, transparent 0),
+    radial-gradient(transparent 20%, var(--primary) 20%, var(--primary) 40%, transparent 0),
+    radial-gradient(transparent 50%, var(--primary) 50%, var(--primary) 80%, transparent 0);
+}
+
+#volume {
+  width: 30%;
+}
+
+.playlist {
+  height: 100%;
+  width: max-content;
+  overflow-y: auto;
+  display: grid;
+  place-items: center;
+  place-self: center;
+  padding-inline: 1rem;
+}
+
+@media (max-width: 600px) {
+  .playlist {
+    padding-inline: .5rem;
+    width: unset;
+  } 
+}
+
+.visualizing .app-controls {
+  display: none;
+}
+
+.app-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.app-controls button {
+  background: var(--primary);
+}
+
+#add-songs span {
+  background: 
+    linear-gradient(to bottom, transparent 40%, var(--text) 40%, var(--text) 60%, transparent 0),
+    linear-gradient(to right, transparent 40%, var(--text) 40%, var(--text) 60%, transparent 0);
+}
+
+#load-custom-skin span {
+  background: linear-gradient(135deg, transparent 50%, var(--text) 0);
+  border-radius: 50%;
+  border: 2px solid var(--text);
+}
+
+#record-audio span {
+  background: var(--text);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px var(--primary), 0 0 0 2px var(--text);
+}
+
+#record-audio.recording {
+  background-color: red;
+}
+
+#record-audio.recording span {
+  box-shadow: inset 0 0 0 2px red, 0 0 0 2px var(--text);
+}
+
+#playlist-actions span {
+  background: radial-gradient(circle at center, var(--text) 20%, #0000 0);
+  background-repeat: repeat-x;
+  background-size: .33rem 1rem;
+}
+
+#toggle-visualizer {
+  background-color: #0004;
+  background-image:
+    linear-gradient(to right, transparent calc(50% - 1.15rem), var(--primary) calc(50% - 1.15rem) calc(50% - .85rem), transparent 0),
+    linear-gradient(to right, transparent calc(50% - .65rem), var(--primary) calc(50% - .65rem) calc(50% - .35rem), transparent 0),
+    linear-gradient(to right, transparent calc(50% - .15rem), var(--primary) calc(50% - .15rem) calc(50% + .15rem), transparent 0),
+    linear-gradient(to right, transparent calc(50% + .35rem), var(--primary) calc(50% + .35rem) calc(50% + .65rem), transparent 0),
+    linear-gradient(to right, transparent calc(50% + .85rem), var(--primary) calc(50% + .85rem) calc(50% + 1.15rem), transparent 0);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size:
+    100% 15%,
+    100% 30%,
+    100% 60%,
+    100% 40%,
+    100% 20%;
+  scale: .4;
+  position: absolute;
+  left: calc(50% + 6rem);
+}
+
+[popover] {
+  position: fixed;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--back);
+  box-shadow: 0 0 0 1px var(--back);
+  opacity: 1;
+  transition: opacity .1s linear;
+  pointer-events: all;
+  border-radius: .25rem;
+  overflow: hidden;
+  box-shadow: 0 0 .5rem 0 #0006;
+}
+
+[popover]:not(:popover-open) {
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* Duplicated rule needed when the polyfill is used */
+@supports not selector([popover]:popover-open) {
+  [popover]:not(.\:popover-open) {
+    pointer-events: none;
+    opacity: 0;
+  }
+}
+
+.popover-item {
+  background: var(--secondary);
+  color: var(--text);
+  text-align: left;
+  border: 0;
+  cursor: pointer;
+  padding: .5rem 1rem;
+  border-block-end: 1px solid #0003;
+}
+
+.popover-item:last-child {
+  border: 0;
+}
+
+.popover-item:not([disabled]):hover {
+  background: var(--primary);
+  color: var(--back);
+}
+
+.popover-item[disabled] {
+  color: var(--text-disabled);
+}
+
+#waveform {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+html:not(.visualizing) #waveform {
+  display: none;
+}
+
+.current-song {
+  display: none;
+  pointer-events: none;
+  grid-row: 1;
+}
+
+.visualizing .current-song {
+  display: block;
+}
+
+.current-song .playlist-song {
+  display: block;
+  padding: 0;
+  text-align: center;
+  background: transparent;
+  margin: 0;
+  width: 100%;
+}
+
+.current-song .playlist-song * {
+  font-size: 1rem;
+  color: var(--text);
+  padding-inline-start: .25rem;
+}
+
+.current-song .playlist-song .title::after,
+.current-song .playlist-song .artist::after {
+  content: " -";
+}
+
+.current-song .playlist-song .artwork {
+  width: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  -webkit-mask-image: -webkit-gradient(linear, 0 0, 0 80%, from(rgba(0,0,0,.5)), to(rgba(0,0,0,0)));
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,.5), rgba(0,0,0,0) 80%);
+  scale: 1.1;
+}
+
+.current-song .playlist-song .duration {
+  display: none;
+}
+
+.current-song .playlist-song.remote .title::before {
+  display: none;
+}

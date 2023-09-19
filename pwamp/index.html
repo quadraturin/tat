@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pwamp</title>
+    <link rel="icon" href="favicon.ico" sizes="any" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#181c25" />
+    <link rel="stylesheet" href="about.css" />
+    <link rel="stylesheet" href="skins/default.css" id="default-stylesheet" />
+    <meta http-equiv="origin-trial" content="Ag0dq8uEMbI39TwGGfxxyR3EG4tXDnqIxBr4kwlYh7sV/HDAA2FS4k9OGqPczceHZJYs52vwSbwrSslVa/lzNr0AAAB0eyJvcmlnaW4iOiJodHRwczovL21pY3Jvc29mdGVkZ2UuZ2l0aHViLmlvOjQ0MyIsImlzU3ViZG9tYWluIjpmYWxzZSwiZmVhdHVyZSI6Im1zV2ViQXBwV2lkZ2V0cyIsImV4cGlyeSI6MTY4NTU3NzYwMH0=">
+  </head>
+  <body>
+    <div
+      id="wco-drag"
+      style="
+        position: fixed;
+        top: env(titlebar-area-y);
+        left: env(titlebar-area-x);
+        height: env(titlebar-area-height);
+        width: env(titlebar-area-width);
+        -webkit-app-region: drag;
+      "
+    ></div>
+
+    <section class="player">
+      <div class="player-controls">
+        <button
+          class="player-control-button main-button"
+          id="previous"
+          title="Go to the previous song or the beginning of song (P)"
+        >
+          <span>Previous</span>
+        </button>
+        <button
+          class="player-control-button main-button"
+          id="playpause"
+          title="Play (space)"
+        >
+          <span>Play</span>
+        </button>
+        <button
+          class="player-control-button main-button"
+          id="next"
+          title="Go to the next song (N)"
+        >
+          <span>Next</span>
+        </button>
+        <button
+          class="main-button"
+          id="toggle-visualizer"
+          title="Show visualizer (V)"
+        >
+          <span>Show visualizer</span>
+        </button>
+      </div>
+
+      <div class="playhead-control">
+        <span id="currenttime">00:00</span>
+        <input
+          type="range"
+          id="playhead"
+          aria-label="Current position in song"
+          value="0"
+        />
+        <span id="duration">00:00</span>
+      </div>
+    </section>
+
+    <section class="playlist">
+      <p class="empty-playlist">
+        No songs in playlist, drag songs here or click <strong>+</strong>
+      </p>
+      <ol class="songs"></ol>
+    </section>
+
+    <section class="current-song"></section>
+
+    <section class="volume">
+      <label for="volume">Volume</label>
+      <input type="range" id="volume" min="0" max="10" value="10" />
+    </section>
+
+    <section class="app-controls">
+      <button
+        class="main-button"
+        id="add-songs"
+        title="Add new songs to the playlist"
+      >
+        <span>Add new songs</span>
+      </button>
+      <button
+        class="main-button"
+        id="load-custom-skin"
+        title="Apply a custom skin"
+      >
+        <span>Apply a custom skin</span>
+      </button>
+      <button
+        class="main-button"
+        id="record-audio"
+        title="Record an audio clip"
+      >
+        <span>Record an audio clip</span>
+      </button>
+      <button class="main-button" id="playlist-actions" popovertarget="playlist-actions-popover" popovertargetaction="toggle" title="More tools...">
+        <span>More tools...</span>
+      </button>
+    </section>
+
+    <canvas id="waveform"></canvas>
+
+    <div id="song-actions-popover" popover>
+      <button class="popover-item song-action" id="song-action-copy-uri">
+        Copy link
+      </button>
+      <button class="popover-item song-action" id="song-action-export">
+        Export...
+      </button>
+      <button class="popover-item song-action" id="song-action-share">
+        Share...
+      </button>
+      <button class="popover-item song-action" id="song-action-delete">
+        Delete
+      </button>
+    </div>
+
+    <div id="playlist-actions-popover" popover>
+      <button
+        class="popover-item playlist-action"
+        id="playlist-action-sortbyartist"
+      >
+        Sort by artist
+      </button>
+      <button
+        class="popover-item playlist-action"
+        id="playlist-action-sortbyalbum"
+      >
+        Sort by album
+      </button>
+      <button
+        class="popover-item playlist-action"
+        id="playlist-action-sortbydateadded"
+      >
+        Sort by most recent
+      </button>
+      <button class="popover-item playlist-action" id="playlist-action-delete">
+        Delete all
+      </button>
+      <button class="popover-item playlist-action" id="playlist-action-export">
+        Export all...
+      </button>
+      <button class="popover-item playlist-action" id="playlist-action-about">
+        About...
+      </button>
+    </div>
+
+    <dialog id="about-dialog">
+      <div class="screenshot"></div>
+      <img class="logo" src="./favicon-128.png" alt="The PWAmp logo" />
+      <section class="about">
+        <h1>PWAmp</h1>
+        <h2>The Progressive Web Amp</h2>
+        <p>
+          Listen to your favorite local song files, play online songs, share
+          with friends, customize the app, and more...
+        </p>
+        <p>
+          PWAmp is a simple audio player app for the web, and desktop operating
+          systems. It is built with HTML, CSS, JavaScript, and Progressive Web
+          App features.
+        </p>
+      </section>
+      <form class="actions" method="dialog">
+        <button value="cancel">Close</button>
+        <button value="install" id="install-button">Install app</button>
+      </form>
+    </dialog>
+
+    <script src="popover.min.js"></script>
+
+    <script type="module" src="app.js"></script>
+    <script type="module" src="file-launch-handler.js"></script>
+    <script type="module" src="protocol-launch-handler.js"></script>
+    <script type="module" src="share-target-launch-handler.js"></script>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("./sw.js");
+      }
+    </script>
+  </body>
+</html>
