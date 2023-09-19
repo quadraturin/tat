@@ -13,11 +13,7 @@
   "tauri": {
     "allowlist": {
       "window": {
-        "setClosable": true,
-        "setCursorIcon": true,
-        "setCursorPosition": true,
-        "setCursorVisible": true,
-        "setDecorations": true
+        "all": true
       },
       "path":{
         "all": true
@@ -90,7 +86,8 @@
         "height": 600,
         "resizable": true,
         "title": "Paradiso Tabletop Audio Tool",
-        "width": 800
+        "width": 800,
+        "decorations": false
       }
     ]
   }

@@ -34,6 +34,7 @@
 :root {
     --text-color: coral;
     --background-color: black;
+    --title-bar-height: 20px;
 }
 /* app styles */
 html {
@@ -63,6 +64,7 @@ html {
 #toolbar {
     width: 100%;
     position: fixed;
+    top: var(--title-bar-height);
     background-color: rgba(0, 0, 0, 0.5);
     font-size: 0.7em;
     padding: 5px;
@@ -86,4 +88,32 @@ input {
     border-radius: 4px;
     font-weight: bold;
     padding: 5px;
+}
+
+/* custom window dressing */
+
+.titlebar {
+    height: var(--title-bar-height);
+    width: 100%;
+    background: var(--text-color);
+    user-select: none;
+    display: flex;
+    justify-content: flex-end;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    color: var(--background-color);
+}
+.titlebar-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--title-bar-height);
+    height: var(--title-bar-height);
+}
+.titlebar-button:hover {
+    background: var(--background-color);
+    color: var(--text-color);
 }
