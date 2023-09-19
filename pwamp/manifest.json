@@ -1,0 +1,175 @@
+{
+  "name": "PWAmp music player",
+  "short_name": "PWAmp",
+  "description": "A skinable music player app to play your favorite mp3 files",
+  "lang": "en-US",
+  "start_url": "./",
+  "scope": "./",
+  "theme_color": "#181c25",
+  "background_color": "#181c25",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay"
+  ],
+  "edge_side_panel": {
+    "preferred_width": 496
+  },
+  "icons": [
+    {
+      "src": "./favicon-48.png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "./favicon-96.png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "./favicon-128.png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "./favicon-256.png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "./favicon-512.png",
+      "sizes": "512x512"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./screenshot-playlist.png",
+      "sizes": "1280x720",
+      "platform": "wide",
+      "label": "The main PWAmp user interface, showing a list of songs, and playback buttons."
+    },
+    {
+      "src": "./screenshot-visualizer.png",
+      "sizes": "1280x720",
+      "platform": "wide",
+      "label": "The PWAmp visualizer, showing the current song, the playback buttons, and a colorful visualization of the current song."
+    },
+    {
+      "src": "./screenshot-widget.png",
+      "sizes": "600x400",
+      "label": "The PWAmp mini-player widget"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "./",
+      "accept": {
+        "text/plain": [
+          ".pwampskin"
+        ]
+      }
+    },
+    {
+      "action": "./",
+      "accept": {
+        "audio/wav": [
+          ".wav"
+        ],
+        "audio/x-wav": [
+          ".wav"
+        ],
+        "audio/mpeg": [
+          ".mp3"
+        ],
+        "audio/mp4": [
+          ".mp4"
+        ],
+        "audio/aac": [
+          ".adts"
+        ],
+        "audio/ogg": [
+          ".ogg"
+        ],
+        "application/ogg": [
+          ".ogg"
+        ],
+        "audio/webm": [
+          ".webm"
+        ],
+        "audio/flac": [
+          ".flac"
+        ]
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+amp",
+      "url": "./?cmd=%s"
+    }
+  ],
+  "share_target": {
+    "action": "./handle-shared-song",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "files": [
+        {
+          "name": "audioFiles",
+          "accept": [
+            "audio/wav",
+            "audio/x-wav",
+            "audio/mpeg",
+            "audio/mp4",
+            "audio/aac",
+            "audio/ogg",
+            "application/ogg",
+            "audio/webm",
+            "audio/flac"
+          ]
+        }
+      ]
+    }
+  },
+  "widgets": [
+    {
+      "name": "PWAmp mini player",
+      "short_name": "PWAmp",
+      "description": "Widget to control the PWAmp player",
+      "tag": "pwamp",
+      "ms_ac_template": "widgets/mini-player.json",
+      "data": "widgets/mini-player-data.json",
+      "screenshots": [
+        {
+          "src": "./screenshot-widget.png",
+          "sizes": "600x400",
+          "label": "The PWAmp mini-player widget"
+        }
+      ],
+      "icons": [
+        {
+          "src": "./favicon-48.png",
+          "sizes": "48x48"
+        },
+        {
+          "src": "./favicon-96.png",
+          "sizes": "96x96"
+        },
+        {
+          "src": "./favicon-128.png",
+          "sizes": "128x128"
+        },
+        {
+          "src": "./favicon-256.png",
+          "sizes": "256x256"
+        },
+        {
+          "src": "./favicon-512.png",
+          "sizes": "512x512"
+        }
+      ],
+      "backgrounds": [
+        {
+          "src": "./widgets/background.png",
+          "sizes": "600x400"
+        }
+      ]
+    }
+  ]
+}
