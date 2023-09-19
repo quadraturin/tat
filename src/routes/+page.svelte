@@ -3,15 +3,21 @@
     import { open } from "@tauri-apps/api/dialog"
     import { readBinaryFile, readTextFile, createDir, exists, readDir, removeDir, removeFile, writeBinaryFile } from "@tauri-apps/api/fs"
     import { appLocalDataDir, homeDir } from '@tauri-apps/api/path'
-    import { onMount } from 'svelte'
+    import { onMount, beforeUpdate } from 'svelte'
     import Panzoom from '@panzoom/panzoom'
     import { sound } from "svelte-sound"
     import blipSound from "../assets/blip.wav"
     import { appWindow } from '@tauri-apps/api/window'
+    import IconAdd from '$lib/iconAdd.svelte'
+    import IconPlay from '$lib/iconPlay.svelte'
+    import IconLoading from '$lib/iconLoading.svelte'
+    import IconLevels from '$lib/iconLevels.svelte'
+	import IconSettings from '$lib/iconSettings.svelte';
 
     onMount( () => 
     {
         reloadPanzoom() 
+
         const titlebarMinimize = document.getElementById('titlebar-minimize') as HTMLElement
         titlebarMinimize.addEventListener('click', () => appWindow.minimize())
         const titlebarMaximize = document.getElementById('titlebar-maximize') as HTMLElement
@@ -25,6 +31,7 @@
     let selectedPath = ''
     let content = new Uint8Array
     let mapImageURL = ''
+    let loading = false
     
     async function reloadPanzoom()
     {
@@ -35,7 +42,6 @@
         const panzoomWrapper = document.getElementById("map-wrapper") as HTMLElement
         panzoomWrapper.addEventListener('wheel', panzoom.zoomWithWheel)
     }
-
 
     const getDataDir = async () => 
     {
@@ -67,7 +73,9 @@
             }) as string
             console.log(selectedPath)
             if (!selectedPath) return
+            loading = true
             content = await readBinaryFile(selectedPath as string)
+            loading = false
             const img = new Image()
             mapImageURL = URL.createObjectURL( new Blob([content.buffer], { type: 'image/png' } ))
             reloadPanzoom()
@@ -80,6 +88,14 @@
 </script>
 
 <div data-tauri-drag-region class="titlebar">
+    <h1>paradiso</h1>
+    <button class="toolbar-button" id="add-button" on:click={readFileContents}>{#if loading}<IconLoading />{:else}<IconAdd />{/if}<span>load image/audio</span></button>
+    <button class="toolbar-button" use:sound={{src: blipSound, events: ["click"]}}><IconPlay /><span>zorp</span></button>
+    <button class="toolbar-button" use:sound={{src: blipSound, events: ["click"]}}><IconLevels /><span>mixer</span></button>
+    <button class="toolbar-button" use:sound={{src: blipSound, events: ["click"]}}><IconSettings /><span>settings</span></button>
+
+    <div data-tauri-drag-region class="titlebar-drag"></div>
+    
     <div class="titlebar-button" id="titlebar-minimize">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g transform="rotate(-90 12 12)"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M10 12L13 9M10 12L13 15"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g></g></svg>
     </div>
@@ -115,7 +131,4 @@
 </div>
 
 <div id="toolbar">
-    <h1>O</h1>
-    <button on:click={readFileContents}>load image or audio file</button>
-    <button use:sound={{src: blipSound, events: ["click"]}}>zorp</button>
 </div>

@@ -34,7 +34,8 @@
 :root {
     --text-color: coral;
     --background-color: black;
-    --title-bar-height: 20px;
+    --highlight-color: white;
+    --title-bar-height: 30px;
 }
 /* app styles */
 html {
@@ -42,10 +43,14 @@ html {
     color: var(--text-color);
     background-color: var(--background-color);
 }
+body {
+    display: flex;
+}
 #map-wrapper {
     width: 100%;
-    height: 100%;
+    height: calc(100% - var(--title-bar-height));
     position: fixed;
+    top: var(--title-bar-height);
 }
 #map {
     min-width: 100%;
@@ -61,37 +66,49 @@ html {
     top: 0;
     left: 0;
 }
-#toolbar {
-    width: 100%;
-    position: fixed;
-    top: var(--title-bar-height);
-    background-color: rgba(0, 0, 0, 0.5);
-    font-size: 0.7em;
-    padding: 5px;
-    backdrop-filter: blur(10px);
+.titlebar h1 {
+    float:left;
+    display: block;
+    font-size: 10pt;
+    padding: 6px 5px;
+    user-select: none;
 }
-#toolbar h1 {
-    display: none;
+.titlebar-drag {
+    flex: auto;
 }
-button {
+.toolbar-button {
+    color: var(--text-color);
+    border: none;
+    margin: 2px 1px;
+    background-color: var(--background-color);
+    border-radius: 4px;
+    font-weight: bold;
+    padding: 0;
+    font-size: 10pt;
+    display: flex;
+}
+.toolbar-button svg {
+    display: inline-block;
+    margin: 1px;
+}
+.toolbar-button span {
+    display: inline-block;
+    padding: 4px 0;
+    margin: 0 5px 0 0;
+}
+.toolbar-button:hover {
+    background-color: var(--highlight-color);
+    color: var(--text-color);
+}
+.toolbar-input {
     color: var(--text-color);
     border: 1px solid var(--text-color);
     background-color: var(--background-color);
     border-radius: 4px;
     font-weight: bold;
-    padding: 5px 20px;
-}
-input {
-    color: var(--text-color);
-    border: 1px solid var(--text-color);
-    background-color: var(--background-color);
-    border-radius: 4px;
-    font-weight: bold;
     padding: 5px;
+    font-size: 10pt;
 }
-
-/* custom window dressing */
-
 .titlebar {
     height: var(--title-bar-height);
     width: 100%;
@@ -114,6 +131,13 @@ input {
     height: var(--title-bar-height);
 }
 .titlebar-button:hover {
-    background: var(--background-color);
-    color: var(--text-color);
+    color: var(--highlight-color);
+}
+
+/* responsive styles */
+
+@media (max-width: 600px) {
+    .toolbar-button span {
+        display: none;
+    }
 }
