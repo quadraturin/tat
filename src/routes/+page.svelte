@@ -1,60 +1,79 @@
 <script lang="ts">
-    import Greet from '../lib/Greet.svelte'
-    import { open } from "@tauri-apps/api/dialog"
-    import { readBinaryFile, readTextFile, createDir, exists, readDir, removeDir, removeFile, writeBinaryFile } from "@tauri-apps/api/fs"
-    import { appLocalDataDir, homeDir } from '@tauri-apps/api/path'
-    import { onMount, beforeUpdate } from 'svelte'
-    import Panzoom, { type PanzoomObject } from '@panzoom/panzoom'
-    import { sound } from "svelte-sound"
-    import blipSound from "../assets/blip.wav"
-    import { appWindow } from '@tauri-apps/api/window'
-    import IconAdd from '$lib/iconAdd.svelte'
-    import IconPlay from '$lib/iconPlay.svelte'
-    import IconLoading from '$lib/iconLoading.svelte'
-    import IconLevels from '$lib/iconLevels.svelte'
+    import Greet from '../lib/Greet.svelte';
+    import { open } from "@tauri-apps/api/dialog";
+    import { readBinaryFile, readTextFile, createDir, exists, readDir, removeDir, removeFile, writeBinaryFile } from "@tauri-apps/api/fs";
+    import { appLocalDataDir, homeDir } from '@tauri-apps/api/path';
+    import { onMount, beforeUpdate } from 'svelte';
+    import Panzoom, { type PanzoomObject } from '@panzoom/panzoom';
+    import { sound } from "svelte-sound";
+    import blipSound from "../assets/blip.wav";
+    import { appWindow } from '@tauri-apps/api/window';
+    import IconAdd from '$lib/iconAdd.svelte';
+    import IconPlay from '$lib/iconPlay.svelte';
+    import IconLoading from '$lib/iconLoading.svelte';
+    import IconLevels from '$lib/iconLevels.svelte';
 	import IconSettings from '$lib/iconSettings.svelte';
 
-    let mapElement: HTMLElement
-    let dragElementNodes: any
-    let dragElements: any
-    let dragPanzooms = new Array<PanzoomObject>
-    let dataDirPath = ''
-    let selectedPath = ''
-    let content = new Uint8Array
-    let mapImageURL = ''
-    let loading = false
-    let preResizeX: number
-    let preResizeY: number
+    let mapElement: HTMLElement;
+    let dragElementNodes: any;
+    let dragElements: any;
+    let dragPanzooms = new Array<PanzoomObject>;
+    let dataDirPath = '';
+    let selectedPath = '';
+    let content = new Uint8Array;
+    let mapImageURL = '';
+    let loading = false;
+    let preResizeX: number;
+    let preResizeY: number;
+    let maps = new Array<MapInfo>;
+    let activeMap: number;
+    let mapImageWidth: number;
+    let mapImageHeight: number;
+
+    class MapInfo 
+    {
+        name = "untitled";
+        data:Uint8Array;
+        width:number;
+        height:number;
+
+        constructor(data:Uint8Array, width:number, height:number)
+        {
+            this.data = data;
+            this.width = width;
+            this.height = height;
+        }
+    }
 
     onMount( () => 
     {
-        mapElement = document.getElementById("map") as HTMLElement
-        refreshPanzoom() 
+        mapElement = document.getElementById("map") as HTMLElement;
+        refreshPanzoom();
 
-        const titlebarMinimize = document.getElementById('titlebar-minimize') as HTMLElement
-        titlebarMinimize.addEventListener('click', () => appWindow.minimize())
-        const titlebarMaximize = document.getElementById('titlebar-maximize') as HTMLElement
-        titlebarMaximize.addEventListener('click', () => appWindow.toggleMaximize())
-        const titlebarClose = document.getElementById('titlebar-close') as HTMLElement
-        titlebarClose.addEventListener('click', () => appWindow.close())
-        preResizeX = window.innerWidth
-        preResizeY = window.innerHeight
+        const titlebarMinimize = document.getElementById('titlebar-minimize') as HTMLElement;
+        titlebarMinimize.addEventListener('click', () => appWindow.minimize());
+        const titlebarMaximize = document.getElementById('titlebar-maximize') as HTMLElement;
+        titlebarMaximize.addEventListener('click', () => appWindow.toggleMaximize());
+        const titlebarClose = document.getElementById('titlebar-close') as HTMLElement;
+        titlebarClose.addEventListener('click', () => appWindow.close());
+        preResizeX = window.innerWidth;
+        preResizeY = window.innerHeight;
 
-        window.addEventListener('resize', () => adjustDraggables())
+        //window.addEventListener('resize', () => adjustDraggables());
     })
 
     function adjustDraggables()
     {
-        const xPercent = window.innerWidth / preResizeX
-        const yPercent = window.innerHeight / preResizeY
-        console.log("x%: " + xPercent + " y%: " + yPercent)
+        const xPercent = window.innerWidth / preResizeX;
+        const yPercent = window.innerHeight / preResizeY;
+        console.log("x%: " + xPercent + " y%: " + yPercent);
         dragPanzooms.forEach(element => {
-            const oldPan = element.getPan()
-            element.pan(oldPan.x * xPercent, oldPan.y * yPercent)
-            element.zoom(Math.min(xPercent, yPercent))
+            const oldPan = element.getPan();
+            element.pan(oldPan.x * xPercent, oldPan.y * yPercent);
+            element.zoom(Math.min(xPercent, yPercent));
         });
-        preResizeX = window.innerWidth
-        preResizeY = window.innerHeight
+        preResizeX = window.innerWidth;
+        preResizeY = window.innerHeight;
     }
     
     async function refreshPanzoom()
@@ -63,20 +82,20 @@
         {
             maxScale: 5,
             contain: 'outside'
-        })
-        const panzoomWrapper = document.getElementById("map-wrapper") as HTMLElement
-        panzoomWrapper.addEventListener('wheel', panzoom.zoomWithWheel)
+        });
+        const panzoomWrapper = document.getElementById("map-wrapper") as HTMLElement;
+        panzoomWrapper.addEventListener('wheel', panzoom.zoomWithWheel);
 
         // grab all draggables
-        dragElementNodes = document.getElementsByClassName("draggable")
+        dragElementNodes = document.getElementsByClassName("draggable");
         // cast to array
-        dragElements = Array.from(dragElementNodes)
+        dragElements = Array.from(dragElementNodes);
         // iterate over array and make draggable
         dragElements.forEach((element:HTMLElement) => {
             dragPanzooms.push(Panzoom(element, 
             {
                 contain: 'inside'
-            }))
+            }));
         });
 
     }
@@ -85,15 +104,15 @@
     {
         try 
         {
-            dataDirPath = await appLocalDataDir()
-            console.log(dataDirPath)
+            dataDirPath = await appLocalDataDir();
+            console.log(dataDirPath);
         } 
         catch (err) 
         {
-            console.error(err)
+            console.error(err);
         }
     }
-    getDataDir()
+    getDataDir();
     
 
     const readFileContents = async () => {
@@ -108,21 +127,36 @@
                     extensions: ['png', 'gif', 'jpg', 'jpeg', 'webp', 'm4a', 'mp3', 'ogg', 'flac', 'wav'], 
                     name: "*"
                 }]
-            }) as string
-            console.log(selectedPath)
-            if (!selectedPath) return
-            loading = true
-            content = await readBinaryFile(selectedPath as string)
-            loading = false
-            const img = new Image()
-            mapImageURL = URL.createObjectURL( new Blob([content.buffer], { type: 'image/png' } ))
-            refreshPanzoom()
+            }) as string;
+            //console.log(selectedPath)
+            if (!selectedPath) return;
+
+            loading = true;
+
+            content = await readBinaryFile(selectedPath as string);
+            const bmp = await createImageBitmap(new Blob([content]));
+            const { width, height } = bmp;
+            bmp.close(); // free memory
+            maps.push(new MapInfo(content, width, height));
+            activeMap = maps.length - 1;
+            updateCurrentMap();
+
+            loading = false;
+            refreshPanzoom();
         } 
         catch (err) 
         {
-            console.error(err)
+            console.error(err);
         }
     }
+
+    function updateCurrentMap()
+    {
+        mapImageURL = URL.createObjectURL( new Blob([maps[activeMap].data.buffer], { type: 'image/png' } ));
+        mapImageWidth = maps[activeMap].width
+        mapImageHeight = maps[activeMap].height
+    }
+
 </script>
 
 <div data-tauri-drag-region class="titlebar">
@@ -146,11 +180,8 @@
 </div>
 
 <div id="map-wrapper">
-    <div id="map">
-        {#if mapImageURL}
-        <img src="{mapImageURL}" alt="map" />
-        {/if}
-        <div id="map-overlay">
+    <div id="map" style="background: url({mapImageURL}) no-repeat; width:{mapImageWidth}px; height: {mapImageHeight}px;" >
+        <div id="map-overlay" style="width:{mapImageWidth}px; height: {mapImageHeight}px;">
             <div class="draggable listener"></div>
             <div class="draggable emitter"></div>
         </div>
