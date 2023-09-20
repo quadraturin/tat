@@ -4,7 +4,7 @@
     import { readBinaryFile, readTextFile, createDir, exists, readDir, removeDir, removeFile, writeBinaryFile } from "@tauri-apps/api/fs"
     import { appLocalDataDir, homeDir } from '@tauri-apps/api/path'
     import { onMount, beforeUpdate } from 'svelte'
-    import Panzoom from '@panzoom/panzoom'
+    import Panzoom, { type PanzoomObject } from '@panzoom/panzoom'
     import { sound } from "svelte-sound"
     import blipSound from "../assets/blip.wav"
     import { appWindow } from '@tauri-apps/api/window'
@@ -17,12 +17,14 @@
     let mapElement: HTMLElement
     let dragElementNodes: any
     let dragElements: any
-    let dragPanzooms= []
+    let dragPanzooms = new Array<PanzoomObject>
     let dataDirPath = ''
     let selectedPath = ''
     let content = new Uint8Array
     let mapImageURL = ''
     let loading = false
+    let preResizeX: number
+    let preResizeY: number
 
     onMount( () => 
     {
@@ -35,7 +37,25 @@
         titlebarMaximize.addEventListener('click', () => appWindow.toggleMaximize())
         const titlebarClose = document.getElementById('titlebar-close') as HTMLElement
         titlebarClose.addEventListener('click', () => appWindow.close())
+        preResizeX = window.innerWidth
+        preResizeY = window.innerHeight
+
+        window.addEventListener('resize', () => adjustDraggables())
     })
+
+    function adjustDraggables()
+    {
+        const xPercent = window.innerWidth / preResizeX
+        const yPercent = window.innerHeight / preResizeY
+        console.log("x%: " + xPercent + " y%: " + yPercent)
+        dragPanzooms.forEach(element => {
+            const oldPan = element.getPan()
+            element.pan(oldPan.x * xPercent, oldPan.y * yPercent)
+            element.zoom(Math.min(xPercent, yPercent))
+        });
+        preResizeX = window.innerWidth
+        preResizeY = window.innerHeight
+    }
     
     async function refreshPanzoom()
     {
@@ -52,11 +72,11 @@
         // cast to array
         dragElements = Array.from(dragElementNodes)
         // iterate over array and make draggable
-        dragPanzooms = dragElements.forEach((element:HTMLElement) => {
-            Panzoom(element, 
+        dragElements.forEach((element:HTMLElement) => {
+            dragPanzooms.push(Panzoom(element, 
             {
                 contain: 'inside'
-            })
+            }))
         });
 
     }
