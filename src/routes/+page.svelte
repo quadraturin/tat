@@ -4,7 +4,6 @@
     import { readBinaryFile, readTextFile, createDir, exists, readDir, removeDir, removeFile, writeBinaryFile } from "@tauri-apps/api/fs"
     import { appLocalDataDir, homeDir } from '@tauri-apps/api/path'
     import { onMount, beforeUpdate } from 'svelte'
-    import Panzoom, { type PanzoomObject } from '@panzoom/panzoom'
     import { sound } from "svelte-sound"
     import blipSound from "../assets/blip.wav"
     import { appWindow } from '@tauri-apps/api/window'
@@ -13,11 +12,9 @@
     import IconLoading from '$lib/iconLoading.svelte'
     import IconLevels from '$lib/iconLevels.svelte'
 	import IconSettings from '$lib/iconSettings.svelte';
+    import L from "leaflet";
 
     let mapElement: HTMLElement
-    let dragElementNodes: any
-    let dragElements: any
-    let dragPanzooms = new Array<PanzoomObject>
     let dataDirPath = ''
     let selectedPath = ''
     let content = new Uint8Array
@@ -29,7 +26,6 @@
     onMount( () => 
     {
         mapElement = document.getElementById("map") as HTMLElement
-        refreshPanzoom() 
 
         const titlebarMinimize = document.getElementById('titlebar-minimize') as HTMLElement
         titlebarMinimize.addEventListener('click', () => appWindow.minimize())
@@ -40,45 +36,32 @@
         preResizeX = window.innerWidth
         preResizeY = window.innerHeight
 
-        window.addEventListener('resize', () => adjustDraggables())
+        mapSetup();        
     })
 
-    function adjustDraggables()
-    {
-        const xPercent = window.innerWidth / preResizeX
-        const yPercent = window.innerHeight / preResizeY
-        console.log("x%: " + xPercent + " y%: " + yPercent)
-        dragPanzooms.forEach(element => {
-            const oldPan = element.getPan()
-            element.pan(oldPan.x * xPercent, oldPan.y * yPercent)
-            element.zoom(Math.min(xPercent, yPercent))
-        });
-        preResizeX = window.innerWidth
-        preResizeY = window.innerHeight
-    }
-    
-    async function refreshPanzoom()
-    {
-        const panzoom = Panzoom(mapElement, 
-        {
-            maxScale: 5,
-            contain: 'outside'
-        })
-        const panzoomWrapper = document.getElementById("map-wrapper") as HTMLElement
-        panzoomWrapper.addEventListener('wheel', panzoom.zoomWithWheel)
-
-        // grab all draggables
-        dragElementNodes = document.getElementsByClassName("draggable")
-        // cast to array
-        dragElements = Array.from(dragElementNodes)
-        // iterate over array and make draggable
-        dragElements.forEach((element:HTMLElement) => {
-            dragPanzooms.push(Panzoom(element, 
-            {
-                contain: 'inside'
-            }))
-        });
-
+    function mapSetup() {
+        let map = L.map('map').setView([51.505, -0.09], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+        var marker = L.marker([51.5, -0.09],{
+            draggable: true,
+            autoPan: true}).addTo(map);
+        var circle = L.circle([51.508, -0.11], {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: 500
+        }).addTo(map);
+        var polygon = L.polygon([
+            [51.509, -0.08],
+            [51.503, -0.06],
+            [51.51, -0.047]
+        ]).addTo(map);
+        marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+        circle.bindPopup("I am a circle.");
+        polygon.bindPopup("I am a polygon.");
     }
 
     const getDataDir = async () => 
@@ -116,7 +99,6 @@
             loading = false
             const img = new Image()
             mapImageURL = URL.createObjectURL( new Blob([content.buffer], { type: 'image/png' } ))
-            refreshPanzoom()
         } 
         catch (err) 
         {
@@ -150,10 +132,6 @@
         {#if mapImageURL}
         <img src="{mapImageURL}" alt="map" />
         {/if}
-        <div id="map-overlay">
-            <div class="draggable listener"></div>
-            <div class="draggable emitter"></div>
-        </div>
     </div>
 </div>
 
