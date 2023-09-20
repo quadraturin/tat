@@ -14,9 +14,19 @@
     import IconLevels from '$lib/iconLevels.svelte'
 	import IconSettings from '$lib/iconSettings.svelte';
 
+    let mapElement: HTMLElement
+
+    let dataDirPath = ''
+    let homeDirPath = ''
+    let selectedPath = ''
+    let content = new Uint8Array
+    let mapImageURL = ''
+    let loading = false
+
     onMount( () => 
     {
-        reloadPanzoom() 
+        mapElement = document.getElementById("map") as HTMLElement
+        refreshPanzoom() 
 
         const titlebarMinimize = document.getElementById('titlebar-minimize') as HTMLElement
         titlebarMinimize.addEventListener('click', () => appWindow.minimize())
@@ -25,22 +35,16 @@
         const titlebarClose = document.getElementById('titlebar-close') as HTMLElement
         titlebarClose.addEventListener('click', () => appWindow.close())
     })
-
-    let dataDirPath = ''
-    let homeDirPath = ''
-    let selectedPath = ''
-    let content = new Uint8Array
-    let mapImageURL = ''
-    let loading = false
     
-    async function reloadPanzoom()
+    async function refreshPanzoom()
     {
-        const panzoom = await Panzoom(document.getElementById("map") as HTMLElement, {
+        const panzoom = Panzoom(mapElement, {
             maxScale: 5,
             contain: 'outside'
         })
         const panzoomWrapper = document.getElementById("map-wrapper") as HTMLElement
         panzoomWrapper.addEventListener('wheel', panzoom.zoomWithWheel)
+
     }
 
     const getDataDir = async () => 
@@ -78,7 +82,7 @@
             loading = false
             const img = new Image()
             mapImageURL = URL.createObjectURL( new Blob([content.buffer], { type: 'image/png' } ))
-            reloadPanzoom()
+            refreshPanzoom()
         } 
         catch (err) 
         {
@@ -113,8 +117,8 @@
         <img src="{mapImageURL}" alt="map" />
         {/if}
         <div id="map-overlay">
-            <p>put your files in: <em>{dataDirPath}</em></p>
-            <p>selected path: <em>{selectedPath}</em></p>
+            <div class="draggable listener"></div>
+            <div class="draggable emitter"></div>
         </div>
     </div>
 </div>
