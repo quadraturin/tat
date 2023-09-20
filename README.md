@@ -1,5 +1,13 @@
 # Paradiso Tabletop Audio Tool
 
-SvelteKit + Tauri app for running tabletop audio things
+Desktop app for running tabletop audio things.
 
-Used https://tauri.app/v1/guides/getting-started/setup/sveltekit/ to set this up
+Using
+- Svelte
+- SvelteKit
+- SvelteSound
+- Panzoom
+- Tauri
+- icons from [Iconify](https://iconify.design)
+
+Used (this guide)[https://tauri.app/v1/guides/getting-started/setup/sveltekit/] to set up SvelteKit + Tauri
