@@ -15,9 +15,10 @@
 	import IconSettings from '$lib/iconSettings.svelte';
 
     let mapElement: HTMLElement
-
+    let dragElementNodes: any
+    let dragElements: any
+    let dragPanzooms= []
     let dataDirPath = ''
-    let homeDirPath = ''
     let selectedPath = ''
     let content = new Uint8Array
     let mapImageURL = ''
@@ -38,12 +39,25 @@
     
     async function refreshPanzoom()
     {
-        const panzoom = Panzoom(mapElement, {
+        const panzoom = Panzoom(mapElement, 
+        {
             maxScale: 5,
             contain: 'outside'
         })
         const panzoomWrapper = document.getElementById("map-wrapper") as HTMLElement
         panzoomWrapper.addEventListener('wheel', panzoom.zoomWithWheel)
+
+        // grab all draggables
+        dragElementNodes = document.getElementsByClassName("draggable")
+        // cast to array
+        dragElements = Array.from(dragElementNodes)
+        // iterate over array and make draggable
+        dragPanzooms = dragElements.forEach((element:HTMLElement) => {
+            Panzoom(element, 
+            {
+                contain: 'inside'
+            })
+        });
 
     }
 
