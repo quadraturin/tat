@@ -10,4 +10,4 @@ Using
 - Tauri
 - icons from [Iconify](https://iconify.design)
 
-Used (this guide)[https://tauri.app/v1/guides/getting-started/setup/sveltekit/] to set up SvelteKit + Tauri
+Used [this guide](https://tauri.app/v1/guides/getting-started/setup/sveltekit/) to set up SvelteKit + Tauri
