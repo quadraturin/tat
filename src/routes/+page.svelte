@@ -12,6 +12,8 @@
     import IconLoading from '$lib/iconLoading.svelte'
     import IconLevels from '$lib/iconLevels.svelte'
 	import IconSettings from '$lib/iconSettings.svelte';
+    import '../app.css'
+    import 'leaflet/dist/leaflet.css'
     import L from "leaflet";
 
     let mapElement: HTMLElement
@@ -23,21 +25,6 @@
     let preResizeX: number
     let preResizeY: number
 
-    onMount( () => 
-    {
-        mapElement = document.getElementById("map") as HTMLElement
-
-        const titlebarMinimize = document.getElementById('titlebar-minimize') as HTMLElement
-        titlebarMinimize.addEventListener('click', () => appWindow.minimize())
-        const titlebarMaximize = document.getElementById('titlebar-maximize') as HTMLElement
-        titlebarMaximize.addEventListener('click', () => appWindow.toggleMaximize())
-        const titlebarClose = document.getElementById('titlebar-close') as HTMLElement
-        titlebarClose.addEventListener('click', () => appWindow.close())
-        preResizeX = window.innerWidth
-        preResizeY = window.innerHeight
-
-        mapSetup();        
-    })
 
     function mapSetup() {
         let map = L.map('map').setView([51.505, -0.09], 13);
@@ -63,6 +50,26 @@
         circle.bindPopup("I am a circle.");
         polygon.bindPopup("I am a polygon.");
     }
+
+    onMount( () => mapSetup());
+
+    onMount( () => 
+    {
+        mapElement = document.getElementById("map") as HTMLElement
+
+        const titlebarMinimize = document.getElementById('titlebar-minimize') as HTMLElement
+        titlebarMinimize.addEventListener('click', () => appWindow.minimize())
+        const titlebarMaximize = document.getElementById('titlebar-maximize') as HTMLElement
+        titlebarMaximize.addEventListener('click', () => appWindow.toggleMaximize())
+        const titlebarClose = document.getElementById('titlebar-close') as HTMLElement
+        titlebarClose.addEventListener('click', () => appWindow.close())
+        preResizeX = window.innerWidth
+        preResizeY = window.innerHeight
+
+        mapSetup();        
+    })
+
+    
 
     const getDataDir = async () => 
     {
