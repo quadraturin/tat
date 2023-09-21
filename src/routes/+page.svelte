@@ -23,8 +23,8 @@
     let selectedPath = '';
     let content = new Uint8Array;
     let loading = false;
-    let preResizeX: number;
-    let preResizeY: number;
+    let map: L.Map;
+    let listener: L.Marker;
     let maps = new Array<MapInfo>;
     let mapIndex: number;
 
@@ -44,23 +44,39 @@
         }
     }
 
+    function setupMap() 
+    {
+        mapElement = document.getElementById("map") as HTMLElement  
 
-    function mapSetup(imageURL:string, width:number, height:number) {
-        let map = L.map('map', 
+        const width = window.innerWidth;
+        const height = window.innerHeight; 
+
+        map = L.map('map', 
         {
             crs: L.CRS.Simple,
             editable: true,
             minZoom: -5
         }).setView([height/2, width/2], 1);
         map.dragging.enable();
-        let bounds = [[0,0], [height,width]] as LatLngBoundsExpression;
-        //let bounds = [[0,0], [100, 100]] as LatLngBoundsExpression;
-        let image = L.imageOverlay(imageURL, bounds).addTo(map);
-        let marker: L.Marker = L.marker([height/2, width/2],
+
+        listener = L.marker([height/2, width/2],
         {
             draggable: true,
             autoPan: true 
         }).addTo(map);
+    }
+
+
+    function mapSetup(imageURL:string, width:number, height:number) {
+        map.setView([height/2, width/2], 1);
+        let bounds = [[0,0], [height,width]] as LatLngBoundsExpression;
+        //let bounds = [[0,0], [100, 100]] as LatLngBoundsExpression;
+
+        let image = L.imageOverlay(imageURL, bounds, 
+        {
+            interactive: true
+        }).addTo(map);
+
         map.fitBounds(bounds);
 
         //L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -90,16 +106,14 @@
 
     onMount( () => 
     {
-        mapElement = document.getElementById("map") as HTMLElement
-
         const titlebarMinimize = document.getElementById('titlebar-minimize') as HTMLElement
         titlebarMinimize.addEventListener('click', () => appWindow.minimize())
         const titlebarMaximize = document.getElementById('titlebar-maximize') as HTMLElement
         titlebarMaximize.addEventListener('click', () => appWindow.toggleMaximize())
         const titlebarClose = document.getElementById('titlebar-close') as HTMLElement
-        titlebarClose.addEventListener('click', () => appWindow.close())
-        preResizeX = window.innerWidth
-        preResizeY = window.innerHeight       
+        titlebarClose.addEventListener('click', () => appWindow.close()) 
+        
+        setupMap();   
     })
 
     
