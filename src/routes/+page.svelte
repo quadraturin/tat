@@ -14,30 +14,60 @@
 	import IconSettings from '$lib/iconSettings.svelte';
     import '../app.css'
     import 'leaflet/dist/leaflet.css'
-    import L, { Draggable } from "leaflet";
+    import L, { Draggable, type LatLngBoundsExpression } from "leaflet";
     import 'leaflet-editable';
     import 'leaflet.path.drag';
 
-    let mapElement: HTMLElement
-    let dataDirPath = ''
-    let selectedPath = ''
-    let content = new Uint8Array
-    let mapImageURL = ''
-    let loading = false
-    let preResizeX: number
-    let preResizeY: number
+    let mapElement: HTMLElement;
+    let dataDirPath = '';
+    let selectedPath = '';
+    let content = new Uint8Array;
+    let loading = false;
+    let preResizeX: number;
+    let preResizeY: number;
+    let maps = new Array<MapInfo>;
+    let mapIndex: number;
 
 
-    function mapSetup() {
-        let map = L.map('map', {editable: true}).setView([51.505, -0.09], 13);
+    class MapInfo 
+    {
+        name = "untitled";
+        data:Uint8Array;
+        width:number;
+        height:number;
+
+        constructor(data:Uint8Array, width:number, height:number)
+        {
+            this.data = data;
+            this.width = width;
+            this.height = height;
+        }
+    }
+
+
+    function mapSetup(imageURL:string, width:number, height:number) {
+        let map = L.map('map', 
+        {
+            crs: L.CRS.Simple,
+            editable: true,
+            minZoom: -5
+        }).setView([height/2, width/2], 1);
         map.dragging.enable();
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
-        var marker: L.Marker = L.marker([51.5, -0.09],{
+        let bounds = [[0,0], [height,width]] as LatLngBoundsExpression;
+        //let bounds = [[0,0], [100, 100]] as LatLngBoundsExpression;
+        let image = L.imageOverlay(imageURL, bounds).addTo(map);
+        let marker: L.Marker = L.marker([height/2, width/2],
+        {
             draggable: true,
-            autoPan: true}).addTo(map);
+            autoPan: true 
+        }).addTo(map);
+        map.fitBounds(bounds);
+
+        //L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //    maxZoom: 19,
+        //    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        //}).addTo(map);
+        /*
         var circle: L.Circle<Draggable> = L.circle([51.508, -0.11], {
             color: 'red',
             fillColor: '#f03',
@@ -54,7 +84,7 @@
         marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
         circle.bindPopup("I am a circle.");
         polygon.bindPopup("I am a polygon.");
-        polygon.enableEdit();
+        polygon.enableEdit();*/
     }
 
 
@@ -69,9 +99,7 @@
         const titlebarClose = document.getElementById('titlebar-close') as HTMLElement
         titlebarClose.addEventListener('click', () => appWindow.close())
         preResizeX = window.innerWidth
-        preResizeY = window.innerHeight
-
-        mapSetup();        
+        preResizeY = window.innerHeight       
     })
 
     
@@ -102,14 +130,23 @@
                     extensions: ['png', 'gif', 'jpg', 'jpeg', 'webp', 'm4a', 'mp3', 'ogg', 'flac', 'wav'], 
                     name: "*"
                 }]
-            }) as string
-            console.log(selectedPath)
-            if (!selectedPath) return
-            loading = true
-            content = await readBinaryFile(selectedPath as string)
-            loading = false
-            const img = new Image()
-            mapImageURL = URL.createObjectURL( new Blob([content.buffer], { type: 'image/png' } ))
+            }) as string;
+            console.log(selectedPath);
+            if (!selectedPath) return;
+
+            loading = true;
+
+            content = await readBinaryFile(selectedPath as string);
+            const bmp = await createImageBitmap(new Blob([content]));
+            const { width, height } = bmp;
+            bmp.close(); // free memory
+            maps.push(new MapInfo(content, width, height));
+            mapIndex = maps.length - 1;
+
+            loading = false;
+
+            const mapImageURL = URL.createObjectURL( new Blob([maps[mapIndex].data.buffer], { type: 'image/png' } ));
+            mapSetup(mapImageURL, maps[mapIndex].width, maps[mapIndex].height); 
         } 
         catch (err) 
         {
@@ -139,11 +176,7 @@
 </div>
 
 <div id="map-wrapper">
-    <div id="map">
-        {#if mapImageURL}
-        <img src="{mapImageURL}" alt="map" />
-        {/if}
-    </div>
+    <div id="map"></div>
 </div>
 
 <div
