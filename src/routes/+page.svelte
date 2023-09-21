@@ -84,11 +84,20 @@
                     const inside = T.booleanPointInPolygon([listener.getLatLng().lng,listener.getLatLng().lat],layer.toGeoJSON());
                     if (!inside) return;
                     const geoJSONPoly = layer.toGeoJSON();
+                    const listenerDistance = T.pointToLineDistance(listener.toGeoJSON(), T.polygonToLineString(geoJSONPoly) as T.Feature<T.LineString>);
+                    //console.log(listenerDistance);
                     const centroid = T.centroid(geoJSONPoly);
-                    const centroidDistance = T.distance(centroid, T.nearestPointOnLine(T.polygonToLineString(geoJSONPoly) as T.Feature<T.LineString>, centroid));
-                    const listenerDistance = T.distance(listener.toGeoJSON(), T.nearestPointOnLine(T.polygonToLineString(geoJSONPoly) as T.Feature<T.LineString>, listener.toGeoJSON()));
-                    const volume = listenerDistance;
-                    console.log("polygon volume: " + Math.ceil(volume/100) + "%");
+                    const centroidDistance = T.pointToLineDistance(centroid, T.polygonToLineString(geoJSONPoly) as T.Feature<T.LineString>);
+                    //console.log(centroidDistance);
+                    const volume = 1 - (Math.max(0, centroidDistance - listenerDistance) / centroidDistance);
+                    console.log("polygon volume: " + Math.ceil(volume*100) + "%");
+                    //let nearestDistance = Infinity;
+                    //lines.features.forEach(element => {
+                    //    nearestDistance = Math.max(T.distance(element, centroid), farthestDistance);
+                    //});
+                    //const listenerDistance = T.nearestPointOnLine(T.polygonToLineString(geoJSONPoly) as T.Feature<T.LineString>, listener.toGeoJSON()).properties.dist;
+                    
+                    //console.log(listenerDistance);
                 }
                 if(layer instanceof L.Circle) 
                 {
