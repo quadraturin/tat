@@ -33,9 +33,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@panzoom/panzoom": "^4.5.1",
 		"@tauri-apps/api": "^1.4.0",
-		"@turf/boolean-point-in-polygon": "^6.5.0",
+		"@turf/turf": "^6.5.0",
 		"@types/leaflet-editable": "^1.2.3",
 		"howler": "^2.2.3",
 		"leaflet": "^1.9.4",

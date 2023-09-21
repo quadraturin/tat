@@ -17,13 +17,7 @@
     import L, { Draggable, LatLng, type LatLngBoundsExpression } from "leaflet";
     import 'leaflet-editable';
     import 'leaflet.path.drag';
-    //import '@mapbox/leaflet-pip'
-    //import '$lib/PIP'
-	//import 'point-in-polygon';
-    //import 'pointinpoly'
-    import '@turf/boolean-point-in-polygon'
-	import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-
+    import * as T from '@turf/turf'
 
     // override so circle scaling doesn't break when using L.CRS.Simple map coords
     L.LatLng.prototype.distanceTo = function (currentPostion:LatLng) {
@@ -43,25 +37,6 @@
     let mapIndex: number;
 
     const zapSound = new Sound(zapAudio);
-
-    function isMarkerInsidePolygon<bool>(marker: L.Marker, poly: L.Polygon) {
-        let polyPoints = poly.getLatLngs() as Array<LatLng>;       
-        let x = marker.getLatLng().lat, y = marker.getLatLng().lng;
-        console.log("x: " + x + ", y: " + y);
-        console.log(polyPoints);
-
-        let inside = false;
-        for (let i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
-            let xi = polyPoints[i].lat, yi = polyPoints[i].lng;
-            let xj = polyPoints[j].lat, yj = polyPoints[j].lng;
-
-            let intersect = ((yi > y) != (yj > y))
-                && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-            if (intersect) inside = !inside;
-        }
-        console.log(inside);
-        return inside;
-    }
 
     class MapInfo 
     {
@@ -104,14 +79,25 @@
 
         listener.on('drag', () => {
             map.eachLayer((layer) => {
-                if(layer instanceof L.Polygon) {
-                    console.log("polygon " + layer.getLatLngs());
-                    //isMarkerInsidePolygon(listener, layer);
-                    const inside = booleanPointInPolygon([listener.getLatLng().lng,listener.getLatLng().lat],layer.toGeoJSON());
-                    console.log(inside);
+                if(layer instanceof L.Polygon) 
+                {
+                    const inside = T.booleanPointInPolygon([listener.getLatLng().lng,listener.getLatLng().lat],layer.toGeoJSON());
+                    if (!inside) return;
+                    const geoJSONPoly = layer.toGeoJSON();
+                    const centroid = T.centroid(geoJSONPoly);
+                    const centroidDistance = T.distance(centroid, T.nearestPointOnLine(T.polygonToLineString(geoJSONPoly) as T.Feature<T.LineString>, centroid));
+                    const listenerDistance = T.distance(listener.toGeoJSON(), T.nearestPointOnLine(T.polygonToLineString(geoJSONPoly) as T.Feature<T.LineString>, listener.toGeoJSON()));
+                    const volume = listenerDistance;
+                    console.log("polygon volume: " + Math.ceil(volume/100) + "%");
                 }
-                if(layer instanceof L.Circle) {
-                    console.log("circle " + layer.getLatLng());
+                if(layer instanceof L.Circle) 
+                {
+                    const a = layer.getLatLng().lat - listener.getLatLng().lat;
+                    const b = layer.getLatLng().lng - listener.getLatLng().lng;
+                    const c = Math.sqrt(a*a + b*b);
+                    if (c > layer.getRadius()) return;
+                    const volume = (layer.getRadius() - c) / layer.getRadius();
+                    console.log("circle volume: " + Math.ceil(volume*100) + "%");
                 }
             })
         });
