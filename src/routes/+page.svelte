@@ -14,7 +14,9 @@
 	import IconSettings from '$lib/iconSettings.svelte';
     import '../app.css'
     import 'leaflet/dist/leaflet.css'
-    import L from "leaflet";
+    import L, { Draggable } from "leaflet";
+    import 'leaflet-editable';
+    import 'leaflet.path.drag';
 
     let mapElement: HTMLElement
     let dataDirPath = ''
@@ -27,31 +29,34 @@
 
 
     function mapSetup() {
-        let map = L.map('map').setView([51.505, -0.09], 13);
+        let map = L.map('map', {editable: true}).setView([51.505, -0.09], 13);
+        map.dragging.enable();
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
-        var marker = L.marker([51.5, -0.09],{
+        var marker: L.Marker = L.marker([51.5, -0.09],{
             draggable: true,
             autoPan: true}).addTo(map);
-        var circle = L.circle([51.508, -0.11], {
+        var circle: L.Circle<Draggable> = L.circle([51.508, -0.11], {
             color: 'red',
             fillColor: '#f03',
             fillOpacity: 0.5,
             radius: 500
         }).addTo(map);
-        var polygon = L.polygon([
+        var polygon: L.Polygon<Draggable> = L.polygon([
             [51.509, -0.08],
             [51.503, -0.06],
             [51.51, -0.047]
         ]).addTo(map);
+        circle.enableEdit();
+        circle.on('dblclick', L.DomEvent.stop).on('dblclick', circle.toggleEdit);
         marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
         circle.bindPopup("I am a circle.");
         polygon.bindPopup("I am a polygon.");
+        polygon.enableEdit();
     }
 
-    onMount( () => mapSetup());
 
     onMount( () => 
     {
@@ -70,7 +75,6 @@
     })
 
     
-
     const getDataDir = async () => 
     {
         try 
