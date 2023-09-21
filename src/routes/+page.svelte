@@ -4,8 +4,8 @@
     import { readBinaryFile, readTextFile, createDir, exists, readDir, removeDir, removeFile, writeBinaryFile } from "@tauri-apps/api/fs"
     import { appLocalDataDir, homeDir } from '@tauri-apps/api/path'
     import { onMount, beforeUpdate } from 'svelte'
-    import { sound } from "svelte-sound"
-    import blipSound from "../assets/blip.wav"
+    import { sound, Sound } from "svelte-sound"
+    import zapAudio from "../assets/blip.wav"
     import { appWindow } from '@tauri-apps/api/window'
     import IconAdd from '$lib/iconAdd.svelte'
     import IconPlay from '$lib/iconPlay.svelte'
@@ -14,9 +14,16 @@
 	import IconSettings from '$lib/iconSettings.svelte';
     import '../app.css'
     import 'leaflet/dist/leaflet.css'
-    import L, { Draggable, type LatLngBoundsExpression } from "leaflet";
+    import L, { Draggable, LatLng, type LatLngBoundsExpression } from "leaflet";
     import 'leaflet-editable';
     import 'leaflet.path.drag';
+
+    // override so circle scaling doesn't break when using L.CRS.Simple map coords
+    L.LatLng.prototype.distanceTo = function (currentPostion:LatLng) {
+        var dx = currentPostion.lng - this.lng;
+        var dy = currentPostion.lat - this.lat;
+        return Math.sqrt(dx*dx + dy*dy);
+    }
 
     let mapElement: HTMLElement;
     let dataDirPath = '';
@@ -28,6 +35,7 @@
     let maps = new Array<MapInfo>;
     let mapIndex: number;
 
+    const zapSound = new Sound(zapAudio);
 
     class MapInfo 
     {
@@ -55,7 +63,8 @@
         {
             crs: L.CRS.Simple,
             editable: true,
-            minZoom: -5
+            minZoom: -5,
+            maxZoom: 20
         }).setView([height/2, width/2], 1);
         map.dragging.enable();
 
@@ -64,13 +73,22 @@
             draggable: true,
             autoPan: true 
         }).addTo(map);
+
+        /*let polygon: L.Polygon<Draggable> = L.polygon([
+            [51.509, -0.08],
+            [51.503, -0.06],
+            [51.51, -0.047]
+        ]).addTo(map);
+        polygon.bindPopup("I am a polygon.");
+        polygon.enableEdit();*/
+
+        map.fitBounds([[0,0], [height, width]] as LatLngBoundsExpression);
     }
 
 
-    function mapSetup(imageURL:string, width:number, height:number) {
+    function loadImageToMap(imageURL:string, width:number, height:number) {
         map.setView([height/2, width/2], 1);
         let bounds = [[0,0], [height,width]] as LatLngBoundsExpression;
-        //let bounds = [[0,0], [100, 100]] as LatLngBoundsExpression;
 
         let image = L.imageOverlay(imageURL, bounds, 
         {
@@ -90,17 +108,34 @@
             fillOpacity: 0.5,
             radius: 500
         }).addTo(map);
-        var polygon: L.Polygon<Draggable> = L.polygon([
-            [51.509, -0.08],
-            [51.503, -0.06],
-            [51.51, -0.047]
-        ]).addTo(map);
+        
         circle.enableEdit();
         circle.on('dblclick', L.DomEvent.stop).on('dblclick', circle.toggleEdit);
         marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-        circle.bindPopup("I am a circle.");
-        polygon.bindPopup("I am a polygon.");
-        polygon.enableEdit();*/
+        circle.bindPopup("I am a circle.");*/
+    }
+
+    function getRandomPointInViewport<LatLng>()
+    {
+        const min = map.getBounds().getSouthWest();
+        const max = map.getBounds().getNorthEast();
+        const w = max.lng - min.lng;
+        const h = max.lat - min.lat;
+        return new LatLng(Math.random() * h + min.lat, Math.random() * w + min.lng);
+    }
+
+    function createMapSound()
+    {
+        const emitter: L.Circle = L.circle(getRandomPointInViewport(), {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: 100
+        }).addTo(map);
+        emitter.enableEdit();
+        //emitter.on('dblclick', L.DomEvent.stop).on('dblclick', emitter.toggleEdit);
+        //emitter.bindPopup("I am an audio emitter.");
+
     }
 
 
@@ -160,7 +195,7 @@
             loading = false;
 
             const mapImageURL = URL.createObjectURL( new Blob([maps[mapIndex].data.buffer], { type: 'image/png' } ));
-            mapSetup(mapImageURL, maps[mapIndex].width, maps[mapIndex].height); 
+            loadImageToMap(mapImageURL, maps[mapIndex].width, maps[mapIndex].height); 
         } 
         catch (err) 
         {
@@ -172,9 +207,9 @@
 <div data-tauri-drag-region class="titlebar">
     <h1>paradiso</h1>
     <button class="toolbar-button" id="add-button" on:click={readFileContents}>{#if loading}<IconLoading />{:else}<IconAdd />{/if}<span>load image/audio</span></button>
-    <button class="toolbar-button" use:sound={{src: blipSound, events: ["click"]}}><IconPlay /><span>zorp</span></button>
-    <button class="toolbar-button" use:sound={{src: blipSound, events: ["click"]}}><IconLevels /><span>mixer</span></button>
-    <button class="toolbar-button" use:sound={{src: blipSound, events: ["click"]}}><IconSettings /><span>settings</span></button>
+    <button class="toolbar-button" on:click={createMapSound}><IconPlay /><span>zorp</span></button>
+    <button class="toolbar-button" use:sound={{src: zapAudio, events: ["click"]}}><IconLevels /><span>mixer</span></button>
+    <button class="toolbar-button" use:sound={{src: zapAudio, events: ["click"]}}><IconSettings /><span>settings</span></button>
 
     <div data-tauri-drag-region class="titlebar-drag"></div>
     
