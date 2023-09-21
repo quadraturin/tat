@@ -17,6 +17,13 @@
     import L, { Draggable, LatLng, type LatLngBoundsExpression } from "leaflet";
     import 'leaflet-editable';
     import 'leaflet.path.drag';
+    //import '@mapbox/leaflet-pip'
+    //import '$lib/PIP'
+	//import 'point-in-polygon';
+    //import 'pointinpoly'
+    import '@turf/boolean-point-in-polygon'
+	import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+
 
     // override so circle scaling doesn't break when using L.CRS.Simple map coords
     L.LatLng.prototype.distanceTo = function (currentPostion:LatLng) {
@@ -36,6 +43,25 @@
     let mapIndex: number;
 
     const zapSound = new Sound(zapAudio);
+
+    function isMarkerInsidePolygon<bool>(marker: L.Marker, poly: L.Polygon) {
+        let polyPoints = poly.getLatLngs() as Array<LatLng>;       
+        let x = marker.getLatLng().lat, y = marker.getLatLng().lng;
+        console.log("x: " + x + ", y: " + y);
+        console.log(polyPoints);
+
+        let inside = false;
+        for (let i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
+            let xi = polyPoints[i].lat, yi = polyPoints[i].lng;
+            let xj = polyPoints[j].lat, yj = polyPoints[j].lng;
+
+            let intersect = ((yi > y) != (yj > y))
+                && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            if (intersect) inside = !inside;
+        }
+        console.log(inside);
+        return inside;
+    }
 
     class MapInfo 
     {
@@ -74,13 +100,31 @@
             autoPan: true 
         }).addTo(map);
 
-        /*let polygon: L.Polygon<Draggable> = L.polygon([
-            [51.509, -0.08],
-            [51.503, -0.06],
-            [51.51, -0.047]
+        listener.bindPopup("<b>i am the audio listener.</b><br>drag me around :)").openPopup();
+
+        listener.on('drag', () => {
+            map.eachLayer((layer) => {
+                if(layer instanceof L.Polygon) {
+                    console.log("polygon " + layer.getLatLngs());
+                    //isMarkerInsidePolygon(listener, layer);
+                    const inside = booleanPointInPolygon([listener.getLatLng().lng,listener.getLatLng().lat],layer.toGeoJSON());
+                    console.log(inside);
+                }
+                if(layer instanceof L.Circle) {
+                    console.log("circle " + layer.getLatLng());
+                }
+            })
+        });
+
+        // test polygon
+        let polygon: L.Polygon<Draggable> = L.polygon([
+            [0, 0],
+            [150, 0],
+            [200, 300],
+            [50, 100]
         ]).addTo(map);
         polygon.bindPopup("I am a polygon.");
-        polygon.enableEdit();*/
+        polygon.enableEdit();
 
         map.fitBounds([[0,0], [height, width]] as LatLngBoundsExpression);
     }
@@ -111,7 +155,6 @@
         
         circle.enableEdit();
         circle.on('dblclick', L.DomEvent.stop).on('dblclick', circle.toggleEdit);
-        marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
         circle.bindPopup("I am a circle.");*/
     }
 
