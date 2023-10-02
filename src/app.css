@@ -155,10 +155,18 @@ body {
     color: var(--text-color);
     border: 2px solid var(--text-color);
 }
+.leaflet-bar {
+    border-radius: 4px;
+    background: rgba(0,0,0,0.2);
+}
 .leaflet-bar a{
     background-color: var(--text-color);
     color: var(--background-color);
+    user-select: none;
     border: none;
+}
+.leaflet-bar a:hover{
+    background-color: var(--highlight-color);
 }
 .leaflet-bar a:first-child {
     margin-bottom: 2px;
