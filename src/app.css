@@ -149,6 +149,25 @@ body {
     background-color: var(--text-color);
 }
 
+/* leaflet */
+.leaflet-touch {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: 2px solid var(--text-color);
+}
+.leaflet-bar a{
+    background-color: var(--text-color);
+    color: var(--background-color);
+    border: none;
+}
+.leaflet-bar a:first-child {
+    margin-bottom: 2px;
+}
+/* not showing real world maps */
+.leaflet-control-attribution {
+    display: none;
+}
+
 /* responsive styles */
 
 @media (max-width: 600px) {
