@@ -4,7 +4,6 @@
     import { readBinaryFile, readTextFile, createDir, exists, readDir, removeDir, removeFile, writeBinaryFile } from "@tauri-apps/api/fs"
     import { appLocalDataDir, homeDir } from '@tauri-apps/api/path'
     import { onMount, beforeUpdate } from 'svelte'
-    import { sound, Sound } from "svelte-sound"
     import zapAudio from "../assets/blip.wav"
     import { appWindow } from '@tauri-apps/api/window'
     import IconAdd from '$lib/iconAdd.svelte'
@@ -12,32 +11,43 @@
     import IconLoading from '$lib/iconLoading.svelte'
     import IconLevels from '$lib/iconLevels.svelte'
 	import IconSettings from '$lib/iconSettings.svelte';
-    import '../app.css'
+    import IconAudioFile from '$lib/iconAudioFile.svelte'
+    import IconImageFile from '$lib/iconImageFile.svelte'
     import 'leaflet/dist/leaflet.css'
+    import '../app.css'
     import L, { Draggable, LatLng, type LatLngBoundsExpression } from "leaflet";
     import 'leaflet-editable';
     import 'leaflet.path.drag';
     import * as T from '@turf/turf'
+	import { distanceToPolygon_direct } from '$lib/pointPolyDistance';
+    import {Howl, Howler} from 'howler';
+    import {arr2base} from 'uint8-util';
+
+    let mapElement: HTMLElement;
+    let dataDirPath = '';
+    let selected: String | String[] | null;
+    let content = new Uint8Array;
+    let loadingImage = false;
+    let loadingAudio = false;
+    let map: L.Map;
+    let listener: L.Marker;
+    let mapIndex: number;
+
+    let maps = new Array<MapInfo>;
+    let images = new Array<MapImage>;
+    let sounds = new Array<MapSound>;
+
+    const zapSound = new Howl({src:[zapAudio]});
 
     // override so circle scaling doesn't break when using L.CRS.Simple map coords
-    L.LatLng.prototype.distanceTo = function (currentPostion:LatLng) {
+    L.LatLng.prototype.distanceTo = function (currentPostion:LatLng) 
+    {
         var dx = currentPostion.lng - this.lng;
         var dy = currentPostion.lat - this.lat;
         return Math.sqrt(dx*dx + dy*dy);
     }
 
-    let mapElement: HTMLElement;
-    let dataDirPath = '';
-    let selectedPath = '';
-    let content = new Uint8Array;
-    let loading = false;
-    let map: L.Map;
-    let listener: L.Marker;
-    let maps = new Array<MapInfo>;
-    let mapIndex: number;
-
-    const zapSound = new Sound(zapAudio);
-
+    // class that defines a particular map 
     class MapInfo 
     {
         name = "untitled";
@@ -53,6 +63,28 @@
         }
     }
 
+    // class that defines an audio emitter
+    class MapSound
+    {
+        circle:L.Circle;
+        sound:Howl;
+        
+        constructor(sound:Howl, circle:L.Circle)
+        {
+            this.sound = sound;
+            this.circle = circle;
+        }
+    }
+
+    // class that defines an image on the map
+    class MapImage
+    {
+        constructor()
+        {
+        }
+    }
+
+    // set up the initial map state
     function setupMap() 
     {
         mapElement = document.getElementById("map") as HTMLElement  
@@ -75,7 +107,7 @@
             autoPan: true 
         }).addTo(map);
 
-        listener.bindPopup("<b>i am the audio listener.</b><br>drag me around :)").openPopup();
+        //listener.bindPopup("<b>i am the audio listener.</b><br>drag me around :)").openPopup();
 
         listener.on('drag', () => {
             map.eachLayer((layer) => {
@@ -83,21 +115,9 @@
                 {
                     const inside = T.booleanPointInPolygon([listener.getLatLng().lng,listener.getLatLng().lat],layer.toGeoJSON());
                     if (!inside) return;
-                    const geoJSONPoly = layer.toGeoJSON();
-                    const listenerDistance = T.pointToLineDistance(listener.toGeoJSON(), T.polygonToLineString(geoJSONPoly) as T.Feature<T.LineString>);
-                    //console.log(listenerDistance);
-                    const centroid = T.centroid(geoJSONPoly);
-                    const centroidDistance = T.pointToLineDistance(centroid, T.polygonToLineString(geoJSONPoly) as T.Feature<T.LineString>);
-                    //console.log(centroidDistance);
-                    const volume = 1 - (Math.max(0, centroidDistance - listenerDistance) / centroidDistance);
-                    console.log("polygon volume: " + Math.ceil(volume*100) + "%");
-                    //let nearestDistance = Infinity;
-                    //lines.features.forEach(element => {
-                    //    nearestDistance = Math.max(T.distance(element, centroid), farthestDistance);
-                    //});
-                    //const listenerDistance = T.nearestPointOnLine(T.polygonToLineString(geoJSONPoly) as T.Feature<T.LineString>, listener.toGeoJSON()).properties.dist;
+                    //console.log(distanceToPolygon_direct({point:(listener.toGeoJSON().geometry as T.Point), polygon:(layer.toGeoJSON().geometry as T.Polygon)}));
+                    //console.log(distanceToPolygon_direct({point:(T.centroid(layer.toGeoJSON()).geometry as T.Point), polygon:(layer.toGeoJSON().geometry as T.Polygon)}));
                     
-                    //console.log(listenerDistance);
                 }
                 if(layer instanceof L.Circle) 
                 {
@@ -107,11 +127,19 @@
                     if (c > layer.getRadius()) return;
                     const volume = (layer.getRadius() - c) / layer.getRadius();
                     console.log("circle volume: " + Math.ceil(volume*100) + "%");
+                    for (let i=0; i<sounds.length; i++)
+                    {
+                        if (sounds[i].circle == layer)
+                        {
+                            sounds[i].sound.volume(volume);
+                            break;
+                        }
+                    }
                 }
             })
         });
 
-        // test polygon
+        /*// test polygon
         let polygon: L.Polygon<Draggable> = L.polygon([
             [0, 0],
             [150, 0],
@@ -119,13 +147,14 @@
             [50, 100]
         ]).addTo(map);
         polygon.bindPopup("I am a polygon.");
-        polygon.enableEdit();
+        polygon.enableEdit();*/
 
         map.fitBounds([[0,0], [height, width]] as LatLngBoundsExpression);
     }
 
-
-    function loadImageToMap(imageURL:string, width:number, height:number) {
+    // put an image on the map and frame it
+    function loadImageToMap(imageURL:string, width:number, height:number) 
+    {
         map.setView([height/2, width/2], 1);
         let bounds = [[0,0], [height,width]] as LatLngBoundsExpression;
 
@@ -135,24 +164,9 @@
         }).addTo(map);
 
         map.fitBounds(bounds);
-
-        //L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        //    maxZoom: 19,
-        //    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        //}).addTo(map);
-        /*
-        var circle: L.Circle<Draggable> = L.circle([51.508, -0.11], {
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 0.5,
-            radius: 500
-        }).addTo(map);
-        
-        circle.enableEdit();
-        circle.on('dblclick', L.DomEvent.stop).on('dblclick', circle.toggleEdit);
-        circle.bindPopup("I am a circle.");*/
     }
 
+    // find a random currently visible point on the map and return it
     function getRandomPointInViewport<LatLng>()
     {
         const min = map.getBounds().getSouthWest();
@@ -162,7 +176,8 @@
         return new LatLng(Math.random() * h + min.lat, Math.random() * w + min.lng);
     }
 
-    function createMapSound()
+    // put a sound on the map
+    function createMapSound(sound:Howl)
     {
         const emitter: L.Circle = L.circle(getRandomPointInViewport(), {
             color: 'red',
@@ -171,9 +186,11 @@
             radius: 100
         }).addTo(map);
         emitter.enableEdit();
-        //emitter.on('dblclick', L.DomEvent.stop).on('dblclick', emitter.toggleEdit);
+        emitter.on('dblclick', L.DomEvent.stop).on('dblclick', emitter.toggleEdit);
         //emitter.bindPopup("I am an audio emitter.");
-
+        sounds.push(new MapSound(sound, emitter));
+        sound.volume(0);
+        sound.play();
     }
 
 
@@ -186,7 +203,7 @@
         const titlebarClose = document.getElementById('titlebar-close') as HTMLElement
         titlebarClose.addEventListener('click', () => appWindow.close()) 
         
-        setupMap();   
+        setupMap();
     })
 
     
@@ -195,7 +212,7 @@
         try 
         {
             dataDirPath = await appLocalDataDir()
-            console.log(dataDirPath)
+            //console.log(dataDirPath)
         } 
         catch (err) 
         {
@@ -203,51 +220,157 @@
         }
     }
     getDataDir()
-    
 
-    const readFileContents = async () => {
+    
+    const readImageFile = async () => {
         try 
         {
-            selectedPath = await open
+            selected = await open
             ({
                 multiple: false,
                 title: "open file",
                 filters: 
                 [{
-                    extensions: ['png', 'gif', 'jpg', 'jpeg', 'webp', 'm4a', 'mp3', 'ogg', 'flac', 'wav'], 
+                    extensions: ['png', 'gif', 'jpg', 'jpeg', 'webp'], 
                     name: "*"
                 }]
-            }) as string;
-            console.log(selectedPath);
-            if (!selectedPath) return;
+            });
 
-            loading = true;
+            if (selected === null) 
+            {
+                // user cancelled the selection
+                return;
+            } 
+            else if (Array.isArray(selected)) 
+            {
+                // user selected multiple files
+            }
+            else 
+            {
+                // user selected a single file
+            }
 
-            content = await readBinaryFile(selectedPath as string);
+            loadingImage = true;
+
+            content = await readBinaryFile(selected as string);
             const bmp = await createImageBitmap(new Blob([content]));
             const { width, height } = bmp;
             bmp.close(); // free memory
             maps.push(new MapInfo(content, width, height));
             mapIndex = maps.length - 1;
 
-            loading = false;
-
             const mapImageURL = URL.createObjectURL( new Blob([maps[mapIndex].data.buffer], { type: 'image/png' } ));
             loadImageToMap(mapImageURL, maps[mapIndex].width, maps[mapIndex].height); 
+
+            loadingImage = false;
         } 
         catch (err) 
         {
             console.error(err)
         }
     }
+
+    const readAudioFile = async () => {
+        try 
+        {
+            selected = await open
+            ({
+                multiple: false,
+                title: "open file",
+                filters: 
+                [{
+                    extensions: ['wav'], //['m4a', 'mp3', 'ogg', 'flac', 'wav'], 
+                    name: "*"
+                }]
+            });
+
+            console.log(selected);
+
+            if (selected === null) 
+            {
+                // user cancelled the selection
+                return;
+            } 
+            else if (Array.isArray(selected)) 
+            {
+                // user selected multiple files
+            }
+            else 
+            {
+                // user selected a single file
+            }
+
+            loadingAudio = true;
+
+            content = await readBinaryFile(selected as string);
+
+            let filename:string = selected as string;
+            let format:string;
+            format = ((filename.split('.') as Array<string>).pop() as string).toLowerCase();
+            const file = new File([content], "audio." + format,{type: "audio/" + format});
+            console.log("file: ");
+            console.log(file);
+
+            const b64encoded = arr2base(content);
+
+            const sound = new Howl({
+                src: [`data:${format};base64,${b64encoded}`],
+            });
+            sound.play();
+
+            const audioURL = URL.createObjectURL( file );
+            console.log("audio url: ")
+            console.log(audioURL);
+
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            console.log("data url: ")
+            console.log(reader.result);
+
+            //createMapSound(audioURL);
+
+            loadingAudio = false;
+        } 
+        catch (err) 
+        {
+            console.error(err)
+        }
+    }
+
+    function zap()
+    {
+        zapSound.play();
+    }
+
+	let files:FileList;
+    let fileSound:Howl;
+
+	$: if (files) 
+    {
+		console.log(files);
+		for (const file of files) 
+        {
+			console.log(`${file.name}: ${file.type}, ${file.size} bytes`);
+            let fileurl = URL.createObjectURL(file);
+            fileSound = new Howl(
+            {
+                src: [fileurl], 
+                format: [file.type.split("/")[1]], //only uses mime subtype
+                loop: true
+            });
+            createMapSound(fileSound);
+		}
+	}
+
 </script>
 
 <div data-tauri-drag-region class="titlebar">
     <h1>paradiso</h1>
-    <button class="toolbar-button" id="add-button" on:click={readFileContents}>{#if loading}<IconLoading />{:else}<IconAdd />{/if}<span>load image/audio</span></button>
-    <button class="toolbar-button" on:click={createMapSound}><IconPlay /><span>zorp</span></button>
-    <button class="toolbar-button" use:sound={{src: zapAudio, events: ["click"]}}><IconLevels /><span>mixer</span></button>
-    <button class="toolbar-button" use:sound={{src: zapAudio, events: ["click"]}}><IconSettings /><span>settings</span></button>
+    <button class="toolbar-button" id="add-button" on:click={readImageFile}>{#if loadingImage}<IconLoading />{:else}<IconImageFile />{/if}<span>load image</span></button>
+    <button class="toolbar-button" id="add-button" on:click={readAudioFile}>{#if loadingAudio}<IconLoading />{:else}<IconAudioFile />{/if}<span>load audio</span></button>
+    <button class="toolbar-button" on:click={zap}><IconLevels /><span>mixer</span></button>
+    <button class="toolbar-button"><IconSettings /><span>settings</span></button>
+    <input accept="audio/wav, audio/mpeg" bind:files id="audioInput" name="audioInput" type="file" />
 
     <div data-tauri-drag-region class="titlebar-drag"></div>
     
