@@ -27,7 +27,7 @@
         "save": true
       },
       "fs": {
-        "scope":["$HOME/*", "$APPLOCALDATA/*"],
+        "scope":["**"],
         "all": true,
         "readFile": true,
         "writeFile": true,

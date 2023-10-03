@@ -1,8 +1,8 @@
 <script lang="ts">
     import Greet from '../lib/Greet.svelte'
-    import { open } from "@tauri-apps/api/dialog"
-    import { readBinaryFile, readTextFile, createDir, exists, readDir, removeDir, removeFile, writeBinaryFile } from "@tauri-apps/api/fs"
-    import { appLocalDataDir, homeDir } from '@tauri-apps/api/path'
+    import { open, save } from "@tauri-apps/api/dialog"
+    import { readBinaryFile, readTextFile, createDir, exists, readDir, removeDir, removeFile, writeBinaryFile, writeTextFile, BaseDirectory } from "@tauri-apps/api/fs"
+    import { appLocalDataDir, homeDir, join } from '@tauri-apps/api/path'
     import { onMount, beforeUpdate } from 'svelte'
     import zapAudio from "../assets/blip.wav"
     import { appWindow } from '@tauri-apps/api/window'
@@ -13,6 +13,8 @@
 	import IconSettings from '$lib/iconSettings.svelte';
     import IconAudioFile from '$lib/iconAudioFile.svelte'
     import IconImageFile from '$lib/iconImageFile.svelte'
+    import IconLoad from '$lib/iconLoad.svelte'
+	import IconSave from '$lib/iconSave.svelte';
     import 'leaflet/dist/leaflet.css'
     import '../app.css'
     import L, { Draggable, LatLng, type LatLngBoundsExpression } from "leaflet";
@@ -29,6 +31,8 @@
     let content = new Uint8Array;
     let loadingImage = false;
     let loadingAudio = false;
+    let loading = false;
+    let saving = false;
     let map: L.Map;
     let listener: L.Marker;
     let mapIndex: number;
@@ -79,8 +83,13 @@
     // class that defines an image on the map
     class MapImage
     {
-        constructor()
+        dataURL:string;
+        overlay:L.ImageOverlay;
+
+        constructor(dataURL:string, overlay:L.ImageOverlay)
         {
+            this.dataURL = dataURL;
+            this.overlay = overlay;
         }
     }
 
@@ -132,6 +141,9 @@
         polygon.enableEdit();*/
 
         map.fitBounds([[0,0], [height, width]] as LatLngBoundsExpression);
+
+        // trying to add a grid bkg
+        //map.addLayer(new L.TileLayer('data:image/svg+xml, <svg width="10" height="10"><line x1="5" y1="0" x2="5" y2="10" stroke="white" stroke-width="1" /><line x1="0" y1="5" x2="10" y2="5" stroke="white" stroke-width="1" /></svg>'));
     }
 
     function setMapSoundVolumes()
@@ -169,6 +181,8 @@
             interactive: true
         }).addTo(map);
 
+        images.push(new MapImage(imageURL, image));
+
         map.fitBounds(bounds);
     }
 
@@ -195,7 +209,6 @@
         emitter.enableEdit();
         emitter.on('dblclick', L.DomEvent.stop).on('dblclick', emitter.toggleEdit);
         emitter.on('drag', setMapSoundVolumes); //could be optimized to only update *this* vol
-        //emitter.on('resize', setMapSoundVolumes);
         emitter.on('editable:editing', setMapSoundVolumes);
         //emitter.bindPopup("I am an audio emitter.");
         sounds.push(new MapSound(sound, emitter));
@@ -266,11 +279,10 @@
             const bmp = await createImageBitmap(new Blob([content]));
             const { width, height } = bmp;
             bmp.close(); // free memory
-            maps.push(new MapInfo(content, width, height));
-            mapIndex = maps.length - 1;
 
-            const mapImageURL = URL.createObjectURL( new Blob([maps[mapIndex].data.buffer], { type: 'image/png' } ));
-            loadImageToMap(mapImageURL, maps[mapIndex].width, maps[mapIndex].height); 
+            const mapImageURL = URL.createObjectURL( new Blob([content.buffer], { type: 'image/png' } ));
+            
+            loadImageToMap(mapImageURL, width, height);
 
             loadingImage = false;
         } 
@@ -289,7 +301,7 @@
                 title: "open file",
                 filters: 
                 [{
-                    extensions: ['wav', 'm4a', 'mp3', 'ogg', 'flac', 'wav'], 
+                    extensions: ['wav', 'm4a', 'mp3', 'ogg', 'flac'], 
                     name: "*"
                 }]
             });
@@ -318,11 +330,7 @@
             let format:string;
             format = ((filename.split('.')).pop() as string).toLowerCase();
             const file = new File([content], "audio." + format,{type: format});
-            //console.log("file: ");
-            //console.log(filename);
             const audioURL = URL.createObjectURL( file );
-            //console.log("audio url: ")
-            //console.log(audioURL);
             const sound = new Howl({
                 src: [audioURL],
                 format: [format],
@@ -365,23 +373,63 @@
 	}
 
 
-    L.Path = L.Path.extend({
-        options: {
-            icon: new L.DivIcon({
-            iconSize: new L.Point(100, 100),
-            className: 'leaflet-div-icon leaflet-editing-icon my-own-icon',
-            }),
-        },
-    });
+    var imgs: { [key: string]: string | number } = {};
+    var snds: { [key: string]: string | number } = {};
+    let project = {
+        map_0: {
+            imgs,
+            snds
+        }
+    }
+
+    async function saveProject() 
+    {
+        const filePath = await save();
+        if (filePath === null) return;
+
+        saving = true;
+
+        var i = 0;
+        images.forEach(e => {
+            const imageID = "image_" + i.toString();
+            project.map_0.imgs = Object.assign({[imageID]: {
+                src: e.dataURL,
+                bounds: e.overlay.getBounds()
+            }},project.map_0.imgs);
+            i++;
+        });
+
+        i = 0;
+        sounds.forEach(e => {
+            const soundID = "sound_" + i.toString();
+            project.map_0.snds = Object.assign({[soundID]: {
+                src: "",
+                x: e.circle.getLatLng().lng,
+                y: e.circle.getLatLng().lat,
+                radius: e.circle.getRadius()
+            }},project.map_0.snds);
+            i++;
+        });
+
+        console.log(project);
+        await createDir(filePath, { recursive: true });
+        //await writeTextFile("project.json", JSON.stringify(project), {dir:filePath});
+        await writeTextFile(await join(filePath, 'project.json'), JSON.stringify(project));
+
+        saving = false;
+    }
+    
 
 </script>
 
 <div data-tauri-drag-region class="titlebar">
-    <h1>paradiso</h1>
-    <button class="toolbar-button" id="add-button" on:click={readImageFile}>{#if loadingImage}<IconLoading />{:else}<IconImageFile />{/if}<span>load image</span></button>
-    <button class="toolbar-button" id="add-button" on:click={readAudioFile}>{#if loadingAudio}<IconLoading />{:else}<IconAudioFile />{/if}<span>load audio</span></button>
+    <!--<h1>paradiso</h1>-->
+    <button class="toolbar-button" on:click={readImageFile}>{#if loadingImage}<IconLoading />{:else}<IconImageFile />{/if}<span>add image</span></button>
+    <button class="toolbar-button" on:click={readAudioFile}>{#if loadingAudio}<IconLoading />{:else}<IconAudioFile />{/if}<span>add audio</span></button>
     <button class="toolbar-button" on:click={zap}><IconLevels /><span>mixer</span></button>
     <button class="toolbar-button"><IconSettings /><span>settings</span></button>
+    <button class="toolbar-button" on:click={saveProject}>{#if saving}<IconLoading />{:else}<IconSave />{/if}<span>save</span></button>
+    <button class="toolbar-button">{#if loading}<IconLoading />{:else}<IconLoad />{/if}<span>load</span></button>
     <!--<input accept="audio/wav, audio/mpeg" bind:files id="audioInput" name="audioInput" type="file" />-->
 
     <div data-tauri-drag-region class="titlebar-drag"></div>
@@ -398,7 +446,8 @@
 </div>
 
 <div id="map-wrapper">
-    <div id="map"></div>
+    <div id="map">
+    </div>
 </div>
 
 <div
