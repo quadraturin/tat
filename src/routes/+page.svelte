@@ -13,7 +13,6 @@
 	import IconSettings from '$lib/iconSettings.svelte';
     import IconAudioFile from '$lib/iconAudioFile.svelte'
     import IconImageFile from '$lib/iconImageFile.svelte'
-    import iconPin from '$lib/iconPin.svelte'
     import 'leaflet/dist/leaflet.css'
     import '../app.css'
     import L, { Draggable, LatLng, type LatLngBoundsExpression } from "leaflet";
@@ -290,7 +289,7 @@
                 title: "open file",
                 filters: 
                 [{
-                    extensions: ['wav'], //['m4a', 'mp3', 'ogg', 'flac', 'wav'], 
+                    extensions: ['wav', 'm4a', 'mp3', 'ogg', 'flac', 'wav'], 
                     name: "*"
                 }]
             });
@@ -317,28 +316,20 @@
 
             let filename:string = selected as string;
             let format:string;
-            format = ((filename.split('.') as Array<string>).pop() as string).toLowerCase();
-            const file = new File([content], "audio." + format,{type: "audio/" + format});
-            console.log("file: ");
-            console.log(file);
-
-            const b64encoded = arr2base(content);
-
-            const sound = new Howl({
-                src: [`data:${format};base64,${b64encoded}`],
-            });
-            sound.play();
-
+            format = ((filename.split('.')).pop() as string).toLowerCase();
+            const file = new File([content], "audio." + format,{type: format});
+            //console.log("file: ");
+            //console.log(filename);
             const audioURL = URL.createObjectURL( file );
-            console.log("audio url: ")
-            console.log(audioURL);
+            //console.log("audio url: ")
+            //console.log(audioURL);
+            const sound = new Howl({
+                src: [audioURL],
+                format: [format],
+                loop: true
+            });
 
-            let reader = new FileReader();
-            reader.readAsDataURL(file);
-            console.log("data url: ")
-            console.log(reader.result);
-
-            //createMapSound(audioURL);
+            createMapSound(sound);
 
             loadingAudio = false;
         } 
@@ -391,7 +382,7 @@
     <button class="toolbar-button" id="add-button" on:click={readAudioFile}>{#if loadingAudio}<IconLoading />{:else}<IconAudioFile />{/if}<span>load audio</span></button>
     <button class="toolbar-button" on:click={zap}><IconLevels /><span>mixer</span></button>
     <button class="toolbar-button"><IconSettings /><span>settings</span></button>
-    <input accept="audio/wav, audio/mpeg" bind:files id="audioInput" name="audioInput" type="file" />
+    <!--<input accept="audio/wav, audio/mpeg" bind:files id="audioInput" name="audioInput" type="file" />-->
 
     <div data-tauri-drag-region class="titlebar-drag"></div>
     

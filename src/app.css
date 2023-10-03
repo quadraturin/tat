@@ -154,6 +154,7 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     border: 2px solid var(--text-color);
+    border-top: none;
 }
 .leaflet-bar {
     border-radius: 4px;
