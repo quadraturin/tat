@@ -175,6 +175,12 @@ body {
 .leaflet-control-attribution {
     display: none;
 }
+/* classes for leaflet markers: leaflet-marker-icon leaflet-div-icon leaflet-vertex-icon leaflet-zoom-animated leaflet-interactive leaflet-marker-draggable */
+.leaflet-vertex-icon {
+    background: var(--text-color);
+    border: none;
+    border-radius: 9999px;
+}
 
 /* responsive styles */
 

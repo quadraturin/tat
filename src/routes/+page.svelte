@@ -13,6 +13,7 @@
 	import IconSettings from '$lib/iconSettings.svelte';
     import IconAudioFile from '$lib/iconAudioFile.svelte'
     import IconImageFile from '$lib/iconImageFile.svelte'
+    import iconPin from '$lib/iconPin.svelte'
     import 'leaflet/dist/leaflet.css'
     import '../app.css'
     import L, { Draggable, LatLng, type LatLngBoundsExpression } from "leaflet";
@@ -92,6 +93,15 @@
         const width = window.innerWidth;
         const height = window.innerHeight; 
 
+        let iconUrl = 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="coral" fill-rule="evenodd" clip-rule="evenodd"><path d="M16.272 10.272a4 4 0 1 1-8 0a4 4 0 0 1 8 0Zm-2 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0Z"/><path d="M5.794 16.518a9 9 0 1 1 12.724-.312l-6.206 6.518l-6.518-6.206Zm11.276-1.691l-4.827 5.07l-5.07-4.827a7 7 0 1 1 9.897-.243Z"/></g></svg>');
+
+        let icon = L.icon( 
+        {
+            iconUrl: iconUrl,
+            iconSize: [36,36],
+            iconAnchor: [18,35]
+        } );
+
         map = L.map('map', 
         {
             crs: L.CRS.Simple,
@@ -104,40 +114,13 @@
         listener = L.marker([height/2, width/2],
         {
             draggable: true,
-            autoPan: true 
+            autoPan: true,
+            icon: icon 
         }).addTo(map);
 
         //listener.bindPopup("<b>i am the audio listener.</b><br>drag me around :)").openPopup();
 
-        listener.on('drag', () => {
-            map.eachLayer((layer) => {
-                if(layer instanceof L.Polygon) 
-                {
-                    const inside = T.booleanPointInPolygon([listener.getLatLng().lng,listener.getLatLng().lat],layer.toGeoJSON());
-                    if (!inside) return;
-                    //console.log(distanceToPolygon_direct({point:(listener.toGeoJSON().geometry as T.Point), polygon:(layer.toGeoJSON().geometry as T.Polygon)}));
-                    //console.log(distanceToPolygon_direct({point:(T.centroid(layer.toGeoJSON()).geometry as T.Point), polygon:(layer.toGeoJSON().geometry as T.Polygon)}));
-                    
-                }
-                if(layer instanceof L.Circle) 
-                {
-                    const a = layer.getLatLng().lat - listener.getLatLng().lat;
-                    const b = layer.getLatLng().lng - listener.getLatLng().lng;
-                    const c = Math.sqrt(a*a + b*b);
-                    if (c > layer.getRadius()) return;
-                    const volume = (layer.getRadius() - c) / layer.getRadius();
-                    console.log("circle volume: " + Math.ceil(volume*100) + "%");
-                    for (let i=0; i<sounds.length; i++)
-                    {
-                        if (sounds[i].circle == layer)
-                        {
-                            sounds[i].sound.volume(volume);
-                            break;
-                        }
-                    }
-                }
-            })
-        });
+        listener.on('drag', setMapSoundVolumes);
 
         /*// test polygon
         let polygon: L.Polygon<Draggable> = L.polygon([
@@ -150,6 +133,30 @@
         polygon.enableEdit();*/
 
         map.fitBounds([[0,0], [height, width]] as LatLngBoundsExpression);
+    }
+
+    function setMapSoundVolumes()
+    {
+        map.eachLayer((layer) => 
+        {
+            if(layer instanceof L.Polygon) 
+            {
+                const inside = T.booleanPointInPolygon([listener.getLatLng().lng,listener.getLatLng().lat],layer.toGeoJSON());
+                if (!inside) return;
+            }
+            if(layer instanceof L.Circle) 
+            {
+                const a = layer.getLatLng().lat - listener.getLatLng().lat;
+                const b = layer.getLatLng().lng - listener.getLatLng().lng;
+                const c = Math.sqrt(a*a + b*b);
+                const volume = Math.max(0,(layer.getRadius() - c) / layer.getRadius());
+                console.log("circle volume: " + Math.ceil(volume*100) + "%");
+                sounds.forEach(e => 
+                {
+                    if (e.circle == layer) e.sound.volume(volume);
+                });
+            }
+        })
     }
 
     // put an image on the map and frame it
@@ -180,16 +187,20 @@
     function createMapSound(sound:Howl)
     {
         const emitter: L.Circle = L.circle(getRandomPointInViewport(), {
-            color: 'red',
-            fillColor: '#f03',
+            color: 'coral',
+            fillColor: 'coral',
             fillOpacity: 0.5,
-            radius: 100
+            radius: 100,
+
         }).addTo(map);
         emitter.enableEdit();
         emitter.on('dblclick', L.DomEvent.stop).on('dblclick', emitter.toggleEdit);
+        emitter.on('drag', setMapSoundVolumes); //could be optimized to only update *this* vol
+        //emitter.on('resize', setMapSoundVolumes);
+        emitter.on('editable:editing', setMapSoundVolumes);
         //emitter.bindPopup("I am an audio emitter.");
         sounds.push(new MapSound(sound, emitter));
-        sound.volume(0);
+        setMapSoundVolumes();
         sound.play();
     }
 
@@ -361,6 +372,16 @@
             createMapSound(fileSound);
 		}
 	}
+
+
+    L.Path = L.Path.extend({
+        options: {
+            icon: new L.DivIcon({
+            iconSize: new L.Point(100, 100),
+            className: 'leaflet-div-icon leaflet-editing-icon my-own-icon',
+            }),
+        },
+    });
 
 </script>
 
