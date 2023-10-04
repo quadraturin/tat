@@ -1,0 +1,47 @@
+import * as R from '$lib/registry'
+import { open } from "@tauri-apps/api/dialog";
+import { imageFileTypes, soundFileTypes } from '$lib/filetypes';
+import { loadFile } from "./input.loadFile";
+
+// read in valid files, handle loading state
+export async function readFiles(): Promise<void> {
+    try {
+        // prompt to open one or more image or audio files
+        const selected = await open({
+            multiple: true,
+            title: "open file",
+            filters: [{
+                extensions: imageFileTypes.concat(soundFileTypes),
+                name: "*"
+            }]
+        });
+
+        // check if they opened one or more files
+        if (selected === null) {
+            // user cancelled the selection
+            console.log('canceled selection');
+            return;
+        }
+        else if (Array.isArray(selected)) {
+            // user selected multiple files
+            console.log('selected multiple files');
+            R.setIsLoading(true);
+            selected.forEach(e => {
+                loadFile({ filePath: e as string });
+            });
+            R.setIsLoading(false);
+        }
+        else {
+            // user selected a single file -- not sure this ever gets called
+            console.log('selected single file');
+            R.setIsLoading(true);
+            loadFile({ filePath: selected as string });
+            R.setIsLoading(false);
+        }
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
+
+
