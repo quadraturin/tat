@@ -14,7 +14,7 @@ export async function loadFile({ filePath }: { filePath: string; }): Promise<voi
         else if (soundFileTypes.includes(ext)) {
             // file is a sound
             console.log('file is sound: ' + filePath);
-            await loadSound({filePath, ext});
+            await loadSound(filePath);
         }
     }
     catch (err) {

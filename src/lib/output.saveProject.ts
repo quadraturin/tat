@@ -1,12 +1,11 @@
 import * as R from '$lib/registry';
 import { save } from "@tauri-apps/api/dialog";
-import { createDir, writeTextFile, writeBinaryFile } from "@tauri-apps/api/fs";
+import { createDir, writeTextFile, writeBinaryFile, exists } from "@tauri-apps/api/fs";
 import { join} from "@tauri-apps/api/path";
 import type { MapImage } from './classes/MapImage';
 import type { MapSound } from './classes/MapSound';
-import { projectExt } from './settings';
 
-export async function saveProject() 
+export async function saveProject(): Promise<void> 
 {
     const imageList = R.getImageList();
     const soundList = R.getSoundList();
@@ -33,13 +32,12 @@ export async function saveProject()
     R.setIsSaving(true);
 
     // make a project directory with 'sounds' and 'images' directories inside
-    const filePathExt:string = `${filePath}.${projectExt}`;
-    await createDir(filePathExt, { recursive: true });
-    await createDir(await join(filePathExt, 'sounds'), { recursive: true });
-    await createDir(await join(filePathExt, 'images'), { recursive: true });
+    await createDir(filePath, { recursive: true });
+    await createDir(await join(filePath, 'sounds'), { recursive: true });
+    await createDir(await join(filePath, 'images'), { recursive: true });
 
     // cycle through loaded images, adding each to the project object
-    var i = 0;
+    let i = 0;
     imageList.forEach(e => {
         const imageID = "image_" + i.toString();
         project.map_0.images = Object.assign ({[imageID]: // only supporting 1 map for now
@@ -50,7 +48,7 @@ export async function saveProject()
             w: e.overlay.getBounds().getEast() - e.overlay.getBounds().getWest(),
             h: e.overlay.getBounds().getNorth() - e.overlay.getBounds().getSouth()
         }}, project.map_0.images);
-        writeImageFile(e, filePathExt);
+        writeImageFile(e, filePath);
         i++;
     });
 
@@ -65,21 +63,30 @@ export async function saveProject()
             y: e.circle.getLatLng().lat,
             radius: e.circle.getRadius()
         }}, project.map_0.sounds);
-        writeSoundFile(e, filePathExt);
+        writeSoundFile(e, filePath);
         i++;
     });
 
     // write the project JSON
     console.log(project);
-    await writeTextFile(await join(filePathExt, 'project.json'), JSON.stringify(project));
+    await writeTextFile(await join(filePath, 'project.json'), JSON.stringify(project));
 
     // leave saving state when done
     R.setIsSaving(false);
 }
 
+// writes image file to images folder if the specified image doesn't already exist there
 async function writeImageFile(e:MapImage, filePath:string) {
-    writeBinaryFile(await join(filePath, 'images', e.data.name), await e.data.arrayBuffer())
+    const fullPath = await join(filePath, 'images', e.data.name);
+
+    if (await exists(fullPath)) console.log(`${fullPath} already exists. skipping write.`);
+    else writeBinaryFile(fullPath, await e.data.arrayBuffer());
 }
+
+// writes sound file to images folder if the specified sound doesn't already exist there
 async function writeSoundFile(e:MapSound, filePath:string) {
-    writeBinaryFile(await join(filePath, 'sounds', e.data.name), await e.data.arrayBuffer())
+    const fullPath = await join(filePath, 'sounds', e.data.name);
+
+    if (await exists(fullPath)) console.log(`${fullPath} already exists. skipping write.`);
+    else writeBinaryFile(fullPath, await e.data.arrayBuffer());
 }

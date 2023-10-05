@@ -1,6 +1,6 @@
 import * as R from '$lib/registry';
 import { readBinaryFile } from "@tauri-apps/api/fs";
-import { basename } from "@tauri-apps/api/path";
+import { basename, extname } from "@tauri-apps/api/path";
 import { getRandomPointInViewport } from "./getRandomPointInViewport";
 import L from "leaflet";
 import { setMapSoundVolumes } from './setMapSoundVolumes';
@@ -9,10 +9,16 @@ import 'leaflet-editable';
 import 'leaflet.path.drag';
 
 
-export async function loadSound({ filePath, ext }: { filePath: string; ext: string; }): Promise<void> 
+export async function loadSound(filePath:string, x?:number, y?:number, r?:number): Promise<void> 
 {
     try 
     {
+        var lat = y;
+        var lng = x;
+        var rad = r;
+        const ext = await extname(filePath);
+        var point:L.LatLng;
+
         // read in the sound data
         const content = await readBinaryFile(filePath);
 
@@ -31,13 +37,22 @@ export async function loadSound({ filePath, ext }: { filePath: string; ext: stri
             loop: true
         });
 
+        if (typeof rad === 'undefined') rad = 100;
+        if (typeof x === 'undefined' || typeof y === 'undefined')
+        {
+            point = getRandomPointInViewport(R.getMap())
+        }
+        else
+        {
+            point = L.latLng(lat as number,lng as number);
+        }
         // create emitter circle in leaflet
-        const emitter: L.Circle = L.circle(getRandomPointInViewport(R.getMap()), 
+        const emitter: L.Circle = L.circle(point, 
         {
             color: 'coral',
             fillColor: 'coral',
             fillOpacity: 0.5,
-            radius: 100,
+            radius: rad,
         }).addTo(R.getMap());
         
         // emitter settings

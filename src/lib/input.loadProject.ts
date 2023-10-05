@@ -3,6 +3,7 @@ import { projectExt } from './settings';
 import { exists, readTextFile } from '@tauri-apps/api/fs';
 import { join } from '@tauri-apps/api/path';
 import { loadImage } from './input.loadImage';
+import { loadSound } from './input.loadSound';
 
 export async function loadProject() 
 {
@@ -34,11 +35,11 @@ export async function loadProject()
         for (const pMap in project) {
             for (const pImage in project[pMap].images) {
                 const obj = project[pMap].images[pImage];
-                console.log(obj);
-                loadImage(await join(filePath as string, 'images', obj.src), obj.x, obj.y,obj.w, obj.h);
+                loadImage(await join(filePath as string, 'images', obj.src), obj.x, obj.y, obj.w, obj.h);
             }
             for (const pSound in project[pMap].sounds) {
-                console.log(project[pMap].sounds[pSound]);
+                const obj = project[pMap].sounds[pSound];
+                loadSound(await join(filePath as string, 'sounds', obj.src), obj.x, obj.y, obj.radius);
             }
         }
     }
