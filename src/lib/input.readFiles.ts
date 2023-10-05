@@ -1,6 +1,6 @@
 import * as R from '$lib/registry'
 import { open } from "@tauri-apps/api/dialog";
-import { imageFileTypes, soundFileTypes } from '$lib/filetypes';
+import { imageFileTypes, soundFileTypes } from '$lib/settings';
 import { loadFile } from "./input.loadFile";
 
 // read in valid files, handle loading state

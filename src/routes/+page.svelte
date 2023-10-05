@@ -20,6 +20,7 @@
     import IconLoad from '$lib/icons/iconLoad.svelte'
     import IconImageFile from '$lib/icons/iconImageFile.svelte'
 	import { readFiles } from '$lib/input.readFiles';
+	import { loadProject } from '$lib/loadProject';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
@@ -85,7 +86,7 @@
     <!--<button class="toolbar-button" on:click={zap}><IconLevels /><span>mixer</span></button>-->
     <button class="toolbar-button"><IconSettings /><span>settings</span></button>
     <button class="toolbar-button" on:click={saveProject}>{#if R.getIsSaving()}<IconLoading />{:else}<IconSave />{/if}<span>save</span></button>
-    <button class="toolbar-button">{#if R.getIsLoading()}<IconLoading />{:else}<IconLoad />{/if}<span>load</span></button>
+    <button class="toolbar-button" on:click={loadProject}>{#if R.getIsLoading()}<IconLoading />{:else}<IconLoad />{/if}<span>load</span></button>
     <!--<input accept="audio/wav, audio/mpeg" bind:files id="audioInput" name="audioInput" type="file" />-->
 
     <div data-tauri-drag-region class="titlebar-drag"></div>

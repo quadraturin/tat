@@ -1,5 +1,5 @@
 import { extname } from '@tauri-apps/api/path';
-import { imageFileTypes, soundFileTypes } from '$lib/filetypes';
+import { imageFileTypes, soundFileTypes } from '$lib/settings';
 import { loadSound } from "./input.loadSound";
 import { loadImage } from "./input.loadImage";
 

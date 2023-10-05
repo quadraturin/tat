@@ -1,7 +1,10 @@
 import * as R from '$lib/registry';
 import { save } from "@tauri-apps/api/dialog";
 import { createDir, writeTextFile, writeBinaryFile } from "@tauri-apps/api/fs";
-import { join } from "@tauri-apps/api/path";
+import { join} from "@tauri-apps/api/path";
+import type { MapImage } from './classes/MapImage';
+import type { MapSound } from './classes/MapSound';
+import { projectExt } from './settings';
 
 export async function saveProject() 
 {
@@ -30,7 +33,7 @@ export async function saveProject()
     R.setIsSaving(true);
 
     // make a project directory with 'sounds' and 'images' directories inside
-    await createDir(filePath, { recursive: true });
+    await createDir(`${filePath}.${projectExt}`, { recursive: true });
     await createDir(await join(filePath, 'sounds'), { recursive: true });
     await createDir(await join(filePath, 'images'), { recursive: true });
 
@@ -44,7 +47,7 @@ export async function saveProject()
             src: e.data.name,
             bounds: e.overlay.getBounds()
         }}, project.map_0.images);
-        //writeBinaryFile(await join('images', e.dataURL),e.data);
+        writeImageFile(e, filePath);
         i++;
     });
 
@@ -60,6 +63,7 @@ export async function saveProject()
             y: e.circle.getLatLng().lat,
             radius: e.circle.getRadius()
         }}, project.map_0.sounds);
+        writeSoundFile(e, filePath);
         i++;
     });
 
@@ -69,4 +73,11 @@ export async function saveProject()
 
     // leave saving state when done
     R.setIsSaving(false);
+}
+
+async function writeImageFile(e:MapImage, filePath:string) {
+    writeBinaryFile(await join(filePath, 'images', e.data.name), await e.data.arrayBuffer())
+}
+async function writeSoundFile(e:MapSound, filePath:string) {
+    writeBinaryFile(await join(filePath, 'sounds', e.data.name), await e.data.arrayBuffer())
 }
