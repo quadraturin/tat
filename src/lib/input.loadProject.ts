@@ -2,6 +2,7 @@ import { open } from '@tauri-apps/api/dialog';
 import { projectExt } from './settings';
 import { exists, readTextFile } from '@tauri-apps/api/fs';
 import { join } from '@tauri-apps/api/path';
+import { loadImage } from './input.loadImage';
 
 export async function loadProject() 
 {
@@ -20,7 +21,7 @@ export async function loadProject()
         if (filePath === null) { return; } // user cancelled the selection 
 
         // if project.json exists in the folder, read it
-        const jsonPath = await join(filePath as string, 'project.json')
+        const jsonPath = await join(filePath as string, 'project.json');
         if (!await exists(jsonPath))
         {
             console.error('No project.json found!');
@@ -32,7 +33,9 @@ export async function loadProject()
 
         for (const pMap in project) {
             for (const pImage in project[pMap].images) {
-                console.log(project[pMap].images[pImage]);
+                const obj = project[pMap].images[pImage];
+                console.log(obj);
+                loadImage(await join(filePath as string, 'images', obj.src), obj.x, obj.y,obj.w, obj.h);
             }
             for (const pSound in project[pMap].sounds) {
                 console.log(project[pMap].sounds[pSound]);

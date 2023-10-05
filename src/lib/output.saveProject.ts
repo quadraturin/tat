@@ -33,26 +33,28 @@ export async function saveProject()
     R.setIsSaving(true);
 
     // make a project directory with 'sounds' and 'images' directories inside
-    await createDir(`${filePath}.${projectExt}`, { recursive: true });
-    await createDir(await join(filePath, 'sounds'), { recursive: true });
-    await createDir(await join(filePath, 'images'), { recursive: true });
+    const filePathExt:string = `${filePath}.${projectExt}`;
+    await createDir(filePathExt, { recursive: true });
+    await createDir(await join(filePathExt, 'sounds'), { recursive: true });
+    await createDir(await join(filePathExt, 'images'), { recursive: true });
 
     // cycle through loaded images, adding each to the project object
-    // TODO: write binary files
     var i = 0;
     imageList.forEach(e => {
         const imageID = "image_" + i.toString();
         project.map_0.images = Object.assign ({[imageID]: // only supporting 1 map for now
         {
             src: e.data.name,
-            bounds: e.overlay.getBounds()
+            x: e.overlay.getBounds().getWest(),
+            y: e.overlay.getBounds().getSouth(),
+            w: e.overlay.getBounds().getEast() - e.overlay.getBounds().getWest(),
+            h: e.overlay.getBounds().getNorth() - e.overlay.getBounds().getSouth()
         }}, project.map_0.images);
-        writeImageFile(e, filePath);
+        writeImageFile(e, filePathExt);
         i++;
     });
 
     // cycle through loaded sounds, adding each to the project object
-    // TODO: write binary files
     i = 0;
     soundList.forEach(e => {
         const soundID = "sound_" + i.toString();
@@ -63,13 +65,13 @@ export async function saveProject()
             y: e.circle.getLatLng().lat,
             radius: e.circle.getRadius()
         }}, project.map_0.sounds);
-        writeSoundFile(e, filePath);
+        writeSoundFile(e, filePathExt);
         i++;
     });
 
     // write the project JSON
     console.log(project);
-    await writeTextFile(await join(filePath, 'project.json'), JSON.stringify(project));
+    await writeTextFile(await join(filePathExt, 'project.json'), JSON.stringify(project));
 
     // leave saving state when done
     R.setIsSaving(false);

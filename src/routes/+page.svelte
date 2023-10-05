@@ -10,7 +10,7 @@
     import L from "leaflet";
 	import { setupMap } from '$lib/init.setupMap';
 	import { setupListener } from '$lib/init.setupListener';
-	import { saveProject } from '$lib/saveProject';
+	import { saveProject } from '$lib/output.saveProject';
     //import zapAudio from "../assets/blip.wav"
 
     // icons
@@ -20,7 +20,7 @@
     import IconLoad from '$lib/icons/iconLoad.svelte'
     import IconImageFile from '$lib/icons/iconImageFile.svelte'
 	import { readFiles } from '$lib/input.readFiles';
-	import { loadProject } from '$lib/loadProject';
+	import { loadProject } from '$lib/input.loadProject';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
