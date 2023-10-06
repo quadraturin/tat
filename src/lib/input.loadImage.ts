@@ -2,6 +2,8 @@ import * as R from '$lib/registry'
 import { readBinaryFile } from "@tauri-apps/api/fs";
 import { basename, extname } from '@tauri-apps/api/path';
 import L from 'leaflet';
+import 'leaflet-editable';
+import 'leaflet.path.drag';
 
 export async function loadImage(filePath:string, x?:number, y?:number, w?:number, h?:number): Promise<void> {
     try {
@@ -14,6 +16,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         let height = h;
         let ext = await extname(filePath);
 
+        // if no lat/lng is set, set them to 0
         if (typeof lat === 'undefined') lat = 0;
         if (typeof lng === 'undefined') lng = 0;
         // if no width/height is set, get it from image data
@@ -42,15 +45,56 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         let bounds = [[lat,lng], [height,width]] as L.LatLngBoundsExpression;
         let overlay = L.imageOverlay(mapImageURL, bounds, 
         {
-            interactive: true
         }).addTo(map);
-
-        // center and frame the image
-        map.setView([height/2, width/2], 1);
-        map.fitBounds(bounds);
         
         // add image data to registry
         R.addToImageList(file, overlay);
+        
+        //let proportionalScale = true;
+
+        function editImage() {
+            overlay.setBounds(imageRect.getBounds());
+            overlay.bringToFront();
+        }
+
+        function moveImage() {
+            overlay.setBounds(imageRect.getBounds());
+            overlay.bringToFront();
+            overlay.setStyle({opacity:0.5});
+            imageRect.redraw();
+        }
+
+        function stopMoveImage() {
+            overlay.setBounds(imageRect.getBounds());
+            overlay.setStyle({opacity:1});
+        }
+
+        function toggleImageEdit() {
+            if(imageRect.editEnabled()) imageRect.setStyle({opacity:0});
+            else imageRect.setStyle({opacity:0.5});
+            imageRect.toggleEdit();
+        }
+
+        // create rectangle over image
+        let imageRect = L.rectangle([[lat,lng],[lat+height,lng],[lat+height,lng+width],[lat,lng+width]], {
+            color: 'coral',
+            fillColor: 'coral',
+            opacity: 0.5,
+            fillOpacity: 0
+        }).addTo(map);
+        imageRect.enableEdit();
+        imageRect.on('dblclick', L.DomEvent.stop).on('dblclick', toggleImageEdit);
+        imageRect.on('editable:editing', editImage);
+        imageRect.on('dragstart drag', moveImage); // drag doesn't seem to work -- image pos doesn't update while dragging
+        imageRect.on('dragend', stopMoveImage);
+        imageRect.on('click', overlay.bringToFront);
+        //imageRect.on('editable:vertex:shiftclick', )
+        
+        editImage();
+
+        // center and frame the image
+        map.flyToBounds(bounds);
+        
     }
     catch (err) {
         console.error(err);

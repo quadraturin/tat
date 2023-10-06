@@ -3,10 +3,10 @@ import { readBinaryFile } from "@tauri-apps/api/fs";
 import { basename, extname } from "@tauri-apps/api/path";
 import { getRandomPointInViewport } from "./getRandomPointInViewport";
 import L from "leaflet";
-import { setMapSoundVolumes } from './setMapSoundVolumes';
-import { Howl } from "howler";
 import 'leaflet-editable';
 import 'leaflet.path.drag';
+import { setMapSoundVolumes } from './setMapSoundVolumes';
+import { Howl } from "howler";
 
 
 export async function loadSound(filePath:string, x?:number, y?:number, r?:number): Promise<void> 
@@ -60,6 +60,8 @@ export async function loadSound(filePath:string, x?:number, y?:number, r?:number
         emitter.on('dblclick', L.DomEvent.stop).on('dblclick', emitter.toggleEdit);
         emitter.on('drag', setMapSoundVolumes); //could be optimized to only update *this* vol
         emitter.on('editable:editing', setMapSoundVolumes);
+        emitter.on('drag', emitter.bringToFront);
+        emitter.on('editable:editing', emitter.bringToFront);
         //emitter.bindPopup("I am an audio emitter.");
 
         // add this sound to the sound list registry
