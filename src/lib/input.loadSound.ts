@@ -47,22 +47,39 @@ export async function loadSound(filePath:string, x?:number, y?:number, r?:number
             point = L.latLng(lat as number,lng as number);
         }
         // create emitter circle in leaflet
+
         const emitter: L.Circle = L.circle(point, 
         {
             color: 'coral',
             fillColor: 'coral',
             fillOpacity: 0.5,
             radius: rad,
+            pane: 'soundPane'
         }).addTo(R.getMap());
         
         // emitter settings
         emitter.enableEdit();
-        emitter.on('dblclick', L.DomEvent.stop).on('dblclick', emitter.toggleEdit);
+        emitter.on('dblclick', L.DomEvent.stop).on('dblclick', toggleSoundEdit);
         emitter.on('drag', setMapSoundVolumes); //could be optimized to only update *this* vol
         emitter.on('editable:editing', setMapSoundVolumes);
         emitter.on('drag', emitter.bringToFront);
         emitter.on('editable:editing', emitter.bringToFront);
+        emitter.on('dragstart editable:editing', selectEmitter);
+        emitter.on('dragend', deselectEmitter);
+        emitter.on('editable:vertex:dragend', deselectEmitter)
         //emitter.bindPopup("I am an audio emitter.");
+
+        function selectEmitter(){
+            emitter.setStyle({color:"white"});
+        };
+        function deselectEmitter(){
+            emitter.setStyle({color:"coral"});
+        }
+        function toggleSoundEdit(){
+            if (emitter.editEnabled()) emitter.setStyle({opacity:0});
+            else emitter.setStyle({opacity:1});
+            emitter.toggleEdit();
+        }
 
         // add this sound to the sound list registry
         R.addToSoundList(file, sound, emitter);

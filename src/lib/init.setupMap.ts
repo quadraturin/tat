@@ -1,5 +1,5 @@
 import L from "leaflet";
-import { setMapSoundVolumes } from "./setMapSoundVolumes";
+import * as R from '$lib/registry'
 
     // set up the initial map state
     export function setupMap(): L.Map 
@@ -14,7 +14,9 @@ import { setMapSoundVolumes } from "./setMapSoundVolumes";
             editable: true,
             minZoom: -5,
             maxZoom: 20
-        }).setView([height/2, width/2], 1);
+        });
+        map.createPane("soundPane").style.zIndex = "450";
+        map.setView([height/2, width/2], 1);
         map.dragging.enable();
 
         /*// test polygon
@@ -26,6 +28,7 @@ import { setMapSoundVolumes } from "./setMapSoundVolumes";
         ]).addTo(map);
         polygon.bindPopup("I am a polygon.");
         polygon.enableEdit();*/
+
 
         map.fitBounds([[0,0], [height, width]] as L.LatLngBoundsExpression);
 

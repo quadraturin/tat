@@ -60,13 +60,16 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         function moveImage() {
             overlay.setBounds(imageRect.getBounds());
             overlay.bringToFront();
+            imageRect.bringToFront();
             overlay.setStyle({opacity:0.5});
+            imageRect.setStyle({color:'white'})
             imageRect.redraw();
         }
 
         function stopMoveImage() {
             overlay.setBounds(imageRect.getBounds());
             overlay.setStyle({opacity:1});
+            imageRect.setStyle({color:'coral'})
         }
 
         function toggleImageEdit() {
@@ -79,7 +82,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         let imageRect = L.rectangle([[lat,lng],[lat+height,lng],[lat+height,lng+width],[lat,lng+width]], {
             color: 'coral',
             fillColor: 'coral',
-            opacity: 0.5,
+            opacity: 1,
             fillOpacity: 0
         }).addTo(map);
         imageRect.enableEdit();
@@ -88,6 +91,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         imageRect.on('dragstart drag', moveImage); // drag doesn't seem to work -- image pos doesn't update while dragging
         imageRect.on('dragend', stopMoveImage);
         imageRect.on('click', overlay.bringToFront);
+        imageRect.on('click', imageRect.bringToFront);
         //imageRect.on('editable:vertex:shiftclick', )
         
         editImage();

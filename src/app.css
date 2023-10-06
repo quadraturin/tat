@@ -18,7 +18,7 @@
   }
   img, picture, video, canvas, svg {
     display: block;
-    max-width: 100%;
+    /*max-width: 100%; <- broke leaflet custom panes*/
   }
   input, button, textarea, select {
     font: inherit;
