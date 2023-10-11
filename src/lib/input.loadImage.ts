@@ -3,9 +3,8 @@ import { readBinaryFile } from "@tauri-apps/api/fs";
 import { basename, extname } from '@tauri-apps/api/path';
 import L from 'leaflet';
 import 'leaflet-editable';
-import 'leaflet.path.drag';
 
-export async function loadImage(filePath:string, x?:number, y?:number, w?:number, h?:number): Promise<void> {
+export async function loadImage(filePath:string, x?:number, y?:number, w?:number, h?:number, ow?:number, oh?:number): Promise<void> {
     try {
         // read in the image data
         const content = await readBinaryFile(filePath);
@@ -14,18 +13,24 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         let lng = x;
         let width = w;
         let height = h;
+        let originalWidth = ow;
+        let originalHeight = oh;
         let ext = await extname(filePath);
 
         // if no lat/lng is set, set them to 0
         if (typeof lat === 'undefined') lat = 0;
         if (typeof lng === 'undefined') lng = 0;
+
         // if no width/height is set, get it from image data
-        if (typeof width === 'undefined' || typeof height === 'undefined')
+        if (typeof width === 'undefined' || typeof height === 'undefined' ||
+            typeof originalWidth === 'undefined' || typeof originalHeight === 'undefined')
         {
             // get the image dimensions
             const bmp = await createImageBitmap(new Blob([content]));
             width = bmp.width;
             height = bmp.height;
+            originalWidth = width;
+            originalHeight = height;
             bmp.close(); // free memory
         }
 
@@ -43,27 +48,31 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
 
         // create image overlay
         let bounds = [[lat,lng], [height,width]] as L.LatLngBoundsExpression;
+        
         let overlay = L.imageOverlay(mapImageURL, bounds, 
         {
+            interactive:true
         }).addTo(map);
         
         // add image data to registry
-        R.addToImageList(file, overlay);
+        R.addToImageList(file, overlay, width, height);
         
-        //let proportionalScale = true;
-
+        
         function editImage() {
+            console.log('editing!');
+            /*if (R.getIsProportionalScaleOn())
+            {
+                const maxHeight = imageRect.getBounds().getNorth() - imageRect.getBounds().getSouth();
+                const maxWidth = imageRect.getBounds().getEast() - imageRect.getBounds().getWest();
+                const ratio = Math.min(maxHeight / (originalHeight as number), 
+                                       maxWidth / (originalWidth as number));
+                const newH = (originalHeight as number) * ratio;
+                const newW = (originalWidth as number) * ratio;
+                imageRect.setBounds([[imageRect.getBounds().getSouth(), imageRect.getBounds().getWest()], 
+                                     [imageRect.getBounds().getSouth() + newH, imageRect.getBounds().getWest() + newW]]);
+            }*/
             overlay.setBounds(imageRect.getBounds());
             overlay.bringToFront();
-        }
-
-        function moveImage() {
-            overlay.setBounds(imageRect.getBounds());
-            overlay.bringToFront();
-            imageRect.bringToFront();
-            overlay.setStyle({opacity:0.5});
-            imageRect.setStyle({color:'white'})
-            imageRect.redraw();
         }
 
         function stopMoveImage() {
@@ -78,6 +87,33 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
             imageRect.toggleEdit();
         }
 
+        function startMoveImage() {
+            R.setImageOffset(overlay.getBounds().getSouthWest() as L.LatLng);
+        }
+
+        function moveImage(e:L.LeafletEvent) {
+            //console.log('moving!');
+            //const newBounds = [imageRect.getBounds().getSouthWest(),imageRect.getBounds().getNorthEast()];
+            //overlay.setBounds(L.latLngBounds(newBounds));
+            
+            imageRect.bringToFront().setStyle({color:'white'})
+            
+            let newPos = e.target.dragging._draggable._newPos;
+            console.log(newPos);
+            let sw = L.CRS.Simple.pointToLatLng(L.point(newPos.x, newPos.y), R.getMap().getZoom());
+            console.log(sw);
+            let h = overlay.getBounds().getNorth() - overlay.getBounds().getSouth();
+            let w = overlay.getBounds().getEast() - overlay.getBounds().getWest();
+            let ne = L.latLng(sw.lat + h, sw.lng + w);
+            sw.lat += R.getImageOffset().lat;
+            sw.lng += R.getImageOffset().lng;
+            ne.lat += R.getImageOffset().lat;
+            ne.lng += R.getImageOffset().lng;
+            let bounds = L.latLngBounds(sw,ne);
+            overlay.setBounds(bounds);
+
+        }
+
         // create rectangle over image
         let imageRect = L.rectangle([[lat,lng],[lat+height,lng],[lat+height,lng+width],[lat,lng+width]], {
             color: 'coral',
@@ -87,12 +123,14 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         }).addTo(map);
         imageRect.enableEdit();
         imageRect.on('dblclick', L.DomEvent.stop).on('dblclick', toggleImageEdit);
+        imageRect.on('editable:drag', editImage);
         imageRect.on('editable:editing', editImage);
-        imageRect.on('dragstart drag', moveImage); // drag doesn't seem to work -- image pos doesn't update while dragging
+        imageRect.on('editable:dragend', editImage);
+        imageRect.on('dragstart', startMoveImage);
+        imageRect.on('drag', (e) => moveImage(e)); // drag doesn't seem to work -- image pos doesn't update while dragging
         imageRect.on('dragend', stopMoveImage);
-        imageRect.on('click', overlay.bringToFront);
-        imageRect.on('click', imageRect.bringToFront);
-        //imageRect.on('editable:vertex:shiftclick', )
+        //imageRect.on('click', overlay.bringToFront);
+        //imageRect.on('click', imageRect.bringToFront);
         
         editImage();
 
@@ -104,3 +142,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         console.error(err);
     }
 }
+
+
+
+

@@ -35,7 +35,7 @@ export async function loadProject()
         for (const pMap in project) {
             for (const pImage in project[pMap].images) {
                 const obj = project[pMap].images[pImage];
-                loadImage(await join(filePath as string, 'images', obj.src), obj.x, obj.y, obj.w, obj.h);
+                loadImage(await join(filePath as string, 'images', obj.src), obj.x, obj.y, obj.width, obj.height);
             }
             for (const pSound in project[pMap].sounds) {
                 const obj = project[pMap].sounds[pSound];

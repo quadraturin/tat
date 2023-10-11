@@ -77,8 +77,26 @@
 		}
 	}*/
 
+    function onKeyDown(e:KeyboardEvent) { 
+        console.log(e);
+        if (e.key=="Shift") R.setIsProportionalScaleOn(false);
+    };
+    function onKeyUp(e:KeyboardEvent) {
+        console.log(e); 
+        if (e.key=="Shift") R.setIsProportionalScaleOn(true);
+    };
+    function onDrag(e:any) {
+        console.log(e);
+    }
+    
 
 </script>
+
+<svelte:window
+    on:keydown={onKeyDown}
+    on:keyup={onKeyUp}
+    on:drag={onDrag}
+/>
 
 <div data-tauri-drag-region class="titlebar">
     <!--<h1>paradiso</h1>-->

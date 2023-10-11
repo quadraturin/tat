@@ -45,8 +45,10 @@ export async function saveProject(): Promise<void>
             src: e.data.name,
             x: e.overlay.getBounds().getWest(),
             y: e.overlay.getBounds().getSouth(),
-            w: e.overlay.getBounds().getEast() - e.overlay.getBounds().getWest(),
-            h: e.overlay.getBounds().getNorth() - e.overlay.getBounds().getSouth()
+            width: e.overlay.getBounds().getEast() - e.overlay.getBounds().getWest(),
+            height: e.overlay.getBounds().getNorth() - e.overlay.getBounds().getSouth(),
+            originalWidth: e.originalWidth,
+            originalHeight: e.originalHeight
         }}, project.map_0.images);
         writeImageFile(e, filePath);
         i++;
