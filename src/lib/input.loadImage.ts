@@ -48,7 +48,6 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
 
         // create image overlay
         let bounds = [[lat,lng], [height,width]] as L.LatLngBoundsExpression;
-        
         let overlay = L.imageOverlay(mapImageURL, bounds, 
         {
             interactive:true
@@ -56,8 +55,25 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         
         // add image data to registry
         R.addToImageList(file, overlay, width, height);
+
+        // create rectangle over image
+        let imageRect = L.rectangle([[lat,lng],[lat+height,lng],[lat+height,lng+width],[lat,lng+width]], {
+            color: 'coral',
+            fillColor: 'coral',
+            opacity: 1,
+            fillOpacity: 0
+        }).addTo(map);
+        imageRect.enableEdit();
+        imageRect.on('dblclick', L.DomEvent.stop).on('dblclick', toggleImageEdit);
+        bindEventsToImageRect();
+        editImage();
+
+        // center and frame the image
+        map.flyToBounds(bounds);
         
-        
+        // functions
+
+        // called repeatedly while editing the image
         function editImage() {
             console.log('editing!');
             /*if (R.getIsProportionalScaleOn())
@@ -72,36 +88,42 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
                                      [imageRect.getBounds().getSouth() + newH, imageRect.getBounds().getWest() + newW]]);
             }*/
             overlay.setBounds(imageRect.getBounds());
-            overlay.bringToFront();
+            bringImageToFront();
         }
 
+        // called when we stop moving the image
         function stopMoveImage() {
             overlay.setBounds(imageRect.getBounds());
             overlay.setStyle({opacity:1});
             imageRect.setStyle({color:'coral'})
         }
 
+        // called when double-clicking the image (sets/unsets editability)
         function toggleImageEdit() {
             if(imageRect.editEnabled()) imageRect.setStyle({opacity:0});
-            else imageRect.setStyle({opacity:0.5});
+            else {
+                imageRect.setStyle({opacity:1});
+                bindEventsToImageRect();
+            }
             imageRect.toggleEdit();
         }
 
+        // called when starting to move the image
         function startMoveImage() {
             R.setImageOffset(overlay.getBounds().getSouthWest() as L.LatLng);
+            bringImageToFront();
         }
 
+        // called repeatedly while moving the image
         function moveImage(e:L.LeafletEvent) {
-            //console.log('moving!');
-            //const newBounds = [imageRect.getBounds().getSouthWest(),imageRect.getBounds().getNorthEast()];
-            //overlay.setBounds(L.latLngBounds(newBounds));
+            console.log('moving!');
             
+            // raise to front and set drag style
             imageRect.bringToFront().setStyle({color:'white'})
             
+            // update image location while dragging
             let newPos = e.target.dragging._draggable._newPos;
-            console.log(newPos);
             let sw = L.CRS.Simple.pointToLatLng(L.point(newPos.x, newPos.y), R.getMap().getZoom());
-            console.log(sw);
             let h = overlay.getBounds().getNorth() - overlay.getBounds().getSouth();
             let w = overlay.getBounds().getEast() - overlay.getBounds().getWest();
             let ne = L.latLng(sw.lat + h, sw.lng + w);
@@ -111,31 +133,24 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
             ne.lng += R.getImageOffset().lng;
             let bounds = L.latLngBounds(sw,ne);
             overlay.setBounds(bounds);
-
         }
 
-        // create rectangle over image
-        let imageRect = L.rectangle([[lat,lng],[lat+height,lng],[lat+height,lng+width],[lat,lng+width]], {
-            color: 'coral',
-            fillColor: 'coral',
-            opacity: 1,
-            fillOpacity: 0
-        }).addTo(map);
-        imageRect.enableEdit();
-        imageRect.on('dblclick', L.DomEvent.stop).on('dblclick', toggleImageEdit);
-        imageRect.on('editable:drag', editImage);
-        imageRect.on('editable:editing', editImage);
-        imageRect.on('editable:dragend', editImage);
-        imageRect.on('dragstart', startMoveImage);
-        imageRect.on('drag', (e) => moveImage(e)); // drag doesn't seem to work -- image pos doesn't update while dragging
-        imageRect.on('dragend', stopMoveImage);
-        //imageRect.on('click', overlay.bringToFront);
-        //imageRect.on('click', imageRect.bringToFront);
-        
-        editImage();
+        // brings image and rect to front of respective layers
+        function bringImageToFront()
+        {
+            overlay.bringToFront();
+            imageRect.bringToFront();
+        }
 
-        // center and frame the image
-        map.flyToBounds(bounds);
+        // sets interactive event handlers for the image
+        function bindEventsToImageRect()
+        {
+            imageRect.on('editable:vertex:drag', editImage);
+            imageRect.on('dragstart', startMoveImage);
+            imageRect.on('drag', (e) => moveImage(e));
+            imageRect.on('dragend', stopMoveImage);
+            imageRect.on('click', bringImageToFront);
+        }
         
     }
     catch (err) {
