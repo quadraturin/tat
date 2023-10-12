@@ -23,6 +23,17 @@ let isSaving  = false;
 export function getIsSaving():boolean { return isSaving; };
 export function setIsSaving(value:boolean) {isSaving = value; };
 
+// loaded project path
+let projectPath:string;
+export function setProjectPath(p:string) { projectPath = p; };
+export function getProjectPath():string { return projectPath; };
+
+// track if there are unsaved changes
+let isProjectDirty = false;
+export function getisProjectDirty():boolean { return isProjectDirty; };
+export function setProjectDirty() { console.log("dirty"); isProjectDirty = true; };
+export function setProjectClean() { console.log("clean"); isProjectDirty = false; };
+
 // list of maps
 let mapList   = new Array<MapInfo>;
 export function getMapList():Array<MapInfo> { return mapList; };
@@ -61,11 +72,7 @@ export function resetDragOffset() {
     dragOffset.lng = 0;
 }
 
-
-
-
-
-
+// image offset from origin
 let imageOffsetFromOrigin = L.latLng(0,0);
 export function setImageOffset(imageLatLng:L.LatLng):void {
     imageOffsetFromOrigin = imageLatLng;

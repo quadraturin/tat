@@ -27,7 +27,7 @@ export function setupListener(map:L.Map): L.Marker<any>
     }).addTo(map);
 
     // adjust sound volumes when the listener gets dragged around
-    listener.on('drag', () => { setMapSoundVolumes(map, listener, R.getSoundList()) });
+    listener.on('drag', () => { setMapSoundVolumes() });
     // listener popup
     //listener.bindPopup("<b>i am the audio listener.</b><br>drag me around :)").openPopup();
 

@@ -11,16 +11,17 @@
 	import { setupMap } from '$lib/init.setupMap';
 	import { setupListener } from '$lib/init.setupListener';
 	import { saveProject } from '$lib/output.saveProject';
+	import { readFiles } from '$lib/input.readFiles';
+	import { loadProject } from '$lib/input.loadProject';
     //import zapAudio from "../assets/blip.wav"
 
     // icons
-    import IconLoading from '$lib/icons/iconLoading.svelte'
+    import IconLoading from '$lib/icons/iconLoading.svelte';
 	import IconSettings from '$lib/icons/iconSettings.svelte';
 	import IconSave from '$lib/icons/iconSave.svelte';
-    import IconLoad from '$lib/icons/iconLoad.svelte'
-    import IconImageFile from '$lib/icons/iconImageFile.svelte'
-	import { readFiles } from '$lib/input.readFiles';
-	import { loadProject } from '$lib/input.loadProject';
+    import IconLoad from '$lib/icons/iconLoad.svelte';
+    import IconImageFile from '$lib/icons/iconImageFile.svelte';
+    import IconSaveAs from '$lib/icons/iconSaveAs.svelte';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
@@ -100,11 +101,13 @@
 
 <div data-tauri-drag-region class="titlebar">
     <!--<h1>paradiso</h1>-->
-    <button class="toolbar-button" on:click={readFiles}>{#if R.getIsLoading()}<IconLoading />{:else}<IconImageFile />{/if}<span>add image/sound</span></button>
+    <button class="toolbar-button" on:click={readFiles}>{#if R.getIsLoading()}<IconLoading />{:else}<IconImageFile />{/if}<span>add media</span></button>
     <!--<button class="toolbar-button" on:click={zap}><IconLevels /><span>mixer</span></button>-->
-    <button class="toolbar-button"><IconSettings /><span>settings</span></button>
-    <button class="toolbar-button" on:click={saveProject}>{#if R.getIsSaving()}<IconLoading />{:else}<IconSave />{/if}<span>save</span></button>
+    <button class="toolbar-button" on:click={() => saveProject(false)}>{#if R.getIsSaving()}<IconLoading />{:else}<IconSave />{/if}<span>save{#if R.getisProjectDirty()}*{/if}</span></button>
+    <button class="toolbar-button" on:click={() => saveProject(true)}>{#if R.getIsSaving()}<IconLoading />{:else}<IconSaveAs />{/if}<span>save as{#if R.getisProjectDirty()}*{/if}</span></button>
     <button class="toolbar-button" on:click={loadProject}>{#if R.getIsLoading()}<IconLoading />{:else}<IconLoad />{/if}<span>load</span></button>
+    <button class="toolbar-button"><IconSettings /><span>new</span></button>
+    <button class="toolbar-button"><IconSettings /><span>settings</span></button>
     <!--<input accept="audio/wav, audio/mpeg" bind:files id="audioInput" name="audioInput" type="file" />-->
 
     <div data-tauri-drag-region class="titlebar-drag"></div>

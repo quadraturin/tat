@@ -4,6 +4,7 @@ import { exists, readTextFile } from '@tauri-apps/api/fs';
 import { join } from '@tauri-apps/api/path';
 import { loadImage } from './input.loadImage';
 import { loadSound } from './input.loadSound';
+import * as R from '$lib/registry'
 
 export async function loadProject() 
 {
@@ -28,6 +29,9 @@ export async function loadProject()
             console.error('No project.json found!');
             return;
         }
+
+        // store project path
+        R.setProjectPath(filePath as string);
         const project = JSON.parse(await readTextFile(jsonPath));
 
         console.log(project);

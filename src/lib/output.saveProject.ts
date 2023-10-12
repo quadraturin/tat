@@ -5,10 +5,11 @@ import { join} from "@tauri-apps/api/path";
 import type { MapImage } from './classes/MapImage';
 import type { MapSound } from './classes/MapSound';
 
-export async function saveProject(): Promise<void> 
+export async function saveProject(saveAs=false): Promise<void> 
 {
     const imageList = R.getImageList();
     const soundList = R.getSoundList();
+    let filePath: string | null = "";
 
     // objects for storing map data that will be JSONified
     var images: { [key: string]: string | number } = {};
@@ -22,11 +23,21 @@ export async function saveProject(): Promise<void>
         }
     }
 
-    // prompt the user with a save dialog
-    const filePath = await save();
+    // if saving over the current project...
+    if (!saveAs) { 
+        // ...check if the project path exists. if not, save as instead...
+        if (typeof R.getProjectPath() === 'undefined') saveAs = true;
+        // ... if it does exist, save to project path.
+        else filePath = R.getProjectPath();
+    }
 
-    // cancel if they back out
-    if (filePath === null) return;
+    // if saving as (to a new dir)...
+    if (saveAs) {
+        // ...prompt the user with a save dialog...
+        filePath = await save();
+        // ...cancel if they back out.
+        if (filePath === null) return;
+    }
 
     // if they didn't back out, we are now in saving state
     R.setIsSaving(true);
@@ -50,7 +61,7 @@ export async function saveProject(): Promise<void>
             originalWidth: e.originalWidth,
             originalHeight: e.originalHeight
         }}, project.map_0.images);
-        writeImageFile(e, filePath);
+        writeImageFile(e, filePath as string);
         i++;
     });
 
@@ -65,13 +76,17 @@ export async function saveProject(): Promise<void>
             y: e.circle.getLatLng().lat,
             radius: e.circle.getRadius()
         }}, project.map_0.sounds);
-        writeSoundFile(e, filePath);
+        writeSoundFile(e, filePath as string);
         i++;
     });
 
     // write the project JSON
     console.log(project);
     await writeTextFile(await join(filePath, 'project.json'), JSON.stringify(project));
+
+    // set the project path & set project state to clean
+    R.setProjectPath(filePath);
+    R.setProjectClean();
 
     // leave saving state when done
     R.setIsSaving(false);

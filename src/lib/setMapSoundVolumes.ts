@@ -4,6 +4,7 @@ import * as T from '@turf/turf'
 
 export function setMapSoundVolumes(): void
 {
+    R.setProjectDirty();
     const listener = R.getListener();
     R.getMap().eachLayer((layer) => 
     {

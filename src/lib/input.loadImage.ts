@@ -89,6 +89,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
             }*/
             overlay.setBounds(imageRect.getBounds());
             bringImageToFront();
+            R.setProjectDirty();
         }
 
         // called when we stop moving the image
@@ -112,6 +113,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         function startMoveImage() {
             R.setImageOffset(overlay.getBounds().getSouthWest() as L.LatLng);
             bringImageToFront();
+            R.setProjectDirty();
         }
 
         // called repeatedly while moving the image
