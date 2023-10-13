@@ -3,6 +3,7 @@ import { readBinaryFile } from "@tauri-apps/api/fs";
 import { basename, extname } from '@tauri-apps/api/path';
 import L from 'leaflet';
 import 'leaflet-editable';
+import { removeImage } from './input.removeImage';
 
 export async function loadImage(filePath:string, x?:number, y?:number, w?:number, h?:number, ow?:number, oh?:number): Promise<void> {
     try {
@@ -142,17 +143,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         function onClick()
         {
             bringImageToFront();
-
-            if (!R.getIsInDeleteMode()) return;
-            let imageList = R.getImageList();
-            for(let i = 0; i < imageList.length; i++) {
-                if (imageList[i].rect === imageRect) {
-                    imageList[i].rect.remove();
-                    imageList[i].overlay.remove();
-                    imageList.splice(i, 1);
-                    break;
-                }
-            }
+            if (R.getIsInDeleteMode()) removeImage(imageRect);
         }
 
         function bringImageToFront() {

@@ -7,6 +7,7 @@ import 'leaflet-editable';
 import 'leaflet.path.drag';
 import { setMapSoundVolumes } from './setMapSoundVolumes';
 import { Howl } from "howler";
+import { removeSound } from './input.removeSound';
 
 
 export async function loadSound(filePath:string, x?:number, y?:number, r?:number): Promise<void> 
@@ -82,16 +83,8 @@ export async function loadSound(filePath:string, x?:number, y?:number, r?:number
 
         function onClick() {
             emitter.bringToFront();
-            
-            if (!R.getIsInDeleteMode()) return;
-            let soundList = R.getSoundList();
-            for(let i = 0; i < soundList.length; i++) {
-                if (soundList[i].circle === emitter) {
-                    soundList[i].circle.remove();
-                    soundList.splice(i, 1);
-                    break;
-                }
-            }
+
+            if (R.getIsInDeleteMode()) removeSound(emitter);
         };
 
         function selectEmitter(){
