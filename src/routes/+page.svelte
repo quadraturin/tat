@@ -13,7 +13,6 @@
 	import { saveProject } from '$lib/output.saveProject';
 	import { readFiles } from '$lib/input.readFiles';
 	import { loadProject } from '$lib/input.loadProject';
-    //import zapAudio from "../assets/blip.wav"
 
     // icons
     import IconLoading from '$lib/icons/iconLoading.svelte';
@@ -22,6 +21,7 @@
     import IconLoad from '$lib/icons/iconLoad.svelte';
     import IconImageFile from '$lib/icons/iconImageFile.svelte';
     import IconSaveAs from '$lib/icons/iconSaveAs.svelte';
+    import IconNew from '$lib/icons/iconNew.svelte'
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
@@ -29,10 +29,6 @@
 
 	//let files:FileList;
     //let fileSound:Howl;
-
-    // testing stuff
-    //const zapSound = new Howl({src:[zapAudio]});
-    //function zap() { zapSound.play(); };
 
     // initialize
     onMount( () => 
@@ -81,10 +77,12 @@
     function onKeyDown(e:KeyboardEvent) { 
         console.log(e);
         if (e.key=="Shift") R.setIsProportionalScaleOn(false);
+        else if (e.key == "Alt") R.setIsInDeleteMode(true);
     };
     function onKeyUp(e:KeyboardEvent) {
         console.log(e); 
         if (e.key=="Shift") R.setIsProportionalScaleOn(true);
+        else if (e.key == "Alt") R.setIsInDeleteMode(false);
     };
     function onDrag(e:any) {
         console.log(e);
@@ -106,7 +104,7 @@
     <button class="toolbar-button" on:click={() => saveProject(false)}>{#if R.getIsSaving()}<IconLoading />{:else}<IconSave />{/if}<span>save{#if R.getisProjectDirty()}*{/if}</span></button>
     <button class="toolbar-button" on:click={() => saveProject(true)}>{#if R.getIsSaving()}<IconLoading />{:else}<IconSaveAs />{/if}<span>save as{#if R.getisProjectDirty()}*{/if}</span></button>
     <button class="toolbar-button" on:click={loadProject}>{#if R.getIsLoading()}<IconLoading />{:else}<IconLoad />{/if}<span>load</span></button>
-    <button class="toolbar-button"><IconSettings /><span>new</span></button>
+    <button class="toolbar-button"><IconNew /><span>new</span></button>
     <button class="toolbar-button"><IconSettings /><span>settings</span></button>
     <!--<input accept="audio/wav, audio/mpeg" bind:files id="audioInput" name="audioInput" type="file" />-->
 

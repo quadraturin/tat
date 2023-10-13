@@ -66,7 +66,8 @@ export async function loadSound(filePath:string, x?:number, y?:number, r?:number
         emitter.on('editable:editing', emitter.bringToFront);
         emitter.on('dragstart editable:editing', selectEmitter);
         emitter.on('dragend', deselectEmitter);
-        emitter.on('editable:vertex:dragend', deselectEmitter)
+        emitter.on('editable:vertex:dragend', deselectEmitter);
+        emitter.on('click', onClick);
         //emitter.bindPopup("I am an audio emitter.");
 
         // add this sound to the sound list registry
@@ -79,17 +80,33 @@ export async function loadSound(filePath:string, x?:number, y?:number, r?:number
         // set project state to dirty
         R.setProjectDirty();
 
+        function onClick() {
+            emitter.bringToFront();
+            
+            if (!R.getIsInDeleteMode()) return;
+            let soundList = R.getSoundList();
+            for(let i = 0; i < soundList.length; i++) {
+                if (soundList[i].circle === emitter) {
+                    soundList[i].circle.remove();
+                    soundList.splice(i, 1);
+                    break;
+                }
+            }
+        };
+
         function selectEmitter(){
             emitter.setStyle({color:"white"});
         };
+
         function deselectEmitter(){
             emitter.setStyle({color:"coral"});
-        }
+        };
+
         function toggleSoundEdit(){
             if (emitter.editEnabled()) emitter.setStyle({opacity:0});
             else emitter.setStyle({opacity:1});
             emitter.toggleEdit();
-        }
+        };
     } 
     catch (err) 
     {

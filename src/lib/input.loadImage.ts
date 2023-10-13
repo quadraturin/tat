@@ -53,8 +53,6 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
             interactive:true
         }).addTo(map);
         
-        // add image data to registry
-        R.addToImageList(file, overlay, width, height);
 
         // create rectangle over image
         let imageRect = L.rectangle([[lat,lng],[lat+height,lng],[lat+height,lng+width],[lat,lng+width]], {
@@ -67,6 +65,9 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         imageRect.on('dblclick', L.DomEvent.stop).on('dblclick', toggleImageEdit);
         bindEventsToImageRect();
         editImage();
+
+        // add image data to registry
+        R.addToImageList(file, overlay, imageRect, width, height);
 
         // center and frame the image
         map.flyToBounds(bounds);
@@ -138,8 +139,23 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         }
 
         // brings image and rect to front of respective layers
-        function bringImageToFront()
+        function onClick()
         {
+            bringImageToFront();
+
+            if (!R.getIsInDeleteMode()) return;
+            let imageList = R.getImageList();
+            for(let i = 0; i < imageList.length; i++) {
+                if (imageList[i].rect === imageRect) {
+                    imageList[i].rect.remove();
+                    imageList[i].overlay.remove();
+                    imageList.splice(i, 1);
+                    break;
+                }
+            }
+        }
+
+        function bringImageToFront() {
             overlay.bringToFront();
             imageRect.bringToFront();
         }
@@ -151,7 +167,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
             imageRect.on('dragstart', startMoveImage);
             imageRect.on('drag', (e) => moveImage(e));
             imageRect.on('dragend', stopMoveImage);
-            imageRect.on('click', bringImageToFront);
+            imageRect.on('click', onClick);
         }
         
     }

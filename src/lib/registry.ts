@@ -43,8 +43,8 @@ export function setMapList(newMapList:Array<MapInfo>) { mapList = newMapList; };
 let imageList = new Array<MapImage>;
 export function getImageList():Array<MapImage> { return imageList; };
 export function setImageList(newImageList:Array<MapImage>) { imageList = newImageList; };
-export function addToImageList(data:File, overlay:L.ImageOverlay, w:number, h:number) {
-    imageList.push(new MapImage(data, overlay, w, h))
+export function addToImageList(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, w:number, h:number) {
+    imageList.push(new MapImage(data, overlay, rect, w, h))
 }
 
 // list of sounds
@@ -59,6 +59,10 @@ export function addToSoundList(data:File, sound:Howl, circle:L.Circle) {
 let isProportionalScaleOn = true;
 export function getIsProportionalScaleOn():boolean { return isProportionalScaleOn; };
 export function setIsProportionalScaleOn(b:boolean) { isProportionalScaleOn = b; };
+let isInDeleteMode = false;
+export function getIsInDeleteMode():boolean { return isInDeleteMode; };
+export function setIsInDeleteMode(b:boolean) {isInDeleteMode = b; };
+
 
 // image drag offset
 let dragOffset = L.latLng(0,0);

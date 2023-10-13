@@ -5,13 +5,15 @@ export class MapImage
 {
     data:File;
     overlay:L.ImageOverlay;
+    rect:L.Rectangle;
     originalWidth:number;
     originalHeight:number;
 
-    constructor(data:File, overlay:L.ImageOverlay, w:number, h:number)
+    constructor(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, w:number, h:number)
     {
         this.data = data;
         this.overlay = overlay;
+        this.rect = rect;
         this.originalWidth = w;
         this.originalHeight = h;
     }
