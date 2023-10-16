@@ -8,6 +8,7 @@ export function removeImage(imageRect:L.Rectangle) {
             imageList[i].rect.remove();
             imageList[i].overlay.remove();
             imageList.splice(i, 1);
+            R.setProjectDirty();
             break;
         }
     }

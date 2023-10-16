@@ -7,6 +7,7 @@ export function removeSound(emitter:L.Circle) {
         if (soundList[i].circle === emitter) {
             soundList[i].circle.remove();
             soundList.splice(i, 1);
+            R.setProjectDirty();
             break;
         }
     }

@@ -75,7 +75,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         
         // functions
 
-        // called repeatedly while editing the image
+        // called repeatedly while editing the image and when loaded
         function editImage() {
             console.log('editing!');
             /*if (R.getIsProportionalScaleOn())

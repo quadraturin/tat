@@ -101,7 +101,7 @@ body {
 }
 .toolbar-spacer {
     display: flex;
-    flex-basis: 6px;
+    flex-basis: 8px;
 }
 .toolbar-input {
     color: var(--text-color);
@@ -125,6 +125,22 @@ body {
     right: 0;
     z-index: 100;
     color: var(--background-color);
+}
+.titlebar * {
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Likely future */  
+}
+.titlebar h1 {
+    cursor: default;
+    display: inline-flex;
+}
+.project-name {
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .titlebar-button {
     display: inline-flex;
@@ -186,8 +202,29 @@ body {
 
 /* responsive styles */
 
-@media (max-width: 600px) {
-    .toolbar-button span {
+@media (min-width: 801px) {
+    .toolbar-button .button-title-full {
+        display: inline-block;
+    }
+    .toolbar-button .button-title-short {
+        display: none;
+    }
+}
+
+@media (max-width: 800px) {
+    .toolbar-button .button-title-full {
+        display: none;
+    }
+    .toolbar-button .button-title-short {
+        display: inline-block;
+    }
+}
+
+@media (max-width: 550px) {
+    .toolbar-button .button-title-full {
+        display: none;
+    }
+    .toolbar-button .button-title-short, .project-name {
         display: none;
     }
 }

@@ -46,6 +46,7 @@ export async function loadProject()
                 loadSound(await join(filePath as string, 'sounds', obj.src), obj.x, obj.y, obj.radius);
             }
         }
+        R.setProjectClean();
     }
     catch (err) 
     {

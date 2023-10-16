@@ -30,6 +30,10 @@
 	//let files:FileList;
     //let fileSound:Howl;
 
+    let isSaving = false;
+    let isDirty = false;
+    let hasMedia = false;
+
     // initialize
     onMount( () => 
     {
@@ -74,6 +78,16 @@
 		}
 	}*/
 
+    //$: if(R.getIsSaving()) {
+    //    isSaving = R.getIsSaving();
+    //}
+    //$: if(R.getisProjectDirty()) {
+    //    isDirty = R.getisProjectDirty();
+    //}
+
+    let titleTooltip:string;
+    $: isDirty = R.getisProjectDirty(), isDirty ? titleTooltip = "unsaved changes" : titleTooltip = "saved";
+
     function onKeyDown(e:KeyboardEvent) { 
         console.log(e);
         if (e.key=="Shift") R.setIsProportionalScaleOn(false);
@@ -88,6 +102,7 @@
         console.log(e);
     }
     
+    setInterval(() => isDirty = R.getisProjectDirty(), 15);
 
 </script>
 
@@ -98,15 +113,40 @@
 />
 
 <div data-tauri-drag-region class="titlebar">
-    <!--<h1>paradiso</h1>-->
-    <button class="toolbar-button" on:click={readFiles}>{#if R.getIsLoading()}<IconLoading />{:else}<IconImageFile />{/if}<span>add media</span></button>
-    <button class="toolbar-button" on:click={() => saveProject(false)}>{#if R.getIsSaving()}<IconLoading />{:else}<IconSave />{/if}<span>save{#if R.getisProjectDirty()}*{/if}</span></button>
-    <button class="toolbar-button" on:click={() => saveProject(true)}>{#if R.getIsSaving()}<IconLoading />{:else}<IconSaveAs />{/if}<span>save as{#if R.getisProjectDirty()}*{/if}</span></button>
-    <span class="toolbar-spacer"></span>
-    <button class="toolbar-button" on:click={loadProject}>{#if R.getIsLoading()}<IconLoading />{:else}<IconLoad />{/if}<span>load</span></button>
-    <button class="toolbar-button"><IconNew /><span>new</span></button>
-    <span class="toolbar-spacer"></span>
-    <button class="toolbar-button"><IconSettings /><span>settings</span></button>
+    <h1 data-tauri-drag-region title="{titleTooltip}">
+        <span data-tauri-drag-region class="project-name">new project</span>
+        <span data-tauri-drag-region>{#if isDirty}*{/if}</span></h1>
+    <button class="toolbar-button" title="add media" on:click={readFiles}>
+        {#if R.getIsLoading()}<IconLoading />{:else}<IconImageFile />{/if}
+        <span class="button-title-short">add</span>
+        <span class="button-title-full">add media</span>
+    </button>
+    <button class="toolbar-button" title="save" on:click={() => saveProject(false)}>
+        {#if isSaving}<IconLoading />{:else}<IconSave />{/if}
+        <span class="button-title-short">sav</span>
+        <span class="button-title-full">save</span>
+    </button>
+    <button class="toolbar-button"  title="save as" on:click={() => saveProject(true)}>
+        {#if isSaving}<IconLoading />{:else}<IconSaveAs />{/if}
+        <span class="button-title-short">sva</span>
+        <span class="button-title-full">save as</span>
+    </button>
+    <span data-tauri-drag-region class="toolbar-spacer"></span>
+    <button class="toolbar-button"  title="open project" on:click={loadProject}>
+        {#if R.getIsLoading()}<IconLoading />{:else}<IconLoad />{/if}
+        <span class="button-title-short">opn</span>
+        <span class="button-title-full">open</span></button>
+    <button class="toolbar-button"  title="new project">
+        <IconNew />
+        <span class="button-title-short">new</span>
+        <span class="button-title-full">new</span>
+    </button>
+    <span data-tauri-drag-region class="toolbar-spacer"></span>
+    <button class="toolbar-button"  title="settings">
+        <IconSettings />
+        <span class="button-title-short">stg</span>
+        <span class="button-title-full">settings</span>
+    </button>
     <!--<input accept="audio/wav, audio/mpeg" bind:files id="audioInput" name="audioInput" type="file" />-->
 
     <div data-tauri-drag-region class="titlebar-drag"></div>

@@ -31,8 +31,8 @@ export function getProjectPath():string { return projectPath; };
 // track if there are unsaved changes
 let isProjectDirty = false;
 export function getisProjectDirty():boolean { return isProjectDirty; };
-export function setProjectDirty() { console.log("dirty"); isProjectDirty = true; };
-export function setProjectClean() { console.log("clean"); isProjectDirty = false; };
+export function setProjectDirty() { isProjectDirty = true; };
+export function setProjectClean() { isProjectDirty = false; };
 
 // list of maps
 let mapList   = new Array<MapInfo>;
