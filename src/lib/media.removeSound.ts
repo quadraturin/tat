@@ -1,4 +1,5 @@
 import * as R from '$lib/registry'
+import type L from 'leaflet'
 
 export function removeSound(emitter:L.Circle) {
     let soundList = R.getSoundList();

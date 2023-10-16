@@ -1,13 +1,13 @@
 import * as R from '$lib/registry';
 import { readBinaryFile } from "@tauri-apps/api/fs";
 import { basename, extname } from "@tauri-apps/api/path";
-import { getRandomPointInViewport } from "./getRandomPointInViewport";
+import { getRandomPointInViewport } from "./util.getRandomPointInViewport";
 import L from "leaflet";
 import 'leaflet-editable';
 import 'leaflet.path.drag';
-import { setMapSoundVolumes } from './setMapSoundVolumes';
+import { setMapSoundVolumes } from './project.setMapSoundVolumes';
 import { Howl } from "howler";
-import { removeSound } from './input.removeSound';
+import { removeSound } from './media.removeSound';
 
 
 export async function loadSound(filePath:string, x?:number, y?:number, r?:number): Promise<void> 

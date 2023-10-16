@@ -2,8 +2,8 @@ import { open } from '@tauri-apps/api/dialog';
 import { projectExt } from './settings';
 import { exists, readTextFile } from '@tauri-apps/api/fs';
 import { join } from '@tauri-apps/api/path';
-import { loadImage } from './input.loadImage';
-import { loadSound } from './input.loadSound';
+import { loadImage } from './media.loadImage';
+import { loadSound } from './media.loadSound';
 import * as R from '$lib/registry'
 
 export async function loadProject() 

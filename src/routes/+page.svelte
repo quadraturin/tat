@@ -10,9 +10,9 @@
     import L from "leaflet";
 	import { setupMap } from '$lib/init.setupMap';
 	import { setupListener } from '$lib/init.setupListener';
-	import { saveProject } from '$lib/output.saveProject';
-	import { readFiles } from '$lib/input.readFiles';
-	import { loadProject } from '$lib/input.loadProject';
+	import { saveProject } from '$lib/project.saveProject';
+	import { readFiles } from '$lib/media.readFiles';
+	import { loadProject } from '$lib/project.loadProject';
 
     // icons
     import IconLoading from '$lib/icons/iconLoading.svelte';

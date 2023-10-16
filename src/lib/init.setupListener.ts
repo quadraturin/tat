@@ -1,7 +1,6 @@
 import L from "leaflet";
-import * as R from '$lib/registry';
 
-import { setMapSoundVolumes } from "./setMapSoundVolumes";
+import { setMapSoundVolumes } from "./project.setMapSoundVolumes";
 
 export function setupListener(map:L.Map): L.Marker<any>
 {

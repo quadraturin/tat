@@ -1,5 +1,4 @@
 import L from "leaflet";
-import * as R from '$lib/registry'
 
     // set up the initial map state
     export function setupMap(): L.Map 
