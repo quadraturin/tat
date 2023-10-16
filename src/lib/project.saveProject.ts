@@ -1,11 +1,11 @@
 import * as R from '$lib/registry';
-import { save } from "@tauri-apps/api/dialog";
+import { message, save } from "@tauri-apps/api/dialog";
 import { createDir, writeTextFile, writeBinaryFile, exists } from "@tauri-apps/api/fs";
 import { join, basename } from "@tauri-apps/api/path";
 import type { MapImage } from './classes/MapImage';
 import type { MapSound } from './classes/MapSound';
 
-export async function saveProject(saveAs=false): Promise<void> 
+export async function saveProject(saveAs=false): Promise<boolean> 
 {
     const imageList = R.getImageList();
     const soundList = R.getSoundList();
@@ -36,7 +36,7 @@ export async function saveProject(saveAs=false): Promise<void>
         // ...prompt the user with a save dialog...
         filePath = await save();
         // ...cancel if they back out.
-        if (filePath === null) return;
+        if (filePath === null) return false;
     }
 
     // if they didn't back out, we are now in saving state
@@ -91,6 +91,10 @@ export async function saveProject(saveAs=false): Promise<void>
 
     // leave saving state when done
     R.setIsSaving(false);
+
+    await message('project saved!');
+
+    return true;
 }
 
 // writes image file to images folder if the specified image doesn't already exist there

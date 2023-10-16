@@ -5,11 +5,14 @@ import { basename, join } from '@tauri-apps/api/path';
 import { loadImage } from './media.loadImage';
 import { loadSound } from './media.loadSound';
 import * as R from '$lib/registry'
+import { clearProject } from './project.clearProject';
 
 export async function loadProject() 
 {
     try 
     {
+        await clearProject();
+
         const filePath = await open(
         {
             directory: true,

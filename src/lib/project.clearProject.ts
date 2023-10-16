@@ -4,8 +4,20 @@ import { removeImage } from "./media.removeImage";
 import { removeSound } from "./media.removeSound";
 import type { MapSound } from "./classes/MapSound";
 import type { MapImage } from "./classes/MapImage";
+import { shouldSaveProject } from "./project.shouldSaveProject";
+import { saveProject } from "./project.saveProject";
 
 export async function clearProject() {
+
+    // check if we should save the project
+    if (await shouldSaveProject()) {
+        // if we should, prompt user to save
+        if(!await saveProject()){
+            // if they cancel the save, back out. if they do save, continue.
+            return;
+        }
+    }
+
     R.getImageList().forEach(e => {
         removeImage(e.rect, false);
     });
