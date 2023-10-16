@@ -28,6 +28,16 @@ let projectPath:string;
 export function setProjectPath(p:string) { projectPath = p; };
 export function getProjectPath():string { return projectPath; };
 
+// loaded project path
+let projectName:string;
+export function setProjectName(p:string) { projectName = p; };
+export function getProjectName():string { return projectName; };
+
+// track if there is any media in the project
+let hasMedia = false;
+export function getHasMedia():boolean { return hasMedia; };
+export function setHasMedia(b:boolean) { hasMedia = b; };
+
 // track if there are unsaved changes
 let isProjectDirty = false;
 export function getisProjectDirty():boolean { return isProjectDirty; };

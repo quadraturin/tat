@@ -1,7 +1,7 @@
 import * as R from '$lib/registry';
 import { save } from "@tauri-apps/api/dialog";
 import { createDir, writeTextFile, writeBinaryFile, exists } from "@tauri-apps/api/fs";
-import { join} from "@tauri-apps/api/path";
+import { join, basename } from "@tauri-apps/api/path";
 import type { MapImage } from './classes/MapImage';
 import type { MapSound } from './classes/MapSound';
 
@@ -86,6 +86,7 @@ export async function saveProject(saveAs=false): Promise<void>
 
     // set the project path & set project state to clean
     R.setProjectPath(filePath);
+    R.setProjectName(await basename(R.getProjectPath()));
     R.setProjectClean();
 
     // leave saving state when done

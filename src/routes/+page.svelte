@@ -13,6 +13,7 @@
 	import { saveProject } from '$lib/project.saveProject';
 	import { readFiles } from '$lib/media.readFiles';
 	import { loadProject } from '$lib/project.loadProject';
+    import * as S from '$lib/settings';
 
     // icons
     import IconLoading from '$lib/icons/iconLoading.svelte';
@@ -33,6 +34,8 @@
     let isSaving = false;
     let isDirty = false;
     let hasMedia = false;
+    let projectName:string;
+    let titleTooltip:string;
 
     // initialize
     onMount( () => 
@@ -53,11 +56,15 @@
             return Math.sqrt(dx*dx + dy*dy);
         }
 
+        // default project name
+        R.setProjectName(S.defaultProjectName);
+
         // set up map
         R.setMap(setupMap());
 
         // set up listener
         R.setListener(setupListener(R.getMap()));
+
     })
 
     // catch js file input (input element, drag-and-drop etc)
@@ -85,7 +92,6 @@
     //    isDirty = R.getisProjectDirty();
     //}
 
-    let titleTooltip:string;
     $: isDirty = R.getisProjectDirty(), isDirty ? titleTooltip = "unsaved changes" : titleTooltip = "saved";
 
     function onKeyDown(e:KeyboardEvent) { 
@@ -102,7 +108,10 @@
         console.log(e);
     }
     
-    setInterval(() => isDirty = R.getisProjectDirty(), 15);
+    setInterval(() => {
+        isDirty = R.getisProjectDirty();
+        projectName = R.getProjectName();
+    }, 15);
 
 </script>
 
@@ -114,7 +123,7 @@
 
 <div data-tauri-drag-region class="titlebar">
     <h1 data-tauri-drag-region title="{titleTooltip}">
-        <span data-tauri-drag-region class="project-name">new project</span>
+        <span data-tauri-drag-region class="project-name">{projectName}</span>
         <span data-tauri-drag-region>{#if isDirty}*{/if}</span></h1>
     <button class="toolbar-button" title="add media" on:click={readFiles}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconImageFile />{/if}

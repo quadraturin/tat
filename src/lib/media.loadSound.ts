@@ -78,7 +78,8 @@ export async function loadSound(filePath:string, x?:number, y?:number, r?:number
         setMapSoundVolumes();
         sound.play();
 
-        // set project state to dirty
+        // set has media to true and project state to dirty
+        R.setHasMedia(true);
         R.setProjectDirty();
 
         function onClick() {

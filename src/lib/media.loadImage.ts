@@ -65,6 +65,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         imageRect.enableEdit();
         imageRect.on('dblclick', L.DomEvent.stop).on('dblclick', toggleImageEdit);
         bindEventsToImageRect();
+        R.setHasMedia(true);
         editImage();
 
         // add image data to registry

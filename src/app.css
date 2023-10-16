@@ -202,7 +202,7 @@ body {
 
 /* responsive styles */
 
-@media (min-width: 801px) {
+@media (min-width: 701px) {
     .toolbar-button .button-title-full {
         display: inline-block;
     }
@@ -211,7 +211,7 @@ body {
     }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 700px) {
     .toolbar-button .button-title-full {
         display: none;
     }
@@ -220,7 +220,16 @@ body {
     }
 }
 
-@media (max-width: 550px) {
+@media (max-width: 580px) {
+    .toolbar-button .button-title-full {
+        display: none;
+    }
+    .toolbar-button .button-title-short {
+        display: none;
+    }
+}
+
+@media (max-width: 350px) {
     .toolbar-button .button-title-full {
         display: none;
     }

@@ -1,7 +1,7 @@
 import { open } from '@tauri-apps/api/dialog';
 import { projectExt } from './settings';
 import { exists, readTextFile } from '@tauri-apps/api/fs';
-import { join } from '@tauri-apps/api/path';
+import { basename, join } from '@tauri-apps/api/path';
 import { loadImage } from './media.loadImage';
 import { loadSound } from './media.loadSound';
 import * as R from '$lib/registry'
@@ -36,6 +36,8 @@ export async function loadProject()
 
         console.log(project);
 
+        R.setProjectName("loading");
+
         for (const pMap in project) {
             for (const pImage in project[pMap].images) {
                 const obj = project[pMap].images[pImage];
@@ -47,6 +49,7 @@ export async function loadProject()
             }
         }
         R.setProjectClean();
+        R.setProjectName(await basename(R.getProjectPath()));
     }
     catch (err) 
     {
