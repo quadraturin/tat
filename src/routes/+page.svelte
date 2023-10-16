@@ -100,11 +100,12 @@
 <div data-tauri-drag-region class="titlebar">
     <!--<h1>paradiso</h1>-->
     <button class="toolbar-button" on:click={readFiles}>{#if R.getIsLoading()}<IconLoading />{:else}<IconImageFile />{/if}<span>add media</span></button>
-    <!--<button class="toolbar-button" on:click={zap}><IconLevels /><span>mixer</span></button>-->
     <button class="toolbar-button" on:click={() => saveProject(false)}>{#if R.getIsSaving()}<IconLoading />{:else}<IconSave />{/if}<span>save{#if R.getisProjectDirty()}*{/if}</span></button>
     <button class="toolbar-button" on:click={() => saveProject(true)}>{#if R.getIsSaving()}<IconLoading />{:else}<IconSaveAs />{/if}<span>save as{#if R.getisProjectDirty()}*{/if}</span></button>
+    <span class="toolbar-spacer"></span>
     <button class="toolbar-button" on:click={loadProject}>{#if R.getIsLoading()}<IconLoading />{:else}<IconLoad />{/if}<span>load</span></button>
     <button class="toolbar-button"><IconNew /><span>new</span></button>
+    <span class="toolbar-spacer"></span>
     <button class="toolbar-button"><IconSettings /><span>settings</span></button>
     <!--<input accept="audio/wav, audio/mpeg" bind:files id="audioInput" name="audioInput" type="file" />-->
 

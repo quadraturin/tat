@@ -99,6 +99,10 @@ body {
     background-color: var(--highlight-color);
     color: var(--text-color);
 }
+.toolbar-spacer {
+    display: flex;
+    flex-basis: 6px;
+}
 .toolbar-input {
     color: var(--text-color);
     border: 1px solid var(--text-color);
