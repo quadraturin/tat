@@ -16,7 +16,7 @@ export async function saveProject(saveAs=false): Promise<void>
     var sounds: { [key: string]: string | number } = {};
 
     // main project object
-    let project = {
+    let project = { 
         map_0: {
             images,
             sounds

@@ -1,0 +1,39 @@
+{
+    "locale":                   "en-us",
+    "localeName":               "🇺🇸 English (US)",
+
+    "defaultProjectName":       "new project",
+    "projectNotSavedTooltip":   "project has unsaved changes!",
+    "projectSavedTooltip":      "project has no unsaved changes",
+
+    "buttonAddMediaFull":       "add media",
+    "buttonAddMediaShort":      "add",
+    "buttonAddMediaTooltip":    "add images and/or audio files",
+
+    "buttonSaveFull":           "save",
+    "buttonSaveShort":          "sav",
+    "buttonSaveTooltip":        "save the current project",
+
+    "buttonSaveAsFull":         "save as",
+    "buttonSaveAsShort":        "sva",
+    "buttonSaveAsTooltip":      "choose a folder to save the current project to",
+
+    "buttonOpenFull":           "open",
+    "buttonOpenShort":          "opn",
+    "buttonOpenTooltip":        "open a project",
+
+    "buttonNewFull":            "new",
+    "buttonNewShort":           "new",
+    "buttonNewTooltip":         "create a new project",
+
+    "buttonSettingsFull":       "settings",
+    "buttonSettingsShort":      "stg",
+    "buttonSettingsTooltip":    "open the settings panel",
+
+    "buttonZoomInTooltip":      "zoom in",
+    "buttonZoomOutTooltip":     "zoom out",
+
+    "buttonMinimizeTooltip":    "minimize",
+    "buttonMaximizeTooltip":    "maximize",
+    "buttonCloseTooltip":       "close"
+}

@@ -23,6 +23,7 @@
     import IconImageFile from '$lib/icons/iconImageFile.svelte';
     import IconSaveAs from '$lib/icons/iconSaveAs.svelte';
     import IconNew from '$lib/icons/iconNew.svelte'
+	import { clearProject } from '$lib/project.clearProject';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
@@ -124,38 +125,49 @@
 <div data-tauri-drag-region class="titlebar">
     <h1 data-tauri-drag-region title="{titleTooltip}">
         <span data-tauri-drag-region class="project-name">{projectName}</span>
-        <span data-tauri-drag-region>{#if isDirty}*{/if}</span></h1>
+        <span data-tauri-drag-region>{#if isDirty}*{/if}</span>
+    </h1>
+    
     <button class="toolbar-button" title="add media" on:click={readFiles}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconImageFile />{/if}
         <span class="button-title-short">add</span>
         <span class="button-title-full">add media</span>
     </button>
+    
     <button class="toolbar-button" title="save" on:click={() => saveProject(false)}>
         {#if isSaving}<IconLoading />{:else}<IconSave />{/if}
         <span class="button-title-short">sav</span>
         <span class="button-title-full">save</span>
     </button>
+    
     <button class="toolbar-button"  title="save as" on:click={() => saveProject(true)}>
         {#if isSaving}<IconLoading />{:else}<IconSaveAs />{/if}
         <span class="button-title-short">sva</span>
         <span class="button-title-full">save as</span>
     </button>
+    
     <span data-tauri-drag-region class="toolbar-spacer"></span>
+    
     <button class="toolbar-button"  title="open project" on:click={loadProject}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconLoad />{/if}
         <span class="button-title-short">opn</span>
-        <span class="button-title-full">open</span></button>
-    <button class="toolbar-button"  title="new project">
+        <span class="button-title-full">open</span>
+    </button>
+    
+    <button class="toolbar-button"  title="new project" on:click={clearProject}>
         <IconNew />
         <span class="button-title-short">new</span>
         <span class="button-title-full">new</span>
     </button>
+    
     <span data-tauri-drag-region class="toolbar-spacer"></span>
+    
     <button class="toolbar-button"  title="settings">
         <IconSettings />
         <span class="button-title-short">stg</span>
         <span class="button-title-full">settings</span>
     </button>
+    
     <!--<input accept="audio/wav, audio/mpeg" bind:files id="audioInput" name="audioInput" type="file" />-->
 
     <div data-tauri-drag-region class="titlebar-drag"></div>
