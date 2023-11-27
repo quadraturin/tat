@@ -24,9 +24,9 @@ export function getIsSaving():boolean { return isSaving; };
 export function setIsSaving(value:boolean) {isSaving = value; };
 
 // loaded project path
-let projectPath:string;
-export function setProjectPath(p:string) { projectPath = p; };
-export function getProjectPath():string { return projectPath; };
+let projectPath:string | undefined;
+export function setProjectPath(p:string) { projectPath = p; projectPath = projectPath || undefined };
+export function getProjectPath():string|undefined { return projectPath; };
 
 // loaded project path
 let projectName:string;

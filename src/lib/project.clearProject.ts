@@ -27,6 +27,8 @@ export async function clearProject() {
         removeSound(e.circle, false);
     });
     R.setSoundList(new Array<MapSound>);
+
+    R.setProjectPath('');
     
     R.setProjectClean();
     R.setHasMedia(false);

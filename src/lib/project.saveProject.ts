@@ -28,7 +28,7 @@ export async function saveProject(saveAs=false): Promise<boolean>
         // ...check if the project path exists. if not, save as instead...
         if (typeof R.getProjectPath() === 'undefined') saveAs = true;
         // ... if it does exist, save to project path.
-        else filePath = R.getProjectPath();
+        else filePath = R.getProjectPath() as string;
     }
 
     // if saving as (to a new dir)...
@@ -86,7 +86,7 @@ export async function saveProject(saveAs=false): Promise<boolean>
 
     // set the project path & set project state to clean
     R.setProjectPath(filePath);
-    R.setProjectName(await basename(R.getProjectPath()));
+    R.setProjectName(await basename(R.getProjectPath() as string));
     R.setProjectClean();
 
     // leave saving state when done

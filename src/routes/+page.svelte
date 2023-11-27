@@ -99,6 +99,11 @@
         console.log(e);
         if (e.key=="Shift") R.setIsProportionalScaleOn(false);
         else if (e.key == "Alt") R.setIsInDeleteMode(true);
+        else if (e.key == "s" && e.shiftKey && (e.metaKey || e.ctrlKey)) saveProject(true);
+        else if (e.key == "s" && (e.metaKey || e.ctrlKey)) saveProject(false);
+        else if (e.key == "o" && (e.metaKey || e.ctrlKey)) loadProject();
+        else if (e.key == "n" && (e.metaKey || e.ctrlKey)) clearProject();
+        else if (e.key == "m" && (e.metaKey || e.ctrlKey)) readFiles();
     };
     function onKeyUp(e:KeyboardEvent) {
         console.log(e); 
@@ -130,42 +135,42 @@
     
     <button class="toolbar-button" title="add media" on:click={readFiles}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconImageFile />{/if}
-        <span class="button-title-short">add</span>
-        <span class="button-title-full">add media</span>
+        <span class="button-title-short"><span>m</span>ed</span>
+        <span class="button-title-full">add <span>m</span>edia</span>
     </button>
     
     <button class="toolbar-button" title="save" on:click={() => saveProject(false)}>
         {#if isSaving}<IconLoading />{:else}<IconSave />{/if}
-        <span class="button-title-short">sav</span>
-        <span class="button-title-full">save</span>
+        <span class="button-title-short"><span>s</span>av</span>
+        <span class="button-title-full"><span>s</span>ave</span>
     </button>
     
     <button class="toolbar-button"  title="save as" on:click={() => saveProject(true)}>
         {#if isSaving}<IconLoading />{:else}<IconSaveAs />{/if}
-        <span class="button-title-short">sva</span>
-        <span class="button-title-full">save as</span>
+        <span class="button-title-short"><span>S</span>va</span>
+        <span class="button-title-full"><span>S</span>ave as</span>
     </button>
     
     <span data-tauri-drag-region class="toolbar-spacer"></span>
     
     <button class="toolbar-button"  title="open project" on:click={loadProject}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconLoad />{/if}
-        <span class="button-title-short">opn</span>
-        <span class="button-title-full">open</span>
+        <span class="button-title-short"><span>o</span>pn</span>
+        <span class="button-title-full"><span>o</span>pen</span>
     </button>
     
     <button class="toolbar-button"  title="new project" on:click={clearProject}>
         <IconNew />
-        <span class="button-title-short">new</span>
-        <span class="button-title-full">new</span>
+        <span class="button-title-short"><span>n</span>ew</span>
+        <span class="button-title-full"><span>n</span>ew</span>
     </button>
     
     <span data-tauri-drag-region class="toolbar-spacer"></span>
     
     <button class="toolbar-button"  title="settings">
         <IconSettings />
-        <span class="button-title-short">stg</span>
-        <span class="button-title-full">settings</span>
+        <span class="button-title-short">s<span>e</span>t</span>
+        <span class="button-title-full">s<span>e</span>ttings</span>
     </button>
     
     <!--<input accept="audio/wav, audio/mpeg" bind:files id="audioInput" name="audioInput" type="file" />-->
