@@ -12,7 +12,7 @@ import L from "leaflet";
             crs: L.CRS.Simple,
             editable: true,
             minZoom: -5,
-            maxZoom: 20
+            maxZoom: 2
         });
         map.createPane("soundPane").style.zIndex = "450";
         map.setView([height/2, width/2], 1);
@@ -32,7 +32,29 @@ import L from "leaflet";
         map.fitBounds([[0,0], [height, width]] as L.LatLngBoundsExpression);
 
         // trying to add a grid bkg
-        //map.addLayer(new L.TileLayer('data:image/svg+xml, <svg width="10" height="10"><line x1="5" y1="0" x2="5" y2="10" stroke="white" stroke-width="1" /><line x1="0" y1="5" x2="10" y2="5" stroke="white" stroke-width="1" /></svg>'));
         
+        let Grid = L.GridLayer.extend({
+            createTile: function (coords:any) {
+                var tile = document.createElement('div');
+                //tile.style.borderBottom = "1px solid #333";
+                //tile.style.borderRight = "1px solid #333";
+                tile.innerHTML = ".";
+                return tile;
+            },
+            options: {
+                tileSize: 50,
+                maxZoom: 10,
+                minZoom: -5
+            }
+        });
+        
+        let grid = function() {
+            return new Grid();
+        };
+        
+        //map.addLayer( grid() );
+
+        grid().addTo(map);
+
         return map;
     }
