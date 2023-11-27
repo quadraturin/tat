@@ -121,7 +121,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
 
         // called repeatedly while moving the image
         function moveImage(e:L.LeafletEvent) {
-            console.log('moving!');
+            //console.log('moving!');
             
             // raise to front and set drag style
             imageRect.bringToFront().setStyle({color:'white'})
@@ -148,6 +148,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         }
 
         function bringImageToFront() {
+            if (!imageRect.editEnabled()) return;
             overlay.bringToFront();
             imageRect.bringToFront();
         }
