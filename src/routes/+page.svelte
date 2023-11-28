@@ -13,6 +13,7 @@
 	import { saveProject } from '$lib/project.saveProject';
 	import { readFiles } from '$lib/media.readFiles';
 	import { loadProject } from '$lib/project.loadProject';
+    import { removeSelected } from '$lib/media.removeSelected';
     import * as S from '$lib/settings';
 
     // icons
@@ -98,6 +99,7 @@
     function onKeyDown(e:KeyboardEvent) { 
         console.log(e);
         if (e.key=="Shift") R.setIsProportionalScaleOn(false);
+        else if (e.key == "Delete" || e.key == "Backspace") removeSelected();
         else if (e.key == "Alt") R.setIsInDeleteMode(true);
         else if (e.key == "s" && e.shiftKey && (e.metaKey || e.ctrlKey)) saveProject(true);
         else if (e.key == "s" && (e.metaKey || e.ctrlKey)) saveProject(false);

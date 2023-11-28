@@ -99,7 +99,6 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         function stopMoveImage() {
             overlay.setBounds(imageRect.getBounds());
             overlay.setStyle({opacity:1});
-            imageRect.setStyle({color:'coral'})
         }
 
         // called when double-clicking the image (sets/unsets editability)
@@ -143,12 +142,14 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         // brings image and rect to front of respective layers
         function onClick()
         {
+            if (!imageRect.editEnabled()) return;
+            if (R.getIsSelected(imageRect)) R.removeFromSelection(imageRect);
+            else R.addToSelection(imageRect);
             bringImageToFront();
             if (R.getIsInDeleteMode()) removeImage(imageRect);
         }
 
         function bringImageToFront() {
-            if (!imageRect.editEnabled()) return;
             overlay.bringToFront();
             imageRect.bringToFront();
         }
@@ -160,7 +161,8 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
             imageRect.on('dragstart', startMoveImage);
             imageRect.on('drag', (e) => moveImage(e));
             imageRect.on('dragend', stopMoveImage);
-            imageRect.on('click', onClick);
+            imageRect.on('dragend', onClick);
+            imageRect.on('mousedown', onClick);
         }
         
     }

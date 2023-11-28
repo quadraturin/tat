@@ -95,3 +95,31 @@ export function setImageOffset(imageLatLng:L.LatLng):void {
 export function getImageOffset():L.LatLng {
     return imageOffsetFromOrigin;
 }
+
+// map object selection
+let selected = new Array<L.Rectangle|L.Circle|L.Polygon>;
+export function addToSelection(item:L.Rectangle|L.Circle|L.Polygon) {
+    selected.push(item);
+    item.setStyle({color:"white"});
+}
+export function removeFromSelection(item:L.Rectangle|L.Circle|L.Polygon) {
+    for (let i=0;i<selected.length;i++) {
+        if (item === selected[i]) {
+            selected.splice(i,1);
+            break;
+        }
+    }
+    item.setStyle({color:"coral"});
+}
+export function getIsSelected(item:L.Rectangle|L.Circle|L.Polygon):boolean {
+    console.log(selected);
+    for (let i=0;i<selected.length;i++) {
+        if (item === selected[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+export function getSelectedList():Array<L.Rectangle|L.Circle|L.Polygon> {
+    return selected;
+}

@@ -65,10 +65,10 @@ export async function loadSound(filePath:string, x?:number, y?:number, r?:number
         emitter.on('editable:editing', setMapSoundVolumes);
         emitter.on('drag', emitter.bringToFront);
         emitter.on('editable:editing', emitter.bringToFront);
-        emitter.on('dragstart editable:editing', selectEmitter);
-        emitter.on('dragend', deselectEmitter);
-        emitter.on('editable:vertex:dragend', deselectEmitter);
-        emitter.on('click', onClick);
+        emitter.on('dragstart editable:editing', highlightEmitter);
+        emitter.on('dragend', onClick);
+        //emitter.on('editable:vertex:dragend', deselectEmitter);
+        emitter.on('mousedown', onClick);
         //emitter.bindPopup("I am an audio emitter.");
 
         // add this sound to the sound list registry
@@ -82,18 +82,17 @@ export async function loadSound(filePath:string, x?:number, y?:number, r?:number
         R.setHasMedia(true);
         R.setProjectDirty();
 
+        function highlightEmitter() {
+            emitter.setStyle({color:"white"});
+        }
+
         function onClick() {
+            if (!emitter.editEnabled()) return;
+            if (R.getIsSelected(emitter)) R.removeFromSelection(emitter);
+            else R.addToSelection(emitter);
             emitter.bringToFront();
 
             if (R.getIsInDeleteMode()) removeSound(emitter);
-        };
-
-        function selectEmitter(){
-            emitter.setStyle({color:"white"});
-        };
-
-        function deselectEmitter(){
-            emitter.setStyle({color:"coral"});
         };
 
         function toggleSoundEdit(){

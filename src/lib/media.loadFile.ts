@@ -8,12 +8,12 @@ export async function loadFile({ filePath }: { filePath: string; }): Promise<voi
         const ext = await extname(filePath);
         if (imageFileTypes.includes(ext)) {
             // file is an image
-            console.log('file is image: ' + filePath);
+            //console.log('file is image: ' + filePath);
             await loadImage(filePath);
         }
         else if (soundFileTypes.includes(ext)) {
             // file is a sound
-            console.log('file is sound: ' + filePath);
+            //console.log('file is sound: ' + filePath);
             await loadSound(filePath);
         }
     }
