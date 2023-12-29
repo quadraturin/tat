@@ -245,7 +245,7 @@
             you can drag these around and drag the dots on their outlines to resize them.
             you can do this to match sounds with areas of a dungeon, or create a more abstract "mind map" of images and sounds.
             use the "+" and "-" buttons or the scroll wheel to zoom in and out and click and drag on the background to pan around.
-            double-click a sound or image to lock it in place. when an image is locked, its outline will disappear.
+            double-click a sound or image to lock it in place. when an image or sound is locked, its outline will disappear.
             double-click again to unlock it.
         </p>
         <p>
@@ -254,10 +254,32 @@
             and the listener will automatically blend the audio sources that you have placed.
         </p>
         <p>
+            when you save a project, it is saved as a folder containing a "project.json" file describing the project, 
+            a "sounds" folder, and an "images" folder, containing copies of the sounds and images you added, respectively.
+            references to the original files are not saved. 
+        </p>
+        <p>
             this tool was designed and programmed by quadra for <a href="https://www.paradiso.zone" target="_blank">PARADISO</a>,
             originally as a stretch goal reward for the <a href="https://www.kickstarter.com/projects/ultraparadiso/warped-beyond-recognition" target="_blank">warped beyond recognition kickstarter</a>.
             the original prototype was programmed by <a href="https://galendrew.com/" target="_blank">galen drew</a>.
         </p>
+
+        <h2>changelog</h2>
+        <h3>v0.1a -- initial alpha release to kickstarter backers</h3>
+        <ul>
+            <li>import images (.png, .gif, .jpg, .jpeg, .webp) and audio (.wav, .m4a, .mp3, .ogg, .flac) with the "add media" button</li>
+            <li>move images and audio emitters by clicking and dragging them</li>
+            <li>resize images and audio emitters by clicking and dragging the handles on their outlines</li>
+            <li>move the audio listener pin by clicking and dragging across audio emitters to hear the audio</li>
+            <li>save projects with the "save project" button</li>
+            <li>open projects with the "open project" button</li>
+            <li>create new projects with the "new project" button</li>
+            <li>title bar layout adjusts to window size</li>
+            <li>select images and audio emitters by single-clicking (outline will highlight)</li>
+            <li>delete selected images by pressing the delete or backspace key</li>
+            <li>lock and unlock images and audio emitters from editing by double-clicking them</li>
+            <li>click the "about" button to view the about menu with information, changelog, and licenses</li>
+        </ul>
 
         <h2>tech and licences</h2>
         <p>

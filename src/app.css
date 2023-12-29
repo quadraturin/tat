@@ -243,10 +243,26 @@ a { color: var(--highlight-color); }
     background-color: var(--background-color);
     width: 5px;
 }
+.menu::-webkit-scrollbar:horizontal {
+    height: 5px;
+}
+.menu::-webkit-scrollbar-corner, .menu::-webkit-resizer {
+    background-color: var(--text-color);
+}
 .menu::-webkit-scrollbar-thumb {
     background-color: var(--text-color);
 }
-.menu h3 {margin-top: 1rem;}
+.menu h2, .menu h3 {margin-top: 1rem;}
+
+.menu h2 {
+    color: var(--background-color);
+    background-color: var(--text-color);
+    padding: 0 8px;
+}
+
+.menu h3 {
+    text-decoration: underline;
+}
 
 /* responsive styles */
 
