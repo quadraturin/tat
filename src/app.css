@@ -46,6 +46,11 @@ html {
 body {
     display: flex;
 }
+
+p { margin-bottom: 1rem; }
+
+a { color: var(--highlight-color); }
+
 #map-wrapper {
     width: 100%;
     height: calc(100% - var(--title-bar-height));
@@ -70,7 +75,6 @@ body {
     display: block;
     font-size: 10pt;
     padding: 6px 5px;
-    user-select: none;
 }
 .titlebar-drag {
     flex: auto;
@@ -119,7 +123,6 @@ body {
     height: var(--title-bar-height);
     width: 100%;
     background: var(--text-color);
-    user-select: none;
     display: flex;
     justify-content: flex-end;
     position: fixed;
@@ -129,7 +132,7 @@ body {
     z-index: 100;
     color: var(--background-color);
 }
-.titlebar * {
+.titlebar, .titlebar * {
     -webkit-user-select: none;  /* Chrome all / Safari all */
     -moz-user-select: none;     /* Firefox all */
     -ms-user-select: none;      /* IE 10+ */
@@ -184,6 +187,7 @@ body {
     background-color: var(--text-color);
     color: var(--background-color);
     user-select: none;
+    -webkit-user-select: none;
     border: none;
 }
 .leaflet-bar a:hover{
@@ -202,6 +206,47 @@ body {
     border: none;
     border-radius: 9999px;
 }
+
+/* bottom media browser */
+#browser {
+    z-index: 10000;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--text-color);
+    color: var(--background-color);
+    padding: 2px;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+/* menus*/
+
+.menu {
+    z-index: 10000;
+    position: absolute;
+    top: var(--title-bar-height);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: 2px solid var(--text-color);
+    border-top: none;
+    width: 100%;
+    height: calc(100% - 30px);
+    padding: 1rem 5rem;
+    display: none;
+    font-size: 0.8rem;
+    overflow-y: scroll;
+    scrollbar-color: var(--text-color) var(--background-color);
+}
+.menu::-webkit-scrollbar {
+    background-color: var(--background-color);
+    width: 5px;
+}
+.menu::-webkit-scrollbar-thumb {
+    background-color: var(--text-color);
+}
+.menu h3 {margin-top: 1rem;}
 
 /* responsive styles */
 

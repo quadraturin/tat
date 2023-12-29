@@ -123,3 +123,19 @@ export function getIsSelected(item:L.Rectangle|L.Circle|L.Polygon):boolean {
 export function getSelectedList():Array<L.Rectangle|L.Circle|L.Polygon> {
     return selected;
 }
+
+// menu state
+let aboutMenuOpen = false;
+let settingsMenuOpen = false;
+export function getIsAboutMenuOpen():boolean {
+    return aboutMenuOpen;
+}
+export function setIsAboutMenuOpen(val:boolean) {
+    aboutMenuOpen = val;
+}
+export function getIsSettingsMenuOpen():boolean {
+    return settingsMenuOpen;
+}
+export function setIsSettingsMenuOpen(val:boolean) {
+    settingsMenuOpen = val;
+}

@@ -15,6 +15,9 @@
       "window": {
         "all": true
       },
+      "shell": {
+        "all": true
+      },
       "path":{
         "all": true
       },

@@ -1,3 +1,4 @@
+import type { event } from "@tauri-apps/api";
 import L from "leaflet";
 
     // set up the initial map state
@@ -12,11 +13,37 @@ import L from "leaflet";
             crs: L.CRS.Simple,
             editable: true,
             minZoom: -5,
-            maxZoom: 2
+            maxZoom: 2,
+            contextmenu: true,
+            contextmenuItems: [{
+                text: 'center map here',
+                callback: centerMap
+            },
+            {
+                text: 'zoom in',
+                callback: zoomIn
+            },
+            {
+                text: 'zoom out',
+                callback: zoomOut
+            }]
         });
         map.createPane("soundPane").style.zIndex = "450";
         map.setView([height/2, width/2], 1);
         map.dragging.enable();
+
+        // TODO: get correct types
+        function centerMap (e:any) {
+            map.panTo(e.latlng);
+        }
+         
+        function zoomIn (e:any) {
+            map.zoomIn();
+        }
+         
+        function zoomOut (e:any) {
+            map.zoomOut();
+        }
 
         /*// test polygon
         let polygon: L.Polygon<Draggable> = L.polygon([
