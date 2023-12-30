@@ -90,6 +90,12 @@ a { color: var(--highlight-color); }
     font-size: 10pt;
     display: flex;
 }
+.toolbar-button.selected {
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    color: var(--highlight-color);
+}
 .toolbar-button svg {
     display: inline-block;
     margin: 1px;

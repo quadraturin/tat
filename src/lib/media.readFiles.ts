@@ -2,10 +2,14 @@ import * as R from '$lib/registry'
 import { open } from "@tauri-apps/api/dialog";
 import { imageFileTypes, soundFileTypes } from '$lib/settings';
 import { loadFile } from "./media.loadFile";
+import { closeAllMenus } from './menus';
 
 // read in valid files, handle loading state
 export async function readFiles(): Promise<void> {
     try {
+
+        await closeAllMenus();
+        
         // prompt to open one or more image or audio files
         const selected = await open({
             multiple: true,

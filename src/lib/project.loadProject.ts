@@ -6,11 +6,14 @@ import { loadImage } from './media.loadImage';
 import { loadSound } from './media.loadSound';
 import * as R from '$lib/registry'
 import { clearProject } from './project.clearProject';
+import { closeAllMenus } from './menus';
 
 export async function loadProject() 
 {
     try 
     {
+        await closeAllMenus();
+
         await clearProject();
 
         const filePath = await open(
@@ -52,7 +55,7 @@ export async function loadProject()
             }
         }
         R.setProjectClean();
-        R.setProjectName(await basename(R.getProjectPath()));
+        R.setProjectName(await basename(R.getProjectPath() as string));
     }
     catch (err) 
     {

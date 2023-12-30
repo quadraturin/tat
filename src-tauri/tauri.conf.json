@@ -7,7 +7,7 @@
     "distDir": "../build"
   },
   "package": {
-    "productName": "Tabletop Audio",
+    "productName": "tat",
     "version": "0.1.0"
   },
   "tauri": {
@@ -59,7 +59,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "zone.paradiso.tabletopaudio",
+      "identifier": "zone.paradiso.tat",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -88,7 +88,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "Paradiso Tabletop Audio Tool",
+        "title": "tat",
         "width": 800,
         "decorations": false
       }
