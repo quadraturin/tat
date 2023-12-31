@@ -6,14 +6,12 @@ import { loadImage } from './media.loadImage';
 import { loadSound } from './media.loadSound';
 import * as R from '$lib/registry'
 import { clearProject } from './project.clearProject';
-import { closeAllMenus } from './menu.menus';
-import { closeLoadingModal, openLoadingModal } from './menu.modals';
+import { closeModal, openLoadingModal } from './menu.modals';
 
 export async function loadProject() 
 {
     try 
     {
-
         const filePath = await open(
         {
             directory: true,
@@ -28,6 +26,8 @@ export async function loadProject()
 
         // try clearing the project. if it doesn't get cleared, back out.
         if (!await clearProject()) return;
+
+        console.log('hellooo');
 
         // if project.json exists in the folder, read it
         const jsonPath = await join(filePath as string, 'project.json');
@@ -49,19 +49,20 @@ export async function loadProject()
 
         let promises = new Array<Promise<any>>;
 
-        for (const pMap in project) {
-            for (const pImage in project[pMap].images) {
-                const obj = project[pMap].images[pImage];
+        for (let i=0; i<project.maps.length; i++) {
+            for (let j=0; j<project.maps[i].images.length; j++) {
+                console.log(i,j);
+                const obj = project.maps[i].images[j];
                 promises.push(loadImage(await join(filePath as string, 'images', obj.src), obj.x, obj.y, obj.width, obj.height));
             }
-            for (const pSound in project[pMap].sounds) {
-                const obj = project[pMap].sounds[pSound];
+            for (let j=0; j<project.maps[i].sounds.length; j++) {
+                const obj = project.maps[i].sounds[j];
                 promises.push(loadSound(await join(filePath as string, 'sounds', obj.src), obj.x, obj.y, obj.radius));
             }
         }
         await Promise.allSettled(promises);
         R.setProjectClean();
-        closeLoadingModal();
+        closeModal();
     }
     catch (err) 
     {

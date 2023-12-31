@@ -1,8 +1,8 @@
 export function openLoadingModal(projectName?:string) {
-    let element = document.getElementById("modal-loading-title");
+    let element = document.getElementById("modal-title");
     if (element != null) {
         if (projectName !== undefined) {
-            element.innerHTML = 'loading project "' + projectName + '"...';
+            element.innerHTML = `loading project "${projectName}"...`;
         } else {
             element.innerHTML = 'loading files...'
         }
@@ -11,16 +11,24 @@ export function openLoadingModal(projectName?:string) {
 }
 
 export function updateLoadingModal(filePath:string) {
-    let element = document.getElementById("modal-loading-filepath");
+    let element = document.getElementById("modal-text");
     if (element != null){
         element.innerHTML = element.innerText + "<br />" + filePath;
     }
 }
 
-export function closeLoadingModal() {
+export function closeModal() {
     document.getElementById("modal-background")?.setAttribute("style", "display:none");
-    let element = document.getElementById("modal-loading-filepath");
+    let element = document.getElementById("modal-text");
     if (element != null){
         element.innerHTML = "";
     }
+}
+
+export function openSavingModal(projectName:string) {
+    let element = document.getElementById("modal-title");
+    if (element != null) {
+        element.innerHTML = `saving project "${projectName}"...`;
+    }
+    document.getElementById("modal-background")?.setAttribute("style", "display:block");
 }

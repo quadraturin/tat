@@ -3,7 +3,7 @@ import { open } from "@tauri-apps/api/dialog";
 import { imageFileTypes, soundFileTypes } from '$lib/settings';
 import { loadFile } from "./media.loadFile";
 import { closeAllMenus } from './menu.menus';
-import { closeLoadingModal, openLoadingModal, updateLoadingModal } from './menu.modals';
+import { closeModal, openLoadingModal, updateLoadingModal } from './menu.modals';
 
 // read in valid files, handle loading state
 export async function readFiles(): Promise<void> {
@@ -36,7 +36,7 @@ export async function readFiles(): Promise<void> {
             });
             await Promise.allSettled(promises);
             R.setIsLoading(false);
-            closeLoadingModal();
+            closeModal();
         }
     }
     catch (err) {

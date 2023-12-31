@@ -5,6 +5,7 @@ import { join, basename } from "@tauri-apps/api/path";
 import type { MapImage } from './classes/MapImage';
 import type { MapSound } from './classes/MapSound';
 import { closeAllMenus } from './menu.menus';
+import { closeModal, openSavingModal } from './menu.modals';
 
 export async function saveProject(saveAs=false): Promise<boolean> 
 {
@@ -14,16 +15,14 @@ export async function saveProject(saveAs=false): Promise<boolean>
     const soundList = R.getSoundList();
     let filePath: string | null = "";
 
-    // objects for storing map data that will be JSONified
-    var images: { [key: string]: string | number } = {};
-    var sounds: { [key: string]: string | number } = {};
-
     // main project object
     let project = { 
-        map_0: {
-            images,
-            sounds
-        }
+        maps: [
+            {
+            images: new Array<any>,
+            sounds: new Array<any>
+            }
+        ]
     }
 
     // if saving over the current project...
@@ -41,9 +40,13 @@ export async function saveProject(saveAs=false): Promise<boolean>
         // ...cancel if they back out.
         if (filePath === null) return false;
     }
+    
 
     // if they didn't back out, we are now in saving state
     R.setIsSaving(true);
+    let newProjectName = await basename(filePath as string);
+    openSavingModal(newProjectName);
+    let promises = new Array<Promise<any>>;
 
     // make a project directory with 'sounds' and 'images' directories inside
     await createDir(filePath, { recursive: true });
@@ -53,49 +56,50 @@ export async function saveProject(saveAs=false): Promise<boolean>
     // cycle through loaded images, adding each to the project object
     let i = 0;
     imageList.forEach(e => {
-        const imageID = "image_" + i.toString();
-        project.map_0.images = Object.assign ({[imageID]: // only supporting 1 map for now
-        {
+        project.maps[0].images[i] = {
             src: e.data.name,
             x: e.overlay.getBounds().getWest(),
             y: e.overlay.getBounds().getSouth(),
+            z: window.getComputedStyle(e.rect.getElement() as Element).zIndex,
             width: e.overlay.getBounds().getEast() - e.overlay.getBounds().getWest(),
             height: e.overlay.getBounds().getNorth() - e.overlay.getBounds().getSouth(),
             originalWidth: e.originalWidth,
             originalHeight: e.originalHeight
-        }}, project.map_0.images);
-        writeImageFile(e, filePath as string);
+        }
+        promises.push(writeImageFile(e, filePath as string));
         i++;
     });
 
     // cycle through loaded sounds, adding each to the project object
     i = 0;
     soundList.forEach(e => {
-        const soundID = "sound_" + i.toString();
-        project.map_0.sounds = Object.assign({[soundID]: // only supporting 1 map for now
+        project.maps[0].sounds[i] = 
         {
             src: e.data.name,
             x: e.circle.getLatLng().lng,
             y: e.circle.getLatLng().lat,
+            z: window.getComputedStyle(e.circle.getElement() as Element).zIndex,
             radius: e.circle.getRadius()
-        }}, project.map_0.sounds);
-        writeSoundFile(e, filePath as string);
+        }
+        promises.push(writeSoundFile(e, filePath as string));
         i++;
     });
 
     // write the project JSON
     console.log(project);
-    await writeTextFile(await join(filePath, 'project.json'), JSON.stringify(project));
+    promises.push(writeTextFile(await join(filePath, 'project.json'), JSON.stringify(project)));
 
     // set the project path & set project state to clean
     R.setProjectPath(filePath);
-    R.setProjectName(await basename(R.getProjectPath() as string));
+    R.setProjectName(newProjectName);
     R.setProjectClean();
 
     // leave saving state when done
+    await Promise.allSettled(promises);
     R.setIsSaving(false);
 
     await message('project saved!');
+    closeModal();
 
     return true;
 }

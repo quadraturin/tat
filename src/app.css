@@ -213,6 +213,7 @@ a { color: var(--highlight-color); }
     border-radius: 9999px;
 }
 
+
 /* bottom media browser */
 #browser {
     z-index: 10000;
@@ -281,7 +282,7 @@ a { color: var(--highlight-color); }
     background-color: rgba(0,0,0,0.8);
     display: none;
 }
-#modal-loading {
+#modal {
     width: 80%;
     max-width: 50rem;
     margin: 10% auto;
@@ -289,10 +290,10 @@ a { color: var(--highlight-color); }
     background-color: var(--text-color);
     color: var(--background-color);
 }
-#modal-loading svg {
+#modal svg {
     display: inline-block;
 }
-#modal-loading p {
+#modal p {
     font-weight: bold;
     font-size: 0.7rem;
 }

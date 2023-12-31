@@ -2,7 +2,7 @@ import { extname } from '@tauri-apps/api/path';
 import { imageFileTypes, soundFileTypes } from '$lib/settings';
 import { loadSound } from "./media.loadSound";
 import { loadImage } from "./media.loadImage";
-import { closeLoadingModal, openLoadingModal } from './menu.modals';
+import { closeModal, openLoadingModal } from './menu.modals';
 
 export async function loadFile({ filePath }: { filePath: string; }): Promise<void> {
     try {
