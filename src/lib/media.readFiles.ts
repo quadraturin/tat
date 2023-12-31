@@ -2,14 +2,15 @@ import * as R from '$lib/registry'
 import { open } from "@tauri-apps/api/dialog";
 import { imageFileTypes, soundFileTypes } from '$lib/settings';
 import { loadFile } from "./media.loadFile";
-import { closeAllMenus } from './menus';
+import { closeAllMenus } from './menu.menus';
+import { closeLoadingModal, openLoadingModal, updateLoadingModal } from './menu.modals';
 
 // read in valid files, handle loading state
 export async function readFiles(): Promise<void> {
     try {
 
         await closeAllMenus();
-        
+
         // prompt to open one or more image or audio files
         const selected = await open({
             multiple: true,
@@ -27,25 +28,19 @@ export async function readFiles(): Promise<void> {
             return;
         }
         else if (Array.isArray(selected)) {
-            // user selected multiple files
-            console.log('selected multiple files');
+            let promises = new Array<Promise<any>>;
+            openLoadingModal();
             R.setIsLoading(true);
             selected.forEach(e => {
-                loadFile({ filePath: e as string });
+                promises.push(loadFile({ filePath: e as string }));
             });
+            await Promise.allSettled(promises);
             R.setIsLoading(false);
-        }
-        else {
-            // user selected a single file -- not sure this ever gets called
-            console.log('selected single file');
-            R.setIsLoading(true);
-            loadFile({ filePath: selected as string });
-            R.setIsLoading(false);
+            closeLoadingModal();
         }
     }
     catch (err) {
         console.error(err);
     }
 }
-
 

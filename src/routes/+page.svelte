@@ -26,12 +26,13 @@
     import IconSaveAs from '$lib/icons/iconSaveAs.svelte';
     import IconNew from '$lib/icons/iconNew.svelte'
 	import { clearProject } from '$lib/project.clearProject';
-	import { toggleAboutMenu } from '$lib/menus';
+	import { toggleAboutMenu } from '$lib/menu.menus';
 	import IconAbout from '$lib/icons/iconAbout.svelte';
 	import About from '$lib/menus/about.svelte';
-	import Modal from '$lib/menus/modal.svelte';
+	import Modal from '$lib/menus/loading.svelte';
 	import Settings from '$lib/menus/settings.svelte';
 	import { tryQuit } from '$lib/quit';
+	import Loading from '$lib/menus/loading.svelte';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
@@ -228,7 +229,7 @@
 
 <About />
 
-<Modal />
+<Loading />
 
 <div id="toolbar">
 </div>

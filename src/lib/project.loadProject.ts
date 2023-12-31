@@ -6,15 +6,13 @@ import { loadImage } from './media.loadImage';
 import { loadSound } from './media.loadSound';
 import * as R from '$lib/registry'
 import { clearProject } from './project.clearProject';
-import { closeAllMenus } from './menus';
+import { closeAllMenus } from './menu.menus';
+import { closeLoadingModal, openLoadingModal } from './menu.modals';
 
 export async function loadProject() 
 {
     try 
     {
-        await closeAllMenus();
-
-        await clearProject();
 
         const filePath = await open(
         {
@@ -22,11 +20,14 @@ export async function loadProject()
             recursive: true,
             multiple: false,
             filters: [{
-                name: 'TabletopAudio',
+                name: 'tat',
                 extensions: [projectExt]
             }]
         });
         if (filePath === null) { return; } // user cancelled the selection 
+
+        // try clearing the project. if it doesn't get cleared, back out.
+        if (!await clearProject()) return;
 
         // if project.json exists in the folder, read it
         const jsonPath = await join(filePath as string, 'project.json');
@@ -42,20 +43,25 @@ export async function loadProject()
 
         console.log(project);
 
-        R.setProjectName("loading");
+        let projectName = await basename(R.getProjectPath() as string)
+        R.setProjectName(projectName);
+        openLoadingModal(projectName);
+
+        let promises = new Array<Promise<any>>;
 
         for (const pMap in project) {
             for (const pImage in project[pMap].images) {
                 const obj = project[pMap].images[pImage];
-                loadImage(await join(filePath as string, 'images', obj.src), obj.x, obj.y, obj.width, obj.height);
+                promises.push(loadImage(await join(filePath as string, 'images', obj.src), obj.x, obj.y, obj.width, obj.height));
             }
             for (const pSound in project[pMap].sounds) {
                 const obj = project[pMap].sounds[pSound];
-                loadSound(await join(filePath as string, 'sounds', obj.src), obj.x, obj.y, obj.radius);
+                promises.push(loadSound(await join(filePath as string, 'sounds', obj.src), obj.x, obj.y, obj.radius));
             }
         }
+        await Promise.allSettled(promises);
         R.setProjectClean();
-        R.setProjectName(await basename(R.getProjectPath() as string));
+        closeLoadingModal();
     }
     catch (err) 
     {

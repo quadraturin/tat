@@ -4,9 +4,11 @@ import { basename, extname } from '@tauri-apps/api/path';
 import L from 'leaflet';
 import 'leaflet-editable';
 import { removeImage } from './media.removeImage';
+import { updateLoadingModal } from './menu.modals';
 
 export async function loadImage(filePath:string, x?:number, y?:number, w?:number, h?:number, ow?:number, oh?:number): Promise<void> {
     try {
+        updateLoadingModal(filePath);
         // read in the image data
         const content = await readBinaryFile(filePath);
 
@@ -60,7 +62,8 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
             color: 'coral',
             fillColor: 'coral',
             opacity: 1,
-            fillOpacity: 0
+            fillOpacity: 0,
+            weight: 1
         }).addTo(map);
         imageRect.enableEdit();
         imageRect.on('dblclick', L.DomEvent.stop).on('dblclick', toggleImageEdit);

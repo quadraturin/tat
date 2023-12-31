@@ -8,12 +8,14 @@ import 'leaflet.path.drag';
 import { setMapSoundVolumes } from './project.setMapSoundVolumes';
 import { Howl } from "howler";
 import { removeSound } from './media.removeSound';
+import { updateLoadingModal } from './menu.modals';
 
 
 export async function loadSound(filePath:string, x?:number, y?:number, r?:number): Promise<void> 
 {
     try 
     {
+        updateLoadingModal(filePath);
         var lat = y;
         var lng = x;
         var rad = r;
@@ -53,9 +55,10 @@ export async function loadSound(filePath:string, x?:number, y?:number, r?:number
         {
             color: 'coral',
             fillColor: 'coral',
-            fillOpacity: 0.5,
+            fillOpacity: 0.2,
             radius: rad,
-            pane: 'soundPane'
+            pane: 'soundPane',
+            weight: 1
         }).addTo(R.getMap());
         
         // emitter settings
