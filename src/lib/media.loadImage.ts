@@ -49,12 +49,18 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         // grab the map
         const map = R.getMap();
 
+        // create image id #
+        let id = R.getImageList().length;
+
         // create image overlay
         let bounds = [[lat,lng], [height,width]] as L.LatLngBoundsExpression;
-        let overlay = L.imageOverlay(mapImageURL, bounds, 
+        
+        let overlay = L.imageOverlay(mapImageURL, bounds,
         {
-            interactive:true
+            interactive: true,
+            className: "id-" + id
         }).addTo(map);
+        overlay.bringToFront();
         
 
         // create rectangle over image
@@ -72,7 +78,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         editImage();
 
         // add image data to registry
-        R.addToImageList(file, overlay, imageRect, width, height);
+        R.addToImageList(file, overlay, imageRect, width, height, id);
 
         // center and frame the image
         map.flyToBounds(bounds);
@@ -155,6 +161,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         function bringImageToFront() {
             overlay.bringToFront();
             imageRect.bringToFront();
+            R.moveImageToEndOfList(overlay);
         }
 
         // sets interactive event handlers for the image

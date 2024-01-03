@@ -1,4 +1,4 @@
-import L from "leaflet";
+import L, { ImageOverlay } from "leaflet";
 import { MapImage } from "./classes/MapImage";
 import { MapSound } from "./classes/MapSound";
 import type { MapInfo } from "./classes/MapInfo";
@@ -53,8 +53,22 @@ export function setMapList(newMapList:Array<MapInfo>) { mapList = newMapList; };
 let imageList = new Array<MapImage>;
 export function getImageList():Array<MapImage> { return imageList; };
 export function setImageList(newImageList:Array<MapImage>) { imageList = newImageList; };
-export function addToImageList(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, w:number, h:number) {
+export function addToImageList(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, w:number, h:number, id:number) {
     imageList.push(new MapImage(data, overlay, rect, w, h))
+}
+export function moveImageToEndOfList(overlay:ImageOverlay) {
+    // moves image to end of list -- required for save/load as order determines stacking
+    for (let i=0; i < imageList.length; i++) {
+        if (imageList[i].overlay == overlay) {
+            console.log('splicin')
+            imageList.push(imageList.splice(i,1)[0]);
+            break;
+        }
+    }
+}
+export function moveImageToStartOfList(i:number) {
+    // moves image to start of list -- required for save/load as order determines stacking
+    imageList.splice(0,0,imageList.splice(i,1)[0]);
 }
 
 // list of sounds
@@ -90,7 +104,7 @@ export function resetDragOffset() {
 let imageOffsetFromOrigin = L.latLng(0,0);
 export function setImageOffset(imageLatLng:L.LatLng):void {
     imageOffsetFromOrigin = imageLatLng;
-    console.log("offset", imageOffsetFromOrigin);
+    //console.log("offset", imageOffsetFromOrigin);
 }
 export function getImageOffset():L.LatLng {
     return imageOffsetFromOrigin;
@@ -112,7 +126,7 @@ export function removeFromSelection(item:L.Rectangle|L.Circle|L.Polygon) {
     item.setStyle({color:"coral"});
 }
 export function getIsSelected(item:L.Rectangle|L.Circle|L.Polygon):boolean {
-    console.log(selected);
+    //console.log(selected);
     for (let i=0;i<selected.length;i++) {
         if (item === selected[i]) {
             return true;

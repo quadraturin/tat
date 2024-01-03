@@ -60,7 +60,6 @@ export async function saveProject(saveAs=false): Promise<boolean>
             src: e.data.name,
             x: e.overlay.getBounds().getWest(),
             y: e.overlay.getBounds().getSouth(),
-            z: window.getComputedStyle(e.rect.getElement() as Element).zIndex,
             width: e.overlay.getBounds().getEast() - e.overlay.getBounds().getWest(),
             height: e.overlay.getBounds().getNorth() - e.overlay.getBounds().getSouth(),
             originalWidth: e.originalWidth,
@@ -78,7 +77,6 @@ export async function saveProject(saveAs=false): Promise<boolean>
             src: e.data.name,
             x: e.circle.getLatLng().lng,
             y: e.circle.getLatLng().lat,
-            z: window.getComputedStyle(e.circle.getElement() as Element).zIndex,
             radius: e.circle.getRadius()
         }
         promises.push(writeSoundFile(e, filePath as string));
