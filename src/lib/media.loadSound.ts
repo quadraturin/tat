@@ -1,5 +1,5 @@
 import * as R from '$lib/registry';
-import { readBinaryFile } from "@tauri-apps/api/fs";
+import { readFile } from "@tauri-apps/plugin-fs";
 import { basename, extname } from "@tauri-apps/api/path";
 import { getRandomPointInViewport } from "./util.getRandomPointInViewport";
 import L from "leaflet";
@@ -23,7 +23,7 @@ export async function loadSound(filePath:string, x?:number, y?:number, r?:number
         var point:L.LatLng;
 
         // read in the sound data
-        const content = await readBinaryFile(filePath);
+        const content = await readFile(filePath);
 
         // get the filename from the path
         const fileName = await basename(filePath);

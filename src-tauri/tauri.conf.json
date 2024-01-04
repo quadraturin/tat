@@ -10,40 +10,14 @@
     "productName": "tat",
     "version": "0.1.0"
   },
+  "plugins": {
+    "fs": {
+      "scope": [
+        "**"
+      ]
+    }
+  },
   "tauri": {
-    "allowlist": {
-      "window": {
-        "all": true
-      },
-      "shell": {
-        "all": true
-      },
-      "path":{
-        "all": true
-      },
-      "dialog": {
-        "all": true,
-        "ask": true,
-        "confirm": true,
-        "message": true,
-        "open": true,
-        "save": true
-      },
-      "fs": {
-        "scope":["**"],
-        "all": true,
-        "readFile": true,
-        "writeFile": true,
-        "copyFile": true,
-        "readDir": true,
-        "createDir": true,
-        "removeDir": true,
-        "removeFile": true,
-        "renameFile": true,
-        "exists": true
-      },
-      "all": false
-    },
     "bundle": {
       "active": true,
       "category": "DeveloperTool",
@@ -80,17 +54,14 @@
     "security": {
       "csp": null
     },
-    "updater": {
-      "active": false
-    },
     "windows": [
       {
+        "decorations": false,
         "fullscreen": false,
         "height": 600,
         "resizable": true,
         "title": "tat",
-        "width": 800,
-        "decorations": false
+        "width": 800
       }
     ]
   }

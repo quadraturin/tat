@@ -1,5 +1,5 @@
 import * as R from '$lib/registry'
-import { readBinaryFile } from "@tauri-apps/api/fs";
+import { readFile } from "@tauri-apps/plugin-fs";
 import { basename, extname } from '@tauri-apps/api/path';
 import L from 'leaflet';
 import 'leaflet-editable';
@@ -10,7 +10,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
     try {
         updateLoadingModal(filePath);
         // read in the image data
-        const content = await readBinaryFile(filePath);
+        const content = await readFile(filePath);
 
         let lat = y;
         let lng = x;

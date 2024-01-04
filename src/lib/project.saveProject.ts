@@ -1,6 +1,6 @@
 import * as R from '$lib/registry';
-import { message, save } from "@tauri-apps/api/dialog";
-import { createDir, writeTextFile, writeBinaryFile, exists } from "@tauri-apps/api/fs";
+import { message, save } from "@tauri-apps/plugin-dialog";
+import { mkdir, writeTextFile, writeFile, exists } from "@tauri-apps/plugin-fs";
 import { join, basename } from "@tauri-apps/api/path";
 import type { MapImage } from './classes/MapImage';
 import type { MapSound } from './classes/MapSound';
@@ -49,9 +49,9 @@ export async function saveProject(saveAs=false): Promise<boolean>
     let promises = new Array<Promise<any>>;
 
     // make a project directory with 'sounds' and 'images' directories inside
-    await createDir(filePath, { recursive: true });
-    await createDir(await join(filePath, 'sounds'), { recursive: true });
-    await createDir(await join(filePath, 'images'), { recursive: true });
+    await mkdir(filePath, { recursive: true });
+    await mkdir(await join(filePath, 'sounds'), { recursive: true });
+    await mkdir(await join(filePath, 'images'), { recursive: true });
 
     // cycle through loaded images, adding each to the project object
     let i = 0;
@@ -107,7 +107,9 @@ async function writeImageFile(e:MapImage, filePath:string) {
     const fullPath = await join(filePath, 'images', e.data.name);
 
     if (await exists(fullPath)) console.log(`${fullPath} already exists. skipping write.`);
-    else writeBinaryFile(fullPath, await e.data.arrayBuffer());
+    else writeFile(fullPath, await e.data.arrayBuffer().then(buff => {
+        return new Uint8Array(buff);
+    }));
 }
 
 // writes sound file to images folder if the specified sound doesn't already exist there
@@ -115,5 +117,7 @@ async function writeSoundFile(e:MapSound, filePath:string) {
     const fullPath = await join(filePath, 'sounds', e.data.name);
 
     if (await exists(fullPath)) console.log(`${fullPath} already exists. skipping write.`);
-    else writeBinaryFile(fullPath, await e.data.arrayBuffer());
+    else writeFile(fullPath, await e.data.arrayBuffer().then(buff => {
+        return new Uint8Array(buff);
+    }));
 }

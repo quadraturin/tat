@@ -1,4 +1,4 @@
-import { ask, message } from "@tauri-apps/api/dialog";
+import { ask, message } from "@tauri-apps/plugin-dialog";
 import { getisProjectDirty } from "./registry";
 import { appWindow } from "@tauri-apps/api/window";
 

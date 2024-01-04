@@ -1,6 +1,6 @@
-import { open } from '@tauri-apps/api/dialog';
+import { open } from '@tauri-apps/plugin-dialog';
 import { projectExt } from './settings';
-import { exists, readTextFile } from '@tauri-apps/api/fs';
+import { exists, readTextFile } from '@tauri-apps/plugin-fs';
 import { basename, join } from '@tauri-apps/api/path';
 import { loadImage } from './media.loadImage';
 import { loadSound } from './media.loadSound';
