@@ -223,7 +223,23 @@
     -webkit-app-region: drag;">
 </div>-->
 
-<div id="browser">test</div>
+<div id="browser">
+    <div class="item">
+        <span class="item-qty">1x</span>
+        <span class="item-name">test.gif</span>
+        <span class="item-add">+</span>
+    </div>
+    <div class="item">
+        <span class="item-qty">3x</span>
+        <span class="item-name">testing testing testing.jpeg</span>
+        <span class="item-add">+</span>
+    </div>
+    <div class="item">
+        <span class="item-qty">2x</span>
+        <span class="item-name">something - or another.mp3</span>
+        <span class="item-add">+</span>
+    </div>
+</div>
 
 <Settings />
 
