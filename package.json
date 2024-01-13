@@ -33,7 +33,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@tauri-apps/api": "^1.5.0",
+		"@tauri-apps/api": "^1.5.3",
 		"@turf/turf": "^6.5.0",
 		"@types/howler": "^2.2.9",
 		"@types/leaflet-contextmenu": "^1.4.3",

@@ -2,8 +2,8 @@ import * as R from '$lib/registry'
 import { open } from "@tauri-apps/api/dialog";
 import { imageFileTypes, soundFileTypes } from '$lib/settings';
 import { loadFile } from "./media.loadFile";
-import { closeAllMenus } from './menu.menus';
-import { closeModal, openLoadingModal, updateLoadingModal } from './menu.modals';
+import { closeAllMenus } from './ui.menus';
+import { closeModal, openLoadingModal, updateLoadingModal } from './ui.modals';
 
 // read in valid files, handle loading state
 export async function readFiles(): Promise<void> {

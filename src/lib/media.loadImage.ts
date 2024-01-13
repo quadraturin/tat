@@ -4,7 +4,7 @@ import { basename, extname } from '@tauri-apps/api/path';
 import L from 'leaflet';
 import 'leaflet-editable';
 import { removeImage } from './media.removeImage';
-import { updateLoadingModal } from './menu.modals';
+import { updateLoadingModal } from './ui.modals';
 
 export async function loadImage(filePath:string, x?:number, y?:number, w?:number, h?:number, ow?:number, oh?:number): Promise<void> {
     try {

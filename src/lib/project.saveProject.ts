@@ -4,8 +4,8 @@ import { createDir, writeTextFile, writeBinaryFile, exists } from "@tauri-apps/a
 import { join, basename } from "@tauri-apps/api/path";
 import type { MapImage } from './classes/MapImage';
 import type { MapSound } from './classes/MapSound';
-import { closeAllMenus } from './menu.menus';
-import { closeModal, openSavingModal } from './menu.modals';
+import { closeAllMenus } from './ui.menus';
+import { closeModal, openSavingModal } from './ui.modals';
 
 export async function saveProject(saveAs=false): Promise<boolean> 
 {

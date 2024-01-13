@@ -6,7 +6,7 @@ import { loadImage } from './media.loadImage';
 import { loadSound } from './media.loadSound';
 import * as R from '$lib/registry'
 import { clearProject } from './project.clearProject';
-import { closeModal, openLoadingModal } from './menu.modals';
+import { closeModal, openLoadingModal } from './ui.modals';
 
 export async function loadProject() 
 {

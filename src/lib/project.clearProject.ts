@@ -6,7 +6,7 @@ import type { MapSound } from "./classes/MapSound";
 import type { MapImage } from "./classes/MapImage";
 import { shouldSaveProject } from "./project.shouldSaveProject";
 import { saveProject } from "./project.saveProject";
-import { closeAllMenus } from "./menu.menus";
+import { closeAllMenus } from "./ui.menus";
 
 export async function clearProject():Promise<boolean> {
     

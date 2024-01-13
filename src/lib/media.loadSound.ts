@@ -8,7 +8,7 @@ import 'leaflet.path.drag';
 import { setMapSoundVolumes } from './project.setMapSoundVolumes';
 import { Howl } from "howler";
 import { removeSound } from './media.removeSound';
-import { updateLoadingModal } from './menu.modals';
+import { updateLoadingModal } from './ui.modals';
 
 
 export async function loadSound(filePath:string, x?:number, y?:number, r?:number): Promise<void> 

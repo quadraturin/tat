@@ -26,13 +26,14 @@
     import IconSaveAs from '$lib/icons/iconSaveAs.svelte';
     import IconNew from '$lib/icons/iconNew.svelte'
 	import { clearProject } from '$lib/project.clearProject';
-	import { toggleAboutMenu } from '$lib/menu.menus';
+	import { toggleAboutMenu } from '$lib/ui.menus';
 	import IconAbout from '$lib/icons/iconAbout.svelte';
 	import About from '$lib/menus/about.svelte';
 	import Modal from '$lib/menus/loading.svelte';
 	import Settings from '$lib/menus/settings.svelte';
 	import { tryQuit } from '$lib/quit';
 	import Loading from '$lib/menus/loading.svelte';
+	import { toggleMute, toggleSolo } from '$lib/media.mixSound';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
@@ -47,6 +48,8 @@
     let isAboutMenuOpen = false;
     let projectName:string;
     let titleTooltip:string;
+    let imageList = R.getImageList();
+    let soundList = R.getSoundList();
 
     // initialize
     onMount( () => 
@@ -107,6 +110,10 @@
 
     $: isDirty = R.getisProjectDirty(), isDirty ? titleTooltip = "unsaved changes" : titleTooltip = "saved";
 
+    $: imageList = R.getImageList();
+
+    $: soundList = R.getSoundList();
+
     function onKeyDown(e:KeyboardEvent) { 
         console.log(e);
         if (e.key=="Shift") R.setIsProportionalScaleOn(false);
@@ -131,6 +138,8 @@
         isDirty = R.getisProjectDirty();
         projectName = R.getProjectName();
         isAboutMenuOpen = R.getIsAboutMenuOpen();
+        imageList = R.getImageList();
+        soundList = R.getSoundList();
     }, 15);
 
 </script>
@@ -222,23 +231,33 @@
     width: env(titlebar-area-width);
     -webkit-app-region: drag;">
 </div>-->
-
 <div id="browser">
-    <div class="item">
-        <span class="item-qty">1x</span>
-        <span class="item-name">test.gif</span>
-        <span class="item-add">+</span>
-    </div>
-    <div class="item">
-        <span class="item-qty">3x</span>
-        <span class="item-name">testing testing testing.jpeg</span>
-        <span class="item-add">+</span>
-    </div>
-    <div class="item">
-        <span class="item-qty">2x</span>
-        <span class="item-name">something - or another.mp3</span>
-        <span class="item-add">+</span>
-    </div>
+    {#if soundList.length>0}
+        <div id="browser-sounds">
+            <div>sounds</div>
+            {#each soundList as item, i }
+                <div class="item sound-item" id="sound-item-{i}">
+                    <span class="item-name">{item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}</span>
+                    <button class="item-button item-mute" class:activated={item.muted} title="mute sound" on:click={() => toggleMute(i)}>M</button>
+                    <button class="item-button item-solo" class:activated={item.solo} title="solo sound" on:click={() => toggleSolo(i)}>S</button>
+                    <button class="item-button item-add" title="duplicate sound">+</button>
+                    <button class="item-button item-delete" title="delete sound">×</button>
+                </div>
+            {/each}
+        </div>
+    {/if}
+    {#if imageList.length > 0}
+        <div id="browser-images">
+            <div>images</div>
+            {#each imageList as item, i}
+                <div class="item image-item" id="image-item-{i}">
+                    <span class="item-name">{item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}</span>
+                    <button class="item-button item-add" title="duplicate image">+</button>
+                    <button class="item-button item-delete" title="delete image">×</button>
+                </div>
+            {/each}
+        </div>
+    {/if}
 </div>
 
 <Settings />
