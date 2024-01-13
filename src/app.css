@@ -192,6 +192,8 @@ a { color: var(--highlight-color); }
     width: 12rem;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
+    border: none !important;
+    padding: 2px;
 }
 .leaflet-bar a{
     background-color: var(--text-color);
@@ -205,6 +207,7 @@ a { color: var(--highlight-color); }
     border-radius: 2px;
     font-size: 18px !important;
     line-height: 18px !important;
+    cursor: default;
 }
 .leaflet-bar a:hover{
     background-color: var(--highlight-color);
@@ -238,6 +241,11 @@ a { color: var(--highlight-color); }
     border-radius: 4px;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Likely future */  
+    cursor: default;
 }
 #browser-sounds {
     margin-bottom: 8px;
