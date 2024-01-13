@@ -1,4 +1,5 @@
 import * as R from '$lib/registry'
+import { ask } from "@tauri-apps/api/dialog";
 import type L from 'leaflet'
 
 export function removeSoundbyCircle(emitter:L.Circle, removeFromList:boolean = true) {
@@ -11,9 +12,20 @@ export function removeSoundbyCircle(emitter:L.Circle, removeFromList:boolean = t
     }
 }
 
-export function removeSound(id:number, removeFromList:boolean = true) {
+export async function removeSound(id:number, removeFromList:boolean = true) {
     let soundList = R.getSoundList();
     if (id < soundList.length) {
+        let unique = true;
+        for (let i=0; i<soundList.length; i++) {
+            if (i != id && soundList[i].data.name == soundList[id].data.name) {
+                unique = false;
+                break;
+            }
+        }
+        if (unique) {
+            let approveDelete = await ask("this is the only instance of this sound file in this project!\n\nif you remove it and save the project, the sound file will be deleted from the project folder.\n\ndo you still want to remove the sound?");
+            if (!approveDelete) return;
+        }
         soundList[id].sound.stop();
         soundList[id].circle.remove();
         if(removeFromList) soundList.splice(id, 1);

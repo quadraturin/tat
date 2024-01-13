@@ -1,7 +1,7 @@
 import * as R from '$lib/registry';
 import { message, save } from "@tauri-apps/api/dialog";
-import { createDir, writeTextFile, writeBinaryFile, exists } from "@tauri-apps/api/fs";
-import { join, basename } from "@tauri-apps/api/path";
+import { createDir, writeTextFile, writeBinaryFile, exists, readDir, removeFile } from "@tauri-apps/api/fs";
+import { join, basename, sep } from "@tauri-apps/api/path";
 import type { MapImage } from './classes/MapImage';
 import type { MapSound } from './classes/MapSound';
 import { closeAllMenus } from './ui.menus';
@@ -41,7 +41,6 @@ export async function saveProject(saveAs=false): Promise<boolean>
         if (filePath === null) return false;
     }
     
-
     // if they didn't back out, we are now in saving state
     R.setIsSaving(true);
     let newProjectName = await basename(filePath as string);
@@ -87,6 +86,10 @@ export async function saveProject(saveAs=false): Promise<boolean>
     console.log(project);
     promises.push(writeTextFile(await join(filePath, 'project.json'), JSON.stringify(project)));
 
+    // delete unused files
+    deleteUnused("images");
+    deleteUnused("sounds");
+
     // set the project path & set project state to clean
     R.setProjectPath(filePath);
     R.setProjectName(newProjectName);
@@ -116,4 +119,35 @@ async function writeSoundFile(e:MapSound, filePath:string) {
 
     if (await exists(fullPath)) console.log(`${fullPath} already exists. skipping write.`);
     else writeBinaryFile(fullPath, await e.data.arrayBuffer());
+}
+
+async function deleteUnused(fileType:string) {
+    let itemList: MapImage[] | MapSound[] = [];
+    
+    if (fileType == "images") {
+        itemList = R.getImageList();
+    } else if (fileType == "sounds") {
+        itemList = R.getSoundList();
+    }
+
+    let path = R.getProjectPath();
+    if (typeof path == "undefined") return;
+
+    let fileList = await readDir(path + sep + fileType);
+
+    for (let i=0; i<fileList.length; i++) {
+        let notInUse = true;
+        for (let j=0; j<itemList.length; j++) {
+            console.log("checking " + fileList[i].name + " vs. " + itemList[j].data.name);
+            if (fileList[i].name == itemList[j].data.name) {
+                notInUse = false;
+                console.log(fileList[i].name + " is in use.")
+                break;
+            }
+        }
+        if (notInUse) {
+            console.log(fileList[i].name as string + " is not in use. deleting...")
+            removeFile(path + sep + fileType + sep + fileList[i].name as string);
+        }
+    }
 }
