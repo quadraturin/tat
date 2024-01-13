@@ -34,6 +34,8 @@
 	import { tryQuit } from '$lib/quit';
 	import Loading from '$lib/menus/loading.svelte';
 	import { toggleMute, toggleSolo } from '$lib/media.mixSound';
+	import { removeImage } from '$lib/media.removeImage';
+	import { removeSound } from '$lib/media.removeSound';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
@@ -241,7 +243,7 @@
                     <button class="item-button item-mute" class:activated={item.muted} title="mute sound" on:click={() => toggleMute(i)}>M</button>
                     <button class="item-button item-solo" class:activated={item.solo} title="solo sound" on:click={() => toggleSolo(i)}>S</button>
                     <button class="item-button item-add" title="duplicate sound">+</button>
-                    <button class="item-button item-delete" title="delete sound">×</button>
+                    <button class="item-button item-delete" title="delete sound" on:click={() => removeSound(i)}>×</button>
                 </div>
             {/each}
         </div>
@@ -253,7 +255,7 @@
                 <div class="item image-item" id="image-item-{i}">
                     <span class="item-name">{item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}</span>
                     <button class="item-button item-add" title="duplicate image">+</button>
-                    <button class="item-button item-delete" title="delete image">×</button>
+                    <button class="item-button item-delete" title="delete image" on:click={() => removeImage(i)}>×</button>
                 </div>
             {/each}
         </div>

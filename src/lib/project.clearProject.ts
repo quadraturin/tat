@@ -1,7 +1,7 @@
 import * as R from "$lib/registry"
 import * as S from "$lib/settings"
-import { removeImage } from "./media.removeImage";
-import { removeSound } from "./media.removeSound";
+import { removeImageByRect } from "./media.removeImage";
+import { removeSoundbyCircle } from "./media.removeSound";
 import type { MapSound } from "./classes/MapSound";
 import type { MapImage } from "./classes/MapImage";
 import { shouldSaveProject } from "./project.shouldSaveProject";
@@ -17,12 +17,12 @@ export async function clearProject():Promise<boolean> {
     if (!await shouldSaveProject()) return false;
 
     R.getImageList().forEach(e => {
-        removeImage(e.rect, false);
+        removeImageByRect(e.rect, false);
     });
     R.setImageList(new Array<MapImage>);
 
     R.getSoundList().forEach(e => {
-        removeSound(e.circle, false);
+        removeSoundbyCircle(e.circle, false);
     });
     R.setSoundList(new Array<MapSound>);
 

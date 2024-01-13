@@ -7,7 +7,7 @@ import 'leaflet-editable';
 import 'leaflet.path.drag';
 import { setMapSoundVolumes } from './project.setMapSoundVolumes';
 import { Howl } from "howler";
-import { removeSound } from './media.removeSound';
+import { removeSoundbyCircle } from './media.removeSound';
 import { updateLoadingModal } from './ui.modals';
 
 
@@ -95,7 +95,7 @@ export async function loadSound(filePath:string, x?:number, y?:number, r?:number
             else R.addToSelection(emitter);
             emitter.bringToFront();
 
-            if (R.getIsInDeleteMode()) removeSound(emitter);
+            if (R.getIsInDeleteMode()) removeSoundbyCircle(emitter);
         };
 
         function toggleSoundEdit(){
