@@ -38,7 +38,7 @@
 	import { removeSound } from '$lib/media.removeSound';
 	import { duplicateImage } from '$lib/media.loadImage';
 	import { duplicateSound } from '$lib/media.loadSound';
-	import { seekToByClick, togglePause } from '$lib/media.controlSound';
+	import { changeBaseVolume, seekToByClick, togglePause } from '$lib/media.controlSound';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
@@ -155,6 +155,7 @@
 	}
 
     let soundTrack:HTMLButtonElement;
+
 </script>
 
 <svelte:window
@@ -249,7 +250,8 @@
     {#if soundList.length>0}
         <div id="browser-sounds">
             {#each soundList as item, i }
-                <div class="item sound-item" id="sound-item-{i}">
+                <div class="item sound-item" id="sound-item-{i}" on:wheel|preventDefault={(event) => changeBaseVolume(item, event)}>
+                    <div class="volume" style={"height: "+(item.volume*100)+"%"}></div>
                     <span class="item-name">{item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}</span>
                     <button class="item-button item-pause" class:activated={!item.sound.playing()} title="play/pause sound" on:click={() => togglePause(item)}>{#if item.sound.playing()}⏸{:else}⏵{/if}</button>
                     <button class="item-button item-mute" class:activated={item.muted} title="mute sound" on:click={() => toggleMute(i)}>M</button>

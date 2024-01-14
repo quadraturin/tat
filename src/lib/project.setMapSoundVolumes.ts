@@ -19,10 +19,10 @@ export function setMapSoundVolumes(): void
             const b = layer.getLatLng().lng - listener.getLatLng().lng;
             const c = Math.sqrt(a*a + b*b);
             const volume = Math.max(0,(layer.getRadius() - c) / layer.getRadius());
-            console.log("circle volume: " + Math.ceil(volume*100) + "%");
+            //console.log("circle volume: " + Math.ceil(volume*100) + "%");
             R.getSoundList().forEach(e => 
             {
-                if (e.circle == layer) e.sound.volume(volume);
+                if (e.circle == layer) e.sound.volume(volume*e.volume); // adjusted for base volume
             });
         }
     })

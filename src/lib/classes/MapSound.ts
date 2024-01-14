@@ -9,8 +9,9 @@ export class MapSound
     sound:Howl;
     muted:boolean;
     solo:boolean;
+    volume:number;
     
-    constructor(data:File, sound:Howl, circle:L.Circle, muted?:boolean, solo?:boolean)
+    constructor(data:File, sound:Howl, circle:L.Circle, muted?:boolean, solo?:boolean, volume?:number)
     {
         this.data = data;
         this.sound = sound;
@@ -24,6 +25,11 @@ export class MapSound
             this.solo = false;
         } else {
             this.solo = solo;
+        }
+        if (typeof volume == "undefined") {
+            this.volume = 1;
+        } else {
+            this.volume = volume;
         }
     }
 }

@@ -263,18 +263,20 @@ a { color: var(--highlight-color); }
     display: flex;
     line-height: 10px;
     flex-wrap: wrap;
+    position: relative;
 }
 #browser .item:last-child {
     margin-bottom: 0;
-}
-#browser .item-qty {
-    flex: 2;
 }
 #browser .item-name {
     flex: 10;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    z-index: 10;
+}
+#browser .sound-item {
+    background-color: rgb(192, 79, 47);
 }
 #browser .image-item .item-name {
     flex: 12;
@@ -287,6 +289,7 @@ a { color: var(--highlight-color); }
     padding: 0;
     border-radius: 2px;
     border: none;
+    z-index: 10;
 }
 #browser .item-button:hover {
     background-color: var(--highlight-color);
@@ -305,6 +308,7 @@ a { color: var(--highlight-color); }
     margin-top: 2px;
     border: none;
     padding: 1px;
+    z-index: 10;
 }
 .sound-item-progress-bar {
     height: 2px;
@@ -313,6 +317,17 @@ a { color: var(--highlight-color); }
     min-width: 2px;
     width: 50%;
     border: none;
+    z-index: 10;
+}
+.volume {
+    position:absolute;
+    width: 100%;
+    bottom:0;
+    left:0;
+    height: 80%;
+    background: var(--text-color);
+    z-index: 0;
+    border-radius: 2px;
 }
 
 /* menus*/
