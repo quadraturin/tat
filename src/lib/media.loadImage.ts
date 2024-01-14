@@ -5,6 +5,8 @@ import L from 'leaflet';
 import 'leaflet-editable';
 import { removeImageByRect } from './media.removeImage';
 import { updateLoadingModal } from './ui.modals';
+import type { MapImage } from './classes/MapImage';
+import { getRandomPointInViewport } from './util.getRandomPointInViewport';
 
 export async function loadImage(filePath:string, x?:number, y?:number, w?:number, h?:number, ow?:number, oh?:number): Promise<void> {
     try {
@@ -19,10 +21,6 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         let originalWidth = ow;
         let originalHeight = oh;
         let ext = await extname(filePath);
-
-        // if no lat/lng is set, set them to 0
-        if (typeof lat === 'undefined') lat = 0;
-        if (typeof lng === 'undefined') lng = 0;
 
         // if no width/height is set, get it from image data
         if (typeof width === 'undefined' || typeof height === 'undefined' ||
@@ -42,7 +40,17 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
 
         // return a File object to hold the data
         const file =  new File([content], fileName, { type: 'image/' + ext });
+        
+        newImage(file, height, width, lat, lng);
 
+    }
+    catch (err) {
+        console.error(err);
+    }
+}
+
+export async function newImage(file:File, height:number, width:number, lat?:number, lng?:number) {
+    try {
         // create a data URL & pass into Leaflet
         const mapImageURL = URL.createObjectURL(file);
 
@@ -51,6 +59,19 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
 
         // create image id #
         let id = R.getImageList().length;
+
+        let point:L.LatLng;
+
+        if (typeof lng === 'undefined' || typeof lat === 'undefined')
+        {
+            point = getRandomPointInViewport(R.getMap())
+        }
+        else
+        {
+            point = L.latLng(lat as number,lng as number);
+        }
+        lat = point.lat;
+        lng = point.lng;
 
         // create image overlay
         let bounds = [[lat,lng], [height,width]] as L.LatLngBoundsExpression;
@@ -81,7 +102,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         R.addToImageList(file, overlay, imageRect, width, height, id);
 
         // center and frame the image
-        map.flyToBounds(bounds);
+        //map.flyToBounds(bounds);
         
         // functions
 
@@ -174,13 +195,14 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
             imageRect.on('dragend', onClick);
             imageRect.on('mousedown', onClick);
         }
-        
-    }
-    catch (err) {
+    } catch(err) {
         console.error(err);
     }
 }
 
+export async function duplicateImage(image:MapImage) {
+    newImage(image.data, image.originalHeight, image.originalWidth);
+}
 
 
 

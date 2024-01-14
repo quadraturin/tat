@@ -36,6 +36,9 @@
 	import { toggleMute, toggleSolo } from '$lib/media.mixSound';
 	import { removeImage } from '$lib/media.removeImage';
 	import { removeSound } from '$lib/media.removeSound';
+	import { duplicateImage } from '$lib/media.loadImage';
+	import { duplicateSound } from '$lib/media.loadSound';
+	import { seekToByClick, togglePause } from '$lib/media.controlSound';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
@@ -144,6 +147,14 @@
         soundList = R.getSoundList();
     }, 15);
 
+    let mousePos = { x: 0, y: 0 };
+
+	function handleMousemove(event:MouseEvent) {
+		mousePos.x = event.clientX;
+		mousePos.y = event.clientY;
+	}
+
+    let soundTrack:HTMLButtonElement;
 </script>
 
 <svelte:window
@@ -233,31 +244,36 @@
     width: env(titlebar-area-width);
     -webkit-app-region: drag;">
 </div>-->
+
 <div id="browser">
     {#if soundList.length>0}
         <div id="browser-sounds">
-            <div>sounds</div>
             {#each soundList as item, i }
                 <div class="item sound-item" id="sound-item-{i}">
                     <span class="item-name">{item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}</span>
+                    <button class="item-button item-pause" class:activated={!item.sound.playing()} title="play/pause sound" on:click={() => togglePause(item)}>{#if item.sound.playing()}⏸{:else}⏵{/if}</button>
                     <button class="item-button item-mute" class:activated={item.muted} title="mute sound" on:click={() => toggleMute(i)}>M</button>
                     <button class="item-button item-solo" class:activated={item.solo} title="solo sound" on:click={() => toggleSolo(i)}>S</button>
-                    <button class="item-button item-add" title="duplicate sound">+</button>
+                    <button class="item-button item-add" title="duplicate sound" on:click={() => duplicateSound(item)}>+</button>
                     <button class="item-button item-delete" title="delete sound" on:click={() => removeSound(i)}>×</button>
+                    <button class="sound-item-progress-track" bind:this={soundTrack} on:mousemove={handleMousemove} on:click={() => seekToByClick(item, soundTrack, mousePos.x)}>
+                        <div style={"width: "+((item.sound.seek()/item.sound.duration())*100).toString()+"%"} class="sound-item-progress-bar"></div>
+                    </button>
                 </div>
             {/each}
+            <div>sounds</div>
         </div>
     {/if}
     {#if imageList.length > 0}
         <div id="browser-images">
-            <div>images</div>
             {#each imageList as item, i}
                 <div class="item image-item" id="image-item-{i}">
                     <span class="item-name">{item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}</span>
-                    <button class="item-button item-add" title="duplicate image">+</button>
+                    <button class="item-button item-add" title="duplicate image" on:click={() => duplicateImage(item)}>+</button>
                     <button class="item-button item-delete" title="delete image" on:click={() => removeImage(i)}>×</button>
                 </div>
             {/each}
+            <div>images</div>
         </div>
     {/if}
 </div>

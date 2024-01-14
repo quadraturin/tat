@@ -9,6 +9,7 @@ import { setMapSoundVolumes } from './project.setMapSoundVolumes';
 import { Howl } from "howler";
 import { removeSoundbyCircle } from './media.removeSound';
 import { updateLoadingModal } from './ui.modals';
+import type { MapSound } from './classes/MapSound';
 
 
 export async function loadSound(filePath:string, x?:number, y?:number, r?:number): Promise<void> 
@@ -16,11 +17,10 @@ export async function loadSound(filePath:string, x?:number, y?:number, r?:number
     try 
     {
         updateLoadingModal(filePath);
-        var lat = y;
-        var lng = x;
-        var rad = r;
+        let lat = y;
+        let lng = x;
+        let rad = r;
         const ext = await extname(filePath);
-        var point:L.LatLng;
 
         // read in the sound data
         const content = await readBinaryFile(filePath);
@@ -31,17 +31,31 @@ export async function loadSound(filePath:string, x?:number, y?:number, r?:number
         // return a File object to hold the data
         const file =  new File([content], fileName, { type: 'audio/' + ext });
 
+        newSound(file);
+    } 
+    catch (err) 
+    {
+        console.error(err);
+    }
+}
+
+export async function newSound(file:File, lat?:number, lng?:number, rad?:number) {
+    try {
+        let point:L.LatLng;
+
+        console.log('sound file type: ' + file.type.replace(/.*\//, ""));
+
         // create a data URL & pass to howler
         const mapSoundURL = URL.createObjectURL(file);
         const sound = new Howl(
         {
             src: [mapSoundURL],
-            format: [ext],
+            format: [file.type.replace(/.*\//, "")],
             loop: true
         });
 
         if (typeof rad === 'undefined') rad = 100;
-        if (typeof x === 'undefined' || typeof y === 'undefined')
+        if (typeof lng === 'undefined' || typeof lat === 'undefined')
         {
             point = getRandomPointInViewport(R.getMap())
         }
@@ -103,9 +117,11 @@ export async function loadSound(filePath:string, x?:number, y?:number, r?:number
             else emitter.setStyle({opacity:1});
             emitter.toggleEdit();
         };
-    } 
-    catch (err) 
-    {
+    } catch(err) {
         console.error(err);
     }
-};
+}
+
+export async function duplicateSound(sound:MapSound) {
+    newSound(sound.data);
+}
