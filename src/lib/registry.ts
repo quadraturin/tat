@@ -137,6 +137,13 @@ export function getIsSelected(item:L.Rectangle|L.Circle|L.Polygon):boolean {
 export function getSelectedList():Array<L.Rectangle|L.Circle|L.Polygon> {
     return selected;
 }
+export function toggleSelected(item:L.Rectangle|L.Circle|L.Polygon) {
+    if (getIsSelected(item)) {
+        removeFromSelection(item);
+    } else {
+        addToSelection(item);
+    }
+}
 
 // menu state
 let aboutMenuOpen = false;

@@ -1,4 +1,5 @@
 <script lang="ts">
+
     // styles
     import 'leaflet/dist/leaflet.css'
     import 'leaflet-contextmenu/dist/leaflet.contextmenu.css'
@@ -39,6 +40,7 @@
 	import { duplicateImage } from '$lib/media.loadImage';
 	import { duplicateSound } from '$lib/media.loadSound';
 	import { changeBaseVolume, seekToByClick, togglePause } from '$lib/media.controlSound';
+	import { changeOpacity } from '$lib/media.controlOpacity';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
@@ -250,9 +252,9 @@
     {#if soundList.length>0}
         <div id="browser-sounds">
             {#each soundList as item, i }
-                <div class="item sound-item" id="sound-item-{i}" on:wheel|preventDefault={(event) => changeBaseVolume(item, event)}>
+                <div class="item sound-item" class:selected={R.getIsSelected(item.circle)} id="sound-item-{i}" on:wheel|preventDefault={(event) => changeBaseVolume(item, event)}>
                     <div class="volume" style={"height: "+(item.volume*100)+"%"}></div>
-                    <span class="item-name">{item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}</span>
+                    <button class="item-name" on:click={() => {R.toggleSelected(item.circle)}}>{item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}</button>
                     <button class="item-button item-pause" class:activated={!item.sound.playing()} title="play/pause sound" on:click={() => togglePause(item)}>{#if item.sound.playing()}⏸{:else}⏵{/if}</button>
                     <button class="item-button item-mute" class:activated={item.muted} title="mute sound" on:click={() => toggleMute(i)}>M</button>
                     <button class="item-button item-solo" class:activated={item.solo} title="solo sound" on:click={() => toggleSolo(i)}>S</button>
@@ -269,8 +271,9 @@
     {#if imageList.length > 0}
         <div id="browser-images">
             {#each imageList as item, i}
-                <div class="item image-item" id="image-item-{i}">
-                    <span class="item-name">{item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}</span>
+                <div class="item image-item" id="image-item-{i}" class:selected={R.getIsSelected(item.rect)} on:wheel|preventDefault={(event) => changeOpacity(item, event)}>
+                    <div class="volume" style={"height: "+(item.opacity*100)+"%"}></div>
+                    <button class="item-name" on:click={() => {R.toggleSelected(item.rect)}}>{item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}</button>
                     <button class="item-button item-add" title="duplicate image" on:click={() => duplicateImage(item)}>+</button>
                     <button class="item-button item-delete" title="delete image" on:click={() => removeImage(i)}>×</button>
                 </div>

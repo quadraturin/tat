@@ -255,7 +255,7 @@ a { color: var(--highlight-color); }
     flex-direction: column-reverse;
 }
 #browser .item {
-    background-color: var(--text-color);
+    background-color: rgb(192, 79, 47);
     color: var(--background-color);
     border-radius: 2px;
     margin: 1px 0;
@@ -264,6 +264,10 @@ a { color: var(--highlight-color); }
     line-height: 10px;
     flex-wrap: wrap;
     position: relative;
+}
+#browser .item.selected {
+    border: 1px solid var(--highlight-color) !important;
+    padding: 1px;
 }
 #browser .item:last-child {
     margin-bottom: 0;
@@ -274,9 +278,6 @@ a { color: var(--highlight-color); }
     text-overflow: ellipsis;
     white-space: nowrap;
     z-index: 10;
-}
-#browser .sound-item {
-    background-color: rgb(192, 79, 47);
 }
 #browser .image-item .item-name {
     flex: 12;
@@ -328,6 +329,11 @@ a { color: var(--highlight-color); }
     background: var(--text-color);
     z-index: 0;
     border-radius: 2px;
+}
+.item-name {
+    background: none;
+    border: none;
+    padding: 0;
 }
 
 /* menus*/
@@ -393,6 +399,7 @@ a { color: var(--highlight-color); }
     padding: 1rem;
     background-color: var(--text-color);
     color: var(--background-color);
+    border-radius: 4px;
 }
 #modal svg {
     display: inline-block;
