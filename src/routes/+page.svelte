@@ -166,7 +166,7 @@
     on:drag={onDrag}
 />
 
-<div data-tauri-drag-region class="titlebar">
+<div data-tauri-drag-region class="titlebar" on:wheel|preventDefault={()=>{}}>
     <h1 data-tauri-drag-region title="{titleTooltip}">
         <span data-tauri-drag-region class="project-name">{projectName}</span>
         <span data-tauri-drag-region>{#if isDirty}*{/if}</span>

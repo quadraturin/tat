@@ -128,7 +128,6 @@ export async function newImage(file:File, height:number, width:number, lat?:numb
         // called when we stop moving the image
         function stopMoveImage() {
             overlay.setBounds(imageRect.getBounds());
-            overlay.setStyle({opacity:1});
         }
 
         // called when double-clicking the image (sets/unsets editability)
