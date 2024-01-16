@@ -51,7 +51,7 @@ export async function loadProject()
             for (let j=0; j<project.maps[i].images.length; j++) {
                 const obj = project.maps[i].images[j];
                 //load sequentially so they stack correctly!
-                await loadImage(await join(filePath as string, 'images', obj.src), obj.x, obj.y, obj.width, obj.height);
+                await loadImage(await join(filePath as string, 'images', obj.src), obj.x, obj.y, obj.width, obj.height, obj.originalWidth, obj.originalHeight, obj.opacity);
             }
             for (let j=0; j<project.maps[i].sounds.length; j++) {
                 const obj = project.maps[i].sounds[j];

@@ -187,7 +187,7 @@ a { color: var(--highlight-color); }
 }
 .leaflet-bar {
     border-radius: 4px;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.5);
     display: flex;
     width: 12rem;
     backdrop-filter: blur(5px);
@@ -237,7 +237,7 @@ a { color: var(--highlight-color); }
     padding: 2px;
     font-size: 0.7rem;
     font-weight: bold;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.5);
     border-radius: 4px;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);

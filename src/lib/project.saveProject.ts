@@ -62,7 +62,8 @@ export async function saveProject(saveAs=false): Promise<boolean>
             width: e.overlay.getBounds().getEast() - e.overlay.getBounds().getWest(),
             height: e.overlay.getBounds().getNorth() - e.overlay.getBounds().getSouth(),
             originalWidth: e.originalWidth,
-            originalHeight: e.originalHeight
+            originalHeight: e.originalHeight,
+            opacity: e.opacity
         }
         promises.push(writeImageFile(e, filePath as string));
         i++;
@@ -76,7 +77,10 @@ export async function saveProject(saveAs=false): Promise<boolean>
             src: e.data.name,
             x: e.circle.getLatLng().lng,
             y: e.circle.getLatLng().lat,
-            radius: e.circle.getRadius()
+            radius: e.circle.getRadius(),
+            volume: e.volume,
+            solo: e.solo,
+            muted: e.muted
         }
         promises.push(writeSoundFile(e, filePath as string));
         i++;

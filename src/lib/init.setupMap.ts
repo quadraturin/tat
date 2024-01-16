@@ -14,6 +14,7 @@ import L from "leaflet";
             editable: true,
             minZoom: -5,
             maxZoom: 2,
+            boxZoom: false,
             contextmenu: true,
             contextmenuItems: [{
                 text: 'center map here',
@@ -45,15 +46,15 @@ import L from "leaflet";
             map.zoomOut();
         }
 
-        /*// test polygon
-        let polygon: L.Polygon<Draggable> = L.polygon([
+        // test polygon
+        let polygon = L.polygon([
             [0, 0],
             [150, 0],
             [200, 300],
             [50, 100]
         ]).addTo(map);
         polygon.bindPopup("I am a polygon.");
-        polygon.enableEdit();*/
+        polygon.enableEdit();
 
 
         map.fitBounds([[0,0], [height, width]] as L.LatLngBoundsExpression);

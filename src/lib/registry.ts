@@ -53,8 +53,8 @@ export function setMapList(newMapList:Array<MapInfo>) { mapList = newMapList; };
 let imageList = new Array<MapImage>;
 export function getImageList():Array<MapImage> { return imageList; };
 export function setImageList(newImageList:Array<MapImage>) { imageList = newImageList; };
-export function addToImageList(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, w:number, h:number, id:number) {
-    imageList.push(new MapImage(data, overlay, rect, w, h));
+export function addToImageList(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, w:number, h:number, opacity?:number) {
+    imageList.push(new MapImage(data, overlay, rect, w, h, opacity));
 }
 export function moveImageToEndOfList(overlay:ImageOverlay) {
     // moves image to end of list -- required for save/load as order determines stacking

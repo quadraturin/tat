@@ -9,7 +9,7 @@ import type { MapImage } from './classes/MapImage';
 import { getRandomPointInViewport } from './util.getRandomPointInViewport';
 import type { event } from '@tauri-apps/api';
 
-export async function loadImage(filePath:string, x?:number, y?:number, w?:number, h?:number, ow?:number, oh?:number): Promise<void> {
+export async function loadImage(filePath:string, x?:number, y?:number, w?:number, h?:number, ow?:number, oh?:number, o?:number): Promise<void> {
     try {
         updateLoadingModal(filePath);
         // read in the image data
@@ -21,6 +21,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         let height = h;
         let originalWidth = ow;
         let originalHeight = oh;
+        let opacity = o;
         let ext = await extname(filePath);
 
         // if no width/height is set, get it from image data
@@ -42,7 +43,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
         // return a File object to hold the data
         const file =  new File([content], fileName, { type: 'image/' + ext });
         
-        newImage(file, height, width, lat, lng);
+        newImage(file, height, width, lat, lng, opacity);
 
     }
     catch (err) {
@@ -50,7 +51,7 @@ export async function loadImage(filePath:string, x?:number, y?:number, w?:number
     }
 }
 
-export async function newImage(file:File, height:number, width:number, lat?:number, lng?:number) {
+export async function newImage(file:File, height:number, width:number, lat?:number, lng?:number, opacity?:number) {
     try {
         // create a data URL & pass into Leaflet
         const mapImageURL = URL.createObjectURL(file);
@@ -80,7 +81,8 @@ export async function newImage(file:File, height:number, width:number, lat?:numb
         let overlay = L.imageOverlay(mapImageURL, bounds,
         {
             interactive: true,
-            className: "id-" + id
+            className: "id-" + id,
+            opacity: opacity
         }).addTo(map);
         overlay.bringToFront();
         
@@ -102,7 +104,7 @@ export async function newImage(file:File, height:number, width:number, lat?:numb
         R.setProjectDirty;
 
         // add image data to registry
-        R.addToImageList(file, overlay, imageRect, width, height, id);
+        R.addToImageList(file, overlay, imageRect, width, height, opacity);
 
         // center and frame the image
         //map.flyToBounds(bounds);
@@ -132,7 +134,7 @@ export async function newImage(file:File, height:number, width:number, lat?:numb
                 else   availableWidth = Math.abs(e.vertex.getLatLng().lng - imageRect.getBounds().getWest());
                 
                 let scale = Math.min(availableWidth/width, availableHeight/height);
-                console.log("scale", scale)
+                //console.log("scale", scale)
 
                 if (n&&w) { // NW
                     p1 = new L.LatLng(imageRect.getBounds().getSouth(), imageRect.getBounds().getEast()); // SE corner
@@ -147,7 +149,7 @@ export async function newImage(file:File, height:number, width:number, lat?:numb
                     p1 = new L.LatLng(imageRect.getBounds().getNorth(), imageRect.getBounds().getWest()); // NW corner
                     p2 = new L.LatLng(p1.lat - height*scale, p1.lng + width*scale);
                 }
-                console.log(new L.LatLngBounds(p1,p2));
+                //console.log(new L.LatLngBounds(p1,p2));
                 overlay.setBounds(new L.LatLngBounds(p1,p2));
             } else { // free scale
                 overlay.setBounds(imageRect.getBounds());
@@ -226,6 +228,7 @@ export async function newImage(file:File, height:number, width:number, lat?:numb
         function bindEventsToImageRect()
         {
             imageRect.on('editable:vertex:drag', (e) => editImage(e));
+            imageRect.on('editable:vertex:mousedown', (e) => editImage(e));
             imageRect.on('editable:vertex:dragend', stopEditImage);
             imageRect.on('dragstart', startMoveImage);
             imageRect.on('drag', (e) => moveImage(e));
