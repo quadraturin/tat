@@ -27,8 +27,6 @@ export async function loadProject()
         // try clearing the project. if it doesn't get cleared, back out.
         if (!await clearProject()) return;
 
-        console.log('hellooo');
-
         // if project.json exists in the folder, read it
         const jsonPath = await join(filePath as string, 'project.json');
         if (!await exists(jsonPath))
@@ -51,7 +49,6 @@ export async function loadProject()
 
         for (let i=0; i<project.maps.length; i++) {
             for (let j=0; j<project.maps[i].images.length; j++) {
-                console.log(i,j);
                 const obj = project.maps[i].images[j];
                 //load sequentially so they stack correctly!
                 await loadImage(await join(filePath as string, 'images', obj.src), obj.x, obj.y, obj.width, obj.height);

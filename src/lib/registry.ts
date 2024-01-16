@@ -54,13 +54,12 @@ let imageList = new Array<MapImage>;
 export function getImageList():Array<MapImage> { return imageList; };
 export function setImageList(newImageList:Array<MapImage>) { imageList = newImageList; };
 export function addToImageList(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, w:number, h:number, id:number) {
-    imageList.push(new MapImage(data, overlay, rect, w, h))
+    imageList.push(new MapImage(data, overlay, rect, w, h));
 }
 export function moveImageToEndOfList(overlay:ImageOverlay) {
     // moves image to end of list -- required for save/load as order determines stacking
     for (let i=0; i < imageList.length; i++) {
         if (imageList[i].overlay == overlay) {
-            console.log('splicin')
             imageList.push(imageList.splice(i,1)[0]);
             break;
         }
@@ -80,7 +79,7 @@ export function addToSoundList(data:File, sound:Howl, circle:L.Circle) {
 }
 
 // control modifiers
-let isProportionalScaleOn = true;
+let isProportionalScaleOn = false;
 export function getIsProportionalScaleOn():boolean { return isProportionalScaleOn; };
 export function setIsProportionalScaleOn(b:boolean) { isProportionalScaleOn = b; };
 let isInDeleteMode = false;

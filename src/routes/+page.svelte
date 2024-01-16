@@ -123,7 +123,7 @@
 
     function onKeyDown(e:KeyboardEvent) { 
         console.log(e);
-        if (e.key=="Shift") R.setIsProportionalScaleOn(false);
+        if (e.key=="Shift") R.setIsProportionalScaleOn(true);
         else if (e.key == "Delete" || e.key == "Backspace") removeSelected();
         else if (e.key == "Alt") R.setIsInDeleteMode(true);
         else if (e.key == "s" && e.shiftKey && (e.metaKey || e.ctrlKey)) saveProject(true);
@@ -134,7 +134,7 @@
     };
     function onKeyUp(e:KeyboardEvent) {
         console.log(e); 
-        if (e.key=="Shift") R.setIsProportionalScaleOn(true);
+        if (e.key=="Shift") R.setIsProportionalScaleOn(false);
         else if (e.key == "Alt") R.setIsInDeleteMode(false);
     };
     function onDrag(e:any) {

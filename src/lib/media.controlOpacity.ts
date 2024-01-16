@@ -6,5 +6,5 @@ export async function changeOpacity(image:MapImage, event:WheelEvent) {
     if (image.opacity < 0) image.opacity = 0;
     else if (image.opacity > 1) image.opacity = 1;
     image.overlay.setOpacity(image.opacity);
-    console.log(image.opacity);
+    //console.log(image.opacity);
 }
