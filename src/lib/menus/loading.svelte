@@ -5,6 +5,6 @@
 <div id="modal-background">
     <div id="modal">
         <h2><IconLoading /> <span id="modal-title">loading...</span></h2>
-        <p id="modal-text"></p>
+        <ul id="modal-text"></ul>
     </div>
 </div>

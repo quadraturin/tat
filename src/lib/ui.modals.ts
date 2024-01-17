@@ -13,7 +13,7 @@ export function openLoadingModal(projectName?:string) {
 export function updateLoadingModal(filePath:string) {
     let element = document.getElementById("modal-text");
     if (element != null){
-        element.innerHTML = element.innerText + "<br />" + filePath;
+        element.insertAdjacentHTML("beforeend", "<li>" + filePath + "</li>");
     }
 }
 

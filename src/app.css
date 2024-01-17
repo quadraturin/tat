@@ -405,7 +405,7 @@ a { color: var(--highlight-color); }
 #modal svg {
     display: inline-block;
 }
-#modal p {
+#modal p, #modal ul {
     font-weight: bold;
     font-size: 0.7rem;
 }
