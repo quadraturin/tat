@@ -5,17 +5,18 @@ import type L from 'leaflet';
 export class MapSound
 {
     data:File;
-    circle:L.Circle;
+    emitter:L.Circle|L.Polygon;
     sound:Howl;
     muted:boolean;
     solo:boolean;
     volume:number;
+    soundType:string;
     
-    constructor(data:File, sound:Howl, circle:L.Circle, muted?:boolean, solo?:boolean, volume?:number)
+    constructor(data:File, sound:Howl, emitter:L.Circle|L.Polygon, volume?:number, muted?:boolean, solo?:boolean, soundType?:string)
     {
         this.data = data;
         this.sound = sound;
-        this.circle = circle;
+        this.emitter = emitter;
         if (typeof muted == "undefined") {
             this.muted = false;
         } else {
@@ -30,6 +31,11 @@ export class MapSound
             this.volume = 1;
         } else {
             this.volume = volume;
+        }
+        if (typeof soundType == "undefined") {
+            this.soundType = "sound";
+        } else {
+            this.soundType = soundType;
         }
     }
 }

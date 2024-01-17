@@ -2,10 +2,10 @@ import * as R from '$lib/registry'
 import { ask } from "@tauri-apps/api/dialog";
 import type L from 'leaflet'
 
-export function removeSoundbyCircle(emitter:L.Circle, removeFromList:boolean = true) {
+export function removeSoundbyEmitter(emitter:L.Circle|L.Polygon, removeFromList:boolean = true) {
     let soundList = R.getSoundList();
     for(let i = 0; i < soundList.length; i++) {
-        if (soundList[i].circle === emitter) {
+        if (soundList[i].emitter === emitter) {
             removeSound(i, removeFromList);
             break;
         }
@@ -27,7 +27,7 @@ export async function removeSound(id:number, removeFromList:boolean = true) {
             if (!approveDelete) return;
         }
         soundList[id].sound.stop();
-        soundList[id].circle.remove();
+        soundList[id].emitter.remove();
         if(removeFromList) soundList.splice(id, 1);
         R.setProjectDirty();
     }

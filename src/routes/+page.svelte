@@ -252,9 +252,9 @@
     {#if soundList.length>0}
         <div id="browser-sounds">
             {#each soundList as item, i }
-                <div class="item sound-item" class:selected={R.getIsSelected(item.circle)} id="sound-item-{i}" on:wheel|preventDefault={(event) => changeBaseVolume(item, event)}>
+                <div class="item sound-item" class:selected={R.getIsSelected(item.emitter)} id="sound-item-{i}" on:wheel|preventDefault={(event) => changeBaseVolume(item, event)}>
                     <div class="volume" style={"height: "+(item.volume*100)+"%"}></div>
-                    <button class="item-name" on:click={() => {R.toggleSelected(item.circle)}}>{item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}</button>
+                    <button class="item-name" on:click={() => {R.toggleSelected(item.emitter)}}>{item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}</button>
                     <button class="item-button item-pause" class:activated={!item.sound.playing()} title="play/pause sound" on:click={() => togglePause(item)}>{#if item.sound.playing()}⏸{:else}⏵{/if}</button>
                     <button class="item-button item-mute" class:activated={item.muted} title="mute sound" on:click={() => toggleMute(i)}>M</button>
                     <button class="item-button item-solo" class:activated={item.solo} title="solo sound" on:click={() => toggleSolo(i)}>S</button>

@@ -1,4 +1,5 @@
 import * as R from '$lib/registry';
+import L, { LatLng } from 'leaflet';
 import { message, save } from "@tauri-apps/api/dialog";
 import { createDir, writeTextFile, writeBinaryFile, exists, readDir, removeFile } from "@tauri-apps/api/fs";
 import { join, basename, sep } from "@tauri-apps/api/path";
@@ -72,16 +73,25 @@ export async function saveProject(saveAs=false): Promise<boolean>
     // cycle through loaded sounds, adding each to the project object
     i = 0;
     soundList.forEach(e => {
-        project.maps[0].sounds[i] = 
-        {
+        project.maps[0].sounds[i] = {
             src: e.data.name,
-            x: e.circle.getLatLng().lng,
-            y: e.circle.getLatLng().lat,
-            radius: e.circle.getRadius(),
+            soundType: e.soundType,
             volume: e.volume,
             solo: e.solo,
             muted: e.muted
         }
+        if (e.emitter instanceof L.Circle) {
+            project.maps[0].sounds[i].x = e.emitter.getLatLng().lng;
+            project.maps[0].sounds[i].y = e.emitter.getLatLng().lat;
+            project.maps[0].sounds[i].radius = e.emitter.getRadius();
+        } else if (e.emitter instanceof L.Polygon) {
+            project.maps[0].sounds[i].points = [];
+            for (let j=0; j<(e.emitter.getLatLngs()[0]as LatLng[]).length; j++) {
+                project.maps[0].sounds[i].points.push([(e.emitter.getLatLngs()[0] as LatLng[])[j].lng, (e.emitter.getLatLngs()[0] as LatLng[])[j].lat]);
+            }
+            console.log(e.emitter.getLatLngs());
+        }
+
         promises.push(writeSoundFile(e, filePath as string));
         i++;
     });

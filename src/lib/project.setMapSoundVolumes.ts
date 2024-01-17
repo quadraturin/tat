@@ -10,8 +10,14 @@ export function setMapSoundVolumes(): void
     {
         if(layer instanceof L.Polygon) 
         {
-            const inside = T.booleanPointInPolygon([listener.getLatLng().lng,listener.getLatLng().lat],layer.toGeoJSON());
-            if (!inside) return;
+            const inside = T.booleanPointInPolygon([listener.getLatLng().lng,listener.getLatLng().lat], layer.toGeoJSON());
+            let volume = 0;
+            if (inside) {
+                volume = 1;
+            }
+            R.getSoundList().forEach(e => {
+                if (e.emitter == layer) e.sound.volume(volume*e.volume);
+            })
         }
         if(layer instanceof L.Circle) 
         {
@@ -20,9 +26,8 @@ export function setMapSoundVolumes(): void
             const c = Math.sqrt(a*a + b*b);
             const volume = Math.max(0,(layer.getRadius() - c) / layer.getRadius());
             //console.log("circle volume: " + Math.ceil(volume*100) + "%");
-            R.getSoundList().forEach(e => 
-            {
-                if (e.circle == layer) e.sound.volume(volume*e.volume); // adjusted for base volume
+            R.getSoundList().forEach(e => {
+                if (e.emitter == layer) e.sound.volume(volume*e.volume); // adjusted for base volume
             });
         }
     })

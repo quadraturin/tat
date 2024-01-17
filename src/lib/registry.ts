@@ -74,8 +74,8 @@ export function moveImageToStartOfList(i:number) {
 let soundList = new Array<MapSound>;
 export function getSoundList():Array<MapSound> { return soundList; };
 export function setSoundList(newSoundList:Array<MapSound>) { soundList = newSoundList; };
-export function addToSoundList(data:File, sound:Howl, circle:L.Circle) {
-    soundList.push(new MapSound(data, sound, circle))
+export function addToSoundList(data:File, sound:Howl, emitter:L.Circle|L.Polygon, volume:number|undefined, muted:boolean|undefined, solo:boolean|undefined, soundType:string|undefined) {
+    soundList.push(new MapSound(data, sound, emitter, volume, muted, solo, soundType));
 }
 
 // control modifiers

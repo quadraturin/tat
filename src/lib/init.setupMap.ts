@@ -47,14 +47,14 @@ import L from "leaflet";
         }
 
         // test polygon
-        let polygon = L.polygon([
+        /*let polygon = L.polygon([
             [0, 0],
             [150, 0],
             [200, 300],
             [50, 100]
         ]).addTo(map);
         polygon.bindPopup("I am a polygon.");
-        polygon.enableEdit();
+        polygon.enableEdit();*/
 
 
         map.fitBounds([[0,0], [height, width]] as L.LatLngBoundsExpression);

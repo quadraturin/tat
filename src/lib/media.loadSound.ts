@@ -7,19 +7,14 @@ import 'leaflet-editable';
 import 'leaflet.path.drag';
 import { setMapSoundVolumes } from './project.setMapSoundVolumes';
 import { Howl } from "howler";
-import { removeSoundbyCircle } from './media.removeSound';
+import { removeSoundbyEmitter } from './media.removeSound';
 import { updateLoadingModal } from './ui.modals';
 import type { MapSound } from './classes/MapSound';
 
 
-export async function loadSound(filePath:string, x?:number, y?:number, r?:number): Promise<void> 
-{
-    try 
-    {
+export async function loadSound(filePath:string, soundType?:string, volume?:number, muted?:boolean, solo?:boolean, x?:number, y?:number, r?:number, points?:[number, number][]): Promise<void> {
+    try {
         updateLoadingModal(filePath);
-        let lat = y;
-        let lng = x;
-        let rad = r;
         const ext = await extname(filePath);
 
         // read in the sound data
@@ -31,49 +26,60 @@ export async function loadSound(filePath:string, x?:number, y?:number, r?:number
         // return a File object to hold the data
         const file =  new File([content], fileName, { type: 'audio/' + ext });
 
-        newSound(file);
+        newSound(file, soundType, volume, muted, solo, y, x, r, points);
     } 
-    catch (err) 
-    {
+    catch (err) {
         console.error(err);
     }
 }
 
-export async function newSound(file:File, lat?:number, lng?:number, rad?:number) {
+export async function newSound(file:File, soundType?:string, volume?:number, muted?:boolean, solo?:boolean, lat?:number, lng?:number, rad?:number, points?:[number, number][]) {
     try {
         let point:L.LatLng;
 
-        console.log('sound file type: ' + file.type.replace(/.*\//, ""));
+        //console.log('sound file type: ' + file.type.replace(/.*\//, ""));
 
         // create a data URL & pass to howler
         const mapSoundURL = URL.createObjectURL(file);
-        const sound = new Howl(
-        {
+        const sound = new Howl({
             src: [mapSoundURL],
             format: [file.type.replace(/.*\//, "")],
-            loop: true
+            loop: true,
+            volume: volume,
+            mute: muted
         });
 
         if (typeof rad === 'undefined') rad = 100;
-        if (typeof lng === 'undefined' || typeof lat === 'undefined')
-        {
+        if (typeof lng === 'undefined' || typeof lat === 'undefined') {
             point = getRandomPointInViewport(R.getMap())
-        }
-        else
-        {
+        } else {
             point = L.latLng(lat as number,lng as number);
         }
-        // create emitter circle in leaflet
 
-        const emitter: L.Circle = L.circle(point, 
-        {
-            color: 'coral',
-            fillColor: 'coral',
-            fillOpacity: 0.2,
-            radius: rad,
-            pane: 'soundPane',
-            weight: 1
-        }).addTo(R.getMap());
+        let emitter: L.Circle | L.Polygon;
+
+        // create emitter based on sound type
+        if (soundType == "area" && typeof points != "undefined") {
+            for (let i=0; i<points.length; i++) {
+                points[i].reverse();
+            }
+            emitter = L.polygon(points, {
+                color: 'coral',
+                fillColor: 'coral',
+                fillOpacity: 0.2,
+                pane: 'soundPane',
+                weight: 1
+            }).addTo(R.getMap());
+        } else { // default to circle
+            emitter = L.circle(point, {
+                color: 'coral',
+                fillColor: 'coral',
+                fillOpacity: 0.2,
+                radius: rad,
+                pane: 'soundPane',
+                weight: 1
+            }).addTo(R.getMap());
+        }
         
         // emitter settings
         emitter.enableEdit();
@@ -84,12 +90,12 @@ export async function newSound(file:File, lat?:number, lng?:number, rad?:number)
         emitter.on('editable:editing', emitter.bringToFront);
         emitter.on('dragstart editable:editing', highlightEmitter);
         emitter.on('dragend', onClick);
-        //emitter.on('editable:vertex:dragend', deselectEmitter);
         emitter.on('mousedown', onClick);
+        //emitter.on('editable:vertex:dragend', deselectEmitter);
         //emitter.bindPopup("I am an audio emitter.");
 
         // add this sound to the sound list registry
-        R.addToSoundList(file, sound, emitter);
+        R.addToSoundList(file, sound, emitter, volume, muted, solo, soundType);
 
         // update volumes & play sound
         setMapSoundVolumes();
@@ -109,10 +115,10 @@ export async function newSound(file:File, lat?:number, lng?:number, rad?:number)
             else R.addToSelection(emitter);
             emitter.bringToFront();
 
-            if (R.getIsInDeleteMode()) removeSoundbyCircle(emitter);
+            if (R.getIsInDeleteMode()) removeSoundbyEmitter(emitter);
         };
 
-        function toggleSoundEdit(){
+        function toggleSoundEdit() {
             if (emitter.editEnabled()) emitter.setStyle({opacity:0});
             else emitter.setStyle({opacity:1});
             emitter.toggleEdit();

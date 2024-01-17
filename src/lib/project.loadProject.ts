@@ -50,12 +50,13 @@ export async function loadProject()
         for (let i=0; i<project.maps.length; i++) {
             for (let j=0; j<project.maps[i].images.length; j++) {
                 const obj = project.maps[i].images[j];
-                //load sequentially so they stack correctly!
+                // load sequentially so they stack correctly!
                 await loadImage(await join(filePath as string, 'images', obj.src), obj.x, obj.y, obj.width, obj.height, obj.originalWidth, obj.originalHeight, obj.opacity);
             }
             for (let j=0; j<project.maps[i].sounds.length; j++) {
                 const obj = project.maps[i].sounds[j];
-                promises.push(loadSound(await join(filePath as string, 'sounds', obj.src), obj.x, obj.y, obj.radius));
+                // load sequentially so they stack correctly!
+                await loadSound(await join(filePath as string, 'sounds', obj.src), obj.soundType, obj.volume, obj.muted, obj.solo, obj.x, obj.y, obj.radius, obj.points);
             }
         }
         await Promise.allSettled(promises);
