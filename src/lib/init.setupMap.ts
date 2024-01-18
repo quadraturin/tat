@@ -14,6 +14,7 @@ import L from "leaflet";
             minZoom: -5,
             maxZoom: 2,
             boxZoom: false,
+            zoomControl: false,
             contextmenu: false,
             contextmenuItems: []
         });

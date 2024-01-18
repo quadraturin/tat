@@ -8,8 +8,8 @@
     // modules
     import * as R from '$lib/registry';
     import { onMount } from 'svelte'
-    import { appWindow } from '@tauri-apps/api/window'
-    import L from "leaflet";
+    import { LogicalSize, appWindow } from '@tauri-apps/api/window'
+    import L, { map } from "leaflet";
 	import { setupMap } from '$lib/init.setupMap';
 	import { setupListener } from '$lib/init.setupListener';
 	import { saveProject } from '$lib/project.saveProject';
@@ -67,6 +67,8 @@
     // initialize
     onMount( () => 
     {
+        appWindow.setMinSize(new LogicalSize(300,200));
+
         // set up title bar window controls
         const titlebarMinimize = document.getElementById('titlebar-minimize') as HTMLElement;
         titlebarMinimize.addEventListener('click', () => appWindow.minimize());
@@ -175,6 +177,14 @@
         R.getMap().flyTo(R.getMap().containerPointToLatLng([event.x, event.y]));
     });*/
 
+    let sidebarHidden = false;
+    
+    $: sidebarHidden;
+
+    function toggleSidebar() {
+        sidebarHidden = !sidebarHidden;
+    }
+
 </script>
 
 <svelte:window
@@ -204,6 +214,8 @@ on:wheel|preventDefault={()=>{}}>
         <span class="button-title-short">{data.ui.addMediaShort}</span>
         <span class="button-title-full">{data.ui.addMedia}</span>
     </button>
+
+    <span data-tauri-drag-region class="toolbar-spacer"></span>
     
     <button class="toolbar-button"
     on:click={() => saveProject(false)} 
@@ -314,7 +326,33 @@ on:wheel|preventDefault={()=>{}}>
     -webkit-app-region: drag;">
 </div>-->
 
-<div id="browser">
+<div id="controls" class:sidebarHidden>
+    <button id="zoom-in"
+    on:click={()=>{R.getMap().zoomIn()}}>
+        +
+    </button>
+
+    <button id="zoom-out"
+    on:click={()=>{R.getMap().zoomOut()}}>
+        -
+    </button>
+
+    <div class="control-spacer"></div>
+
+    <button id="recenter"
+    on:click={()=>{R.getMap().flyTo(R.getListener().getLatLng())}}>
+        x
+    </button>
+    
+    <div class="control-spacer"></div>
+    
+    <button id="hide-show"
+    on:click={toggleSidebar}>
+        ⇐
+    </button>
+</div>
+
+<div id="browser" class:sidebarHidden>
     {#if soundList.length>0}
         <div id="browser-sounds">
             {#each soundList as item, i }

@@ -8,19 +8,26 @@
     },
     "ui": {
         "addMedia": "add media",
-        "addMediaShort": "+md",
+        "addMediaShort": "add",
+        "addMediaShorcut": "<strong>(CTRL/CMD+M)</strong>",
         "save": "save",
-        "saveShort": "sav",
+        "saveShort": "save",
+        "saveShorcut": "<strong>(CTRL/CMD+S)</strong>",
         "saveAs": "save as",
-        "saveAsShort": "sva",
+        "saveAsShort": "save as",
+        "saveAsShorcut": "<strong>(CTRL/CMD+SHIFT+S)</strong>",
         "openProject": "open project",
-        "openProjectShort": "opn",
+        "openProjectShort": "open",
+        "openProjectShorcut": "<strong>(CTRL/CMD+O)</strong>",
         "newProject": "new project",
         "newProjectShort": "new",
+        "newProjectShorcut": "<strong>(CTRL/CMD+N)</strong>",
         "about": "about",
-        "aboutShort": "abt",
+        "aboutShort": "about",
+        "aboutShorcut": "<strong></strong>",
         "settings": "settings",
-        "settingsShort": "set"
+        "settingsShort": "set",
+        "settingsShorcut": "<strong></strong>"
     },
     "help": {
         "titlebar":{
