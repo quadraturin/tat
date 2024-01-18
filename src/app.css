@@ -245,6 +245,7 @@ a { color: var(--highlight-color); }
     -ms-user-select: none;      /* IE 10+ */
     user-select: none;          /* Likely future */  
     cursor: default;
+    width: 100%;
 }
 #help.activated #help-text { 
     display:block; 
@@ -277,6 +278,8 @@ a { color: var(--highlight-color); }
     display: none;
     background-color: var(--text-color);
     color: var(--background-color);
+    min-height:1rem;
+    min-width: 100%;
 }
 #help-text strong {
     text-transform: uppercase;

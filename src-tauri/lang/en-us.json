@@ -47,10 +47,12 @@
             "close": "<strong>close</strong> tat."
         },
         "map": {
+            "helpArea": "<strong>info:</strong> mouse over things in the application to show information about them here. click the \"?\" button to collapse.",
             "zoomIn": "<strong>zoom in:</strong> zoom in on the map.",
             "zoomInDisabled": "you are currently as zoomed is as you can be!",
-            "zoomOut": "<strong>zoom out:<strong> zoom out on the map.",
+            "zoomOut": "<strong>zoom out:</strong> zoom out on the map.",
             "zoomOutDisabled": "you are currently as zoomed out as you can be!",
+            "recenter": "center the view on the listener.",
 
             "hideSidebar": "<strong>hide sidebar:</strong> hide the sidebar interface.",
             "showSidebar": "<strong>show sidebar:</strong> show the sidebar interface.",

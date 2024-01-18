@@ -328,26 +328,42 @@ on:wheel|preventDefault={()=>{}}>
 
 <div id="controls" class:sidebarHidden>
     <button id="zoom-in"
-    on:click={()=>{R.getMap().zoomIn()}}>
+    on:click={()=>{R.getMap().zoomIn()}}
+    on:focus={()=>{}} 
+    on:mouseover={()=>{help(data.help.map.zoomIn)}}
+    on:mouseout={()=>{help()}}
+    on:blur={()=>{}}>
         +
     </button>
 
     <button id="zoom-out"
-    on:click={()=>{R.getMap().zoomOut()}}>
+    on:click={()=>{R.getMap().zoomOut()}}
+    on:focus={()=>{}} 
+    on:mouseover={()=>{help(data.help.map.zoomOut)}}
+    on:mouseout={()=>{help()}}
+    on:blur={()=>{}}>
         -
     </button>
 
     <div class="control-spacer"></div>
 
     <button id="recenter"
-    on:click={()=>{R.getMap().flyTo(R.getListener().getLatLng())}}>
+    on:click={()=>{R.getMap().flyTo(R.getListener().getLatLng())}}
+    on:focus={()=>{}} 
+    on:mouseover={()=>{help(data.help.map.recenter)}}
+    on:mouseout={()=>{help()}}
+    on:blur={()=>{}}>
         x
     </button>
     
     <div class="control-spacer"></div>
     
     <button id="hide-show"
-    on:click={toggleSidebar}>
+    on:click={toggleSidebar}
+    on:focus={()=>{}} 
+    on:mouseover={()=>{help(data.help.map.hideSidebar)}}
+    on:mouseout={()=>{help()}}
+    on:blur={()=>{}}>
         ⇐
     </button>
 </div>

@@ -1,5 +1,3 @@
-import * as R from '$lib/registry'
-
 export function help(...ids:string[]) {
     let textArea = document.getElementById("help-text");
     if (textArea != null) {
