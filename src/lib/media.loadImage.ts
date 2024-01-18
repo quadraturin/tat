@@ -7,6 +7,7 @@ import { removeImageByRect } from './media.removeImage';
 import { updateLoadingModal } from './ui.modals';
 import type { MapImage } from './classes/MapImage';
 import { getRandomPointInViewport } from './util.getRandomPointInViewport';
+import { help } from './util.help';
 
 export async function loadImage(filePath:string, x?:number, y?:number, w?:number, h?:number, ow?:number, oh?:number, o?:number): Promise<void> {
     try {
@@ -96,6 +97,13 @@ export async function newImage(file:File, height:number, width:number, lat?:numb
         }).addTo(map);
         imageRect.enableEdit();
         imageRect.on('dblclick', L.DomEvent.stop).on('dblclick', toggleImageEdit);
+        imageRect.on('mouseover', () => {
+            if (!imageRect.editEnabled()) help(R.t.help.map.locked, R.t.help.map.image, R.t.help.map.itemLocked, R.t.help.map.itemLockedActions);
+            else if(R.getIsSelected(imageRect)) help(R.t.help.map.selected, R.t.help.map.image, R.t.help.map.imageActions, R.t.help.map.itemSelectedActions);
+            else help(R.t.help.map.image, R.t.help.map.imageActions, R.t.help.map.itemUnselectedActions);
+        });
+        imageRect.on('mouseout', () => {help()});
+
         bindEventsToImageRect();
         R.setHasMedia(true);
         overlay.setBounds(imageRect.getBounds());

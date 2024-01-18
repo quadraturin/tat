@@ -2,6 +2,7 @@ import L, { ImageOverlay } from "leaflet";
 import { MapImage } from "./classes/MapImage";
 import { MapSound } from "./classes/MapSound";
 import type { MapInfo } from "./classes/MapInfo";
+import { readTextFile } from "@tauri-apps/api/fs";
 
 // the map
 let map:L.Map;
@@ -158,4 +159,22 @@ export function getIsSettingsMenuOpen():boolean {
 }
 export function setIsSettingsMenuOpen(val:boolean) {
     settingsMenuOpen = val;
+}
+
+// text
+export let t:any;
+export async function setText() {
+    t = JSON.parse(await readTextFile('lang/en-us.json'));
+    //console.log(t);
+}
+
+// help state
+let helpActive = true;
+export function toggleHelpActive() {
+    helpActive = !helpActive;
+    console.log("helpActive is now " + helpActive);
+}
+export function getIsHelpActive():boolean {
+    console.log("getting helpActive: " + helpActive)
+    return helpActive;
 }

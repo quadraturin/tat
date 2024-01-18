@@ -160,6 +160,9 @@ a { color: var(--highlight-color); }
     align-items: center;
     width: var(--title-bar-height);
     height: var(--title-bar-height);
+    background: transparent;
+    padding: 0;
+    border: none;
 }
 .titlebar-button:hover {
     color: var(--highlight-color);
@@ -231,30 +234,51 @@ a { color: var(--highlight-color); }
 #help {
     z-index: 10000;
     position: absolute;
-    bottom: 12px;
-    left: 12px;
-    width: 12rem;
+    bottom: 0;
+    left: 0;
     padding: 2px;
     font-size: 0.7rem;
     font-weight: bold;
-    border-radius: 4px;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
     -webkit-user-select: none;  /* Chrome all / Safari all */
     -moz-user-select: none;     /* Firefox all */
     -ms-user-select: none;      /* IE 10+ */
     user-select: none;          /* Likely future */  
     cursor: default;
 }
+#help.activated #help-text { 
+    display:block; 
+}
+#help.activated #help-toggle {
+    background: var(--text-color);
+    color: var(--background-color);
+}
+#help.activated #help-toggle:hover {
+    background: var(--text-color);
+    color: var(--highlight-color);
+}
 #help-toggle {
     border: 1px solid var(--text-color);
+    border-bottom: 0;
+    border-left: 0;
     background: transparent;
     color: var(--text-color);
-    border-radius: 9999px;
+    border-radius: 0 4px 0 0;
     font-weight: bold;
     padding: 0;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
+}
+#help-toggle:hover {
+    border-color: var(--highlight-color);
+    color: var(--highlight-color);
+}
+#help-text {
+    display: none;
+    background-color: var(--text-color);
+    color: var(--background-color);
+}
+#help-text strong {
+    text-transform: uppercase;
 }
 
 /* media browser */

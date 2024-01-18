@@ -1,5 +1,7 @@
 export let proportionalScaleOnByDefault = false;
 export let invertVolumeScroll = false;
+export let helpOpen = true;
+export let language = "en-us";
 export let theme = {
     name: 'warped',
     color1: 'coral',

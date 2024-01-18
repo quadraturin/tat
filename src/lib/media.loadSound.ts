@@ -11,6 +11,8 @@ import { removeSound, removeSoundbyEmitter } from './media.removeSound';
 import { updateLoadingModal } from './ui.modals';
 import type { MapSound } from './classes/MapSound';
 import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from './settings';
+import { emit } from '@tauri-apps/api/event';
+import { help } from './util.help';
 
 
 export async function loadSound(filePath:string, soundType?:string, volume?:number, muted?:boolean, solo?:boolean, x?:number, y?:number, r?:number, points?:[number, number][]): Promise<void> {
@@ -129,7 +131,7 @@ export async function createEmitter(soundType:string, lat?:number, lng?:number, 
     
     // emitter settings
     emitter.enableEdit();
-    emitter.on('dblclick', L.DomEvent.stop).on('dblclick', toggleSoundEdit);
+    emitter.on('dblclick', L.DomEvent.stop).on('dblclick', () => { toggleSoundEdit(emitter) });
     emitter.on('drag', setMapSoundVolumes); //could be optimized to only update *this* vol
     emitter.on('editable:editing', setMapSoundVolumes);
     emitter.on('drag', emitter.bringToFront);
@@ -137,6 +139,18 @@ export async function createEmitter(soundType:string, lat?:number, lng?:number, 
     emitter.on('dragstart editable:editing', highlightEmitter);
     emitter.on('dragend', onClick);
     emitter.on('mouseup', onClick);
+    emitter.on('mouseover', () => {
+        if (soundType == SOUNDTYPE_AREA) { // area sound
+            if (!emitter.editEnabled()) help(R.t.help.map.locked, R.t.help.map.soundTypeArea, R.t.help.map.itemLocked, R.t.help.map.itemLockedActions);
+            else if(R.getIsSelected(emitter)) help(R.t.help.map.selected, R.t.help.map.soundTypeArea, R.t.help.map.soundAreaActions, R.t.help.map.itemSelectedActions);
+            else help(R.t.help.map.soundTypeArea, R.t.help.map.soundAreaActions, R.t.help.map.itemUnselectedActions);
+        } else { // local sound
+            if (!emitter.editEnabled()) help(R.t.help.map.locked, R.t.help.map.soundTypeLocal, R.t.help.map.itemLocked, R.t.help.map.itemLockedActions);
+            else if(R.getIsSelected(emitter)) help(R.t.help.map.selected, R.t.help.map.soundTypeLocal, R.t.help.map.soundLocalActions, R.t.help.map.itemSelectedActions);
+            else help(R.t.help.map.soundTypeLocal, R.t.help.map.soundLocalActions, R.t.help.map.itemUnselectedActions);
+        }
+    });
+    emitter.on('mouseout', () => {help()});
     //emitter.on('editable:vertex:dragend', deselectEmitter);
     //emitter.bindPopup("I am an audio emitter.");
 
@@ -153,12 +167,12 @@ export async function createEmitter(soundType:string, lat?:number, lng?:number, 
         if (R.getIsInDeleteMode()) removeSoundbyEmitter(emitter);
     }
 
-    function toggleSoundEdit() {
-        if (emitter.editEnabled()) emitter.setStyle({opacity:0});
-        else emitter.setStyle({opacity:1});
-        emitter.toggleEdit();
-        if (R.getIsSelected(emitter)) R.removeFromSelection(emitter);
-    }
-
     return emitter;
+}
+
+export function toggleSoundEdit(emitter:L.Circle|L.Polygon) {
+    if (emitter.editEnabled()) emitter.setStyle({opacity:0});
+    else emitter.setStyle({opacity:1});
+    emitter.toggleEdit();
+    if (R.getIsSelected(emitter)) R.removeFromSelection(emitter);
 }

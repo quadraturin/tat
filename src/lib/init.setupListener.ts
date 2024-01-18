@@ -1,6 +1,8 @@
 import L from "leaflet";
+import {t} from "$lib/registry";
 
 import { setMapSoundVolumes } from "./media.setMapSoundVolumes";
+import { help } from "./util.help";
 
 export function setupListener(map:L.Map): L.Marker<any>
 {
@@ -29,6 +31,12 @@ export function setupListener(map:L.Map): L.Marker<any>
 
     // adjust sound volumes when the listener gets dragged around
     listener.on('drag', () => { setMapSoundVolumes() });
+
+    listener.on('mouseover', () => {
+        help(t.help.map.listener, t.help.map.listenerActions);
+    });
+    listener.on('mouseout', () => {help()});
+    
     // listener popup
     //listener.bindPopup("<b>i am the audio listener.</b><br>drag me around :)").openPopup();
 

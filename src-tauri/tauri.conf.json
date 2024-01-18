@@ -68,7 +68,9 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": [
+        "lang/*"
+      ],
       "shortDescription": "",
       "targets": "all",
       "windows": {
