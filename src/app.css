@@ -318,6 +318,9 @@ a { color: var(--highlight-color); }
     background-color: var(--highlight-color);
     color: var(--text-color);
 }
+#controls button svg {
+    margin: 0 auto;
+}
 #controls .control-spacer {
     flex: 0.1;
 }

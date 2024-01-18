@@ -47,6 +47,11 @@
 	import IconSoundArea from '$lib/icons/iconSoundArea.svelte';
 	import IconSoundPause from '$lib/icons/iconSoundPause.svelte';
 	import { help } from '$lib/util.help';
+	import IconZoomIn from '$lib/icons/iconZoomIn.svelte';
+	import IconZoomOut from '$lib/icons/iconZoomOut.svelte';
+	import IconRecenter from '$lib/icons/iconRecenter.svelte';
+	import IconCollapse from '$lib/icons/iconCollapse.svelte';
+	import IconExpand from '$lib/icons/iconExpand.svelte';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
@@ -330,19 +335,19 @@ on:wheel|preventDefault={()=>{}}>
     <button id="zoom-in"
     on:click={()=>{R.getMap().zoomIn()}}
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.map.zoomIn)}}
+    on:mouseover={()=>{help(data.help.map.zoomIn, data.help.map.zoomInShortcut)}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
-        +
+        <IconZoomIn/>
     </button>
 
     <button id="zoom-out"
     on:click={()=>{R.getMap().zoomOut()}}
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.map.zoomOut)}}
+    on:mouseover={()=>{help(data.help.map.zoomOut, data.help.map.zoomOutShortcut)}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
-        -
+        <IconZoomOut/>
     </button>
 
     <div class="control-spacer"></div>
@@ -350,10 +355,10 @@ on:wheel|preventDefault={()=>{}}>
     <button id="recenter"
     on:click={()=>{R.getMap().flyTo(R.getListener().getLatLng())}}
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.map.recenter)}}
+    on:mouseover={()=>{help(data.help.map.recenter, data.help.map.recenterShortcut)}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
-        x
+        <IconRecenter/>
     </button>
     
     <div class="control-spacer"></div>
@@ -361,10 +366,10 @@ on:wheel|preventDefault={()=>{}}>
     <button id="hide-show"
     on:click={toggleSidebar}
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.map.hideSidebar)}}
+    on:mouseover={()=>{sidebarHidden? help(data.help.map.showSidebar, data.help.map.toggleSidebarShortcut) : help(data.help.map.hideSidebar, data.help.map.toggleSidebarShortcut)}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
-        ⇐
+        {#if sidebarHidden}<IconExpand/>{:else}<IconCollapse/>{/if}
     </button>
 </div>
 
