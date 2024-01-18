@@ -1,4 +1,3 @@
-import type { event } from "@tauri-apps/api";
 import L from "leaflet";
 
     // set up the initial map state
@@ -46,20 +45,9 @@ import L from "leaflet";
             map.zoomOut();
         }
 
-        // test polygon
-        /*let polygon = L.polygon([
-            [0, 0],
-            [150, 0],
-            [200, 300],
-            [50, 100]
-        ]).addTo(map);
-        polygon.bindPopup("I am a polygon.");
-        polygon.enableEdit();*/
-
-
         map.fitBounds([[0,0], [height, width]] as L.LatLngBoundsExpression);
 
-        // trying to add a grid bkg
+        // grid bkg
         
         let Grid = L.GridLayer.extend({
             createTile: function (coords:any) {

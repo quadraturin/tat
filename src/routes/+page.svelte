@@ -38,9 +38,13 @@
 	import { removeImage } from '$lib/media.removeImage';
 	import { removeSound } from '$lib/media.removeSound';
 	import { duplicateImage } from '$lib/media.loadImage';
-	import { duplicateSound } from '$lib/media.loadSound';
+	import { cycleSoundType, duplicateSound } from '$lib/media.loadSound';
 	import { changeBaseVolume, seekToByClick, togglePause } from '$lib/media.controlSound';
 	import { changeOpacity } from '$lib/media.controlOpacity';
+	import IconSoundGlobal from '$lib/icons/iconSoundGlobal.svelte';
+	import IconSoundLocal from '$lib/icons/iconSoundLocal.svelte';
+	import IconSoundArea from '$lib/icons/iconSoundArea.svelte';
+	import IconSoundPause from '$lib/icons/iconSoundPause.svelte';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
@@ -158,6 +162,11 @@
 
     let soundTrack:HTMLButtonElement;
 
+    /*document.addEventListener('contextmenu', event => {
+        event.preventDefault();
+        R.getMap().flyTo(R.getMap().containerPointToLatLng([event.x, event.y]));
+    });*/
+
 </script>
 
 <svelte:window
@@ -252,10 +261,11 @@
     {#if soundList.length>0}
         <div id="browser-sounds">
             {#each soundList as item, i }
-                <div class="item sound-item" class:selected={R.getIsSelected(item.emitter)} id="sound-item-{i}" on:wheel|preventDefault={(event) => changeBaseVolume(item, event)}>
+                <div class="item sound-item" class:selected={R.getIsSelected(item.emitter)} class:locked={!item.emitter.editEnabled()} id="sound-item-{i}" on:wheel|preventDefault={(event) => changeBaseVolume(item, event)}>
                     <div class="volume" style={"height: "+(item.volume*100)+"%"}></div>
                     <button class="item-name" on:click={() => {R.toggleSelected(item.emitter)}}>{item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}</button>
-                    <button class="item-button item-pause" class:activated={!item.sound.playing()} title="play/pause sound" on:click={() => togglePause(item)}>{#if item.sound.playing()}⏸{:else}⏵{/if}</button>
+                    <button class="item-button item-type" title={item.soundType + " sound. click to cycle sound type."} on:click={() => {cycleSoundType(item)}}>{#if item.soundType == "area"}<IconSoundArea/>{:else if item.soundType == "global"}<IconSoundGlobal/>{:else}<IconSoundLocal/>{/if}</button>
+                    <button class="item-button item-pause" class:activated={!item.sound.playing()} title="play/pause sound" on:click={() => togglePause(item)}><IconSoundPause/></button>
                     <button class="item-button item-mute" class:activated={item.muted} title="mute sound" on:click={() => toggleMute(i)}>M</button>
                     <button class="item-button item-solo" class:activated={item.solo} title="solo sound" on:click={() => toggleSolo(i)}>S</button>
                     <button class="item-button item-add" title="duplicate sound" on:click={() => duplicateSound(item)}>+</button>
@@ -271,7 +281,7 @@
     {#if imageList.length > 0}
         <div id="browser-images">
             {#each imageList as item, i}
-                <div class="item image-item" id="image-item-{i}" class:selected={R.getIsSelected(item.rect)} on:wheel|preventDefault={(event) => changeOpacity(item, event)}>
+                <div class="item image-item" id="image-item-{i}" class:selected={R.getIsSelected(item.rect)} class:locked={!item.rect.editEnabled()} on:wheel|preventDefault={(event) => changeOpacity(item, event)}>
                     <div class="volume" style={"height: "+(item.opacity*100)+"%"}></div>
                     <button class="item-name" on:click={() => {R.toggleSelected(item.rect)}}>{item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}</button>
                     <button class="item-button item-add" title="duplicate image" on:click={() => duplicateImage(item)}>+</button>

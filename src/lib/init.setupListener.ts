@@ -1,6 +1,6 @@
 import L from "leaflet";
 
-import { setMapSoundVolumes } from "./project.setMapSoundVolumes";
+import { setMapSoundVolumes } from "./media.setMapSoundVolumes";
 
 export function setupListener(map:L.Map): L.Marker<any>
 {
@@ -20,6 +20,8 @@ export function setupListener(map:L.Map): L.Marker<any>
     // put the listener in the center of the viewport
     const listener = L.marker([height/2, width/2],
     {
+        contextmenu:false,
+        contextmenuItems:[],
         draggable: true,
         autoPan: true,
         icon: icon 

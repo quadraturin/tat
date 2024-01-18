@@ -1,13 +1,12 @@
 import * as R from '$lib/registry'
 import { readBinaryFile } from "@tauri-apps/api/fs";
 import { basename, extname } from '@tauri-apps/api/path';
-import L, { LatLng, control, type VertexEvent, Bounds, Point, LatLngBounds } from 'leaflet';
+import L from 'leaflet';
 import 'leaflet-editable';
 import { removeImageByRect } from './media.removeImage';
 import { updateLoadingModal } from './ui.modals';
 import type { MapImage } from './classes/MapImage';
 import { getRandomPointInViewport } from './util.getRandomPointInViewport';
-import type { event } from '@tauri-apps/api';
 
 export async function loadImage(filePath:string, x?:number, y?:number, w?:number, h?:number, ow?:number, oh?:number, o?:number): Promise<void> {
     try {
@@ -112,7 +111,7 @@ export async function newImage(file:File, height:number, width:number, lat?:numb
         // functions
 
         // called repeatedly while editing the image and when loaded
-        function editImage(e:VertexEvent) {
+        function editImage(e:L.VertexEvent) {
             let w:boolean;
             let n:boolean;
             let availableWidth:number;
@@ -177,6 +176,7 @@ export async function newImage(file:File, height:number, width:number, lat?:numb
                 bindEventsToImageRect();
             }
             imageRect.toggleEdit();
+            R.removeFromSelection(imageRect);
         }
 
         // called when starting to move the image
@@ -234,7 +234,7 @@ export async function newImage(file:File, height:number, width:number, lat?:numb
             imageRect.on('drag', (e) => moveImage(e));
             imageRect.on('dragend', stopMoveImage);
             imageRect.on('dragend', onClick);
-            imageRect.on('mousedown', onClick);
+            imageRect.on('mouseup', onClick);
         }
     } catch(err) {
         console.error(err);

@@ -1,3 +1,4 @@
+import { SOUNDTYPE_LOCAL } from '$lib/settings';
 import type { Howl } from 'howler';
 import type L from 'leaflet';
 
@@ -33,7 +34,7 @@ export class MapSound
             this.volume = volume;
         }
         if (typeof soundType == "undefined") {
-            this.soundType = "sound";
+            this.soundType = SOUNDTYPE_LOCAL;
         } else {
             this.soundType = soundType;
         }

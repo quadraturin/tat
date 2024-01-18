@@ -269,6 +269,10 @@ a { color: var(--highlight-color); }
     border: 1px solid var(--highlight-color) !important;
     padding: 1px;
 }
+#browser .item.locked {
+    border: 1px dashed var(--background-color) !important;
+    padding: 1px;
+}
 #browser .item:last-child {
     margin-bottom: 0;
 }
@@ -294,6 +298,9 @@ a { color: var(--highlight-color); }
 }
 #browser .item-button:hover {
     background-color: var(--highlight-color);
+}
+#browser .item-button svg {
+    margin: 0 auto;
 }
 #browser .activated {
     color: var(--highlight-color) !important;

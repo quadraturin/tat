@@ -2,19 +2,14 @@ import { extname } from '@tauri-apps/api/path';
 import { imageFileTypes, soundFileTypes } from '$lib/settings';
 import { loadSound } from "./media.loadSound";
 import { loadImage } from "./media.loadImage";
-import { closeModal, openLoadingModal } from './ui.modals';
 
 export async function loadFile({ filePath }: { filePath: string; }): Promise<void> {
     try {
         const ext = await extname(filePath);
-        if (imageFileTypes.includes(ext)) {
-            // file is an image
-            //console.log('file is image: ' + filePath);
+        if (imageFileTypes.includes(ext)) { // file is an image
             await loadImage(filePath);
         }
-        else if (soundFileTypes.includes(ext)) {
-            // file is a sound
-            //console.log('file is sound: ' + filePath);
+        else if (soundFileTypes.includes(ext)) { // file is a sound
             await loadSound(filePath);
         }
     }

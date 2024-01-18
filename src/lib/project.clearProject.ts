@@ -22,7 +22,7 @@ export async function clearProject():Promise<boolean> {
     R.setImageList(new Array<MapImage>);
 
     R.getSoundList().forEach(e => {
-        removeSoundbyEmitter(e.circle, false);
+        removeSoundbyEmitter(e.emitter, false);
     });
     R.setSoundList(new Array<MapSound>);
 

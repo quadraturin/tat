@@ -1,5 +1,5 @@
 import * as R from '$lib/registry';
-import L, { LatLng } from 'leaflet';
+import L from 'leaflet';
 import { message, save } from "@tauri-apps/api/dialog";
 import { createDir, writeTextFile, writeBinaryFile, exists, readDir, removeFile } from "@tauri-apps/api/fs";
 import { join, basename, sep } from "@tauri-apps/api/path";
@@ -86,8 +86,8 @@ export async function saveProject(saveAs=false): Promise<boolean>
             project.maps[0].sounds[i].radius = e.emitter.getRadius();
         } else if (e.emitter instanceof L.Polygon) {
             project.maps[0].sounds[i].points = [];
-            for (let j=0; j<(e.emitter.getLatLngs()[0]as LatLng[]).length; j++) {
-                project.maps[0].sounds[i].points.push([(e.emitter.getLatLngs()[0] as LatLng[])[j].lng, (e.emitter.getLatLngs()[0] as LatLng[])[j].lat]);
+            for (let j=0; j<(e.emitter.getLatLngs()[0]as L.LatLng[]).length; j++) {
+                project.maps[0].sounds[i].points.push([(e.emitter.getLatLngs()[0] as L.LatLng[])[j].lng, (e.emitter.getLatLngs()[0] as L.LatLng[])[j].lat]);
             }
             console.log(e.emitter.getLatLngs());
         }

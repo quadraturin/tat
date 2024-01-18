@@ -1,5 +1,5 @@
 import type { MapSound } from "./classes/MapSound";
-import { setMapSoundVolumes } from "./project.setMapSoundVolumes";
+import { setMapSoundVolumes } from "./media.setMapSoundVolumes";
 
 
 export async function togglePause(sound:MapSound) {
