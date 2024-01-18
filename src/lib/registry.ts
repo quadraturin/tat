@@ -163,18 +163,15 @@ export function setIsSettingsMenuOpen(val:boolean) {
 
 // text
 export let t:any;
-export async function setText() {
-    t = JSON.parse(await readTextFile('lang/en-us.json'));
-    //console.log(t);
+export async function setText(data:any) {
+    t = data;
 }
 
 // help state
 let helpActive = true;
 export function toggleHelpActive() {
     helpActive = !helpActive;
-    console.log("helpActive is now " + helpActive);
 }
 export function getIsHelpActive():boolean {
-    console.log("getting helpActive: " + helpActive)
     return helpActive;
 }

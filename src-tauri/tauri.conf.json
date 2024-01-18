@@ -59,7 +59,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "zone.paradiso.tat",
+      "identifier": "ooo.paradiso.tat",
       "longDescription": "",
       "macOS": {
         "entitlements": null,

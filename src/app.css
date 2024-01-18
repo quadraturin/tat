@@ -473,7 +473,7 @@ a { color: var(--highlight-color); }
 
 /* responsive styles */
 
-@media (min-width: 701px) {
+@media (min-width: 801px) {
     .toolbar-button .button-title-full {
         display: inline-block;
     }
@@ -482,7 +482,7 @@ a { color: var(--highlight-color); }
     }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 800px) {
     .toolbar-button .button-title-full {
         display: none;
     }
@@ -500,7 +500,7 @@ a { color: var(--highlight-color); }
     }
 }
 
-@media (max-width: 350px) {
+@media (max-width: 450px) {
     .toolbar-button .button-title-full {
         display: none;
     }
