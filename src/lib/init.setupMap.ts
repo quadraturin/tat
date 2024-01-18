@@ -14,19 +14,8 @@ import L from "leaflet";
             minZoom: -5,
             maxZoom: 2,
             boxZoom: false,
-            contextmenu: true,
-            contextmenuItems: [{
-                text: 'center map here',
-                callback: centerMap
-            },
-            {
-                text: 'zoom in',
-                callback: zoomIn
-            },
-            {
-                text: 'zoom out',
-                callback: zoomOut
-            }]
+            contextmenu: false,
+            contextmenuItems: []
         });
         map.createPane("soundPane").style.zIndex = "450";
         map.setView([height/2, width/2], 1);

@@ -24,7 +24,7 @@ export async function removeSound(id:number, removeFromList:boolean = true, forc
                 }
             }
             if (unique) {
-                let approveDelete = await ask("this is the only instance of this sound file in this project!\n\nif you remove it and save the project, the sound file will be deleted from the project folder.\n\ndo you still want to remove the sound?");
+                let approveDelete = await ask(R.t.dialog.confirmDeleteSound);
                 if (!approveDelete) return;
             }
         }

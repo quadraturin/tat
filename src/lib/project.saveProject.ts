@@ -113,28 +113,25 @@ export async function saveProject(saveAs=false): Promise<boolean>
     await Promise.allSettled(promises);
     R.setIsSaving(false);
 
-    await message('project saved!');
+    await message(R.t.dialog.projectSaved);
     closeModal();
 
     return true;
 }
 
-// writes image file to images folder if the specified image doesn't already exist there
+// write image file to images folder if the specified image doesn't already exist there
 async function writeImageFile(e:MapImage, filePath:string) {
     const fullPath = await join(filePath, 'images', e.data.name);
-
-    if (await exists(fullPath)) console.log(`${fullPath} already exists. skipping write.`);
-    else writeBinaryFile(fullPath, await e.data.arrayBuffer());
+    if (!await exists(fullPath)) writeBinaryFile(fullPath, await e.data.arrayBuffer());
 }
 
-// writes sound file to images folder if the specified sound doesn't already exist there
+// write sound file to images folder if the specified sound doesn't already exist there
 async function writeSoundFile(e:MapSound, filePath:string) {
     const fullPath = await join(filePath, 'sounds', e.data.name);
-
-    if (await exists(fullPath)) console.log(`${fullPath} already exists. skipping write.`);
-    else writeBinaryFile(fullPath, await e.data.arrayBuffer());
+    if (!await exists(fullPath)) writeBinaryFile(fullPath, await e.data.arrayBuffer());
 }
 
+// delete files in the folder that are no longer used in the project
 async function deleteUnused(fileType:string) {
     let itemList: MapImage[] | MapSound[] = [];
     
@@ -152,15 +149,15 @@ async function deleteUnused(fileType:string) {
     for (let i=0; i<fileList.length; i++) {
         let notInUse = true;
         for (let j=0; j<itemList.length; j++) {
-            console.log("checking " + fileList[i].name + " vs. " + itemList[j].data.name);
+            //console.log("checking " + fileList[i].name + " vs. " + itemList[j].data.name);
             if (fileList[i].name == itemList[j].data.name) {
                 notInUse = false;
-                console.log(fileList[i].name + " is in use.")
+                //console.log(fileList[i].name + " is in use.")
                 break;
             }
         }
         if (notInUse) {
-            console.log(fileList[i].name as string + " is not in use. deleting...")
+            //console.log(fileList[i].name as string + " is not in use. deleting...")
             removeFile(path + sep + fileType + sep + fileList[i].name as string);
         }
     }

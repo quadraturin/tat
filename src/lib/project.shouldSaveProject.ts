@@ -5,5 +5,5 @@ export async function shouldSaveProject():Promise<boolean> {
     // if there is no media or there are no changes, no need to save
     if (!R.getHasMedia() || !R.getisProjectDirty()) return true;
 
-    return ask("your project has unsaved changes. are you sure you want to close this project and lose all unsaved changes?", {type: "warning"});
+    return ask(R.t.dialog.closeProjectUnsavedChanges, {type: "warning"});
 }

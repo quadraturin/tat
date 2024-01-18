@@ -24,7 +24,7 @@ export async function removeImage(id:number, removeFromList:boolean = true) {
             }
         }
         if (unique) {
-            let approveDelete = await ask("this is the only instance of this image file in this project!\n\nif you remove it and save the project, the image file will be deleted from the project folder.\n\ndo you still want to remove the image?");
+            let approveDelete = await ask(R.t.dialog.confirmDeleteImage);
             if (!approveDelete) return;
         }
         imageList[id].rect.remove();
