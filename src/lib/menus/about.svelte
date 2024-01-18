@@ -1,9 +1,53 @@
+<script>
+	import IconBluesky from "$lib/icons/iconBluesky.svelte";
+	import IconDiscord from "$lib/icons/iconDiscord.svelte";
+	import IconDriveThruRpg from "$lib/icons/iconDriveThruRPG.svelte";
+	import IconGitHub from "$lib/icons/iconGitHub.svelte";
+	import IconInstagram from "$lib/icons/iconInstagram.svelte";
+	import IconItch from "$lib/icons/iconItch.svelte";
+	import IconMastodon from "$lib/icons/iconMastodon.svelte";
+	import IconParadiso from "$lib/icons/iconParadiso.svelte";
+	import IconReddit from "$lib/icons/iconReddit.svelte";
+	import IconTikTok from "$lib/icons/iconTikTok.svelte";
+	import IconTraaash from "$lib/icons/iconTraaash.svelte";
+	import IconTumblr from "$lib/icons/iconTumblr.svelte";
+	import IconTwitter from "$lib/icons/iconTwitter.svelte";
+	import IconYouTube from "$lib/icons/iconYouTube.svelte";
+
+</script>
 <div class="menu" id="about">
     <div>
-        <h2>about</h2>
+        <h2>follow</h2>
+        <p class="links">
+            web:
+            <a href="https://www.paradiso.zone" target="_blank" title="Paradiso Homepage"><IconParadiso/></a>
+            <a href="https://www.traaa.sh" target="_blank" title="TRAAA.SH RPG Blog"><IconTraaash/></a>
+            shop:
+            <a href="https://ultraparadiso.itch.io/" target="_blank" title="Itch.io"><IconItch/></a>
+            <a href="https://www.drivethrurpg.com/browse/pub/23556/Paradiso" target="_blank" title="DriveThruRPG"><IconDriveThruRpg/></a>
+            social etc.:
+            <a href="https://www.youtube.com/@ultraparadiso" target="_blank" title="YouTube"><IconYouTube/></a>
+            <a href="https://www.tiktok.com/@paradiso102" target="_blank" title="TikTok"><IconTikTok/></a>
+            <a href="https://dice.camp/@quadra" target="_blank" title="Mastodon"><IconMastodon/></a>
+            <a href="https://www.tumblr.com/quadratrash" target="_blank" title="Tumblr"><IconTumblr/></a>
+            <a href="https://bsky.app/profile/traaa.sh" target="_blank" title="Bluesky"><IconBluesky/></a>
+            <a href="https://twitter.com/quadratrash" target="_blank" title="Twitter"><IconTwitter/></a>
+            <a href="https://www.instagram.com/quadratraaash/" target="_blank" title="Instagram"><IconInstagram/></a>
+            <a href="https://www.reddit.com/user/quadrazone/" target="_blank" title="Reddit"><IconReddit/></a>
+            <a href="https://github.com/quadraturin" target="_blank" title="GitHub"><IconGitHub/></a>
+
+            <!--<a href="" target="_blank" title="Discord"><IconDiscord/></a>-->
+            
+        </p>
+        <h2>about tat</h2>
         <p><em>version 0.1a</em></p>
         <p>
             tat is a tool for easily running environmental audio during your tabletop games.
+        </p>
+        <p>
+            this tool was designed and programmed by quadra for <a href="https://www.paradiso.zone" target="_blank">PARADISO</a>,
+            originally as a stretch goal reward for the <a href="https://www.kickstarter.com/projects/ultraparadiso/warped-beyond-recognition" target="_blank">warped beyond recognition kickstarter</a>.
+            the original prototype was programmed by <a href="https://galendrew.com/" target="_blank">galen drew</a>.
         </p>
         <p>
             you will need to do a bit of prep to set it up for your scenario.
@@ -23,11 +67,6 @@
             when you save a project, it is saved as a folder containing a "project.json" file describing the project, 
             a "sounds" folder, and an "images" folder, containing copies of the sounds and images you added, respectively.
             references to the original files are not saved. 
-        </p>
-        <p>
-            this tool was designed and programmed by quadra for <a href="https://www.paradiso.zone" target="_blank">PARADISO</a>,
-            originally as a stretch goal reward for the <a href="https://www.kickstarter.com/projects/ultraparadiso/warped-beyond-recognition" target="_blank">warped beyond recognition kickstarter</a>.
-            the original prototype was programmed by <a href="https://galendrew.com/" target="_blank">galen drew</a>.
         </p>
 
         <h2>changelog</h2>
