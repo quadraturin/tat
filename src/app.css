@@ -227,6 +227,36 @@ a { color: var(--highlight-color); }
 }
 
 
+/* help area */
+#help {
+    z-index: 10000;
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    width: 12rem;
+    padding: 2px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    border-radius: 4px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Likely future */  
+    cursor: default;
+}
+#help-toggle {
+    border: 1px solid var(--text-color);
+    background: transparent;
+    color: var(--text-color);
+    border-radius: 9999px;
+    font-weight: bold;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+}
+
 /* media browser */
 #browser {
     z-index: 10000;

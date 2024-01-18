@@ -162,6 +162,12 @@
 
     let soundTrack:HTMLButtonElement;
 
+    function toggleHelp(id:string) {
+        let div = document.getElementById(id);
+        if (div != null)
+            div.style.display = div.style.display == "none" ? "inline" : "none";
+    }
+
     /*document.addEventListener('contextmenu', event => {
         event.preventDefault();
         R.getMap().flyTo(R.getMap().containerPointToLatLng([event.x, event.y]));
@@ -291,6 +297,11 @@
             <div>images</div>
         </div>
     {/if}
+</div>
+
+<div id="help">
+    <button id="help-toggle" on:click={()=>{toggleHelp("help-text")}}>?</button>
+    <span id="help-text">temporary help text</span>
 </div>
 
 <Settings />
