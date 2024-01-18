@@ -1,4 +1,20 @@
 {
+    "ui": {
+        "addMedia": "add media",
+        "addMediaShort": "+md",
+        "save": "save",
+        "saveShort": "sav",
+        "saveAs": "save as",
+        "saveAsShort": "sva",
+        "openProject": "open project",
+        "openProjectShort": "opn",
+        "newProject": "new project",
+        "newProjectShort": "new",
+        "about": "about",
+        "aboutShort": "abt",
+        "settings": "settings",
+        "settingsShort": "set"
+    },
     "help": {
         "titlebar":{
             "title": "your project has no unsaved changes.",
