@@ -543,7 +543,7 @@ on:wheel|preventDefault={()=>{}}>
 
 <Settings />
 
-<About />
+<About data={data} />
 
 <Loading />
 

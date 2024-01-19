@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import IconBluesky from "$lib/icons/iconBluesky.svelte";
 	import IconDiscord from "$lib/icons/iconDiscord.svelte";
 	import IconDriveThruRpg from "$lib/icons/iconDriveThruRPG.svelte";
@@ -13,19 +13,24 @@
 	import IconTumblr from "$lib/icons/iconTumblr.svelte";
 	import IconTwitter from "$lib/icons/iconTwitter.svelte";
 	import IconYouTube from "$lib/icons/iconYouTube.svelte";
-
+	import type { LayoutData } from '../../routes/$types';
+    export let data:LayoutData;
 </script>
+
 <div class="menu" id="about">
     <div>
-        <h2>follow</h2>
+        <h2>{data.about.followTitle}</h2>
+
         <p class="links">
-            web:
+            {data.about.followWeb}:
             <a href="https://www.paradiso.zone" target="_blank" title="Paradiso Homepage"><IconParadiso/></a>
             <a href="https://www.traaa.sh" target="_blank" title="TRAAA.SH RPG Blog"><IconTraaash/></a>
-            shop:
+            
+            {data.about.followShop}:
             <a href="https://ultraparadiso.itch.io/" target="_blank" title="Itch.io"><IconItch/></a>
             <a href="https://www.drivethrurpg.com/browse/pub/23556/Paradiso" target="_blank" title="DriveThruRPG"><IconDriveThruRpg/></a>
-            social etc.:
+            
+            {data.about.followSocial}:
             <a href="https://www.youtube.com/@ultraparadiso" target="_blank" title="YouTube"><IconYouTube/></a>
             <a href="https://www.tiktok.com/@paradiso102" target="_blank" title="TikTok"><IconTikTok/></a>
             <a href="https://dice.camp/@quadra" target="_blank" title="Mastodon"><IconMastodon/></a>
@@ -37,60 +42,60 @@
             <a href="https://github.com/quadraturin" target="_blank" title="GitHub"><IconGitHub/></a>
 
             <!--<a href="" target="_blank" title="Discord"><IconDiscord/></a>-->
-            
-        </p>
-        <h2>about tat</h2>
-        <p><em>version 0.1a</em></p>
-        <p>
-            tat is a tool for easily running environmental audio during your tabletop games.
-        </p>
-        <p>
-            this tool was designed and programmed by quadra for <a href="https://www.paradiso.zone" target="_blank">PARADISO</a>,
-            originally as a stretch goal reward for the <a href="https://www.kickstarter.com/projects/ultraparadiso/warped-beyond-recognition" target="_blank">warped beyond recognition kickstarter</a>.
-            the original prototype was programmed by <a href="https://galendrew.com/" target="_blank">galen drew</a>.
-        </p>
-        <p>
-            you will need to do a bit of prep to set it up for your scenario.
-            click the "add media" button or press ctrl/cmd+m to add images and audio files to the project.
-            you can drag these around and drag the dots on their outlines to resize them.
-            you can do this to match sounds with areas of a dungeon, or create a more abstract "mind map" of images and sounds.
-            use the "+" and "-" buttons or the scroll wheel to zoom in and out and click and drag on the background to pan around.
-            double-click a sound or image to lock it in place. when an image or sound is locked, its outline will disappear.
-            double-click again to unlock it.
-        </p>
-        <p>
-            the map pin is the "listener": this represents where your players are. 
-            as your players move through environments in the game, drag the pin around on the map(s) you added,
-            and the listener will automatically blend the audio sources that you have placed.
-        </p>
-        <p>
-            when you save a project, it is saved as a folder containing a "project.json" file describing the project, 
-            a "sounds" folder, and an "images" folder, containing copies of the sounds and images you added, respectively.
-            references to the original files are not saved. 
         </p>
 
-        <h2>changelog</h2>
+        <h2>{data.about.aboutTitle}</h2>
+        
+        <p><em>{data.about.version} 0.1a</em></p>
+        
+        <p>{@html data.about.blurb}</p>
+        
+        <p>{@html data.about.credits}</p>
+        
+        <p>{@html data.about.video}</p>
+        
+        <p>{@html data.about.howToUse}</p>
+
+        <p>{@html data.about.projectFiles}</p>
+
+        <h2>{data.about.changelogTitle}</h2>
+
         <h3>v0.1a -- initial alpha release to kickstarter backers</h3>
         <ul>
-            <li><strong>import</strong> images (.png, .gif, .jpg, .jpeg, .webp) and audio (.wav, .m4a, .mp3, .ogg, .flac) with the "add media" button</li>
-            <li><strong>move</strong> images and audio emitters by clicking and dragging them</li>
-            <li><strong>resize</strong> images and audio emitters by clicking and dragging the handles on their outlines</li>
-            <li><strong>move</strong> the audio listener pin by clicking and dragging across audio emitters to hear the audio</li>
-            <li><strong>save</strong> projects with the "save project" button</li>
-            <li><strong>open</strong> projects with the "open project" button</li>
-            <li><strong>create</strong> new projects with the "new project" button</li>
-            <li><strong>select</strong> images and audio emitters by single-clicking (outline will highlight)</li>
-            <li><strong>delete</strong> selected images and audio emitters by pressing the delete or backspace key or by alt-clicking them</li>
-            <li><strong>lock and unlock</strong> images and audio emitters from editing by double-clicking them</li>
-            <li>click the "about" button to view the about menu with information, changelog, and licenses</li>
+            <li>create projects</li>
+            <li>save (+save as) projects: copies media files to folder, deletes unused media, writes project json</li>
+            <li>open projects</li>
+            <li>import images and sounds(supported image filetypes: .png, .gif, .jpg, .jpeg, .webp. supported audio filetypes: .wav, .m4a, .mp3, .ogg, .flac)</li>
+            <li>move images and sounds</li>
+            <li>resize images and sounds</li>
+            <li>proportionally resize images</li>
+            <li>move the audio listener pin</li>
+            <li>select images and sounds</li>
+            <li>delete selected images and audio emitters</li>
+            <li>lock and unlock images and audio emitters to prevent editing/moving</li>
+            <li>"about" menu</li>
             <li>title bar layout adjusts to window size</li>
             <li>confirm on exit when there are unsaved changes</li>
+            <li>localizable text</li>
+            <li>help text on hover in collapsible help bar</li>
+            <li>map zoom in and out</li>
+            <li>recenter on listener</li>
+            <li>sidebar ui lists sounds and images in stacking order</li>
+            <li>duplicate sounds and images</li>
+            <li>adjust opacity of images</li>
+            <li>adjust volume of sounds</li>
+            <li>local sound type: emanates from a point with falloff</li>
+            <li>area sound type: constant volume within a polygon</li>
+            <li>global sound type: audible everywhere</li>
+            <li>change sound type: cycle between local, area, and global</li>
+            <li>mute/unmute sounds</li>
+            <li>solo/unsolo sounds</li>
+            <li>pause/play sounds</li>
+            <li>interactive sound playback display</li>
         </ul>
 
-        <h2>tech and licences</h2>
-        <p>
-            this tool is built on several technologies and tools:
-        </p>
+        <h2>{data.about.licensesTitle}</h2>
+        <p>{@html data.about.licenses}</p>
 
 <h3>tauri</h3>
 <pre>MIT License
