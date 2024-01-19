@@ -112,8 +112,11 @@ export async function loadProject()
                     }
                 }
             } 
+
+            // sort the images
+            R.sortImageList();
         }
-        console.log(uniqueImages,uniqueSounds);
+
         await Promise.allSettled(promises);
         R.setProjectClean();
         closeModal();

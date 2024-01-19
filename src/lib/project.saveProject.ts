@@ -65,7 +65,7 @@ export async function saveProject(saveAs=false): Promise<boolean>
             originalWidth: e.originalWidth,
             originalHeight: e.originalHeight,
             opacity: e.opacity,
-            order: e.order
+            order: i
         }
         promises.push(writeImageFile(e, filePath as string));
         i++;
@@ -80,7 +80,7 @@ export async function saveProject(saveAs=false): Promise<boolean>
             volume: e.volume,
             solo: e.solo,
             muted: e.muted,
-            order: e.order
+            order: i
         }
         if (e.emitter instanceof L.Circle) {
             project.maps[0].sounds[i].x = e.emitter.getLatLng().lng;

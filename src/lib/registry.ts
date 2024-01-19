@@ -70,6 +70,16 @@ export function moveImageToStartOfList(i:number) {
     // moves image to start of list -- required for save/load as order determines stacking
     imageList.splice(0,0,imageList.splice(i,1)[0]);
 }
+//sorts and stacks the images
+export function sortImageList() {
+    imageList.sort(function(a,b){
+        return a.order-b.order;
+    });
+    for(let image of imageList) {
+        image.overlay.bringToFront();
+        image.rect.bringToFront();
+    }
+}
 
 // list of sounds
 let soundList = new Array<MapSound>;
