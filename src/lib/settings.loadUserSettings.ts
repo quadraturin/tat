@@ -6,7 +6,7 @@ import { saveUserSettings } from "./settings.saveUserSettings";
 export async function loadUserSettings() {
     try {
         // if settings.json exists in the folder, read it
-        const jsonPath = await join(await appDataDir(), 'project.json');
+        const jsonPath = await join(await appDataDir(), 'settings.json');
         if (await exists(jsonPath)){
             console.log("loading user settings", await appDataDir());
             overwriteUserSettings(JSON.parse(await readTextFile(jsonPath)));
