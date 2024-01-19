@@ -486,6 +486,7 @@ a { color: var(--highlight-color); }
     font-size: 0.8rem;
     overflow-y: scroll;
     scrollbar-color: var(--text-color) var(--background-color);
+    font-weight: bold;
 }
 .menu::-webkit-scrollbar {
     background-color: var(--background-color);
@@ -511,15 +512,87 @@ a { color: var(--highlight-color); }
 .menu h3 {
     text-decoration: underline;
 }
-#about {
-    font-weight: bold;
-}
 .links {
     margin-top: 1rem;
 }
 .links svg {
     display: inline-block;
     vertical-align: middle;
+}
+.setting{
+    padding: 20px 0 0 0;
+}
+.setting+h2 {
+    margin-top: 30px;
+}
+
+/* fancy checkboxes */
+.fancyCheck {
+    appearance: none;
+    background: transparent;
+    border-style: none;
+    flex-shrink: 0;
+    height: 16px;
+    margin: 0;
+    position: relative;
+    width: 30px;
+    border: 1px solid var(--text-color);
+    vertical-align: middle;
+}
+.fancyCheck::before {
+    bottom: -6px;
+    content: "";
+    left: -6px;
+    position: absolute;
+    right: -6px;
+    top: -6px;
+}
+.fancyCheck, .fancyCheck::after {
+    transition: all 100ms ease-out;
+}
+.fancyCheck::after {
+    background-color: var(--text-color);
+    content: "";
+    height: 10px;
+    left: 2px;
+    position: absolute;
+    top: 2px;
+    width: 10px;
+}
+input[type=checkbox] {
+    cursor: default;
+}
+.fancyCheck {
+    transition-duration: 0s;
+}
+.fancyCheck:hover::after {
+    background-color: var(--text-color);
+}
+.fancyCheck:checked {
+    border-color: var(--highlight-color);
+}
+.fancyCheck:checked::after {
+    background-color: var(--highlight-color);
+    left: 16px;
+}
+.fancyCheck:checked:hover::after {
+    background-color: var(--highlight-color);
+}
+.fancyCheck:checked+label, .fancyText+label {
+    color: var(--highlight-color);
+}
+.fancyText {
+    background: transparent;
+    border: 1px solid var(--highlight-color);
+    color: var(--highlight-color);
+    width: 30px;
+    text-align: center;
+}
+.fancyText::selection {
+    background-color: var(--text-color);
+}
+.fancyText:focus {
+    outline: none;
 }
 
 /* modal */
@@ -553,7 +626,7 @@ a { color: var(--highlight-color); }
 
 /* responsive styles */
 
-@media (min-width: 801px) {
+@media (min-width: 901px) {
     .toolbar-button .button-title-full {
         display: inline-block;
     }
@@ -562,7 +635,7 @@ a { color: var(--highlight-color); }
     }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
     .toolbar-button .button-title-full {
         display: none;
     }
@@ -571,7 +644,7 @@ a { color: var(--highlight-color); }
     }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 720px) {
     .toolbar-button .button-title-full {
         display: none;
     }

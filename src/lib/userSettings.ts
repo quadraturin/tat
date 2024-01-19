@@ -1,7 +1,8 @@
 export let proportionalScaleOnByDefault = false;
 export let invertVolumeScroll = false;
-export let helpOpen = true;
+export let movementSpeed = 5;
 export let language = "en-us";
+
 export let theme = {
     name: 'warped',
     color1: 'coral',
@@ -11,4 +12,5 @@ export let theme = {
     color3: 'white',
     accent3: 'teal'
 }
-export let movementSpeed = 5;
+
+export let helpOpen = true; // not in settings: app remembers last setting

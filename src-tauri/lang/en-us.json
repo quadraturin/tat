@@ -42,7 +42,7 @@
         "aboutShort": "about",
         "aboutShorcut": "<strong></strong>",
         "settings": "settings",
-        "settingsShort": "set",
+        "settingsShort": "settings",
         "settingsShorcut": "<strong></strong>"
     },
     "help": {
@@ -55,7 +55,7 @@
             "saveAs": "<strong>save as:</strong> save a copy of your project to a new location.",
             "openProject": "<strong>open:</strong> open an existing project.",
             "newProject": "<strong>new:</strong> create a new project.",
-            "about": "<strong>about</strong> this application.",
+            "about": "<strong>about:</strong> what is this anyway?.",
             "settings": "<strong>settings:</strong>view the application settings.",
 
             "minimize": "<strong>minimize</strong> this window.",

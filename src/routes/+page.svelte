@@ -9,7 +9,7 @@
     import * as R from '$lib/registry';
     import { onMount } from 'svelte'
     import { LogicalSize, appWindow } from '@tauri-apps/api/window'
-    import L, { latLng, map } from "leaflet";
+    import L from "leaflet";
 	import { setupMap } from '$lib/init.setupMap';
 	import { setupListener } from '$lib/init.setupListener';
 	import { saveProject } from '$lib/project.saveProject';
@@ -30,7 +30,7 @@
     import IconSaveAs from '$lib/icons/iconSaveAs.svelte';
     import IconNew from '$lib/icons/iconNew.svelte'
 	import { clearProject } from '$lib/project.clearProject';
-	import { toggleAboutMenu } from '$lib/ui.menus';
+	import { toggleAboutMenu, toggleSettingsMenu } from '$lib/ui.menus';
 	import IconAbout from '$lib/icons/iconAbout.svelte';
 	import About from '$lib/menus/about.svelte';
 	import Settings from '$lib/menus/settings.svelte';
@@ -65,6 +65,7 @@
     let isDirty = false;
     let hasMedia = false;
     let isAboutMenuOpen = false;
+    let isSettingsMenuOpen = false;
     let isHelpActive = false;
     let projectName:string;
     let imageList = R.getImageList();
@@ -73,7 +74,7 @@
     // initialize
     onMount( () => 
     {
-        appWindow.setMinSize(new LogicalSize(300,200));
+        appWindow.setMinSize(new LogicalSize(480,320));
 
         // set up title bar window controls
         const titlebarMinimize = document.getElementById('titlebar-minimize') as HTMLElement;
@@ -123,14 +124,16 @@
 		}
 	}*/
 
-    //$: if(R.getIsSaving()) {
-    //    isSaving = R.getIsSaving();
-    //}
-    //$: if(R.getisProjectDirty()) {
-    //    isDirty = R.getisProjectDirty();
-    //}
+    /*$: if(R.getIsSaving()) {
+        isSaving = R.getIsSaving();
+    }
+    $: if(R.getisProjectDirty()) {
+        isDirty = R.getisProjectDirty();
+    }*/
 
     $: isAboutMenuOpen = R.getIsAboutMenuOpen(), isAboutMenuOpen ? document.getElementById("about-button")?.setAttribute('class', 'toolbar-button selected') : document.getElementById("about-button")?.setAttribute('class', 'toolbar-button');
+    
+    $: isSettingsMenuOpen = R.getIsSettingsMenuOpen(), isSettingsMenuOpen ? document.getElementById("settings-button")?.setAttribute('class', 'toolbar-button selected') : document.getElementById("settings-button")?.setAttribute('class', 'toolbar-button');
 
     $: isDirty = R.getisProjectDirty();
 
@@ -168,6 +171,7 @@
         isDirty = R.getisProjectDirty();
         projectName = R.getProjectName();
         isAboutMenuOpen = R.getIsAboutMenuOpen();
+        isSettingsMenuOpen = R.getIsSettingsMenuOpen();
         imageList = R.getImageList();
         soundList = R.getSoundList();
         isHelpActive = R.getIsHelpActive();
@@ -275,13 +279,18 @@ on:wheel|preventDefault={()=>{}}>
     
     <span data-tauri-drag-region class="toolbar-spacer"></span>
     
-    <!---<button class="toolbar-button"  title="settings">
+    <button class="toolbar-button" id="settings-button"
+    on:click={toggleSettingsMenu} 
+    on:focus={()=>{}} 
+    on:mouseover={()=>{help(data.help.titlebar.settings)}}
+    on:mouseout={()=>{help()}}
+    on:blur={()=>{}}>
         <IconSettings />
-        <span class="button-title-short">s<span>e</span>t</span>
-        <span class="button-title-full">s<span>e</span>ttings</span>
-    </button>-->
+        <span class="button-title-short">{data.ui.settingsShort}</span>
+        <span class="button-title-full">{data.ui.settings}</span>
+    </button>
 
-    <button class="toolbar-button" id="about-button"  title="about" 
+    <button class="toolbar-button" id="about-button" 
     on:click={toggleAboutMenu} 
     on:focus={()=>{}} 
     on:mouseover={()=>{help(data.help.titlebar.about)}}
@@ -548,7 +557,7 @@ on:wheel|preventDefault={()=>{}}>
     <span id="help-text"></span>
 </div>
 
-<Settings />
+<Settings data={data} />
 
 <About data={data} />
 
