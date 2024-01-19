@@ -1,5 +1,5 @@
 import { open } from '@tauri-apps/api/dialog';
-import { projectExt } from './settings';
+import { projectExt } from './settings.appSettings';
 import { exists, readTextFile } from '@tauri-apps/api/fs';
 import { basename, join } from '@tauri-apps/api/path';
 import { loadImageFile, newImage } from './media.loadImage';

@@ -1,7 +1,7 @@
 import * as R from "$lib/registry"
 import L from "leaflet";
 import * as T from '@turf/turf'
-import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL } from "./settings";
+import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL } from "./settings.appSettings";
 
 export function setMapSoundVolumes(): void
 {

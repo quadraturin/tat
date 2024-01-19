@@ -1,5 +1,5 @@
 import * as R from "$lib/registry"
-import * as S from "$lib/settings"
+import * as S from "$lib/settings.appSettings"
 import { removeImageByRect } from "./media.removeImage";
 import { removeSoundbyEmitter } from "./media.removeSound";
 import type { MapSound } from "./classes/MapSound";

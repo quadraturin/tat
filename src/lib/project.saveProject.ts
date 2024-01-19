@@ -100,7 +100,6 @@ export async function saveProject(saveAs=false): Promise<boolean>
     });
 
     // write the project JSON
-    console.log(project);
     promises.push(writeTextFile(await join(filePath, 'project.json'), JSON.stringify(project)));
 
     // delete unused files

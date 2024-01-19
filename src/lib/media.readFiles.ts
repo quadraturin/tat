@@ -1,6 +1,6 @@
 import * as R from '$lib/registry'
 import { open } from "@tauri-apps/api/dialog";
-import { imageFileTypes, soundFileTypes } from '$lib/settings';
+import { imageFileTypes, soundFileTypes } from '$lib/settings.appSettings';
 import { loadFile } from "./media.loadFile";
 import { closeAllMenus } from './ui.menus';
 import { closeModal, openLoadingModal, updateLoadingModal } from './ui.modals';

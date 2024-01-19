@@ -1,4 +1,4 @@
-import { SOUNDTYPE_LOCAL } from '$lib/settings';
+import { SOUNDTYPE_LOCAL } from '$lib/settings.appSettings';
 import type { Howl } from 'howler';
 import type L from 'leaflet';
 

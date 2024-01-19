@@ -20,7 +20,7 @@
         <input type="input" id="listenerMoveSpeed" value="5" class="fancyText"  /> 
         <label for="listenerMoveSpeed">listener movement speed (WASD)</label>
     </div>
-
+<!--
     <h2>theme</h2>
     <ul>
         <li>
@@ -32,4 +32,5 @@
             <label for="color2">Secondary Color</label>
         </li>
     </ul>
+    -->
 </div>

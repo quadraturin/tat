@@ -10,7 +10,7 @@ import { Howl } from "howler";
 import { removeSoundbyEmitter } from './media.removeSound';
 import { updateLoadingModal } from './ui.modals';
 import type { MapSound } from './classes/MapSound';
-import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from './settings';
+import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from './settings.appSettings';
 import { help } from './util.help';
 
 // load and return a sound file
