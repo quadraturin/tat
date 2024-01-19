@@ -1,7 +1,7 @@
 import * as R from '$lib/registry'
 import { readBinaryFile } from "@tauri-apps/api/fs";
 import { basename, extname } from '@tauri-apps/api/path';
-import L, { ImageOverlay } from 'leaflet';
+import L from 'leaflet';
 import 'leaflet-editable';
 import { removeImageByRect } from './media.removeImage';
 import { updateLoadingModal } from './ui.modals';
@@ -9,50 +9,33 @@ import type { MapImage } from './classes/MapImage';
 import { getRandomPointInViewport } from './util.getRandomPointInViewport';
 import { help } from './util.help';
 
-export async function loadImage(filePath:string, x?:number, y?:number, w?:number, h?:number, ow?:number, oh?:number, o?:number): Promise<void> {
+// load and return an image file
+export async function loadImageFile(filePath:string):Promise<File|undefined> {
     try {
         updateLoadingModal(filePath);
-        // read in the image data
         const content = await readBinaryFile(filePath);
-
-        let lat = y;
-        let lng = x;
-        let width = w;
-        let height = h;
-        let originalWidth = ow;
-        let originalHeight = oh;
-        let opacity = o;
-        let ext = await extname(filePath);
-
-        // if no width/height is set, get it from image data
-        if (typeof width === 'undefined' || typeof height === 'undefined' ||
-            typeof originalWidth === 'undefined' || typeof originalHeight === 'undefined')
-        {
-            // get the image dimensions
-            const bmp = await createImageBitmap(new Blob([content]));
-            width = bmp.width;
-            height = bmp.height;
-            originalWidth = width;
-            originalHeight = height;
-            bmp.close(); // free memory
-        }
-
-        // get the filename from the path
         const fileName = await basename(filePath);
-
-        // return a File object to hold the data
-        const file =  new File([content], fileName, { type: 'image/' + ext });
-        
-        newImage(file, height, width, lat, lng, opacity);
-
-    }
-    catch (err) {
+        const ext = await extname(filePath);
+        return new File([content], fileName, {type: 'image/' + ext});
+    } catch(err) {
         console.error(err);
+        return;
     }
 }
 
-export async function newImage(file:File, height:number, width:number, lat?:number, lng?:number, opacity?:number) {
+// create an image on the map
+export async function newImage(file:File, height?:number, width?:number, lat?:number, lng?:number, opacity?:number, order?:number) {
     try {
+        // if no width/height is set, get it from image data
+        if (typeof width === 'undefined' || typeof height === 'undefined')
+        {
+            // get the image dimensions
+            const bmp = await createImageBitmap(new Blob([file]));
+            width = bmp.width;
+            height = bmp.height;
+            bmp.close(); // free memory
+        }
+
         // create a data URL & pass into Leaflet
         const mapImageURL = URL.createObjectURL(file);
 
@@ -111,16 +94,11 @@ export async function newImage(file:File, height:number, width:number, lat?:numb
         R.setProjectDirty;
 
         // add image data to registry
-        R.addToImageList(file, overlay, imageRect, width, height, opacity);
+        R.addToImageList(file, overlay, imageRect, width, height, opacity, order);
 
         // center and frame the image
         //map.flyToBounds(bounds);
         
-        // functions
-
-        // called repeatedly while editing the image and when loaded
-        
-
     } catch(err) {
         console.error(err);
     }

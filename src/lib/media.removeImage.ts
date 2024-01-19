@@ -1,7 +1,6 @@
 import * as R from '$lib/registry'
 import { ask } from "@tauri-apps/api/dialog";
 import type L from 'leaflet'
-import type { MapImage } from './classes/MapImage';
 
 export function removeImageByRect(imageRect:L.Rectangle, removeFromList:boolean = true) {
     let imageList = R.getImageList();
@@ -32,8 +31,4 @@ export async function removeImage(id:number, removeFromList:boolean = true) {
         if(removeFromList) imageList.splice(id, 1);
         R.setProjectDirty();
     }
-}
-
-async function lastInstanceOfImageCheck(image:MapImage) {
-    
 }

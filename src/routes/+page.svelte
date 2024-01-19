@@ -382,7 +382,7 @@ on:wheel|preventDefault={()=>{}}>
     {#if soundList.length>0}
         <div id="browser-sounds">
             {#each soundList as item, i }
-                <div class="item sound-item" class:selected={R.getIsSelected(item.emitter)} class:locked={!item.emitter.editEnabled()} id="sound-item-{i}" 
+                <div class="item sound-item" class:selected={R.getIsSelected(item.emitter)} class:locked={() => {if (typeof item.emitter != "undefined") !item.emitter.editEnabled()}} id="sound-item-{i}" 
                 on:wheel|preventDefault={(event) => changeBaseVolume(item, event)} >
 
                     <div class="volume" style={"height: "+(item.volume*100)+"%"}></div>
@@ -397,7 +397,7 @@ on:wheel|preventDefault={()=>{}}>
                         } else if (R.getIsSelected(item.emitter)) {
                             if (item.soundType == S.SOUNDTYPE_AREA) help(data.help.map.selected, data.help.map.soundTypeArea, data.help.map.soundItemActions, data.help.map.itemSelectedActions);
                             else help(data.help.map.selected, data.help.map.soundTypeLocal, data.help.map.soundItemActions, data.help.map.itemSelectedActions);
-                        } else if (!item.emitter.editEnabled()) {
+                        } else if (() => {if (typeof item.emitter != "undefined") !item.emitter.editEnabled()}) {
                             if (item.soundType == S.SOUNDTYPE_AREA) help(data.help.map.locked, data.help.map.soundTypeArea, data.help.map.itemLocked, data.help.map.soundItemActions, data.help.map.itemLockedActions);
                             else help(data.help.map.locked, data.help.map.soundTypeLocal, data.help.map.itemLocked, data.help.map.soundItemActions, data.help.map.itemLockedActions);
                         } else {

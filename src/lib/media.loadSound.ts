@@ -7,36 +7,28 @@ import 'leaflet-editable';
 import 'leaflet.path.drag';
 import { setMapSoundVolumes } from './media.setMapSoundVolumes';
 import { Howl } from "howler";
-import { removeSound, removeSoundbyEmitter } from './media.removeSound';
+import { removeSoundbyEmitter } from './media.removeSound';
 import { updateLoadingModal } from './ui.modals';
 import type { MapSound } from './classes/MapSound';
 import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from './settings';
-import { emit } from '@tauri-apps/api/event';
 import { help } from './util.help';
 
-
-export async function loadSound(filePath:string, soundType?:string, volume?:number, muted?:boolean, solo?:boolean, x?:number, y?:number, r?:number, points?:[number, number][]): Promise<void> {
+// load and return a sound file
+export async function loadSoundFile(filePath:string):Promise<File|undefined> {
     try {
         updateLoadingModal(filePath);
         const ext = await extname(filePath);
-
-        // read in the sound data
         const content = await readBinaryFile(filePath);
-
-        // get the filename from the path
         const fileName = await basename(filePath);
-        
-        // return a File object to hold the data
-        const file =  new File([content], fileName, { type: 'audio/' + ext });
-
-        newSound(file, soundType, volume, muted, solo, y, x, r, points);
+        return new File([content], fileName, { type: 'audio/' + ext });
     } 
     catch (err) {
         console.error(err);
     }
 }
 
-export async function newSound(file:File, soundType?:string, volume?:number, muted?:boolean, solo?:boolean, lat?:number, lng?:number, rad?:number, points?:[number, number][]) {
+// create a sound on the map
+export async function newSound(file:File, soundType?:string, volume?:number, muted?:boolean, solo?:boolean, lat?:number, lng?:number, rad?:number, points?:[number, number][], order?:number) {
     try {
 
         // create a data URL & pass to howler
@@ -54,7 +46,7 @@ export async function newSound(file:File, soundType?:string, volume?:number, mut
         let emitter = await createEmitter(soundType, lat, lng, rad, points);
 
         // add this sound to the sound list registry
-        R.addToSoundList(file, sound, emitter, volume, muted, solo, soundType);
+        R.addToSoundList(file, sound, emitter, volume, muted, solo, soundType, order);
 
         // update volumes & play sound
         setMapSoundVolumes();
@@ -91,10 +83,12 @@ export async function cycleSoundType(sound:MapSound) { // cycle: area -> global 
     setMapSoundVolumes();
 }
 
-export async function createEmitter(soundType:string, lat?:number, lng?:number, rad?:number, points?:[number, number][]):Promise<L.Polygon | L.Circle> {
+export async function createEmitter(soundType:string, lat?:number, lng?:number, rad?:number, points?:[number, number][]):Promise<L.Polygon | L.Circle | undefined> {
+    if (soundType == SOUNDTYPE_GLOBAL) { return; } // no emitter
+    
     // create emitter based on sound type
     let emitter: L.Circle | L.Polygon;
-
+    
     if (soundType == SOUNDTYPE_AREA) { // area emitter
         if(typeof points != "undefined") { 
             for (let i=0; i<points.length; i++) {
@@ -155,10 +149,11 @@ export async function createEmitter(soundType:string, lat?:number, lng?:number, 
     //emitter.bindPopup("I am an audio emitter.");
 
     function highlightEmitter() {
-        emitter.setStyle({color:"white"});
+        if (typeof emitter != "undefined") emitter.setStyle({color:"white"});
     }
 
     function onClick() {
+        if (typeof emitter == "undefined") return;
         if (!emitter.editEnabled()) return;
         if (R.getIsSelected(emitter)) R.removeFromSelection(emitter);
         else R.addToSelection(emitter);
@@ -170,7 +165,8 @@ export async function createEmitter(soundType:string, lat?:number, lng?:number, 
     return emitter;
 }
 
-export function toggleSoundEdit(emitter:L.Circle|L.Polygon) {
+export function toggleSoundEdit(emitter:L.Circle|L.Polygon|undefined) {
+    if (typeof emitter == "undefined") return;
     if (emitter.editEnabled()) emitter.setStyle({opacity:0});
     else emitter.setStyle({opacity:1});
     emitter.toggleEdit();

@@ -54,8 +54,8 @@ export function setMapList(newMapList:Array<MapInfo>) { mapList = newMapList; };
 let imageList = new Array<MapImage>;
 export function getImageList():Array<MapImage> { return imageList; };
 export function setImageList(newImageList:Array<MapImage>) { imageList = newImageList; };
-export function addToImageList(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, w:number, h:number, opacity?:number) {
-    imageList.push(new MapImage(data, overlay, rect, w, h, opacity));
+export function addToImageList(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, w:number, h:number, opacity?:number, order?:number) {
+    imageList.push(new MapImage(data, overlay, rect, w, h, opacity, order));
 }
 export function moveImageToEndOfList(overlay:ImageOverlay) {
     // moves image to end of list -- required for save/load as order determines stacking
@@ -75,8 +75,8 @@ export function moveImageToStartOfList(i:number) {
 let soundList = new Array<MapSound>;
 export function getSoundList():Array<MapSound> { return soundList; };
 export function setSoundList(newSoundList:Array<MapSound>) { soundList = newSoundList; };
-export function addToSoundList(data:File, sound:Howl, emitter:L.Circle|L.Polygon, volume:number|undefined, muted:boolean|undefined, solo:boolean|undefined, soundType:string|undefined) {
-    soundList.push(new MapSound(data, sound, emitter, volume, muted, solo, soundType));
+export function addToSoundList(data:File, sound:Howl, emitter:L.Circle|L.Polygon|undefined, volume:number|undefined, muted:boolean|undefined, solo:boolean|undefined, soundType:string|undefined, order:number|undefined) {
+    soundList.push(new MapSound(data, sound, emitter, volume, muted, solo, soundType, order));
 }
 
 // control modifiers
@@ -125,8 +125,8 @@ export function removeFromSelection(item:L.Rectangle|L.Circle|L.Polygon) {
     }
     item.setStyle({color:"coral"});
 }
-export function getIsSelected(item:L.Rectangle|L.Circle|L.Polygon):boolean {
-    //console.log(selected);
+export function getIsSelected(item:L.Rectangle|L.Circle|L.Polygon|undefined):boolean {
+    if (typeof item == "undefined") return false;
     for (let i=0;i<selected.length;i++) {
         if (item === selected[i]) {
             return true;
@@ -137,7 +137,8 @@ export function getIsSelected(item:L.Rectangle|L.Circle|L.Polygon):boolean {
 export function getSelectedList():Array<L.Rectangle|L.Circle|L.Polygon> {
     return selected;
 }
-export function toggleSelected(item:L.Rectangle|L.Circle|L.Polygon) {
+export function toggleSelected(item:L.Rectangle|L.Circle|L.Polygon|undefined) {
+    if (typeof item == "undefined") return;
     if (getIsSelected(item)) {
         removeFromSelection(item);
     } else {
