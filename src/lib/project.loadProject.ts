@@ -113,8 +113,9 @@ export async function loadProject()
                 }
             } 
 
-            // sort the images
+            // sort the images and sounds
             R.sortImageList();
+            R.sortSoundList();
         }
 
         await Promise.allSettled(promises);

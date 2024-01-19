@@ -88,6 +88,18 @@ export function setSoundList(newSoundList:Array<MapSound>) { soundList = newSoun
 export function addToSoundList(data:File, sound:Howl, emitter:L.Circle|L.Polygon|undefined, volume:number|undefined, muted:boolean|undefined, solo:boolean|undefined, soundType:string|undefined, order:number|undefined) {
     soundList.push(new MapSound(data, sound, emitter, volume, muted, solo, soundType, order));
 }
+//sorts and stacks the images
+export function sortSoundList() {
+    soundList.sort(function(a,b){
+        return a.order-b.order;
+    });
+    for(let sound of soundList) {
+        if(typeof sound.emitter != "undefined") {
+            sound.emitter.bringToFront();
+            sound.emitter.bringToFront();
+        }
+    }
+}
 
 // control modifiers
 let isProportionalScaleOn = false;
@@ -154,6 +166,11 @@ export function toggleSelected(item:L.Rectangle|L.Circle|L.Polygon|undefined) {
     } else {
         addToSelection(item);
     }
+}
+
+export function getIsLocked (item:L.Rectangle|L.Circle|L.Polygon|undefined):boolean {
+    if (typeof item == "undefined") return true;
+    return !item.editEnabled();
 }
 
 // menu state
