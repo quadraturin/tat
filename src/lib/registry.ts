@@ -2,7 +2,6 @@ import L, { ImageOverlay } from "leaflet";
 import { MapImage } from "./classes/MapImage";
 import { MapSound } from "./classes/MapSound";
 import type { MapInfo } from "./classes/MapInfo";
-import { readTextFile } from "@tauri-apps/api/fs";
 
 // the map
 let map:L.Map;
@@ -54,8 +53,8 @@ export function setMapList(newMapList:Array<MapInfo>) { mapList = newMapList; };
 let imageList = new Array<MapImage>;
 export function getImageList():Array<MapImage> { return imageList; };
 export function setImageList(newImageList:Array<MapImage>) { imageList = newImageList; };
-export function addToImageList(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, w:number, h:number, opacity?:number, order?:number) {
-    imageList.push(new MapImage(data, overlay, rect, w, h, opacity, order));
+export function addToImageList(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, ow:number, oh:number, opacity?:number, order?:number) {
+    imageList.push(new MapImage(data, overlay, rect, ow, oh, opacity, order));
 }
 export function moveImageToEndOfList(overlay:ImageOverlay) {
     // moves image to end of list -- required for save/load as order determines stacking

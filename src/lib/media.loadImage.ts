@@ -24,17 +24,19 @@ export async function loadImageFile(filePath:string):Promise<File|undefined> {
 }
 
 // create an image on the map
-export async function newImage(file:File, height?:number, width?:number, lat?:number, lng?:number, opacity?:number, order?:number) {
+export async function newImage(file:File, height?:number, width?:number, lat?:number, lng?:number, opacity?:number, order?:number, locked?:boolean) {
     try {
-        // if no width/height is set, get it from image data
-        if (typeof width === 'undefined' || typeof height === 'undefined')
-        {
-            // get the image dimensions
-            const bmp = await createImageBitmap(new Blob([file]));
-            width = bmp.width;
-            height = bmp.height;
-            bmp.close(); // free memory
-        }
+        // get the image dimensions
+        const bmp = await createImageBitmap(new Blob([file]));
+
+        let originalWidth = bmp.width;
+        let originalHeight = bmp.height;
+
+        if (typeof width == "undefined") width = bmp.width;
+        if (typeof height == "undefined") height = bmp.height;
+
+        bmp.close(); // free memory
+        
 
         // create a data URL & pass into Leaflet
         const mapImageURL = URL.createObjectURL(file);
@@ -87,14 +89,16 @@ export async function newImage(file:File, height?:number, width?:number, lat?:nu
         });
         imageRect.on('mouseout', () => {help()});
 
-        bindEventsToImageRect(imageRect, overlay, width, height);
+        bindEventsToImageRect(imageRect, overlay, width, height, originalWidth, originalHeight);
         R.setHasMedia(true);
         overlay.setBounds(imageRect.getBounds());
         bringImageToFront(imageRect, overlay);
         R.setProjectDirty;
 
         // add image data to registry
-        R.addToImageList(file, overlay, imageRect, width, height, opacity, order);
+        R.addToImageList(file, overlay, imageRect, originalWidth, originalHeight, opacity, order);
+        
+        if(locked) toggleImageEdit(imageRect);
 
         // center and frame the image
         //map.flyToBounds(bounds);
@@ -117,7 +121,7 @@ export function toggleImageEdit(imageRect:L.Rectangle) {
     if (R.getIsSelected(imageRect)) R.removeFromSelection(imageRect);
 }
 
-function editImage(e:L.VertexEvent, imageRect:L.Rectangle, overlay:L.ImageOverlay, width:number, height:number) {
+function editImage(e:L.VertexEvent, imageRect:L.Rectangle, overlay:L.ImageOverlay, originalWidth:number, originalHeight:number) {
     let w:boolean;
     let n:boolean;
     let availableWidth:number;
@@ -138,21 +142,21 @@ function editImage(e:L.VertexEvent, imageRect:L.Rectangle, overlay:L.ImageOverla
         if (w) availableWidth = Math.abs(imageRect.getBounds().getEast() - e.vertex.getLatLng().lng);
         else   availableWidth = Math.abs(e.vertex.getLatLng().lng - imageRect.getBounds().getWest());
         
-        let scale = Math.min(availableWidth/width, availableHeight/height);
+        let scale = Math.min(availableWidth/originalWidth, availableHeight/originalHeight);
         //console.log("scale", scale)
 
         if (n&&w) { // NW
             p1 = new L.LatLng(imageRect.getBounds().getSouth(), imageRect.getBounds().getEast()); // SE corner
-            p2 = new L.LatLng(p1.lat + height*scale, p1.lng - width*scale);
+            p2 = new L.LatLng(p1.lat + originalHeight*scale, p1.lng - originalWidth*scale);
         } else if (n) { // NE
             p1 = new L.LatLng(imageRect.getBounds().getSouth(), imageRect.getBounds().getWest()); // SW corner
-            p2 = new L.LatLng(p1.lat + height*scale, p1.lng + width*scale);
+            p2 = new L.LatLng(p1.lat + originalHeight*scale, p1.lng + originalWidth*scale);
         } else if (!n&&w) { // SW
             p1 = new L.LatLng(imageRect.getBounds().getNorth(), imageRect.getBounds().getEast()); // NE corner
-            p2 = new L.LatLng(p1.lat - height*scale, p1.lng - width*scale);
+            p2 = new L.LatLng(p1.lat - originalHeight*scale, p1.lng - originalWidth*scale);
         } else { // SE
             p1 = new L.LatLng(imageRect.getBounds().getNorth(), imageRect.getBounds().getWest()); // NW corner
-            p2 = new L.LatLng(p1.lat - height*scale, p1.lng + width*scale);
+            p2 = new L.LatLng(p1.lat - originalHeight*scale, p1.lng + originalWidth*scale);
         }
         //console.log(new L.LatLngBounds(p1,p2));
         overlay.setBounds(new L.LatLngBounds(p1,p2));
@@ -220,9 +224,9 @@ function bringImageToFront(imageRect:L.Rectangle, overlay:L.ImageOverlay) {
 }
 
 // sets interactive event handlers for the image
-function bindEventsToImageRect(imageRect:L.Rectangle, overlay:L.ImageOverlay, width:number, height:number)
+function bindEventsToImageRect(imageRect:L.Rectangle, overlay:L.ImageOverlay, width:number, height:number, originalWidth:number, originalHeight:number)
 {
-    imageRect.on('editable:vertex:drag', (e) => editImage(e, imageRect, overlay, width, height));
+    imageRect.on('editable:vertex:drag', (e) => editImage(e, imageRect, overlay, originalWidth, originalHeight));
     imageRect.on('editable:vertex:mousedown', (e) => editImage(e, imageRect, overlay, width, height));
     imageRect.on('editable:vertex:dragend', () => stopEditImage(imageRect, overlay));
     imageRect.on('dragstart', () => startMoveImage(imageRect, overlay));

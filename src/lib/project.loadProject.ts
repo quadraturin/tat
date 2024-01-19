@@ -92,7 +92,7 @@ export async function loadProject()
                     for (let k=0; k<project.maps[i].images.length; k++) {
                         if (project.maps[i].images[k].src == uniqueImages[j]){
                             let obj = project.maps[i].images[k];
-                            newImage(file, obj.height, obj.width, obj.y, obj.x, obj.opacity, obj.order);
+                            newImage(file, obj.height, obj.width, obj.y, obj.x, obj.opacity, obj.order, obj.locked);
                         }
                     }
                 }
@@ -107,7 +107,7 @@ export async function loadProject()
                     for (let k=0; k<project.maps[i].sounds.length; k++) {
                         if (project.maps[i].sounds[k].src == uniqueSounds[j]){
                             let obj = project.maps[i].sounds[k];
-                            newSound(file, obj.soundType, obj.volume, obj.muted, obj.solo, obj.y, obj.x, obj.radius, obj.points, obj.order);
+                            newSound(file, obj.soundType, obj.volume, obj.muted, obj.solo, obj.y, obj.x, obj.radius, obj.points, obj.order, obj.seek, obj.locked);
                         }
                     }
                 }

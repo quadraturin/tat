@@ -28,7 +28,7 @@ export async function loadSoundFile(filePath:string):Promise<File|undefined> {
 }
 
 // create a sound on the map
-export async function newSound(file:File, soundType?:string, volume?:number, muted?:boolean, solo?:boolean, lat?:number, lng?:number, rad?:number, points?:[number, number][], order?:number) {
+export async function newSound(file:File, soundType?:string, volume?:number, muted?:boolean, solo?:boolean, lat?:number, lng?:number, rad?:number, points?:[number, number][], order?:number, seek?:number, locked?:boolean) {
     try {
 
         // create a data URL & pass to howler
@@ -38,12 +38,14 @@ export async function newSound(file:File, soundType?:string, volume?:number, mut
             format: [file.type.replace(/.*\//, "")],
             loop: true,
             volume: volume,
-            mute: muted
+            mute: muted,
         });
+
+        if (typeof seek != "undefined") sound.seek(seek);
 
         if (typeof soundType == "undefined") soundType = SOUNDTYPE_LOCAL;
 
-        let emitter = await createEmitter(soundType, lat, lng, rad, points);
+        let emitter = await createEmitter(soundType, lat, lng, rad, points, locked);
 
         // add this sound to the sound list registry
         R.addToSoundList(file, sound, emitter, volume, muted, solo, soundType, order);
@@ -83,7 +85,7 @@ export async function cycleSoundType(sound:MapSound) { // cycle: area -> global 
     setMapSoundVolumes();
 }
 
-export async function createEmitter(soundType:string, lat?:number, lng?:number, rad?:number, points?:[number, number][]):Promise<L.Polygon | L.Circle | undefined> {
+export async function createEmitter(soundType:string, lat?:number, lng?:number, rad?:number, points?:[number, number][], locked?:boolean):Promise<L.Polygon | L.Circle | undefined> {
     if (soundType == SOUNDTYPE_GLOBAL) { return; } // no emitter
     
     // create emitter based on sound type
@@ -147,6 +149,8 @@ export async function createEmitter(soundType:string, lat?:number, lng?:number, 
     emitter.on('mouseout', () => {help()});
     //emitter.on('editable:vertex:dragend', deselectEmitter);
     //emitter.bindPopup("I am an audio emitter.");
+
+    if (locked) toggleSoundEdit(emitter);
 
     function highlightEmitter() {
         if (typeof emitter != "undefined") emitter.setStyle({color:"white"});

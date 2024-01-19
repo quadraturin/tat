@@ -11,13 +11,13 @@ export class MapImage
     opacity:number;
     order:number;
 
-    constructor(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, w:number, h:number, opacity?:number, order?:number)
+    constructor(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, ow:number, oh:number, opacity?:number, order?:number)
     {
         this.data = data;
         this.overlay = overlay;
         this.rect = rect;
-        this.originalWidth = w;
-        this.originalHeight = h;
+        this.originalWidth = ow;
+        this.originalHeight = oh;
 
         if (typeof opacity != "undefined") this.opacity = opacity;
         else this.opacity = 1;

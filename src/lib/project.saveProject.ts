@@ -62,10 +62,9 @@ export async function saveProject(saveAs=false): Promise<boolean>
             y: e.overlay.getBounds().getSouth(),
             width: e.overlay.getBounds().getEast() - e.overlay.getBounds().getWest(),
             height: e.overlay.getBounds().getNorth() - e.overlay.getBounds().getSouth(),
-            originalWidth: e.originalWidth,
-            originalHeight: e.originalHeight,
             opacity: e.opacity,
-            order: i
+            order: i,
+            locked: !e.rect.editEnabled()
         }
         promises.push(writeImageFile(e, filePath as string));
         i++;
@@ -80,7 +79,9 @@ export async function saveProject(saveAs=false): Promise<boolean>
             volume: e.volume,
             solo: e.solo,
             muted: e.muted,
-            order: i
+            order: i,
+            seek: e.sound.seek(),
+            locked: !e.emitter?.editEnabled()
         }
         if (e.emitter instanceof L.Circle) {
             project.maps[0].sounds[i].x = e.emitter.getLatLng().lng;
