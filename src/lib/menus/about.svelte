@@ -69,10 +69,10 @@
             <li>move images and sounds</li>
             <li>resize images and sounds</li>
             <li>proportionally resize images</li>
-            <li>move the audio listener pin</li>
+            <li>move the sound listener pin</li>
             <li>select images and sounds</li>
-            <li>delete selected images and audio emitters</li>
-            <li>lock and unlock images and audio emitters to prevent editing/moving</li>
+            <li>delete selected images and sounds</li>
+            <li>lock and unlock images and sounds to prevent editing/moving</li>
             <li>"about" menu</li>
             <li>title bar layout adjusts to window size</li>
             <li>confirm on exit when there are unsaved changes</li>

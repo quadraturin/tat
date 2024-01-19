@@ -1,7 +1,7 @@
 import * as R from '$lib/registry'
 import { readBinaryFile } from "@tauri-apps/api/fs";
 import { basename, extname } from '@tauri-apps/api/path';
-import L from 'leaflet';
+import L, { ImageOverlay } from 'leaflet';
 import 'leaflet-editable';
 import { removeImageByRect } from './media.removeImage';
 import { updateLoadingModal } from './ui.modals';
@@ -96,7 +96,7 @@ export async function newImage(file:File, height:number, width:number, lat?:numb
             weight: 1
         }).addTo(map);
         imageRect.enableEdit();
-        imageRect.on('dblclick', L.DomEvent.stop).on('dblclick', toggleImageEdit);
+        imageRect.on('dblclick', L.DomEvent.stop).on('dblclick', () => {toggleImageEdit(imageRect)});
         imageRect.on('mouseover', () => {
             if (!imageRect.editEnabled()) help(R.t.help.map.locked, R.t.help.map.image, R.t.help.map.itemLocked, R.t.help.map.itemLockedActions);
             else if(R.getIsSelected(imageRect)) help(R.t.help.map.selected, R.t.help.map.image, R.t.help.map.imageActions, R.t.help.map.itemSelectedActions);
@@ -104,10 +104,10 @@ export async function newImage(file:File, height:number, width:number, lat?:numb
         });
         imageRect.on('mouseout', () => {help()});
 
-        bindEventsToImageRect();
+        bindEventsToImageRect(imageRect, overlay, width, height);
         R.setHasMedia(true);
         overlay.setBounds(imageRect.getBounds());
-        bringImageToFront();
+        bringImageToFront(imageRect, overlay);
         R.setProjectDirty;
 
         // add image data to registry
@@ -119,131 +119,8 @@ export async function newImage(file:File, height:number, width:number, lat?:numb
         // functions
 
         // called repeatedly while editing the image and when loaded
-        function editImage(e:L.VertexEvent) {
-            let w:boolean;
-            let n:boolean;
-            let availableWidth:number;
-            let availableHeight:number;
-            let p1:L.LatLng;
-            let p2:L.LatLng;
+        
 
-            if (R.getIsProportionalScaleOn()) { // proportional scale
-                // determine which corner is being dragged
-                if (e.vertex.getLatLng().lat <= imageRect.getCenter().lat) n = false;
-                else n = true;
-                if (e.vertex.getLatLng().lng <= imageRect.getCenter().lng) w = true;
-                else w = false;
-                
-                if (n) availableHeight = Math.abs(imageRect.getBounds().getSouth() - e.vertex.getLatLng().lat);
-                else   availableHeight = Math.abs(e.vertex.getLatLng().lat - imageRect.getBounds().getNorth());
-
-                if (w) availableWidth = Math.abs(imageRect.getBounds().getEast() - e.vertex.getLatLng().lng);
-                else   availableWidth = Math.abs(e.vertex.getLatLng().lng - imageRect.getBounds().getWest());
-                
-                let scale = Math.min(availableWidth/width, availableHeight/height);
-                //console.log("scale", scale)
-
-                if (n&&w) { // NW
-                    p1 = new L.LatLng(imageRect.getBounds().getSouth(), imageRect.getBounds().getEast()); // SE corner
-                    p2 = new L.LatLng(p1.lat + height*scale, p1.lng - width*scale);
-                } else if (n) { // NE
-                    p1 = new L.LatLng(imageRect.getBounds().getSouth(), imageRect.getBounds().getWest()); // SW corner
-                    p2 = new L.LatLng(p1.lat + height*scale, p1.lng + width*scale);
-                } else if (!n&&w) { // SW
-                    p1 = new L.LatLng(imageRect.getBounds().getNorth(), imageRect.getBounds().getEast()); // NE corner
-                    p2 = new L.LatLng(p1.lat - height*scale, p1.lng - width*scale);
-                } else { // SE
-                    p1 = new L.LatLng(imageRect.getBounds().getNorth(), imageRect.getBounds().getWest()); // NW corner
-                    p2 = new L.LatLng(p1.lat - height*scale, p1.lng + width*scale);
-                }
-                //console.log(new L.LatLngBounds(p1,p2));
-                overlay.setBounds(new L.LatLngBounds(p1,p2));
-            } else { // free scale
-                overlay.setBounds(imageRect.getBounds());
-            }
-            bringImageToFront();
-            R.setProjectDirty();
-        }
-
-        function stopEditImage() {
-            imageRect.setBounds(overlay.getBounds()); // set control rect to image bounds
-            imageRect.disableEdit(); // needed to put the edit handles in the right place
-            imageRect.enableEdit();
-        }
-
-        // called when we stop moving the image
-        function stopMoveImage() {
-            overlay.setBounds(imageRect.getBounds());
-        }
-
-        // called when double-clicking the image (sets/unsets editability)
-        function toggleImageEdit() {
-            if(imageRect.editEnabled()) imageRect.setStyle({opacity:0});
-            else {
-                imageRect.setStyle({opacity:1});
-                bindEventsToImageRect();
-            }
-            imageRect.toggleEdit();
-            R.removeFromSelection(imageRect);
-        }
-
-        // called when starting to move the image
-        function startMoveImage() {
-            overlay.setBounds(imageRect.getBounds());
-            R.setImageOffset(overlay.getBounds().getSouthWest() as L.LatLng);
-            bringImageToFront();
-            R.setProjectDirty();
-        }
-
-        // called repeatedly while moving the image
-        function moveImage(e:L.LeafletEvent) {
-            //console.log('moving!');
-            
-            // raise to front and set drag style
-            imageRect.bringToFront().setStyle({color:'white'})
-            
-            // update image location while dragging
-            let newPos = e.target.dragging._draggable._newPos;
-            let sw = L.CRS.Simple.pointToLatLng(L.point(newPos.x, newPos.y), R.getMap().getZoom());
-            let h = overlay.getBounds().getNorth() - overlay.getBounds().getSouth();
-            let w = overlay.getBounds().getEast() - overlay.getBounds().getWest();
-            let ne = L.latLng(sw.lat + h, sw.lng + w);
-            sw.lat += R.getImageOffset().lat;
-            sw.lng += R.getImageOffset().lng;
-            ne.lat += R.getImageOffset().lat;
-            ne.lng += R.getImageOffset().lng;
-            let bounds = L.latLngBounds(sw,ne);
-            overlay.setBounds(bounds);
-        }
-
-        // brings image and rect to front of respective layers
-        function onClick()
-        {
-            if (!imageRect.editEnabled()) return;
-            if (R.getIsSelected(imageRect)) R.removeFromSelection(imageRect);
-            else R.addToSelection(imageRect);
-            bringImageToFront();
-            if (R.getIsInDeleteMode()) removeImageByRect(imageRect);
-        }
-
-        function bringImageToFront() {
-            overlay.bringToFront();
-            imageRect.bringToFront();
-            R.moveImageToEndOfList(overlay);
-        }
-
-        // sets interactive event handlers for the image
-        function bindEventsToImageRect()
-        {
-            imageRect.on('editable:vertex:drag', (e) => editImage(e));
-            imageRect.on('editable:vertex:mousedown', (e) => editImage(e));
-            imageRect.on('editable:vertex:dragend', stopEditImage);
-            imageRect.on('dragstart', startMoveImage);
-            imageRect.on('drag', (e) => moveImage(e));
-            imageRect.on('dragend', stopMoveImage);
-            imageRect.on('dragend', onClick);
-            imageRect.on('mouseup', onClick);
-        }
     } catch(err) {
         console.error(err);
     }
@@ -254,4 +131,126 @@ export async function duplicateImage(image:MapImage) {
 }
 
 
+// called when double-clicking the image (sets/unsets editability)
+export function toggleImageEdit(imageRect:L.Rectangle) {
+    if (imageRect.editEnabled()) imageRect.setStyle({opacity:0});
+    else imageRect.setStyle({opacity:1});
+    imageRect.toggleEdit();
+    if (R.getIsSelected(imageRect)) R.removeFromSelection(imageRect);
+}
+
+function editImage(e:L.VertexEvent, imageRect:L.Rectangle, overlay:L.ImageOverlay, width:number, height:number) {
+    let w:boolean;
+    let n:boolean;
+    let availableWidth:number;
+    let availableHeight:number;
+    let p1:L.LatLng;
+    let p2:L.LatLng;
+
+    if (R.getIsProportionalScaleOn()) { // proportional scale
+        // determine which corner is being dragged
+        if (e.vertex.getLatLng().lat <= imageRect.getCenter().lat) n = false;
+        else n = true;
+        if (e.vertex.getLatLng().lng <= imageRect.getCenter().lng) w = true;
+        else w = false;
+        
+        if (n) availableHeight = Math.abs(imageRect.getBounds().getSouth() - e.vertex.getLatLng().lat);
+        else   availableHeight = Math.abs(e.vertex.getLatLng().lat - imageRect.getBounds().getNorth());
+
+        if (w) availableWidth = Math.abs(imageRect.getBounds().getEast() - e.vertex.getLatLng().lng);
+        else   availableWidth = Math.abs(e.vertex.getLatLng().lng - imageRect.getBounds().getWest());
+        
+        let scale = Math.min(availableWidth/width, availableHeight/height);
+        //console.log("scale", scale)
+
+        if (n&&w) { // NW
+            p1 = new L.LatLng(imageRect.getBounds().getSouth(), imageRect.getBounds().getEast()); // SE corner
+            p2 = new L.LatLng(p1.lat + height*scale, p1.lng - width*scale);
+        } else if (n) { // NE
+            p1 = new L.LatLng(imageRect.getBounds().getSouth(), imageRect.getBounds().getWest()); // SW corner
+            p2 = new L.LatLng(p1.lat + height*scale, p1.lng + width*scale);
+        } else if (!n&&w) { // SW
+            p1 = new L.LatLng(imageRect.getBounds().getNorth(), imageRect.getBounds().getEast()); // NE corner
+            p2 = new L.LatLng(p1.lat - height*scale, p1.lng - width*scale);
+        } else { // SE
+            p1 = new L.LatLng(imageRect.getBounds().getNorth(), imageRect.getBounds().getWest()); // NW corner
+            p2 = new L.LatLng(p1.lat - height*scale, p1.lng + width*scale);
+        }
+        //console.log(new L.LatLngBounds(p1,p2));
+        overlay.setBounds(new L.LatLngBounds(p1,p2));
+    } else { // free scale
+        overlay.setBounds(imageRect.getBounds());
+    }
+    bringImageToFront(imageRect,overlay);
+    R.setProjectDirty();
+}
+
+function stopEditImage(imageRect:L.Rectangle, overlay:L.ImageOverlay) {
+    imageRect.setBounds(overlay.getBounds()); // set control rect to image bounds
+    imageRect.disableEdit(); // needed to put the edit handles in the right place
+    imageRect.enableEdit();
+}
+
+// called when we stop moving the image
+function stopMoveImage(imageRect:L.Rectangle, overlay:L.ImageOverlay) {
+    overlay.setBounds(imageRect.getBounds());
+}
+
+// called when starting to move the image
+function startMoveImage(imageRect:L.Rectangle, overlay:L.ImageOverlay) {
+    overlay.setBounds(imageRect.getBounds());
+    R.setImageOffset(overlay.getBounds().getSouthWest() as L.LatLng);
+    bringImageToFront(imageRect, overlay);
+    R.setProjectDirty();
+}
+
+// called repeatedly while moving the image
+function moveImage(e:L.LeafletEvent, imageRect:L.Rectangle, overlay:L.ImageOverlay) {
+    //console.log('moving!');
+    
+    // raise to front and set drag style
+    imageRect.bringToFront().setStyle({color:'white'})
+    
+    // update image location while dragging
+    let newPos = e.target.dragging._draggable._newPos;
+    let sw = L.CRS.Simple.pointToLatLng(L.point(newPos.x, newPos.y), R.getMap().getZoom());
+    let h = overlay.getBounds().getNorth() - overlay.getBounds().getSouth();
+    let w = overlay.getBounds().getEast() - overlay.getBounds().getWest();
+    let ne = L.latLng(sw.lat + h, sw.lng + w);
+    sw.lat += R.getImageOffset().lat;
+    sw.lng += R.getImageOffset().lng;
+    ne.lat += R.getImageOffset().lat;
+    ne.lng += R.getImageOffset().lng;
+    let bounds = L.latLngBounds(sw,ne);
+    overlay.setBounds(bounds);
+}
+
+// brings image and rect to front of respective layers
+function onClick(imageRect:L.Rectangle, overlay:L.ImageOverlay)
+{
+    if (!imageRect.editEnabled()) return;
+    if (R.getIsSelected(imageRect)) R.removeFromSelection(imageRect);
+    else R.addToSelection(imageRect);
+    bringImageToFront(imageRect, overlay);
+    if (R.getIsInDeleteMode()) removeImageByRect(imageRect);
+}
+
+function bringImageToFront(imageRect:L.Rectangle, overlay:L.ImageOverlay) {
+    overlay.bringToFront();
+    imageRect.bringToFront();
+    R.moveImageToEndOfList(overlay);
+}
+
+// sets interactive event handlers for the image
+function bindEventsToImageRect(imageRect:L.Rectangle, overlay:L.ImageOverlay, width:number, height:number)
+{
+    imageRect.on('editable:vertex:drag', (e) => editImage(e, imageRect, overlay, width, height));
+    imageRect.on('editable:vertex:mousedown', (e) => editImage(e, imageRect, overlay, width, height));
+    imageRect.on('editable:vertex:dragend', () => stopEditImage(imageRect, overlay));
+    imageRect.on('dragstart', () => startMoveImage(imageRect, overlay));
+    imageRect.on('drag', (e) => moveImage(e, imageRect, overlay));
+    imageRect.on('dragend', () => stopMoveImage(imageRect, overlay));
+    imageRect.on('dragend', () => onClick(imageRect, overlay));
+    imageRect.on('mouseup', () => onClick(imageRect, overlay));
+}
 

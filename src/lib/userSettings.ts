@@ -11,3 +11,4 @@ export let theme = {
     color3: 'white',
     accent3: 'teal'
 }
+export let movementSpeed = 5;

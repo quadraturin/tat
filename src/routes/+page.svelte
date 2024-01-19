@@ -9,7 +9,7 @@
     import * as R from '$lib/registry';
     import { onMount } from 'svelte'
     import { LogicalSize, appWindow } from '@tauri-apps/api/window'
-    import L, { map } from "leaflet";
+    import L, { latLng, map } from "leaflet";
 	import { setupMap } from '$lib/init.setupMap';
 	import { setupListener } from '$lib/init.setupListener';
 	import { saveProject } from '$lib/project.saveProject';
@@ -17,6 +17,7 @@
 	import { loadProject } from '$lib/project.loadProject';
     import { removeSelected } from '$lib/media.removeSelected';
     import * as S from '$lib/settings';
+    import * as US from '$lib/userSettings'
     import type { PageData } from './$types';
     export let data:PageData;
 
@@ -38,7 +39,7 @@
 	import { toggleMute, toggleSolo } from '$lib/media.mixSound';
 	import { removeImage } from '$lib/media.removeImage';
 	import { removeSound } from '$lib/media.removeSound';
-	import { duplicateImage } from '$lib/media.loadImage';
+	import { duplicateImage, toggleImageEdit } from '$lib/media.loadImage';
 	import { cycleSoundType, duplicateSound, toggleSoundEdit } from '$lib/media.loadSound';
 	import { changeBaseVolume, seekToByClick, togglePause } from '$lib/media.controlSound';
 	import { changeOpacity } from '$lib/media.controlOpacity';
@@ -140,7 +141,7 @@
     $: isHelpActive = R.getIsHelpActive();
 
     function onKeyDown(e:KeyboardEvent) { 
-        console.log(e);
+        //console.log(e);
         if (e.key=="Shift") R.setIsProportionalScaleOn(true);
         else if (e.key == "Delete" || e.key == "Backspace") removeSelected();
         else if (e.key == "Alt") R.setIsInDeleteMode(true);
@@ -149,6 +150,10 @@
         else if (e.key == "o" && (e.metaKey || e.ctrlKey)) loadProject();
         else if (e.key == "n" && (e.metaKey || e.ctrlKey)) clearProject();
         else if (e.key == "m" && (e.metaKey || e.ctrlKey)) readFiles();
+        else if (e.key == "w") R.getListener().setLatLng([R.getListener().getLatLng().lat+US.movementSpeed, R.getListener().getLatLng().lng]);
+        else if (e.key == "a") R.getListener().setLatLng([R.getListener().getLatLng().lat, R.getListener().getLatLng().lng-US.movementSpeed]);
+        else if (e.key == "s") R.getListener().setLatLng([R.getListener().getLatLng().lat-US.movementSpeed, R.getListener().getLatLng().lng]);
+        else if (e.key == "d") R.getListener().setLatLng([R.getListener().getLatLng().lat, R.getListener().getLatLng().lng+US.movementSpeed]);
     };
     function onKeyUp(e:KeyboardEvent) {
         console.log(e); 
@@ -492,6 +497,7 @@ on:wheel|preventDefault={()=>{}}>
 
                     <button class="item-name" 
                     on:click={() => {R.toggleSelected(item.rect)}}
+                    on:dblclick={() => { toggleImageEdit(item.rect);}}
                     on:focus={()=>{}} 
                     on:mouseover={()=>{
                         if (R.getIsSelected(item.rect)) help(data.help.map.selected, data.help.map.image, data.help.map.imageItemActions, data.help.map.itemSelectedActions);

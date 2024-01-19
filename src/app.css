@@ -63,6 +63,9 @@ a { color: var(--highlight-color); }
     z-index: -100;
     background-color: var(--background-color);
 }
+#map *:focus {
+    outline: none;
+}
 #map-overlay {
     position: absolute;
     top: 0;

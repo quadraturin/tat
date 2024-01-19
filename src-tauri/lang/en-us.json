@@ -78,7 +78,7 @@
             "toggleSidebarShortcut": "<strong></strong>",
             
             "listener": "<strong>listener:</strong> represents the players' location. you will hear sounds when the listener is overlapping them.",
-            "listenerActions": "<strong>drag:</strong> move.",
+            "listenerActions": "<strong>drag:</strong> move. <strong>W/A/S/D:</strong> move.",
             
             "locked": "<strong>locked</strong>",
             "selected": "<strong>selected</strong>",
