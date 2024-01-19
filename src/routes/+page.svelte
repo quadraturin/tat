@@ -17,7 +17,7 @@
 	import { loadProject } from '$lib/project.loadProject';
     import { removeSelected } from '$lib/media.removeSelected';
     import * as S from '$lib/settings.appSettings';
-    import * as US from '$lib/settings.userSettings'
+    import { getUserSettings } from '$lib/settings.userSettings'
     import type { PageData } from './$types';
     export let data:PageData;
 
@@ -53,6 +53,7 @@
 	import IconRecenter from '$lib/icons/iconRecenter.svelte';
 	import IconCollapse from '$lib/icons/iconCollapse.svelte';
 	import IconExpand from '$lib/icons/iconExpand.svelte';
+	import { loadUserSettings } from '$lib/settings.loadUserSettings';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
@@ -76,6 +77,8 @@
     {
         appWindow.setMinSize(new LogicalSize(480,320));
 
+        loadUserSettings();
+        
         // set up title bar window controls
         const titlebarMinimize = document.getElementById('titlebar-minimize') as HTMLElement;
         titlebarMinimize.addEventListener('click', () => appWindow.minimize());
@@ -145,7 +148,11 @@
 
     function onKeyDown(e:KeyboardEvent) { 
         //console.log(e);
-        if (e.key=="Shift") R.setIsProportionalScaleOn(true);
+        let speed:number = getUserSettings().listenerMoveSpeed;
+        if (e.key=="Shift") {
+            if(getUserSettings().proportionalScaleOnByDefault) R.setIsProportionalScaleOn(false);
+            else R.setIsProportionalScaleOn(true);
+        } 
         else if (e.key == "Delete" || e.key == "Backspace") removeSelected();
         else if (e.key == "Alt") R.setIsInDeleteMode(true);
         else if (e.key == "s" && e.shiftKey && (e.metaKey || e.ctrlKey)) saveProject(true);
@@ -153,14 +160,23 @@
         else if (e.key == "o" && (e.metaKey || e.ctrlKey)) loadProject();
         else if (e.key == "n" && (e.metaKey || e.ctrlKey)) clearProject();
         else if (e.key == "m" && (e.metaKey || e.ctrlKey)) readFiles();
-        else if (e.key == "w") R.getListener().setLatLng([R.getListener().getLatLng().lat+US.movementSpeed, R.getListener().getLatLng().lng]);
-        else if (e.key == "a") R.getListener().setLatLng([R.getListener().getLatLng().lat, R.getListener().getLatLng().lng-US.movementSpeed]);
-        else if (e.key == "s") R.getListener().setLatLng([R.getListener().getLatLng().lat-US.movementSpeed, R.getListener().getLatLng().lng]);
-        else if (e.key == "d") R.getListener().setLatLng([R.getListener().getLatLng().lat, R.getListener().getLatLng().lng+US.movementSpeed]);
+        // using unary + here to prevent weird concat issues
+        else if (e.key == "w") 
+            R.getListener().setLatLng([R.getListener().getLatLng().lat + +speed, R.getListener().getLatLng().lng]);
+        else if (e.key == "a") 
+            R.getListener().setLatLng([R.getListener().getLatLng().lat, R.getListener().getLatLng().lng - +speed]);
+        else if (e.key == "s") 
+            R.getListener().setLatLng([R.getListener().getLatLng().lat - +speed, R.getListener().getLatLng().lng]);
+        else if (e.key == "d") 
+            R.getListener().setLatLng([R.getListener().getLatLng().lat, R.getListener().getLatLng().lng + +speed]);
+        //console.log("listener is at", R.getListener().getLatLng())
     };
     function onKeyUp(e:KeyboardEvent) {
-        console.log(e); 
-        if (e.key=="Shift") R.setIsProportionalScaleOn(false);
+        //console.log(e); 
+        if (e.key=="Shift") {
+            if(getUserSettings().proportionalScaleOnByDefault) R.setIsProportionalScaleOn(true);
+            else R.setIsProportionalScaleOn(false);
+        } 
         else if (e.key == "Alt") R.setIsInDeleteMode(false);
     };
     function onDrag(e:any) {
@@ -192,8 +208,6 @@
     });*/
 
     let sidebarHidden = false;
-    
-    $: sidebarHidden;
 
     function toggleSidebar() {
         sidebarHidden = !sidebarHidden;

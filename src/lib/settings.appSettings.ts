@@ -6,3 +6,11 @@ export const defaultProjectName = "new project";
 export const SOUNDTYPE_LOCAL = "local";
 export const SOUNDTYPE_GLOBAL = "global";
 export const SOUNDTYPE_AREA = "area";
+
+export const defaultUserSettings = {
+    proportionalScaleOnByDefault: false,
+    invertVolumeScroll: false,
+    listenerMoveSpeed: 5,
+    language: "en-us",
+    helpOpen: true
+}

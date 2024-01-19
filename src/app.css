@@ -594,6 +594,15 @@ input[type=checkbox] {
 .fancyText:focus {
     outline: none;
 }
+.setting button {
+    border-radius: 2px;
+    border: none;
+    background-color: var(--text-color);
+    color: var(--background-color);
+}
+.setting button:hover {
+    background-color: var(--highlight-color);
+}
 
 /* modal */
 

@@ -2,7 +2,7 @@
     "settings": {
         "settingsTitle": "settings",
         "invertVolumeScroll": "invert volume scroll direction",
-        "proportionalScaleOn": "proportional image scaling on by default (shift turns off)",
+        "proportionalScaleOnByDefault": "proportional image scaling on by default (shift turns off)",
         "listenerMoveSpeed": "listener movement speed (WASD)",
         "themeTitle": "theme"
     },

@@ -104,6 +104,7 @@ export function sortSoundList() {
 let isProportionalScaleOn = false;
 export function getIsProportionalScaleOn():boolean { return isProportionalScaleOn; };
 export function setIsProportionalScaleOn(b:boolean) { isProportionalScaleOn = b; };
+export function toggleProportionalScale(){ isProportionalScaleOn = !isProportionalScaleOn };
 let isInDeleteMode = false;
 export function getIsInDeleteMode():boolean { return isInDeleteMode; };
 export function setIsInDeleteMode(b:boolean) {isInDeleteMode = b; };

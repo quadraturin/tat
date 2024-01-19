@@ -1,7 +1,6 @@
-export let proportionalScaleOnByDefault = false;
-export let invertVolumeScroll = false;
-export let movementSpeed = 5;
-export let language = "en-us";
+import { defaultUserSettings } from "./settings.appSettings";
+import { saveUserSettings } from "./settings.saveUserSettings";
+import * as R from '$lib/registry'
 
 export let theme = {
     name: 'warped',
@@ -13,20 +12,22 @@ export let theme = {
     accent3: 'teal'
 }
 
-export let helpOpen = true; // not in settings: app remembers last setting
+export let userSettings:any = defaultUserSettings;
 
-let settings:any = {
-    proportionalScaleOnByDefault: false,
-    invertVolumeScroll: false,
-    movementSpeed: 5,
-    language: "en-us"
-}
 export function getUserSettings() {
-    return settings;
+    return userSettings;
 }
 export function setUserSetting(key:string, value:any) {
-    settings[key] = value;
+    console.log('setting user setting', key, value)
+    userSettings[key] = value;
+    saveUserSettings();
 }
-export function overwriteUserSettings(newSettings:any) {
-    settings = newSettings;
+export function overwriteUserSettings(newSettings:{}) {
+    console.log('overwriting user settings', newSettings)
+    userSettings = newSettings;
+    R.setIsProportionalScaleOn(userSettings.proportionalScaleOnByDefault);
+}
+export function resetUserSettings() {
+    userSettings = defaultUserSettings;
+    saveUserSettings();
 }

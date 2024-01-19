@@ -1,24 +1,52 @@
 <script lang="ts">
+	import * as R from '$lib/registry';
+	import { getUserSettings, resetUserSettings, setUserSetting } from '$lib/settings.userSettings';
 	import type { LayoutData } from '../../routes/$types';
     export let data:LayoutData;
+
+    let userSettings:any = getUserSettings();
+    let listenerMoveSpeed:number = getUserSettings().listenerMoveSpeed;
+
+    setInterval(() => {
+        userSettings = getUserSettings();
+        listenerMoveSpeed = userSettings.listenerMoveSpeed;
+    }, 15);
+    
 </script>
 
 <div class="menu" id="settings">
     <h2>{data.settings.settingsTitle}</h2>
 
     <div class="setting">
-        <input type="checkbox" id="invertVolumeScroll" class="fancyCheck" /> 
+        <input type="checkbox" id="invertVolumeScroll" class="fancyCheck" 
+        checked={userSettings?.invertVolumeScroll}
+        on:click={()=>{setUserSetting("invertVolumeScroll", !userSettings.invertVolumeScroll)}} /> 
         <label for="invertVolumeScroll">{data.settings.invertVolumeScroll}</label>
     </div>
 
     <div class="setting">
-        <input type="checkbox" id="proportionalScaleOn" class="fancyCheck"  /> 
-        <label for="proportionalScaleOn">{data.settings.proportionalScaleOn}</label>
+        <input type="checkbox" id="proportionalScaleOnByDefault" class="fancyCheck"
+        checked={userSettings?.proportionalScaleOnByDefault}
+        on:click={()=>{
+            setUserSetting("proportionalScaleOnByDefault", !userSettings.proportionalScaleOnByDefault);
+            R.toggleProportionalScale()}}  /> 
+        <label for="proportionalScaleOnByDefault">{data.settings.proportionalScaleOnByDefault}</label>
     </div>
 
     <div class="setting">
-        <input type="input" id="listenerMoveSpeed" value="5" class="fancyText"  /> 
+        <input type="input" id="listenerMoveSpeed" class="fancyText"
+        placeholder={listenerMoveSpeed.toString()}
+        bind:value={listenerMoveSpeed} 
+        on:input={()=>{setUserSetting("listenerMoveSpeed", listenerMoveSpeed)}}/> 
         <label for="listenerMoveSpeed">{data.settings.listenerMoveSpeed}</label>
+    </div>
+
+    <div class="setting">
+        <button id="resetSettings"
+        on:click={()=>{
+            resetUserSettings(); }}>
+            reset to defaults
+        </button>
     </div>
 <!--
     <h2>theme</h2>
