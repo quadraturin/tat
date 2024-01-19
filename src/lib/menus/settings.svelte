@@ -4,21 +4,21 @@
 </script>
 
 <div class="menu" id="settings">
-    <h2>settings</h2>
+    <h2>{data.settings.settingsTitle}</h2>
 
     <div class="setting">
         <input type="checkbox" id="invertVolumeScroll" class="fancyCheck" /> 
-        <label for="invertVolumeScroll">invert volume scroll direction</label>
+        <label for="invertVolumeScroll">{data.settings.invertVolumeScroll}</label>
     </div>
 
     <div class="setting">
         <input type="checkbox" id="proportionalScaleOn" class="fancyCheck"  /> 
-        <label for="proportionalScaleOn">proportional image scaling on by default (shift turns off)</label>
+        <label for="proportionalScaleOn">{data.settings.proportionalScaleOn}</label>
     </div>
 
     <div class="setting">
         <input type="input" id="listenerMoveSpeed" value="5" class="fancyText"  /> 
-        <label for="listenerMoveSpeed">listener movement speed (WASD)</label>
+        <label for="listenerMoveSpeed">{data.settings.listenerMoveSpeed}</label>
     </div>
 <!--
     <h2>theme</h2>

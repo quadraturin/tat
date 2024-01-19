@@ -16,8 +16,8 @@
 	import { readFiles } from '$lib/media.readFiles';
 	import { loadProject } from '$lib/project.loadProject';
     import { removeSelected } from '$lib/media.removeSelected';
-    import * as S from '$lib/settings';
-    import * as US from '$lib/userSettings'
+    import * as S from '$lib/settings.appSettings';
+    import * as US from '$lib/settings.userSettings'
     import type { PageData } from './$types';
     export let data:PageData;
 
