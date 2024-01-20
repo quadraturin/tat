@@ -33,7 +33,7 @@ export async function readFiles(): Promise<void> {
             R.setIsLoading(true);
             selected.forEach(e => {
                 console.log("LOAD", e);
-                promises.push(loadFile({ filePath: e as string }));
+                promises.push(loadFile(e as string));
             });
             await Promise.allSettled(promises);
             R.setIsLoading(false);

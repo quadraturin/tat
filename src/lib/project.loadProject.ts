@@ -8,6 +8,9 @@ import * as R from '$lib/registry'
 import { clearProject } from './project.clearProject';
 import { closeModal, openLoadingModal } from './ui.modals';
 
+/**
+ * load a project.
+ */
 export async function loadProject() 
 {
     try 
@@ -101,13 +104,14 @@ export async function loadProject()
             // load the sounds and place them
             for (let j=0; j<uniqueSounds.length; j++) {
                 // load the unique sound
-                let file = await newSound(await join(filePath as string, 'sounds', uniqueSounds[j]));
+                let file = await newSound({src:await join(filePath as string, 'sounds', uniqueSounds[j])});
                 if (typeof file != "undefined") {
                     // create all project sounds with the unique sound
                     for (let k=0; k<project.maps[i].sounds.length; k++) {
                         if (project.maps[i].sounds[k].src == uniqueSounds[j]){
                             let obj = project.maps[i].sounds[k];
-                            newSound(file, {
+                            newSound({
+                                src: obj.src,
                                 soundType: obj.soundType,
                                 volume: obj.volume,
                                 muted: obj.muted,

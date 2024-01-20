@@ -3,7 +3,11 @@ import { imageFileTypes, soundFileTypes } from '$lib/settings.appSettings';
 import { newSound } from "./media.loadSound";
 import { loadImageFile, newImage } from "./media.loadImage";
 
-export async function loadFile({ filePath }: { filePath: string; }): Promise<void> {
+/**
+ * load a file.
+ * @param filePath path of file to load. 
+ */
+export async function loadFile(filePath: string): Promise<void> {
     try {
         const ext = await extname(filePath);
         if (imageFileTypes.includes(ext)) { // file is an image
@@ -11,7 +15,7 @@ export async function loadFile({ filePath }: { filePath: string; }): Promise<voi
             if (typeof file != "undefined") newImage(file);
         }
         else if (soundFileTypes.includes(ext)) { // file is a sound
-            newSound(filePath);
+            newSound({src:filePath});
         }
     }
     catch (err) {
