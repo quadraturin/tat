@@ -45,8 +45,9 @@
         <button id="resetSettings"
         on:click={()=>{
             resetUserSettings(); }}>
-            reset to defaults
+            {data.settings.reset}
         </button>
+        <em>{data.settings.autoSave}</em>
     </div>
 <!--
     <h2>theme</h2>

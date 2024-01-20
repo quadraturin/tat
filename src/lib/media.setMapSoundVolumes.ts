@@ -4,11 +4,9 @@ import * as T from '@turf/turf'
 import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from "./settings.appSettings";
 
 /**
- * set all sound volumes on the map.
+ * set all sound volumes on the map. gets called repeatedly while the app is open.
  */
 export function setMapSoundVolumes(){
-    // tell registry that the project has changed.
-    R.setProjectDirty();
 
     // cycle through each sound, checking sound type.
     const listener = R.getListener();

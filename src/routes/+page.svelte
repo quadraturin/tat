@@ -33,7 +33,7 @@
 	import { help } from '$lib/util.help';
 	import { changeOpacity } from '$lib/media.controlOpacity';
 	import { clearProject } from '$lib/project.clearProject';
-	import { toggleAboutMenu, toggleSettingsMenu } from '$lib/ui.menus';
+	import { closeAllMenus, toggleAboutMenu, toggleSettingsMenu } from '$lib/ui.menus';
 
     import type { PageData } from './$types';
     export let data:PageData;
@@ -160,7 +160,13 @@
         else if (e.key == "s" && (e.metaKey || e.ctrlKey)) saveProject(false);
         else if (e.key == "o" && (e.metaKey || e.ctrlKey)) loadProject();
         else if (e.key == "n" && (e.metaKey || e.ctrlKey)) clearProject();
-        else if (e.key == "m" && (e.metaKey || e.ctrlKey)) readFiles();
+        else if (e.key == "i" && (e.metaKey || e.ctrlKey)) readFiles();
+        else if (e.key == "w" && (e.metaKey || e.ctrlKey)) tryQuit();
+        else if (e.key == "m" && (e.metaKey || e.ctrlKey)) appWindow.minimize();
+        else if (e.key == "m" && e.shiftKey && (e.metaKey || e.ctrlKey)) appWindow.maximize();
+        else if (e.key == "1" && (e.metaKey || e.ctrlKey)) toggleSettingsMenu();
+        else if (e.key == "2" && (e.metaKey || e.ctrlKey)) toggleAboutMenu();
+        else if (e.key == 'Escape') closeAllMenus();
         // using unary + here to prevent weird concat issues
         else if (e.key == "w") 
             R.getListener().setLatLng([R.getListener().getLatLng().lat + +speed, R.getListener().getLatLng().lng]);
@@ -240,7 +246,7 @@ on:wheel|preventDefault={()=>{}}>
     <button class="toolbar-button" 
     on:click={readFiles} 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.addMedia)}}
+    on:mouseover={()=>{help(data.help.titlebar.addMedia, data.help.titlebar.addMediaShortcut)}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconImageFile />{/if}
@@ -253,7 +259,7 @@ on:wheel|preventDefault={()=>{}}>
     <button class="toolbar-button"
     on:click={() => saveProject(false)} 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.save)}}
+    on:mouseover={()=>{help(data.help.titlebar.save, data.help.titlebar.saveShortcut)}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         {#if R.getIsSaving()}<IconLoading />{:else}<IconSave />{/if}
@@ -264,7 +270,7 @@ on:wheel|preventDefault={()=>{}}>
     <button class="toolbar-button"
     on:click={() => saveProject(true)}
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.saveAs)}}
+    on:mouseover={()=>{help(data.help.titlebar.saveAs, data.help.titlebar.saveAsShortcut)}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         {#if R.getIsSaving()}<IconLoading />{:else}<IconSaveAs />{/if}
@@ -277,7 +283,7 @@ on:wheel|preventDefault={()=>{}}>
     <button class="toolbar-button"
     on:click={loadProject} 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.openProject)}}
+    on:mouseover={()=>{help(data.help.titlebar.openProject, data.help.titlebar.openProjectShortcut)}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconLoad />{/if}
@@ -288,7 +294,7 @@ on:wheel|preventDefault={()=>{}}>
     <button class="toolbar-button"  title="new project" 
     on:click={clearProject} 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.newProject)}}
+    on:mouseover={()=>{help(data.help.titlebar.newProject, data.help.titlebar.newProjectShortcut)}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         <IconNew />
@@ -301,7 +307,7 @@ on:wheel|preventDefault={()=>{}}>
     <button class="toolbar-button" id="settings-button"
     on:click={toggleSettingsMenu} 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.settings)}}
+    on:mouseover={()=>{help(data.help.titlebar.settings, data.help.titlebar.settingsShortcut)}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         <IconSettings />
@@ -312,7 +318,7 @@ on:wheel|preventDefault={()=>{}}>
     <button class="toolbar-button" id="about-button" 
     on:click={toggleAboutMenu} 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.about)}}
+    on:mouseover={()=>{help(data.help.titlebar.about, data.help.titlebar.aboutShortcut)}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         <IconAbout />
@@ -342,7 +348,7 @@ on:wheel|preventDefault={()=>{}}>
 
     <button class="titlebar-button" id="titlebar-close" title="close" 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.close)}}
+    on:mouseover={()=>{help(data.help.titlebar.close, data.help.titlebar.closeShortcut)}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="8" stroke-dashoffset="8" d="M12 12L16 16M12 12L8 8M12 12L8 16M12 12L16 8"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="8;0"/></path></g></svg>

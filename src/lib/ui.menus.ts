@@ -7,6 +7,7 @@ export async function closeAllMenus() {
     document.getElementById("about")?.setAttribute("style", "display:none");
     document.getElementById("settings")?.setAttribute("style", "display:none");
     R.setIsAboutMenuOpen(false);
+    R.setIsSettingsMenuOpen(false);
 }
 
 /**

@@ -4,7 +4,9 @@
         "invertVolumeScroll": "invert volume scroll direction",
         "proportionalScaleOnByDefault": "proportional image scaling on by default (shift turns off)",
         "listenerMoveSpeed": "listener movement speed (WASD)",
-        "themeTitle": "theme"
+        "themeTitle": "theme",
+        "reset": "reset to defaults",
+        "autoSave": "(all settings changes are immediately applied.)"
     },
     "about": {
         "followTitle": "follow paradiso",
@@ -32,25 +34,18 @@
     "ui": {
         "addMedia": "add media",
         "addMediaShort": "add",
-        "addMediaShorcut": "<strong>(CTRL/CMD+M)</strong>",
         "save": "save",
         "saveShort": "save",
-        "saveShorcut": "<strong>(CTRL/CMD+S)</strong>",
         "saveAs": "save as",
         "saveAsShort": "save as",
-        "saveAsShorcut": "<strong>(CTRL/CMD+SHIFT+S)</strong>",
         "openProject": "open project",
         "openProjectShort": "open",
-        "openProjectShorcut": "<strong>(CTRL/CMD+O)</strong>",
         "newProject": "new project",
         "newProjectShort": "new",
-        "newProjectShorcut": "<strong>(CTRL/CMD+N)</strong>",
         "about": "about",
         "aboutShort": "about",
-        "aboutShorcut": "<strong></strong>",
         "settings": "settings",
-        "settingsShort": "settings",
-        "settingsShorcut": "<strong></strong>"
+        "settingsShort": "settings"
     },
     "help": {
         "titlebar":{
@@ -58,16 +53,34 @@
             "titleDirty": "your project has unsaved changes.",
 
             "addMedia": "<strong>add media:</strong> add images and/or audio to your project. these will be copied to your project folder when you save.",
+            "addMediaShortcut": "<strong>(ctrl/cmd+i)</strong>",
+    
             "save": "<strong>save:</strong> save your project.",
+            "saveShortcut": "<strong>(ctrl/cmd+s)</strong>",
+    
             "saveAs": "<strong>save as:</strong> save a copy of your project to a new location.",
+            "saveAsShortcut": "<strong>(ctrl/cmd+shift+s)</strong>",
+    
             "openProject": "<strong>open:</strong> open an existing project.",
+            "openProjectShortcut": "<strong>(ctrl/cmd+o)</strong>",
+    
             "newProject": "<strong>new:</strong> create a new project.",
-            "about": "<strong>about:</strong> what is this anyway?.",
+            "newProjectShortcut": "<strong>(ctrl/cmd+n)</strong>",
+    
             "settings": "<strong>settings:</strong>view the application settings.",
+            "settingsShortcut": "<strong>(ctrl/cmd+1)</strong>",
+    
+            "about": "<strong>about:</strong> what is this anyway?.",
+            "aboutShortcut": "<strong>(ctrl/cmd+2)</strong>",
 
             "minimize": "<strong>minimize</strong> this window.",
+            "minimizeShortcut": "<strong>ctrl/cmd+m</strong>",
+
             "maximize": "<strong>maximize</strong> this window.",
-            "close": "<strong>close</strong> tat."
+            "maximizeShortcut": "<strong>(ctrl/cmd+shift+m)</strong>",
+            
+            "close": "<strong>close</strong> tat.",
+            "closeShortcut": "<strong>(ctrl/cmd+w)</strong>"
         },
         "map": {
             "helpArea": "<strong>info:</strong> mouse over things in the application to show information about them here. click the \"?\" button to collapse.",

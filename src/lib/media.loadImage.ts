@@ -264,6 +264,8 @@ function moveImage(e:L.LeafletEvent, imageRect:L.Rectangle, overlay:L.ImageOverl
     ne.lng += R.getImageOffset().lng;
     let bounds = L.latLngBounds(sw,ne);
     overlay.setBounds(bounds);
+
+    R.setProjectDirty()
 }
 
 /**
