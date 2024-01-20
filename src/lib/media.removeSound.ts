@@ -19,7 +19,7 @@ export async function removeSound(id:number, removeFromList:boolean = true, forc
         if (!force) {
             let unique = true;
             for (let i=0; i<soundList.length; i++) {
-                if (i != id && soundList[i].data.name == soundList[id].data.name) {
+                if (i != id && soundList[i].src == soundList[id].src) {
                     unique = false;
                     break;
                 }

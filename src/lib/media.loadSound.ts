@@ -9,15 +9,15 @@ import { updateLoadingModal } from './ui.modals';
 import type { MapSound } from './classes/MapSound';
 import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from './settings.appSettings';
 import { help } from './util.help';
-import * as P from 'pizzicato';
+import * as Tone from 'tone';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 
-// pizzicato sound
+// create new sound
 export async function newSound(filePath:string, options?:any){
     try {
         updateLoadingModal(filePath);
 
-        let pSound = new P.Sound(convertFileSrc(filePath));
+        let sound = new Tone.Player(convertFileSrc(filePath)).toDestination();
 
         let soundType:string = options.soundType || SOUNDTYPE_LOCAL;
 
@@ -39,11 +39,18 @@ export async function newSound(filePath:string, options?:any){
 
         let emitter = await createEmitter(soundType, lat, lng, radius, points, locked);
 
-        if (muted) pSound.volume = 0;   // mute if muted
-        pSound.play(0,seek);            // play sound from seek position
-        if(paused) pSound.pause();      // pause if sound should be paused
+        let startTime = Date.now(); // needed to track playback position
 
-        R.addToSoundList(filePath, pSound, soundType, emitter, volume, muted, solo, order);
+        sound.loop = true;
+        if (muted) sound.mute = true; // mute if muted
+
+        Tone.loaded().then(() => {
+            sound.start(0, seek); // play sound from seek position
+        });
+
+        if(paused) sound.stop();  // pause if sound should be paused
+
+        R.addToSoundList(filePath, sound, soundType, emitter, startTime, volume, muted, solo, order);
         
         // update volumes
         setMapSoundVolumes();
@@ -128,7 +135,8 @@ export async function cycleSoundType(sound:MapSound) { // cycle: area -> global 
         await removeSoundbyEmitter(sound.emitter, false, true);
         sound.emitter = await createEmitter(sound.soundType);
     }
-    sound.sound.play();
+    sound.sound.start(0);
+    sound.startTime = Date.now();
     setMapSoundVolumes();
 }
 

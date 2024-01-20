@@ -3,7 +3,7 @@ import { projectExt } from './settings.appSettings';
 import { exists, readTextFile } from '@tauri-apps/api/fs';
 import { basename, join } from '@tauri-apps/api/path';
 import { loadImageFile, newImage } from './media.loadImage';
-import { loadSoundFile, newSound } from './media.loadSound';
+import { newSound } from './media.loadSound';
 import * as R from '$lib/registry'
 import { clearProject } from './project.clearProject';
 import { closeModal, openLoadingModal } from './ui.modals';
@@ -101,13 +101,25 @@ export async function loadProject()
             // load the sounds and place them
             for (let j=0; j<uniqueSounds.length; j++) {
                 // load the unique sound
-                let file = await loadSoundFile(await join(filePath as string, 'sounds', uniqueSounds[j]));
+                let file = await newSound(await join(filePath as string, 'sounds', uniqueSounds[j]));
                 if (typeof file != "undefined") {
                     // create all project sounds with the unique sound
                     for (let k=0; k<project.maps[i].sounds.length; k++) {
                         if (project.maps[i].sounds[k].src == uniqueSounds[j]){
                             let obj = project.maps[i].sounds[k];
-                            newSound(file, obj.soundType, obj.volume, obj.muted, obj.solo, obj.y, obj.x, obj.radius, obj.points, obj.order, obj.seek, obj.locked);
+                            newSound(file, {
+                                soundType: obj.soundType,
+                                volume: obj.volume,
+                                muted: obj.muted,
+                                solo: obj.solo,
+                                lat: obj.y,
+                                lng: obj.x,
+                                radius: obj.radius,
+                                points: obj.points,
+                                order: obj.order,
+                                seek: obj.seek,
+                                locked: obj.locked
+                            });
                         }
                     }
                 }

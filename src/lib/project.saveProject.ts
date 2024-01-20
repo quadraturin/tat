@@ -1,7 +1,7 @@
 import * as R from '$lib/registry';
 import L from 'leaflet';
 import { message, save } from "@tauri-apps/api/dialog";
-import { createDir, writeTextFile, writeBinaryFile, exists, readDir, removeFile } from "@tauri-apps/api/fs";
+import { createDir, writeTextFile, writeBinaryFile, exists, readDir, removeFile, copyFile } from "@tauri-apps/api/fs";
 import { join, basename, sep } from "@tauri-apps/api/path";
 import type { MapImage } from './classes/MapImage';
 import type { MapSound } from './classes/MapSound';
@@ -74,13 +74,13 @@ export async function saveProject(saveAs=false): Promise<boolean>
     i = 0;
     soundList.forEach(e => {
         project.maps[0].sounds[i] = {
-            src: e.data.name,
+            src: e.src,
             soundType: e.soundType,
             volume: e.volume,
             solo: e.solo,
             muted: e.muted,
             order: i,
-            seek: e.sound.seek(),
+            seek: Date.now() - e.startTime,
             locked: !e.emitter?.editEnabled()
         }
         if (e.emitter instanceof L.Circle) {
@@ -129,8 +129,8 @@ async function writeImageFile(e:MapImage, filePath:string) {
 
 // write sound file to images folder if the specified sound doesn't already exist there
 async function writeSoundFile(e:MapSound, filePath:string) {
-    const fullPath = await join(filePath, 'sounds', e.data.name);
-    if (!await exists(fullPath)) writeBinaryFile(fullPath, await e.data.arrayBuffer());
+    const fullPath = await join(filePath, 'sounds', await basename(e.src));
+    if (!await exists(fullPath)) copyFile(e.src, fullPath);
 }
 
 // delete files in the folder that are no longer used in the project
@@ -152,7 +152,7 @@ async function deleteUnused(fileType:string) {
         let notInUse = true;
         for (let j=0; j<itemList.length; j++) {
             //console.log("checking " + fileList[i].name + " vs. " + itemList[j].data.name);
-            if (fileList[i].name == itemList[j].data.name) {
+            if (fileList[i].name == await basename(itemList[j].src)) {
                 notInUse = false;
                 //console.log(fileList[i].name + " is in use.")
                 break;

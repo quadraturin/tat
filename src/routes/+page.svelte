@@ -431,7 +431,7 @@ on:wheel|preventDefault={()=>{}}>
                     }}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
-                        {item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}
+                        {item.src.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}
                     </button>
                     
                     <button class="item-button item-type" 
@@ -446,10 +446,10 @@ on:wheel|preventDefault={()=>{}}>
                         {#if item.soundType == S.SOUNDTYPE_AREA}<IconSoundArea/>{:else if item.soundType == S.SOUNDTYPE_GLOBAL}<IconSoundGlobal/>{:else}<IconSoundLocal/>{/if}
                     </button>
                     
-                    <button class="item-button item-pause" class:activated={!item.sound.playing()}  
+                    <button class="item-button item-pause" class:activated={!item.sound.state}  
                     on:click={() => togglePause(item)}
                     on:focus={()=>{}} 
-                    on:mouseover={()=>{item.sound.playing() ? help(data.help.map.soundPause) : help(data.help.map.soundUnPause)}}
+                    on:mouseover={()=>{item.sound.state ? help(data.help.map.soundPause) : help(data.help.map.soundUnPause)}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
                         <IconSoundPause/>
@@ -499,7 +499,7 @@ on:wheel|preventDefault={()=>{}}>
                     on:mouseover={()=>{help(data.help.map.soundSeek)}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
-                        <div style={"width: "+((item.sound.seek()/item.sound.duration())*100).toString()+"%"} class="sound-item-progress-bar"></div>
+                        <div style={"width: "+((item.sound.sampleTime/item.startTime)*100).toString()+"%"} class="sound-item-progress-bar"></div>
                     </button>
                 </div>
             {/each}

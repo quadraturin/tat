@@ -3,6 +3,7 @@ import type L from 'leaflet';
 // class that defines an image on the map
 export class MapImage
 {
+    src:string;
     data:File;
     overlay:L.ImageOverlay;
     rect:L.Rectangle;
@@ -24,5 +25,6 @@ export class MapImage
         
         if (typeof order != "undefined") this.order = order;
         else this.order = 1;
+        this.src="";
     }
 }

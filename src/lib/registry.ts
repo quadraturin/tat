@@ -1,8 +1,8 @@
-import L, { ImageOverlay } from "leaflet";
+import L from "leaflet";
 import { MapImage } from "./classes/MapImage";
 import { MapSound } from "./classes/MapSound";
 import type { MapInfo } from "./classes/MapInfo";
-import type * as P from 'pizzicato';
+import type * as Tone from 'tone';
 
 // the map
 let map:L.Map;
@@ -57,7 +57,7 @@ export function setImageList(newImageList:Array<MapImage>) { imageList = newImag
 export function addToImageList(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, ow:number, oh:number, opacity?:number, order?:number) {
     imageList.push(new MapImage(data, overlay, rect, ow, oh, opacity, order));
 }
-export function moveImageToEndOfList(overlay:ImageOverlay) {
+export function moveImageToEndOfList(overlay:L.ImageOverlay) {
     // moves image to end of list -- required for save/load as order determines stacking
     for (let i=0; i < imageList.length; i++) {
         if (imageList[i].overlay == overlay) {
@@ -85,8 +85,8 @@ export function sortImageList() {
 let soundList = new Array<MapSound>;
 export function getSoundList():Array<MapSound> { return soundList; };
 export function setSoundList(newSoundList:Array<MapSound>) { soundList = newSoundList; };
-export function addToSoundList(filePath:string, pSound:P.Sound, soundType:string, emitter:L.Circle|L.Polygon|undefined, volume:number, muted:boolean, solo:boolean, order:number) {
-    soundList.push(new MapSound(filePath, pSound, soundType, emitter, volume, muted, solo, order));
+export function addToSoundList(filePath:string, pSound:Tone.Player, soundType:string, emitter:L.Circle|L.Polygon|undefined, startTime:number, volume:number, muted:boolean, solo:boolean, order:number) {
+    soundList.push(new MapSound(filePath, pSound, soundType, emitter, startTime, volume, muted, solo, order));
 }
 
 //sorts and stacks the sounds

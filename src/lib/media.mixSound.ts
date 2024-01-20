@@ -9,7 +9,7 @@ export async function toggleMute(id:number) {
 
 // pass in MapSound and boolean (true = mute, false = unmute)
 async function mute(sound:MapSound, toMute:boolean) {
-    sound.sound.mute(toMute);
+    sound.sound.mute = toMute;
     sound.muted = toMute;
 }
 
@@ -25,19 +25,19 @@ async function solo(sound:MapSound, toSolo:boolean) {
     for (let i=0; i<soundList.length; i++) {
         if (sound == R.getSoundList()[i]) {
             if (toSolo) {
-                R.getSoundList()[i].sound.mute(false);
+                R.getSoundList()[i].sound.mute = false;
                 R.getSoundList()[i].muted = false;
                 R.getSoundList()[i].solo = true;
             }
             else{
-                R.getSoundList()[i].sound.mute(R.getSoundList()[i].muted); // restore muted state
+                R.getSoundList()[i].sound.mute = R.getSoundList()[i].muted; // restore muted state
                 R.getSoundList()[i].solo = false;
             }
         } else {
             if (toSolo) {
-                R.getSoundList()[i].sound.mute(true); // mute all but solo (don't set muted state)
+                R.getSoundList()[i].sound.mute = true; // mute all but solo (don't set muted state)
             } else {
-                R.getSoundList()[i].sound.mute(R.getSoundList()[i].muted); // restore muted state
+                R.getSoundList()[i].sound.mute = R.getSoundList()[i].muted; // restore muted state
             }
             R.getSoundList()[i].solo = false;
         }

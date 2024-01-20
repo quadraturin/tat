@@ -10,7 +10,7 @@ export function setMapSoundVolumes(): void
     
     R.getSoundList().forEach(e => {
         if (e.soundType == SOUNDTYPE_GLOBAL) { 
-            e.sound.volume = e.volume; 
+            e.sound.volume.value = e.volume; 
         } else if (e.soundType == SOUNDTYPE_AREA) {
             R.getMap().eachLayer((layer) => {
                 if(layer instanceof L.Polygon) 
@@ -18,7 +18,7 @@ export function setMapSoundVolumes(): void
                     const inside = T.booleanPointInPolygon([listener.getLatLng().lng,listener.getLatLng().lat], layer.toGeoJSON());
                     let baseVolume = 0;
                     if (inside) baseVolume = 1;
-                    e.sound.volume = baseVolume*e.volume;
+                    e.sound.volume.value = baseVolume*e.volume;
                 }
             });
         } else { // default to local
@@ -30,7 +30,7 @@ export function setMapSoundVolumes(): void
                     const b = layer.getLatLng().lng - listener.getLatLng().lng;
                     const c = Math.sqrt(a*a + b*b);
                     const baseVolume = Math.max(0,(layer.getRadius() - c) / layer.getRadius());
-                    e.sound.volume = baseVolume*e.volume;
+                    e.sound.volume.value = baseVolume*e.volume;
                 }
             });
         }

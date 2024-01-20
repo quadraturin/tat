@@ -4,15 +4,18 @@ import { getUserSettings } from "./settings.userSettings";
 
 
 export async function togglePause(sound:MapSound) {
-    if (sound.sound.playing()) sound.sound.pause();
-    else sound.sound.play();
+    if (sound.sound.state == "started") sound.sound.stop();
+    else {
+        sound.sound.start(0);
+        sound.startTime = Date.now();
+    }
 }
 
 export async function seekToByClick(sound:MapSound, element:HTMLButtonElement, mouseX:number) {
     //console.log(element.getBoundingClientRect().left, element.offsetWidth, mouseX);
     let pct = (mouseX-element.getBoundingClientRect().left)/element.offsetWidth;
     //console.log((pct*100) + "%");
-    let pos = sound.sound.duration() * pct;
+    let pos = sound.sound.sampleTime * pct;
     sound.sound.seek(pos);
 }
 
