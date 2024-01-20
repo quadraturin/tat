@@ -19,12 +19,10 @@ export async function togglePause(sound:MapSound) {
 /**
  * seek to a location in the sound by clicking on the sound's seek bar.
  * @param sound the sound to seek.
- * @param element the seek bar element clicked on.
  * @param mouseX the mouse's x position.
  */
-export async function seekToByClick(sound:MapSound, element:HTMLButtonElement, mouseX:number) {
-    if (!element) return;
-    let pct = (mouseX-element.getBoundingClientRect().left)/element.offsetWidth;
+export async function seekToByClick(sound:MapSound, mouseX:number) {
+    let pct = (mouseX-18)/182; // 12px from left edge of screen, 182px wide
     let pos = sound.sound.duration() * pct;
     sound.sound.seek(pos);
 }
@@ -61,8 +59,5 @@ export async function changeMasterVolume(event:WheelEvent) {
 
     // adjust and clamp volume.
     H.Howler.volume(H.Howler.volume() + delta*0.01);
-    if (H.Howler.volume() < 0) H.Howler.volume(0);
-    else if (H.Howler.volume() > 1) H.Howler.volume(1);
-
     console.log('changing master volume', H.Howler.volume())
 }

@@ -495,7 +495,7 @@ on:wheel|preventDefault={()=>{}}>
                     <button class="sound-item-progress-track" 
                     bind:this={soundTrack} 
                     on:mousemove={handleMousemove} 
-                    on:click={() => seekToByClick(item, soundTrack, mousePos.x)}
+                    on:click={() => seekToByClick(item, mousePos.x)}
                     on:focus={()=>{}} 
                     on:mouseover={()=>{help(data.help.map.soundSeek)}}
                     on:mouseout={()=>{help()}}
