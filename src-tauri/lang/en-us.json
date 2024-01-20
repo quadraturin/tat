@@ -88,14 +88,17 @@
             "zoomIn": "<strong>zoom in:</strong> zoom in on the map.",
             "zoomInDisabled": "you are currently as zoomed is as you can be!",
             "zoomInShortcut": "<strong>(mouse wheel or + or =)</strong>",
+
             "zoomOut": "<strong>zoom out:</strong> zoom out on the map.",
             "zoomOutShortcut": "<strong>(mouse wheel or - or _)</strong>",
             "zoomOutDisabled": "you are currently as zoomed out as you can be!",
+
             "recenter": "<strong>recenter:</strong> center the view on the listener.",
-            "recenterShortcut": "<strong></strong>",
+            "recenterShortcut": "<strong>(c)</strong>",
+
             "hideSidebar": "<strong>hide sidebar:</strong> hide the sidebar interface.",
             "showSidebar": "<strong>show sidebar:</strong> show the sidebar interface.",
-            "toggleSidebarShortcut": "<strong></strong>",
+            "toggleSidebarShortcut": "<strong>(h)</strong>",
             
             "listener": "<strong>listener:</strong> represents the players' location. you will hear sounds when the listener is overlapping them.",
             "listenerActions": "<strong>drag:</strong> move. <strong>W/A/S/D:</strong> move.",

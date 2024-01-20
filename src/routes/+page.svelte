@@ -167,6 +167,8 @@
         else if (e.key == "1" && (e.metaKey || e.ctrlKey)) toggleSettingsMenu();
         else if (e.key == "2" && (e.metaKey || e.ctrlKey)) toggleAboutMenu();
         else if (e.key == 'Escape') closeAllMenus();
+        else if (e.key == "h") toggleSidebar();
+        else if (e.key == "c") R.getMap().flyTo(R.getListener().getLatLng());
         // using unary + here to prevent weird concat issues
         else if (e.key == "w") 
             R.getListener().setLatLng([R.getListener().getLatLng().lat + +speed, R.getListener().getLatLng().lng]);
