@@ -18,6 +18,23 @@
     import { removeSelected } from '$lib/media.removeSelected';
     import * as S from '$lib/settings.appSettings';
     import { getUserSettings } from '$lib/settings.userSettings'
+	import { loadUserSettings } from '$lib/settings.loadUserSettings';
+    import * as H from 'howler';
+	import About from '$lib/menus/about.svelte';
+	import Settings from '$lib/menus/settings.svelte';
+	import { tryQuit } from '$lib/quit';
+	import Loading from '$lib/menus/loading.svelte';
+	import { toggleMute, toggleSolo } from '$lib/media.mixSound';
+	import { removeImage } from '$lib/media.removeImage';
+	import { removeSound } from '$lib/media.removeSound';
+	import { duplicateImage, toggleImageEdit } from '$lib/media.loadImage';
+	import { cycleSoundType, duplicateSound, toggleSoundEdit } from '$lib/media.loadSound';
+	import { changeBaseVolume, changeMasterVolume, seekToByClick, togglePause } from '$lib/media.controlSound';
+	import { help } from '$lib/util.help';
+	import { changeOpacity } from '$lib/media.controlOpacity';
+	import { clearProject } from '$lib/project.clearProject';
+	import { toggleAboutMenu, toggleSettingsMenu } from '$lib/ui.menus';
+
     import type { PageData } from './$types';
     export let data:PageData;
 
@@ -29,39 +46,20 @@
     import IconImageFile from '$lib/icons/iconImageFile.svelte';
     import IconSaveAs from '$lib/icons/iconSaveAs.svelte';
     import IconNew from '$lib/icons/iconNew.svelte'
-	import { clearProject } from '$lib/project.clearProject';
-	import { toggleAboutMenu, toggleSettingsMenu } from '$lib/ui.menus';
 	import IconAbout from '$lib/icons/iconAbout.svelte';
-	import About from '$lib/menus/about.svelte';
-	import Settings from '$lib/menus/settings.svelte';
-	import { tryQuit } from '$lib/quit';
-	import Loading from '$lib/menus/loading.svelte';
-	import { toggleMute, toggleSolo } from '$lib/media.mixSound';
-	import { removeImage } from '$lib/media.removeImage';
-	import { removeSound } from '$lib/media.removeSound';
-	import { duplicateImage, toggleImageEdit } from '$lib/media.loadImage';
-	import { cycleSoundType, duplicateSound, toggleSoundEdit } from '$lib/media.loadSound';
-	import { changeBaseVolume, changeMasterVolume, seekToByClick, togglePause } from '$lib/media.controlSound';
-	import { changeOpacity } from '$lib/media.controlOpacity';
 	import IconSoundGlobal from '$lib/icons/iconSoundGlobal.svelte';
 	import IconSoundLocal from '$lib/icons/iconSoundLocal.svelte';
 	import IconSoundArea from '$lib/icons/iconSoundArea.svelte';
 	import IconSoundPause from '$lib/icons/iconSoundPause.svelte';
-	import { help } from '$lib/util.help';
 	import IconZoomIn from '$lib/icons/iconZoomIn.svelte';
 	import IconZoomOut from '$lib/icons/iconZoomOut.svelte';
 	import IconRecenter from '$lib/icons/iconRecenter.svelte';
 	import IconCollapse from '$lib/icons/iconCollapse.svelte';
 	import IconExpand from '$lib/icons/iconExpand.svelte';
-	import { loadUserSettings } from '$lib/settings.loadUserSettings';
-	import * as  Tone  from 'tone';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
     //import IconAudioFile from '$lib/icons/iconAudioFile.svelte'
-
-	//let files:FileList;
-    //let fileSound:Howl;
 
     let isSaving = false;
     let isDirty = false;
@@ -193,7 +191,7 @@
         imageList = R.getImageList();
         soundList = R.getSoundList();
         isHelpActive = R.getIsHelpActive();
-        masterVolume = Tone.Destination.volume.value;
+        masterVolume = H.Howler.volume();
     }, 15);
 
     let mousePos = { x: 0, y: 0 };
@@ -452,7 +450,7 @@ on:wheel|preventDefault={()=>{}}>
                     <button class="item-button item-pause" class:activated={!item.sound.state}  
                     on:click={() => togglePause(item)}
                     on:focus={()=>{}} 
-                    on:mouseover={()=>{item.sound.state ? help(data.help.map.soundPause) : help(data.help.map.soundUnPause)}}
+                    on:mouseover={()=>{item.sound.playing() ? help(data.help.map.soundPause) : help(data.help.map.soundUnPause)}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
                         <IconSoundPause/>
@@ -502,7 +500,7 @@ on:wheel|preventDefault={()=>{}}>
                     on:mouseover={()=>{help(data.help.map.soundSeek)}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
-                        <div style={"width: "+((item.sound.buffer.duration/item.startTime)*100).toString()+"%"} class="sound-item-progress-bar"></div>
+                        <div style={"width: "+((item.sound.seek()/item.sound.duration())*100).toString()+"%"} class="sound-item-progress-bar"></div>
                     </button>
                 </div>
             {/each}
@@ -513,7 +511,7 @@ on:wheel|preventDefault={()=>{}}>
             on:mouseout={()=>{help()}}
             on:blur={()=>{}}>
                 <div id="master-volume">
-                    <div id="master-volume-bar" style={"height:"+((60+masterVolume)/0.6)+"%"}></div>
+                    <div id="master-volume-bar" style={"height:"+(masterVolume*100)+"%"}></div>
                 </div>
                 <span>sounds</span>
             </div>

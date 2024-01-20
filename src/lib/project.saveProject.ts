@@ -86,7 +86,7 @@ export async function saveProject(saveAs=false): Promise<boolean>
             solo: e.solo,
             muted: e.muted,
             order: i,
-            seek: Date.now() - e.startTime,
+            seek: e.sound.seek(),
             locked: !e.emitter?.editEnabled()
         }
         if (e.emitter instanceof L.Circle) {

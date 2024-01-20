@@ -2,7 +2,7 @@ import L from "leaflet";
 import { MapImage } from "./classes/MapImage";
 import { MapSound } from "./classes/MapSound";
 import type { MapInfo } from "./classes/MapInfo";
-import type * as Tone from 'tone';
+import type * as H from 'howler';
 
 
 
@@ -234,10 +234,9 @@ let soundList = new Array<MapSound>;
  */
 type addToSoundListOptions = {
     src:string, 
-    sound:Tone.Player, 
+    sound:H.Howl, 
     soundType:string, 
     emitter:L.Circle|L.Polygon|undefined, 
-    startTime:number, 
     volume:number, 
     muted:boolean, 
     solo:boolean, 
@@ -268,7 +267,6 @@ export function addToSoundList(options:addToSoundListOptions) {
         sound:options.sound, 
         soundType:options.soundType, 
         emitter:options.emitter, 
-        startTime:options.startTime,
         volume:options.volume, 
         muted:options.muted, 
         solo: options.solo, 

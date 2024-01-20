@@ -9,9 +9,8 @@ import { updateLoadingModal } from './ui.modals';
 import type { MapSound } from './classes/MapSound';
 import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from './settings.appSettings';
 import { help } from './util.help';
-import * as Tone from 'tone';
-import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { basename } from '@tauri-apps/api/path';
+import { convertFileSrc } from '@tauri-apps/api/tauri';
 
 /**
  *  options definition for new sounds.
@@ -68,23 +67,19 @@ export async function newSound(options:newSoundOptions){
         });
 
         // create the sound.
-        let sound = new Tone.Player(convertFileSrc(o.src)).toDestination();
-        sound.loop = true;
-        sound.fadeIn = 0.05;
-        sound.fadeOut = 0.05;
-        if (o.muted) sound.mute = true;
+        let sound = new Howl({
+            src: convertFileSrc(o.src),
+            loop: true,
+            mute: o.muted
+        });
 
         // nice name for the sound.
         let name = await basename(o.src)
         name = name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim();
 
-        // set the start time for sound playback (needed to track playback position).
-        let startTime = Date.now();
-
-        // play the sound when loaded from seek position.
-        Tone.loaded().then(() => {
-            sound.start(0, o.seek);
-        });
+        // seek to seek position and play the sound.
+        sound.seek(o.seek);
+        sound.play();
 
         // pause the sound if it should start paused. this retains the seek position.
         if(o.paused) sound.stop();
@@ -94,8 +89,7 @@ export async function newSound(options:newSoundOptions){
             src: o.src, 
             sound: sound, 
             soundType: o.soundType, 
-            emitter: emitter, 
-            startTime: startTime, 
+            emitter: emitter,
             volume: o.volume, 
             muted: o.muted, 
             solo: o.solo, 
@@ -147,8 +141,7 @@ export async function cycleSoundType(sound:MapSound) {
         await removeSoundbyEmitter(sound.emitter, false, true);
         sound.emitter = await createEmitter({soundType:sound.soundType});
     }
-    sound.sound.start(0);
-    sound.startTime = Date.now();
+    sound.sound.play();
     setMapSoundVolumes();
 }
 

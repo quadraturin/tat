@@ -1,5 +1,5 @@
 import type L from 'leaflet';
-import type * as Tone from 'tone';
+import type * as H from 'howler';
 
 /**
  * type definition for map sound options
@@ -7,10 +7,9 @@ import type * as Tone from 'tone';
 type mapSoundOptions = {
     src:string, 
     name:string,
-    sound:Tone.Player, 
+    sound:H.Howl, 
     soundType:string, 
     emitter:L.Circle|L.Polygon|undefined, 
-    startTime:number, 
     volume:number, 
     muted:boolean, 
     solo:boolean, 
@@ -24,14 +23,13 @@ export class MapSound
 {
     src:string;
     name:string;
-    sound:Tone.Player;
+    sound:H.Howl;
     emitter:L.Circle|L.Polygon|undefined;
     soundType:string;
     volume:number;
     muted:boolean;
     solo:boolean;
     order:number; 
-    startTime:number;
     
     constructor(options:mapSoundOptions)
     {
@@ -43,7 +41,6 @@ export class MapSound
         this.muted = options.muted;
         this.solo = options.solo;
         this.order = options.order;
-        this.startTime = options.startTime;
         this.name = options.name;
     }
 }

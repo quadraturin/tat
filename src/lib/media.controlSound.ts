@@ -1,19 +1,18 @@
 import type { MapSound } from "./classes/MapSound";
 import { setMapSoundVolumes } from "./media.setMapSoundVolumes";
 import { getUserSettings } from "./settings.userSettings";
-import * as Tone from 'tone';
+import * as H from 'howler';
 
 /**
  * pause a playing sound or play a paused sound.
  * @param sound the sound to pause or play.
  */
 export async function togglePause(sound:MapSound) {
-    if (sound.sound.state == "started") {
-        sound.sound.stop();
+    if (sound.sound.playing()) {
+        sound.sound.pause();
     }
     else {
-        sound.sound.start(0);
-        sound.startTime = Date.now();
+        sound.sound.play();
     }
 }
 
@@ -24,8 +23,9 @@ export async function togglePause(sound:MapSound) {
  * @param mouseX the mouse's x position.
  */
 export async function seekToByClick(sound:MapSound, element:HTMLButtonElement, mouseX:number) {
+    if (!element) return;
     let pct = (mouseX-element.getBoundingClientRect().left)/element.offsetWidth;
-    let pos = sound.sound.buffer.duration * pct;
+    let pos = sound.sound.duration() * pct;
     sound.sound.seek(pos);
 }
 
@@ -57,8 +57,12 @@ export async function changeMasterVolume(event:WheelEvent) {
     // invert based on user settings.
     if (getUserSettings().invertVolumeScroll) delta *= -1;
 
+    console.log(delta);
+
     // adjust and clamp volume.
-    Tone.Destination.volume.value += delta * 0.1;
-    if (Tone.Destination.volume.value < -60) Tone.Destination.volume.value = -60;
-    else if (Tone.Destination.volume.value > 0) Tone.Destination.volume.value = 0;
+    H.Howler.volume(H.Howler.volume() + delta*0.01);
+    if (H.Howler.volume() < 0) H.Howler.volume(0);
+    else if (H.Howler.volume() > 1) H.Howler.volume(1);
+
+    console.log('changing master volume', H.Howler.volume())
 }
