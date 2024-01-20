@@ -8,6 +8,12 @@ import type { MapSound } from './classes/MapSound';
 import { closeAllMenus } from './ui.menus';
 import { closeModal, openSavingModal } from './ui.modals';
 
+
+/**
+ * save a project in its current location or save as to a new location.
+ * @param saveAs whether or not to save the project to a new location.
+ * @returns whether or not the project was saved.
+ */
 export async function saveProject(saveAs=false): Promise<boolean> 
 {
     await closeAllMenus();
@@ -121,19 +127,31 @@ export async function saveProject(saveAs=false): Promise<boolean>
     return true;
 }
 
-// write image file to images folder if the specified image doesn't already exist there
+/**
+ * write image file to images folder if the specified image doesn't already exist there
+ * @param e the map image to write.
+ * @param filePath the project folder.
+ */
 async function writeImageFile(e:MapImage, filePath:string) {
     const fullPath = await join(filePath, 'images', e.data.name);
     if (!await exists(fullPath)) writeBinaryFile(fullPath, await e.data.arrayBuffer());
 }
 
-// write sound file to images folder if the specified sound doesn't already exist there
+/**
+ * write sound file to images folder if the specified sound doesn't already exist there
+ * @param e the map sound to write.
+ * @param filePath the project folder.
+ */
 async function writeSoundFile(e:MapSound, filePath:string) {
     const fullPath = await join(filePath, 'sounds', await basename(e.src));
     if (!await exists(fullPath)) copyFile(e.src, fullPath);
 }
 
-// delete files in the folder that are no longer used in the project
+/**
+ * delete files in the project folder that are no longer used in the project.
+ * @param fileType type of file to remove. can be "images" or "sounds".
+ * @returns 
+ */
 async function deleteUnused(fileType:string) {
     let itemList: MapImage[] | MapSound[] = [];
     

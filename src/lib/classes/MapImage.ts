@@ -1,6 +1,8 @@
 import type L from 'leaflet';
 
-// class that defines an image on the map
+/**
+ * map image class.
+ */
 export class MapImage
 {
     src:string;

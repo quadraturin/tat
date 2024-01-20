@@ -1,3 +1,7 @@
+/**
+ * display one or more help text strings.
+ * @param ids the help text string ids.
+ */
 export function help(...ids:string[]) {
     let textArea = document.getElementById("help-text");
     if (textArea != null) {

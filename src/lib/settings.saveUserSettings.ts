@@ -2,6 +2,9 @@ import { createDir, exists, writeTextFile } from "@tauri-apps/api/fs";
 import { appDataDir, join } from "@tauri-apps/api/path";
 import { getUserSettings } from "./settings.userSettings";
 
+/**
+ * save the user settings to a file.
+ */
 export async function saveUserSettings() {
     try {
         console.log('saving user settings', getUserSettings());

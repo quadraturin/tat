@@ -1,6 +1,10 @@
 import L from "leaflet";
 
-// find a random currently visible point on the map and return it
+/**
+ * find a random currently visible point on the map.
+ * @param map the map.
+ * @returns the point.
+ */
 export function getRandomPointInViewport(map:L.Map) {
     const min = map.getBounds().getSouthWest();
     const max = map.getBounds().getNorthEast();

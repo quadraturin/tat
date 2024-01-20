@@ -10,7 +10,6 @@ import { closeModal, openLoadingModal, updateLoadingModal } from './ui.modals';
  */
 export async function readFiles() {
     try {
-
         // close any open menus.
         await closeAllMenus();
 

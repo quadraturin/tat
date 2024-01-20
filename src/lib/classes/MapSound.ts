@@ -1,6 +1,9 @@
 import type L from 'leaflet';
 import type * as Tone from 'tone';
 
+/**
+ * type definition for map sound options
+ */
 type mapSoundOptions = {
     src:string, 
     name:string,
@@ -14,7 +17,9 @@ type mapSoundOptions = {
     order:number
 }
 
-// class that defines an audio emitter
+/**
+ * map sound class.
+ */
 export class MapSound
 {
     src:string;

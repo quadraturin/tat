@@ -3,6 +3,11 @@ import { getisProjectDirty } from "./registry";
 import { appWindow } from "@tauri-apps/api/window";
 import * as R from '$lib/registry';
 
+
+/**
+ * check if the project has unsaved changes. if so, ask the user if they really want to quit. if they do, quit.
+ * @returns 
+ */
 export async function tryQuit() {
     if (getisProjectDirty()) {
         let discardChanges = await ask(R.t.dialog.quitUnsavedChanges);

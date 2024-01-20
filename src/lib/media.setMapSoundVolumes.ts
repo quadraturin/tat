@@ -4,7 +4,7 @@ import * as T from '@turf/turf'
 import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from "./settings.appSettings";
 
 /**
- * set all sound volumes.
+ * set all sound volumes on the map.
  */
 export function setMapSoundVolumes(){
     // tell registry that the project has changed.

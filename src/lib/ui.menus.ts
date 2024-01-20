@@ -1,11 +1,17 @@
 import * as R from '$lib/registry';
 
+/**
+ * close all open menus.
+ */
 export async function closeAllMenus() {
     document.getElementById("about")?.setAttribute("style", "display:none");
     document.getElementById("settings")?.setAttribute("style", "display:none");
     R.setIsAboutMenuOpen(false);
 }
 
+/**
+ * toggle visibilty of the about menu.
+ */
 export async function toggleAboutMenu() {
     if (R.getIsAboutMenuOpen()) {
         document.getElementById("about")?.setAttribute("style", "display:none");
@@ -17,8 +23,10 @@ export async function toggleAboutMenu() {
     }
 }
 
+/**
+ * toggle visibility of the settings menu.
+ */
 export async function toggleSettingsMenu() {
-    console.log("SETTINGS")
     if (R.getIsSettingsMenuOpen()) {
         document.getElementById("settings")?.setAttribute("style", "display:none");
         R.setIsSettingsMenuOpen(false);

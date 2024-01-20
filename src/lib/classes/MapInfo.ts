@@ -1,4 +1,6 @@
-// class that defines a particular map 
+/**
+ * map information class.
+ */
 export class MapInfo 
 {
     name = "untitled";

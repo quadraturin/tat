@@ -7,24 +7,32 @@ import type { MapImage } from "./classes/MapImage";
 import { shouldSaveProject } from "./project.shouldSaveProject";
 import { closeAllMenus } from "./ui.menus";
 
+/**
+ * try to clear the current project.
+ * @returns whether or not the project was cleared.
+ */
 export async function clearProject():Promise<boolean> {
-    
-    await closeAllMenus();
+    try {
+        await closeAllMenus();
 
-    // check if we should save the project, prompt user if they really want to close it if so.
-    // if they don't want to, back out.
-    if (!await shouldSaveProject()) return false;
+        // check if we should save the project, prompt user if they really want to close it if so.
+        // if they don't want to, back out.
+        if (!await shouldSaveProject()) return false;
 
-    R.getImageList().forEach(e => { removeImageByRect(e.rect, false); });
-    R.setImageList(new Array<MapImage>);
+        R.getImageList().forEach(e => { removeImageByRect(e.rect, false); });
+        R.setImageList(new Array<MapImage>);
 
-    R.getSoundList().forEach(e => { removeSoundbyEmitter(e.emitter, false); });
-    R.setSoundList(new Array<MapSound>);
+        R.getSoundList().forEach(e => { removeSoundbyEmitter(e.emitter, false); });
+        R.setSoundList(new Array<MapSound>);
 
-    R.setProjectPath('');
-    R.setProjectClean();
-    R.setHasMedia(false);
-    R.setProjectName(S.defaultProjectName);
+        R.setProjectPath('');
+        R.setProjectClean();
+        R.setHasMedia(false);
+        R.setProjectName(S.defaultProjectName);
 
-    return true;
+        return true;
+    } catch(err) {
+        console.error(err);
+        return false;
+    }
 }

@@ -9,7 +9,11 @@ import type { MapImage } from './classes/MapImage';
 import { getRandomPointInViewport } from './util.getRandomPointInViewport';
 import { help } from './util.help';
 
-// load and return an image file
+/**
+ * load an image file.
+ * @param filePath path to image file.
+ * @returns the image file.
+ */
 export async function loadImageFile(filePath:string):Promise<File|undefined> {
     try {
         updateLoadingModal(filePath);
@@ -23,7 +27,17 @@ export async function loadImageFile(filePath:string):Promise<File|undefined> {
     }
 }
 
-// create an image on the map
+/**
+ * create an image on the map.
+ * @param file the image file.
+ * @param height the image's height.
+ * @param width the image's width.
+ * @param lat the image's latitude.
+ * @param lng the image's longitude.
+ * @param opacity the image's opacity.
+ * @param order the image's stacking order.
+ * @param locked whether the image is locked or not.
+ */
 export async function newImage(file:File, height?:number, width?:number, lat?:number, lng?:number, opacity?:number, order?:number, locked?:boolean) {
     try {
         // get the image dimensions
@@ -108,12 +122,18 @@ export async function newImage(file:File, height?:number, width?:number, lat?:nu
     }
 }
 
+/**
+ * duplicate an image on the map.
+ * @param image the image to duplicate.
+ */
 export async function duplicateImage(image:MapImage) {
     newImage(image.data, image.originalHeight, image.originalWidth);
 }
 
-
-// called when double-clicking the image (sets/unsets editability)
+/**
+ * set/unset editability of an image rectangle. called when double-clicking.
+ * @param imageRect the edit rectangle to toggle.
+ */
 export function toggleImageEdit(imageRect:L.Rectangle) {
     if (imageRect.editEnabled()) imageRect.setStyle({opacity:0});
     else imageRect.setStyle({opacity:1});
@@ -121,6 +141,14 @@ export function toggleImageEdit(imageRect:L.Rectangle) {
     if (R.getIsSelected(imageRect)) R.removeFromSelection(imageRect);
 }
 
+/**
+ * scale an image on the map.
+ * @param e a vertex event from the image rectangle.
+ * @param imageRect the image rectangle.
+ * @param overlay the image overlay.
+ * @param originalWidth the original width of the image.
+ * @param originalHeight the original height of the image.
+ */
 function editImage(e:L.VertexEvent, imageRect:L.Rectangle, overlay:L.ImageOverlay, originalWidth:number, originalHeight:number) {
     let w:boolean;
     let n:boolean;
@@ -167,18 +195,31 @@ function editImage(e:L.VertexEvent, imageRect:L.Rectangle, overlay:L.ImageOverla
     R.setProjectDirty();
 }
 
+/**
+ * align the image rectangle with the overlay.
+ * @param imageRect the image rectangle to stop editing.
+ * @param overlay the image overlay.
+ */
 function stopEditImage(imageRect:L.Rectangle, overlay:L.ImageOverlay) {
     imageRect.setBounds(overlay.getBounds()); // set control rect to image bounds
     imageRect.disableEdit(); // needed to put the edit handles in the right place
     imageRect.enableEdit();
 }
 
-// called when we stop moving the image
+/**
+ * align the overlay with the image rectangle when the user stops moving the image.
+ * @param imageRect the image rect to stop moving.
+ * @param overlay the image overlay.
+ */
 function stopMoveImage(imageRect:L.Rectangle, overlay:L.ImageOverlay) {
     overlay.setBounds(imageRect.getBounds());
 }
 
-// called when starting to move the image
+/**
+ * prepare the image rectangle and overlay to be moved.
+ * @param imageRect the image rectangle being moved.
+ * @param overlay the image overlay.
+ */
 function startMoveImage(imageRect:L.Rectangle, overlay:L.ImageOverlay) {
     overlay.setBounds(imageRect.getBounds());
     R.setImageOffset(overlay.getBounds().getSouthWest() as L.LatLng);
@@ -186,7 +227,12 @@ function startMoveImage(imageRect:L.Rectangle, overlay:L.ImageOverlay) {
     R.setProjectDirty();
 }
 
-// called repeatedly while moving the image
+/**
+ * move an image on the map by dragging.
+ * @param e the leaflet drag event.
+ * @param imageRect the image rectangle being dragged.
+ * @param overlay the image overlay.
+ */
 function moveImage(e:L.LeafletEvent, imageRect:L.Rectangle, overlay:L.ImageOverlay) {
     //console.log('moving!');
     
@@ -207,7 +253,12 @@ function moveImage(e:L.LeafletEvent, imageRect:L.Rectangle, overlay:L.ImageOverl
     overlay.setBounds(bounds);
 }
 
-// brings image and rect to front of respective layers
+/**
+ * select/deselect and bring an image rectangle and overlay to the front of their respective layers on click.
+ * @param imageRect the image rectangle being clicked.
+ * @param overlay the image overlay.
+ * @returns 
+ */
 function onClick(imageRect:L.Rectangle, overlay:L.ImageOverlay)
 {
     if (!imageRect.editEnabled()) return;
@@ -217,13 +268,26 @@ function onClick(imageRect:L.Rectangle, overlay:L.ImageOverlay)
     if (R.getIsInDeleteMode()) removeImageByRect(imageRect);
 }
 
+/**
+ * bring an image rectangle and overlay to the front of their respective layers.
+ * @param imageRect the image rectangle to bring to the front.
+ * @param overlay the image overlay.
+ */
 function bringImageToFront(imageRect:L.Rectangle, overlay:L.ImageOverlay) {
     overlay.bringToFront();
     imageRect.bringToFront();
     R.moveImageToEndOfList(overlay);
 }
 
-// sets interactive event handlers for the image
+/**
+ * set interactive event handlers for an image rectangle.
+ * @param imageRect the image rectangle to set handlers for.
+ * @param overlay the image overlay.
+ * @param width the width of the image.
+ * @param height the height of the image.
+ * @param originalWidth the original width of the image.
+ * @param originalHeight the original height of the image.
+ */
 function bindEventsToImageRect(imageRect:L.Rectangle, overlay:L.ImageOverlay, width:number, height:number, originalWidth:number, originalHeight:number)
 {
     imageRect.on('editable:vertex:drag', (e) => editImage(e, imageRect, overlay, originalWidth, originalHeight));

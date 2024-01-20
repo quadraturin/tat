@@ -3,6 +3,9 @@ import { appDataDir, join } from "@tauri-apps/api/path";
 import { overwriteUserSettings } from "./settings.userSettings";
 import { saveUserSettings } from "./settings.saveUserSettings";
 
+/**
+ * load the user settings from file. if it doesn't exist, load and save the defaults.
+ */
 export async function loadUserSettings() {
     try {
         // if settings.json exists in the folder, read it

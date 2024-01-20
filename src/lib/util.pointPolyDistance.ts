@@ -7,12 +7,21 @@ import {
   } from "@turf/turf";
 import type { LineString } from "geojson";
   
+
+/**
+ * used for determining the shortest distance from a point to a polygon.
+ */
 interface IODistanceToPolygonInput {
   point: Point;
   polygon: Polygon | MultiPolygon;
 }
   
-// Returns distance in meters (negative values for points inside) from a point to the edges of a polygon
+
+/**
+ * get the distance in meters from a point to the edges of a polygon. negative values indicate a point inside the polygon.
+ * @param param0 the point and polygon to measure.
+ * @returns the distance.
+ */
 export function distanceToPolygon_direct({ point, polygon }: IODistanceToPolygonInput): number {
   let distance: number;
 

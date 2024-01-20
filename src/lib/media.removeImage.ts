@@ -2,6 +2,11 @@ import * as R from '$lib/registry'
 import { ask } from "@tauri-apps/api/dialog";
 import type L from 'leaflet'
 
+/**
+ * remove an image from the map, using its rectangle as an identifier.
+ * @param imageRect the image rectangle to remove.
+ * @param removeFromList whether or not to remove the image from the image list.
+ */
 export function removeImageByRect(imageRect:L.Rectangle, removeFromList:boolean = true) {
     let imageList = R.getImageList();
     for(let i = 0; i < imageList.length; i++) {
@@ -12,6 +17,12 @@ export function removeImageByRect(imageRect:L.Rectangle, removeFromList:boolean 
     }
 }
 
+/**
+ * remove an image from the map, using its position in the image list as an identifier.
+ * @param id the id of the image to remove.
+ * @param removeFromList whether or not to remove the image from the image list.
+ * @returns 
+ */
 export async function removeImage(id:number, removeFromList:boolean = true) {
     let imageList = R.getImageList();
     if (id < imageList.length) {

@@ -10,11 +10,13 @@ import { loadImageFile, newImage } from "./media.loadImage";
 export async function loadFile(filePath: string): Promise<void> {
     try {
         const ext = await extname(filePath);
-        if (imageFileTypes.includes(ext)) { // file is an image
+        if (imageFileTypes.includes(ext)) { 
+            // file is an image.
             let file = await loadImageFile(filePath);
             if (typeof file != "undefined") newImage(file);
         }
-        else if (soundFileTypes.includes(ext)) { // file is a sound
+        else if (soundFileTypes.includes(ext)) { 
+            // file is a sound.
             newSound({src:filePath});
         }
     }

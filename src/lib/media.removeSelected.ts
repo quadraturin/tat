@@ -3,6 +3,9 @@ import L from 'leaflet'
 import { removeImageByRect } from './media.removeImage'
 import { removeSoundbyEmitter } from './media.removeSound'
 
+/**
+ * remove selected objects from the map.
+ */
 export function removeSelected() {
     let selectedList = R.getSelectedList();
     for (let i=0; i<selectedList.length; i++) {
