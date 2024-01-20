@@ -41,7 +41,7 @@
 	import { removeSound } from '$lib/media.removeSound';
 	import { duplicateImage, toggleImageEdit } from '$lib/media.loadImage';
 	import { cycleSoundType, duplicateSound, toggleSoundEdit } from '$lib/media.loadSound';
-	import { changeBaseVolume, seekToByClick, togglePause } from '$lib/media.controlSound';
+	import { changeBaseVolume, changeMasterVolume, seekToByClick, togglePause } from '$lib/media.controlSound';
 	import { changeOpacity } from '$lib/media.controlOpacity';
 	import IconSoundGlobal from '$lib/icons/iconSoundGlobal.svelte';
 	import IconSoundLocal from '$lib/icons/iconSoundLocal.svelte';
@@ -54,6 +54,7 @@
 	import IconCollapse from '$lib/icons/iconCollapse.svelte';
 	import IconExpand from '$lib/icons/iconExpand.svelte';
 	import { loadUserSettings } from '$lib/settings.loadUserSettings';
+	import * as  Tone  from 'tone';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
@@ -71,6 +72,7 @@
     let projectName:string;
     let imageList = R.getImageList();
     let soundList = R.getSoundList();
+    let masterVolume = 0;
     
     // initialize
     onMount( () => 
@@ -191,6 +193,7 @@
         imageList = R.getImageList();
         soundList = R.getSoundList();
         isHelpActive = R.getIsHelpActive();
+        masterVolume = Tone.Destination.volume.value;
     }, 15);
 
     let mousePos = { x: 0, y: 0 };
@@ -407,7 +410,7 @@ on:wheel|preventDefault={()=>{}}>
             {#each soundList as item, i }
                 <div class="item sound-item" class:selected={R.getIsSelected(item.emitter)} id="sound-item-{i}" 
                 class:locked={R.getIsLocked(item.emitter)}
-                on:wheel|preventDefault={(event) => changeBaseVolume(item, event)} >
+                on:wheel|preventDefault={(event) => changeBaseVolume(item, event)}>
 
                     <div class="volume" style={"height: "+(item.volume*100)+"%"}></div>
 
@@ -431,7 +434,7 @@ on:wheel|preventDefault={()=>{}}>
                     }}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
-                        {item.src.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}
+                        {item.name}
                     </button>
                     
                     <button class="item-button item-type" 
@@ -504,11 +507,15 @@ on:wheel|preventDefault={()=>{}}>
                 </div>
             {/each}
             <div role="heading" aria-level="2" 
+            on:wheel|preventDefault={(event) => changeMasterVolume(event)}
             on:focus={()=>{}} 
             on:mouseover={()=>{help(data.help.map.soundsTitle)}}
             on:mouseout={()=>{help()}}
             on:blur={()=>{}}>
-                sounds
+                <div id="master-volume">
+                    <div id="master-volume-bar" style={"height:"+((60+masterVolume)/0.6)+"%"}></div>
+                </div>
+                <span>sounds</span>
             </div>
         </div>
     {/if}

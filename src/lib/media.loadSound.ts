@@ -11,6 +11,7 @@ import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from './settings.ap
 import { help } from './util.help';
 import * as Tone from 'tone';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
+import { basename } from '@tauri-apps/api/path';
 
 /**
  *  options definition for new sounds.
@@ -69,7 +70,13 @@ export async function newSound(options:newSoundOptions){
         // create the sound.
         let sound = new Tone.Player(convertFileSrc(o.src)).toDestination();
         sound.loop = true;
+        sound.fadeIn = 0.05;
+        sound.fadeOut = 0.05;
         if (o.muted) sound.mute = true;
+
+        // nice name for the sound.
+        let name = await basename(o.src)
+        name = name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim();
 
         // set the start time for sound playback (needed to track playback position).
         let startTime = Date.now();
@@ -83,7 +90,18 @@ export async function newSound(options:newSoundOptions){
         if(o.paused) sound.stop();
 
         // add the sound to the sound list.
-        R.addToSoundList(o.src, sound, o.soundType, emitter, startTime, o.volume, o.muted, o.solo, o.order);
+        R.addToSoundList({
+            src: o.src, 
+            sound: sound, 
+            soundType: o.soundType, 
+            emitter: emitter, 
+            startTime: startTime, 
+            volume: o.volume, 
+            muted: o.muted, 
+            solo: o.solo, 
+            order: o.order,
+            name:name
+        });
         
         // update sound volumes.
         setMapSoundVolumes();

@@ -83,10 +83,37 @@ export function sortImageList() {
 
 // list of sounds
 let soundList = new Array<MapSound>;
-export function getSoundList():Array<MapSound> { return soundList; };
-export function setSoundList(newSoundList:Array<MapSound>) { soundList = newSoundList; };
-export function addToSoundList(filePath:string, pSound:Tone.Player, soundType:string, emitter:L.Circle|L.Polygon|undefined, startTime:number, volume:number, muted:boolean, solo:boolean, order:number) {
-    soundList.push(new MapSound(filePath, pSound, soundType, emitter, startTime, volume, muted, solo, order));
+type addToSoundListOptions = {
+    src:string, 
+    sound:Tone.Player, 
+    soundType:string, 
+    emitter:L.Circle|L.Polygon|undefined, 
+    startTime:number, 
+    volume:number, 
+    muted:boolean, 
+    solo:boolean, 
+    order:number,
+    name:string
+}
+export function getSoundList():Array<MapSound> {
+    return soundList;
+};
+export function setSoundList(newSoundList:Array<MapSound>) { 
+    soundList = newSoundList; 
+};
+export function addToSoundList(options:addToSoundListOptions) {
+    soundList.push(new MapSound({
+        src: options.src, 
+        sound:options.sound, 
+        soundType:options.soundType, 
+        emitter:options.emitter, 
+        startTime:options.startTime,
+        volume:options.volume, 
+        muted:options.muted, 
+        solo: options.solo, 
+        order: options.order,
+        name: options.name
+    }));
 }
 
 //sorts and stacks the sounds

@@ -468,6 +468,22 @@ a { color: var(--highlight-color); }
     padding: 0;
     text-align: left;
 }
+#master-volume {
+    width: .5em;
+    height: 1.3em;
+    display: inline-block;
+    background-color: var(--background-color);
+    position: relative;
+    border: 1px solid var(--text-color);
+    vertical-align: top;
+    border-radius: 1px;
+}
+#master-volume-bar {
+    background-color: var(--text-color);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
 
 /* menus*/
 

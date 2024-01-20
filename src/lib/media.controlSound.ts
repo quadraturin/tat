@@ -1,6 +1,7 @@
 import type { MapSound } from "./classes/MapSound";
 import { setMapSoundVolumes } from "./media.setMapSoundVolumes";
 import { getUserSettings } from "./settings.userSettings";
+import * as Tone from 'tone';
 
 
 export async function togglePause(sound:MapSound) {
@@ -26,5 +27,15 @@ export async function changeBaseVolume(sound:MapSound, event:WheelEvent) {
     if (sound.volume < 0) sound.volume = 0;
     else if (sound.volume > 1) sound.volume = 1;
     setMapSoundVolumes();
-    //console.log(sound.volume);
+}
+
+export async function changeMasterVolume(event:WheelEvent) {
+    let delta = event.deltaY;
+    if (getUserSettings().invertVolumeScroll) 
+        delta *= -1;
+
+    Tone.Destination.volume.value += delta * 0.1;
+
+    if (Tone.Destination.volume.value < -60) Tone.Destination.volume.value = -60;
+    else if (Tone.Destination.volume.value > 0) Tone.Destination.volume.value = 0;
 }

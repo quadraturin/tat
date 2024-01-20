@@ -101,7 +101,7 @@
             "imageDelete": "<strong>delete image:</strong> delete this image from the map.",
             "imageActions": "<strong>drag:</strong> move. <strong>drag corner:</strong> resize (<strong>+shift:</strong> proportional resize). <strong>alt/opt+click:</strong> delete.",
             
-            "soundsTitle": "<strong>sounds:</strong> the list of sounds in your project. sounds higher on the list are closer to the front.",
+            "soundsTitle": "<strong>sounds:</strong> the list of sounds in your project. sounds higher on the list are closer to the front. <strong>scroll:</strong> adjust master volume.",
             "soundTypeGlobal": "<strong>global sound:</strong> plays everywhere and does not have an emitter on the map.",
             "soundTypeLocal": "<strong>local sound:</strong> emanates from a single point on the map.",
             "soundTypeArea": "<strong>area sound:</strong> plays at a constant volume across an area.",

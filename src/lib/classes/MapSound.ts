@@ -1,10 +1,24 @@
 import type L from 'leaflet';
 import type * as Tone from 'tone';
 
+type mapSoundOptions = {
+    src:string, 
+    name:string,
+    sound:Tone.Player, 
+    soundType:string, 
+    emitter:L.Circle|L.Polygon|undefined, 
+    startTime:number, 
+    volume:number, 
+    muted:boolean, 
+    solo:boolean, 
+    order:number
+}
+
 // class that defines an audio emitter
 export class MapSound
 {
     src:string;
+    name:string;
     sound:Tone.Player;
     emitter:L.Circle|L.Polygon|undefined;
     soundType:string;
@@ -12,18 +26,19 @@ export class MapSound
     muted:boolean;
     solo:boolean;
     order:number; 
-    startTime:number;   
+    startTime:number;
     
-    constructor(src:string, sound:Tone.Player, soundType:string, emitter:L.Circle|L.Polygon|undefined, startTime:number, volume:number, muted:boolean, solo:boolean, order:number)
+    constructor(options:mapSoundOptions)
     {
-        this.src = src;
-        this.sound = sound;
-        this.soundType = soundType;
-        this.emitter = emitter;
-        this.volume = volume;
-        this.muted = muted;
-        this.solo = solo;
-        this.order = order;
-        this.startTime = startTime;
+        this.src = options.src;
+        this.sound = options.sound;
+        this.soundType = options.soundType;
+        this.emitter = options.emitter;
+        this.volume = options.volume;
+        this.muted = options.muted;
+        this.solo = options.solo;
+        this.order = options.order;
+        this.startTime = options.startTime;
+        this.name = options.name;
     }
 }
