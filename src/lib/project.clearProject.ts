@@ -19,10 +19,10 @@ export async function clearProject():Promise<boolean> {
         // if they don't want to, back out.
         if (!await shouldSaveProject()) return false;
 
-        R.getImageList().forEach(e => { removeImageByRect(e.rect, false); });
+        R.getImageList().forEach(e => { removeImageByRect(e.rect, false, true); });
         R.setImageList(new Array<MapImage>);
 
-        R.getSoundList().forEach(e => { removeSoundbyEmitter(e.emitter, false); });
+        R.getSoundList().forEach(e => { removeSoundbyEmitter(e.emitter, false, true); });
         R.setSoundList(new Array<MapSound>);
 
         R.setProjectPath('');

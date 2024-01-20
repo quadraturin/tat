@@ -7,11 +7,11 @@ import type L from 'leaflet'
  * @param imageRect the image rectangle to remove.
  * @param removeFromList whether or not to remove the image from the image list.
  */
-export function removeImageByRect(imageRect:L.Rectangle, removeFromList:boolean = true) {
+export function removeImageByRect(imageRect:L.Rectangle, removeFromList:boolean = true, force:boolean = false) {
     let imageList = R.getImageList();
     for(let i = 0; i < imageList.length; i++) {
         if (imageList[i].rect === imageRect) {
-            removeImage(i, removeFromList);
+            removeImage(i, removeFromList, force);
             break;
         }
     }
@@ -23,19 +23,21 @@ export function removeImageByRect(imageRect:L.Rectangle, removeFromList:boolean 
  * @param removeFromList whether or not to remove the image from the image list.
  * @returns 
  */
-export async function removeImage(id:number, removeFromList:boolean = true) {
+export async function removeImage(id:number, removeFromList:boolean = true, force:boolean = false) {
     let imageList = R.getImageList();
     if (id < imageList.length) {
-        let unique = true;
-        for (let i=0; i<imageList.length; i++) {
-            if (i != id && imageList[i].data.name == imageList[id].data.name) {
-                unique = false;
-                break;
+        if (!force) {
+            let unique = true;
+            for (let i=0; i<imageList.length; i++) {
+                if (i != id && imageList[i].name == imageList[id].name) {
+                    unique = false;
+                    break;
+                }
             }
-        }
-        if (unique) {
-            let approveDelete = await ask(R.t.dialog.confirmDeleteImage);
-            if (!approveDelete) return;
+            if (unique) {
+                let approveDelete = await ask(R.t.dialog.confirmDeleteImage);
+                if (!approveDelete) return;
+            }
         }
         imageList[id].rect.remove();
         imageList[id].overlay.remove();
