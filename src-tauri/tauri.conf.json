@@ -12,6 +12,11 @@
   },
   "tauri": {
     "allowlist": {
+      "protocol": {
+        "all": true,
+        "asset": true,
+        "assetScope": ["**"]
+      },
       "window": {
         "all": true
       },
@@ -80,7 +85,7 @@
       }
     },
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; media-src 'self' asset: https://asset.localhost"
     },
     "updater": {
       "active": false

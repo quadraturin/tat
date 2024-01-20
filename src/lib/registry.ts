@@ -2,6 +2,7 @@ import L, { ImageOverlay } from "leaflet";
 import { MapImage } from "./classes/MapImage";
 import { MapSound } from "./classes/MapSound";
 import type { MapInfo } from "./classes/MapInfo";
+import type * as P from 'pizzicato';
 
 // the map
 let map:L.Map;
@@ -84,10 +85,11 @@ export function sortImageList() {
 let soundList = new Array<MapSound>;
 export function getSoundList():Array<MapSound> { return soundList; };
 export function setSoundList(newSoundList:Array<MapSound>) { soundList = newSoundList; };
-export function addToSoundList(data:File, sound:Howl, emitter:L.Circle|L.Polygon|undefined, volume:number|undefined, muted:boolean|undefined, solo:boolean|undefined, soundType:string|undefined, order:number|undefined) {
-    soundList.push(new MapSound(data, sound, emitter, volume, muted, solo, soundType, order));
+export function addToSoundList(filePath:string, pSound:P.Sound, soundType:string, emitter:L.Circle|L.Polygon|undefined, volume:number, muted:boolean, solo:boolean, order:number) {
+    soundList.push(new MapSound(filePath, pSound, soundType, emitter, volume, muted, solo, order));
 }
-//sorts and stacks the images
+
+//sorts and stacks the sounds
 export function sortSoundList() {
     soundList.sort(function(a,b){
         return a.order-b.order;

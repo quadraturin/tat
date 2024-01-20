@@ -1,18 +1,62 @@
 import * as R from '$lib/registry';
-import { readBinaryFile } from "@tauri-apps/api/fs";
-import { basename, extname } from "@tauri-apps/api/path";
 import { getRandomPointInViewport } from "./util.getRandomPointInViewport";
 import L from "leaflet";
 import 'leaflet-editable';
 import 'leaflet.path.drag';
 import { setMapSoundVolumes } from './media.setMapSoundVolumes';
-import { Howl } from "howler";
 import { removeSoundbyEmitter } from './media.removeSound';
 import { updateLoadingModal } from './ui.modals';
 import type { MapSound } from './classes/MapSound';
 import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from './settings.appSettings';
 import { help } from './util.help';
+import * as P from 'pizzicato';
+import { convertFileSrc } from '@tauri-apps/api/tauri';
 
+// pizzicato sound
+export async function newSound(filePath:string, options?:any){
+    try {
+        updateLoadingModal(filePath);
+
+        let pSound = new P.Sound(convertFileSrc(filePath));
+
+        let soundType:string = options.soundType || SOUNDTYPE_LOCAL;
+
+        let muted:boolean  = typeof options.muted  == 'undefined' ? false : options.muted;
+        let solo:boolean   = typeof options.solo   == 'undefined' ? false : options.solo;
+        let paused:boolean = typeof options.paused == 'undefined' ? false : options.paused;
+        let locked:boolean = typeof options.locked == 'undefined' ? false : options.locked;
+
+        let volume:number  = typeof options.volume == 'undefined' ? 1 : options.volume;
+        let seek:number    = typeof options.seek   == 'undefined' ? 0 : options.seek;
+        let order:number   = typeof options.order  == 'undefined' ? 1 : options.order;
+
+        let randPt = getRandomPointInViewport(R.getMap());
+        
+        let lat:number               = options.lat    || randPt.lat;
+        let lng:number               = options.lng    || randPt.lng;
+        let radius:number            = options.radius || 100;
+        let points:[number,number][] = options.points || [[randPt.lat-50, randPt.lng-50],[randPt.lat-50, randPt.lng+50],[randPt.lat+50, randPt.lng+50],[randPt.lat+50, randPt.lng-50]];
+
+        let emitter = await createEmitter(soundType, lat, lng, radius, points, locked);
+
+        if (muted) pSound.volume = 0;   // mute if muted
+        pSound.play(0,seek);            // play sound from seek position
+        if(paused) pSound.pause();      // pause if sound should be paused
+
+        R.addToSoundList(filePath, pSound, soundType, emitter, volume, muted, solo, order);
+        
+        // update volumes
+        setMapSoundVolumes();
+
+        // set has media to true and project state to dirty
+        R.setHasMedia(true);
+        R.setProjectDirty();
+    } 
+    catch (err) {
+        console.error(err);
+    }
+}
+/*
 // load and return a sound file
 export async function loadSoundFile(filePath:string):Promise<File|undefined> {
     try {
@@ -58,14 +102,17 @@ export async function newSound(file:File, soundType?:string, volume?:number, mut
         R.setHasMedia(true);
         R.setProjectDirty();
 
-        
     } catch(err) {
         console.error(err);
     }
 }
-
+*/
 export async function duplicateSound(sound:MapSound) {
-    newSound(sound.data, sound.soundType, sound.volume, sound.muted, sound.solo);
+    newSound(sound.src, {
+        soundType: sound.soundType,
+        volume: sound.volume, 
+        muted: sound.muted, 
+        solo: sound.solo});
 }
 
 export async function cycleSoundType(sound:MapSound) { // cycle: area -> global -> local

@@ -38,6 +38,7 @@
 		"@types/howler": "^2.2.9",
 		"@types/leaflet-contextmenu": "^1.4.3",
 		"@types/leaflet-editable": "^1.2.3",
+		"@types/pizzicato": "^0.6.4",
 		"howler": "^2.2.4",
 		"leaflet": "^1.9.4",
 		"leaflet-contextmenu": "^1.4.0",
@@ -46,6 +47,7 @@
 		"leaflet-path-transform": "^1.8.0-beta.4",
 		"leaflet.path.drag": "^0.0.6",
 		"panzoom": "^9.4.3",
+		"pizzicato": "^0.6.4",
 		"uint8-util": "^2.2.4"
 	}
 }

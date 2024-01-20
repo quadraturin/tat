@@ -1,6 +1,6 @@
 import { extname } from '@tauri-apps/api/path';
 import { imageFileTypes, soundFileTypes } from '$lib/settings.appSettings';
-import { loadSoundFile, newSound } from "./media.loadSound";
+import { newSound } from "./media.loadSound";
 import { loadImageFile, newImage } from "./media.loadImage";
 
 export async function loadFile({ filePath }: { filePath: string; }): Promise<void> {
@@ -11,8 +11,7 @@ export async function loadFile({ filePath }: { filePath: string; }): Promise<voi
             if (typeof file != "undefined") newImage(file);
         }
         else if (soundFileTypes.includes(ext)) { // file is a sound
-            let file = await loadSoundFile(filePath);
-            if (typeof file != "undefined") newSound(file);
+            newSound(filePath);
         }
     }
     catch (err) {
