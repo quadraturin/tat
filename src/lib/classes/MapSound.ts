@@ -13,7 +13,8 @@ type mapSoundOptions = {
     volume:number, 
     muted:boolean, 
     solo:boolean, 
-    order:number
+    order:number,
+    niceName:string
 }
 
 /**
@@ -30,6 +31,7 @@ export class MapSound
     muted:boolean;
     solo:boolean;
     order:number; 
+    niceName:string;
     
     constructor(options:mapSoundOptions)
     {
@@ -42,5 +44,6 @@ export class MapSound
         this.solo = options.solo;
         this.order = options.order;
         this.name = options.name;
+        this.niceName = options.niceName;
     }
 }

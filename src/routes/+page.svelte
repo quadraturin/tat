@@ -56,6 +56,7 @@
 	import IconRecenter from '$lib/icons/iconRecenter.svelte';
 	import IconCollapse from '$lib/icons/iconCollapse.svelte';
 	import IconExpand from '$lib/icons/iconExpand.svelte';
+	import { setMapSoundVolumes } from '$lib/media.setMapSoundVolumes';
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'
@@ -169,7 +170,6 @@
             R.getListener().setLatLng([R.getListener().getLatLng().lat - +speed, R.getListener().getLatLng().lng]);
         else if (e.key == "d") 
             R.getListener().setLatLng([R.getListener().getLatLng().lat, R.getListener().getLatLng().lng + +speed]);
-        //console.log("listener is at", R.getListener().getLatLng())
     };
     function onKeyUp(e:KeyboardEvent) {
         //console.log(e); 
@@ -183,6 +183,9 @@
         console.log(e);
     }
     
+    /**
+     * main update loop
+    */
     setInterval(() => {
         isDirty = R.getisProjectDirty();
         projectName = R.getProjectName();
@@ -192,6 +195,7 @@
         soundList = R.getSoundList();
         isHelpActive = R.getIsHelpActive();
         masterVolume = H.Howler.volume();
+        setMapSoundVolumes();
     }, 15);
 
     let mousePos = { x: 0, y: 0 };
@@ -432,7 +436,7 @@ on:wheel|preventDefault={()=>{}}>
                     }}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
-                        {item.name}
+                        {item.niceName}
                     </button>
                     
                     <button class="item-button item-type" 
@@ -447,7 +451,7 @@ on:wheel|preventDefault={()=>{}}>
                         {#if item.soundType == S.SOUNDTYPE_AREA}<IconSoundArea/>{:else if item.soundType == S.SOUNDTYPE_GLOBAL}<IconSoundGlobal/>{:else}<IconSoundLocal/>{/if}
                     </button>
                     
-                    <button class="item-button item-pause" class:activated={!item.sound.state}  
+                    <button class="item-button item-pause" class:activated={!item.sound.playing()}  
                     on:click={() => togglePause(item)}
                     on:focus={()=>{}} 
                     on:mouseover={()=>{item.sound.playing() ? help(data.help.map.soundPause) : help(data.help.map.soundUnPause)}}
@@ -534,7 +538,7 @@ on:wheel|preventDefault={()=>{}}>
                         else help(data.help.map.image, data.help.map.imageItemActions, data.help.map.itemUnselectedActions)}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
-                        {item.data.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim()}
+                        {item.niceName}
                     </button>
 
                     <button class="item-button item-add" title="duplicate image" 

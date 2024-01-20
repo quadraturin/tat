@@ -1,7 +1,7 @@
 import * as R from '$lib/registry';
 import L from 'leaflet';
 import { message, save } from "@tauri-apps/api/dialog";
-import { createDir, writeTextFile, writeBinaryFile, exists, readDir, removeFile, copyFile } from "@tauri-apps/api/fs";
+import { createDir, writeTextFile, exists, readDir, removeFile, copyFile } from "@tauri-apps/api/fs";
 import { join, basename, sep } from "@tauri-apps/api/path";
 import type { MapImage } from './classes/MapImage';
 import type { MapSound } from './classes/MapSound';
@@ -63,14 +63,16 @@ export async function saveProject(saveAs=false): Promise<boolean>
     let i = 0;
     imageList.forEach(e => {
         project.maps[0].images[i] = {
-            src: e.data.name,
+            src: e.name,
             x: e.overlay.getBounds().getWest(),
             y: e.overlay.getBounds().getSouth(),
             width: e.overlay.getBounds().getEast() - e.overlay.getBounds().getWest(),
             height: e.overlay.getBounds().getNorth() - e.overlay.getBounds().getSouth(),
             opacity: e.opacity,
             order: i,
-            locked: !e.rect.editEnabled()
+            locked: !e.rect.editEnabled(),
+            originalWidth: e.originalWidth,
+            originalHeight: e.originalHeight
         }
         promises.push(writeImageFile(e, filePath as string));
         i++;
@@ -80,7 +82,7 @@ export async function saveProject(saveAs=false): Promise<boolean>
     i = 0;
     soundList.forEach(e => {
         project.maps[0].sounds[i] = {
-            src: e.src,
+            src: e.name,
             soundType: e.soundType,
             volume: e.volume,
             solo: e.solo,
@@ -133,8 +135,8 @@ export async function saveProject(saveAs=false): Promise<boolean>
  * @param filePath the project folder.
  */
 async function writeImageFile(e:MapImage, filePath:string) {
-    const fullPath = await join(filePath, 'images', e.data.name);
-    if (!await exists(fullPath)) writeBinaryFile(fullPath, await e.data.arrayBuffer());
+    const fullPath = await join(filePath, 'images', await basename(e.src));
+    if (!await exists(fullPath)) copyFile(e.src, fullPath);
 }
 
 /**

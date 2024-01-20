@@ -186,8 +186,29 @@ export function setImageList(newImageList:Array<MapImage>) { imageList = newImag
  * @param opacity the opacity of the image.
  * @param order the stacking order of the image.
  */
-export function addToImageList(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, ow:number, oh:number, opacity?:number, order?:number) {
-    imageList.push(new MapImage(data, overlay, rect, ow, oh, opacity, order));
+type addToImageListOptions = {
+    src:string,
+    overlay:L.ImageOverlay,
+    rect:L.Rectangle,
+    originalWidth:number,
+    originalHeight:number,
+    opacity:number,
+    order:number,
+    name:string,
+    niceName:string
+}
+export function addToImageList(options:addToImageListOptions) {
+    imageList.push(new MapImage({
+        src:options.src, 
+        overlay:options.overlay, 
+        rect:options.rect, 
+        originalWidth:options.originalWidth, 
+        originalHeight:options.originalHeight, 
+        opacity:options.opacity,
+        order:options.order,
+        name:options.name,
+        niceName:options.niceName
+    }));
 }
 /**
  * move an image to the end of the image list, using its overlay as an identifier.
@@ -230,20 +251,6 @@ export function sortImageList() {
  */
 let soundList = new Array<MapSound>;
 /**
- * the options for adding to the sound list.
- */
-type addToSoundListOptions = {
-    src:string, 
-    sound:H.Howl, 
-    soundType:string, 
-    emitter:L.Circle|L.Polygon|undefined, 
-    volume:number, 
-    muted:boolean, 
-    solo:boolean, 
-    order:number,
-    name:string
-}
-/**
  * get the sound list.
  * @returns the sound list.
  */
@@ -258,6 +265,21 @@ export function setSoundList(newSoundList:Array<MapSound>) {
     soundList = newSoundList; 
 };
 /**
+ * the options for adding to the sound list.
+ */
+type addToSoundListOptions = {
+    src:string, 
+    sound:H.Howl, 
+    soundType:string, 
+    emitter:L.Circle|L.Polygon|undefined, 
+    volume:number, 
+    muted:boolean, 
+    solo:boolean, 
+    order:number,
+    name:string,
+    niceName:string
+}
+/**
  * add a new map sound to the sound list.
  * @param options the sound list options to set.
  */
@@ -271,7 +293,8 @@ export function addToSoundList(options:addToSoundListOptions) {
         muted:options.muted, 
         solo: options.solo, 
         order: options.order,
-        name: options.name
+        name: options.name,
+        niceName: options.niceName
     }));
 }
 

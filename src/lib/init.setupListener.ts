@@ -33,9 +33,6 @@ export function setupListener(map:L.Map): L.Marker<any>
         icon: icon 
     }).addTo(map);
 
-    // adjust sound volumes when the listener gets dragged around.
-    listener.on('drag', () => { setMapSoundVolumes() });
-
     // listener help text.
     listener.on('mouseover', () => {
         help(t.help.map.listener, t.help.map.listenerActions);

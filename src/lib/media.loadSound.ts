@@ -3,7 +3,6 @@ import { getRandomPointInViewport } from "./util.getRandomPointInViewport";
 import L from "leaflet";
 import 'leaflet-editable';
 import 'leaflet.path.drag';
-import { setMapSoundVolumes } from './media.setMapSoundVolumes';
 import { removeSoundbyEmitter } from './media.removeSound';
 import { updateLoadingModal } from './ui.modals';
 import type { MapSound } from './classes/MapSound';
@@ -75,7 +74,7 @@ export async function newSound(options:newSoundOptions){
 
         // nice name for the sound.
         let name = await basename(o.src)
-        name = name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim();
+        let niceName = name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim();
 
         // seek to seek position and play the sound.
         sound.seek(o.seek);
@@ -94,11 +93,9 @@ export async function newSound(options:newSoundOptions){
             muted: o.muted, 
             solo: o.solo, 
             order: o.order,
-            name:name
+            name:name,
+            niceName:niceName
         });
-        
-        // update sound volumes.
-        setMapSoundVolumes();
 
         // tell the registry there are unsaved changes.
         R.setHasMedia(true);
@@ -142,7 +139,6 @@ export async function cycleSoundType(sound:MapSound) {
         sound.emitter = await createEmitter({soundType:sound.soundType});
     }
     sound.sound.play();
-    setMapSoundVolumes();
 }
 
 /**
@@ -223,8 +219,6 @@ export async function createEmitter(options:newEmitterOptions):Promise<L.Polygon
         // bind emitter handlers.
         emitter.enableEdit();
         emitter.on('dblclick', L.DomEvent.stop).on('dblclick', () => { toggleSoundEdit(emitter) });
-        emitter.on('drag', setMapSoundVolumes);
-        emitter.on('editable:editing', setMapSoundVolumes);
         emitter.on('drag', emitter.bringToFront);
         emitter.on('editable:editing', emitter.bringToFront);
         emitter.on('dragstart editable:editing', () => { highlightSoundEmitter(emitter) });

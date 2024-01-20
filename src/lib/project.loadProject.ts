@@ -1,12 +1,13 @@
 import { open } from '@tauri-apps/api/dialog';
 import { projectExt } from './settings.appSettings';
 import { exists, readTextFile } from '@tauri-apps/api/fs';
-import { basename, join } from '@tauri-apps/api/path';
+import { basename, join, sep } from '@tauri-apps/api/path';
 import { loadImageFile, newImage } from './media.loadImage';
 import { newSound } from './media.loadSound';
 import * as R from '$lib/registry'
 import { clearProject } from './project.clearProject';
 import { closeModal, openLoadingModal } from './ui.modals';
+import { convertFileSrc } from '@tauri-apps/api/tauri';
 
 /**
  * load a project.
@@ -32,8 +33,7 @@ export async function loadProject()
 
         // if project.json exists in the folder, read it
         const jsonPath = await join(filePath as string, 'project.json');
-        if (!await exists(jsonPath))
-        {
+        if (!await exists(jsonPath)) {
             console.error('No project.json found!');
             return;
         }
@@ -57,77 +57,38 @@ export async function loadProject()
             // find unique images
             for (let j=0; j<project.maps[i].images.length; j++) {
                 const obj = project.maps[i].images[j];
-                let alreadyLoaded = false;
-
-                // check that the image is not already loaded
-                for(let k=0; k<j; k++) {
-                    if(obj.src == project.maps[i].images[k].src) {
-                        console.log("duplicate image!", obj.src);
-                        alreadyLoaded = true;
-                        break;
-                    }
-                }
-                if (!alreadyLoaded) uniqueImages.push(obj.src as string);
+                let src = R.getProjectPath() + sep + "images" + sep + obj.src
+                newImage({
+                    src: src, 
+                    height: obj.height, 
+                    width: obj.width, 
+                    lat: obj.y, 
+                    lng: obj.x, 
+                    opacity: obj.opacity, 
+                    order: obj.order, 
+                    locked: obj.locked
+                });
             }
 
             // find unique sounds
             for (let j=0; j<project.maps[i].sounds.length; j++) {
                 const obj = project.maps[i].sounds[j];
-                let alreadyLoaded = false;
-
-                // check that the sound is not already loaded
-                for(let k=0; k<j; k++) {
-                    if(obj.src == project.maps[i].sounds[k].src) {
-                        console.log("duplicate sound!", obj.src);
-                        alreadyLoaded = true;
-                        break;
-                    }
-                }
-                if (!alreadyLoaded) uniqueSounds.push(obj.src as string);
+                let src = R.getProjectPath() + sep + "sounds" + sep + obj.src
+                newSound({
+                    src: src,
+                    soundType: obj.soundType,
+                    volume: obj.volume,
+                    muted: obj.muted,
+                    solo: obj.solo,
+                    lat: obj.y,
+                    lng: obj.x,
+                    radius: obj.radius,
+                    points: obj.points,
+                    order: obj.order,
+                    seek: obj.seek,
+                    locked: obj.locked
+                });
             }
-
-            // load the images and place them
-            for (let j=0; j<uniqueImages.length; j++) {
-                // load the unique image
-                let file = await loadImageFile(await join(filePath as string, 'images', uniqueImages[j]));
-                if (typeof file != "undefined") {
-                    // create all project images with the unique image
-                    for (let k=0; k<project.maps[i].images.length; k++) {
-                        if (project.maps[i].images[k].src == uniqueImages[j]){
-                            let obj = project.maps[i].images[k];
-                            newImage(file, obj.height, obj.width, obj.y, obj.x, obj.opacity, obj.order, obj.locked);
-                        }
-                    }
-                }
-            } 
-
-            // load the sounds and place them
-            for (let j=0; j<uniqueSounds.length; j++) {
-                // load the unique sound
-                let file = await newSound({src:await join(filePath as string, 'sounds', uniqueSounds[j])});
-                if (typeof file != "undefined") {
-                    // create all project sounds with the unique sound
-                    for (let k=0; k<project.maps[i].sounds.length; k++) {
-                        if (project.maps[i].sounds[k].src == uniqueSounds[j]){
-                            let obj = project.maps[i].sounds[k];
-                            newSound({
-                                src: obj.src,
-                                soundType: obj.soundType,
-                                volume: obj.volume,
-                                muted: obj.muted,
-                                solo: obj.solo,
-                                lat: obj.y,
-                                lng: obj.x,
-                                radius: obj.radius,
-                                points: obj.points,
-                                order: obj.order,
-                                seek: obj.seek,
-                                locked: obj.locked
-                            });
-                        }
-                    }
-                }
-            } 
 
             // sort the images and sounds
             R.sortImageList();

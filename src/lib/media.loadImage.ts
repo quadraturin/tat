@@ -8,6 +8,7 @@ import { updateLoadingModal } from './ui.modals';
 import type { MapImage } from './classes/MapImage';
 import { getRandomPointInViewport } from './util.getRandomPointInViewport';
 import { help } from './util.help';
+import { convertFileSrc } from '@tauri-apps/api/tauri';
 
 /**
  * load an image file.
@@ -27,96 +28,108 @@ export async function loadImageFile(filePath:string):Promise<File|undefined> {
     }
 }
 
+type newImageOptions = {
+    src:string,
+    height?:number,
+    width?:number,
+    lat?:number,
+    lng?:number,
+    opacity?:number,
+    order?:number,
+    locked?:boolean
+}
+
 /**
- * create an image on the map.
- * @param file the image file.
- * @param height the image's height.
- * @param width the image's width.
- * @param lat the image's latitude.
- * @param lng the image's longitude.
- * @param opacity the image's opacity.
- * @param order the image's stacking order.
- * @param locked whether the image is locked or not.
+ * create a new image on the map.
+ * @param options new image options.
  */
-export async function newImage(file:File, height?:number, width?:number, lat?:number, lng?:number, opacity?:number, order?:number, locked?:boolean) {
+export async function newImage(options:newImageOptions) {
     try {
-        // get the image dimensions
-        const bmp = await createImageBitmap(new Blob([file]));
-
-        let originalWidth = bmp.width;
-        let originalHeight = bmp.height;
-
-        if (typeof width == "undefined") width = bmp.width;
-        if (typeof height == "undefined") height = bmp.height;
-
-        bmp.close(); // free memory
-        
-
-        // create a data URL & pass into Leaflet
-        const mapImageURL = URL.createObjectURL(file);
-
-        // grab the map
-        const map = R.getMap();
-
-        // create image id #
-        let id = R.getImageList().length;
-
-        let point:L.LatLng;
-
-        if (typeof lng === 'undefined' || typeof lat === 'undefined')
-        {
-            point = getRandomPointInViewport(R.getMap())
-        }
-        else
-        {
-            point = L.latLng(lat as number,lng as number);
-        }
-        lat = point.lat;
-        lng = point.lng;
-
-        // create image overlay
-        let bounds = [[lat,lng], [height,width]] as L.LatLngBoundsExpression;
-        
-        let overlay = L.imageOverlay(mapImageURL, bounds,
-        {
-            interactive: true,
-            className: "id-" + id,
-            opacity: opacity
-        }).addTo(map);
-        overlay.bringToFront();
-        
-
-        // create rectangle over image
-        let imageRect = L.rectangle([[lat,lng],[lat+height,lng],[lat+height,lng+width],[lat,lng+width]], {
-            color: 'coral',
-            fillColor: 'coral',
+        // load defaults, overwrite with options.
+        let o = Object.assign({
             opacity: 1,
-            fillOpacity: 0,
-            weight: 1
-        }).addTo(map);
-        imageRect.enableEdit();
-        imageRect.on('dblclick', L.DomEvent.stop).on('dblclick', () => {toggleImageEdit(imageRect)});
-        imageRect.on('mouseover', () => {
-            if (!imageRect.editEnabled()) help(R.t.help.map.locked, R.t.help.map.image, R.t.help.map.itemLocked, R.t.help.map.itemLockedActions);
-            else if(R.getIsSelected(imageRect)) help(R.t.help.map.selected, R.t.help.map.image, R.t.help.map.imageActions, R.t.help.map.itemSelectedActions);
-            else help(R.t.help.map.image, R.t.help.map.imageActions, R.t.help.map.itemUnselectedActions);
-        });
-        imageRect.on('mouseout', () => {help()});
+            locked: false
+        }, options);
 
-        bindEventsToImageRect(imageRect, overlay, width, height, originalWidth, originalHeight);
-        R.setHasMedia(true);
-        overlay.setBounds(imageRect.getBounds());
-        bringImageToFront(imageRect, overlay);
-        R.setProjectDirty;
+        // make an image.
+        let img = new Image();
 
-        // add image data to registry
-        R.addToImageList(file, overlay, imageRect, originalWidth, originalHeight, opacity, order);
-        
-        if(locked) toggleImageEdit(imageRect);
+        // nice name for the sound.
+        let name = await basename(o.src)
+        let niceName = name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim();
 
-        // center and frame the image
-        //map.flyToBounds(bounds);
-        
+        // when the image loads, do everything else.
+        img.onload = function(){
+
+            // get the original image dimensions.
+            let originalW:number = img.width;
+            let originalH:number = img.height;
+            console.log (originalW, originalH);
+            if (typeof o.width == "undefined") o.width = originalW;
+            if (typeof o.height == "undefined") o.height = originalH;
+
+            // create image id #
+            if (typeof o.order == "undefined") o.order = R.getImageList().length;
+
+            // determine the image origin point.
+            if (typeof o.lat == "undefined" || typeof o.lng == "undefined") {
+                let point = getRandomPointInViewport(R.getMap())
+                o.lat = point.lat;
+                o.lng = point.lng;
+            }
+
+            // create image overlay.
+            let bounds = [[o.lat,o.lng], [o.height,o.width]] as L.LatLngBoundsExpression;
+            let overlay = L.imageOverlay(img.src, bounds,
+            {
+                interactive: true,
+                className: "id-" + o.order,
+                opacity: o.opacity
+            }).addTo(R.getMap());
+            overlay.bringToFront();
+
+            // create rectangle over image.
+            let imageRect = L.rectangle([[o.lat,o.lng],[o.lat+o.height,o.lng],[o.lat+o.height,o.lng+o.width],[o.lat,o.lng+o.width]], {
+                color: 'coral',
+                fillColor: 'coral',
+                opacity: 1,
+                fillOpacity: 0,
+                weight: 1
+            }).addTo(R.getMap());
+
+            // bind rectangle handlers.
+            imageRect.enableEdit();
+            imageRect.on('dblclick', L.DomEvent.stop).on('dblclick', () => {toggleImageEdit(imageRect)});
+            imageRect.on('mouseover', () => {
+                if (!imageRect.editEnabled()) help(R.t.help.map.locked, R.t.help.map.image, R.t.help.map.itemLocked, R.t.help.map.itemLockedActions);
+                else if(R.getIsSelected(imageRect)) help(R.t.help.map.selected, R.t.help.map.image, R.t.help.map.imageActions, R.t.help.map.itemSelectedActions);
+                else help(R.t.help.map.image, R.t.help.map.imageActions, R.t.help.map.itemUnselectedActions);
+            });
+            imageRect.on('mouseout', () => {help()});
+
+            bindEventsToImageRect(imageRect, overlay, o.width, o.height, originalW, originalH);
+            R.setHasMedia(true);
+            overlay.setBounds(imageRect.getBounds());
+            bringImageToFront(imageRect, overlay);
+            R.setProjectDirty;
+
+            // add image data to registry.
+            R.addToImageList({
+                src:o.src, 
+                overlay:overlay, 
+                rect:imageRect, 
+                originalWidth:originalW, 
+                originalHeight:originalH, 
+                opacity:o.opacity, 
+                order:o.order,
+                name:name,
+                niceName:niceName
+            });
+            
+            // lock if locked.
+            if(o.locked) toggleImageEdit(imageRect);
+        }
+        img.src = convertFileSrc(options.src);
     } catch(err) {
         console.error(err);
     }
@@ -127,7 +140,7 @@ export async function newImage(file:File, height?:number, width?:number, lat?:nu
  * @param image the image to duplicate.
  */
 export async function duplicateImage(image:MapImage) {
-    newImage(image.data, image.originalHeight, image.originalWidth);
+    newImage({src:image.src, opacity:image.opacity});
 }
 
 /**

@@ -1,32 +1,43 @@
 import type L from 'leaflet';
 
 /**
+ * map image options.
+ */
+type mapImageOptions = {
+    src:string,
+    overlay:L.ImageOverlay,
+    rect:L.Rectangle,
+    originalWidth:number,
+    originalHeight:number,
+    opacity:number,
+    order:number,
+    name:string,
+    niceName:string
+}
+
+/**
  * map image class.
  */
-export class MapImage
-{
+export class MapImage {
     src:string;
-    data:File;
     overlay:L.ImageOverlay;
     rect:L.Rectangle;
     originalWidth:number;
     originalHeight:number;
     opacity:number;
     order:number;
+    name:string;
+    niceName:string;
 
-    constructor(data:File, overlay:L.ImageOverlay, rect:L.Rectangle, ow:number, oh:number, opacity?:number, order?:number)
-    {
-        this.data = data;
-        this.overlay = overlay;
-        this.rect = rect;
-        this.originalWidth = ow;
-        this.originalHeight = oh;
-
-        if (typeof opacity != "undefined") this.opacity = opacity;
-        else this.opacity = 1;
-        
-        if (typeof order != "undefined") this.order = order;
-        else this.order = 1;
-        this.src="";
+    constructor(options:mapImageOptions) {
+        this.src = options.src;
+        this.overlay = options.overlay;
+        this.rect = options.rect;
+        this.originalWidth = options.originalWidth;
+        this.originalHeight = options.originalHeight;
+        this.opacity = options.opacity;
+        this.order = options.order;
+        this.name = options.name;
+        this.niceName = options.niceName;
     }
 }
