@@ -12,45 +12,62 @@ import { help } from './util.help';
 import * as Tone from 'tone';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 
+type newSoundOptions = {
+    soundType?: string,
+    muted?: boolean,
+    solo?: boolean,
+    paused?: boolean,
+    locked?: boolean,
+    volume?: number,
+    seek?: number,
+    order?: number,
+    lat?: number,
+    lng?: number,
+    radius?: number,
+    points?: [number,number][]
+}
+
 // create new sound
-export async function newSound(filePath:string, options?:any){
+export async function newSound(filePath:string, options={}){
     try {
+        let o = Object.assign({
+            soundType: SOUNDTYPE_LOCAL,
+            muted: false,
+            solo: false,
+            paused: false,
+            locked: false,
+            volume: 1,
+            seek: 0,
+            order: 1,
+            lat: undefined,
+            lng: undefined,
+            radius: 100,
+            points: undefined}, options);
+        
         updateLoadingModal(filePath);
 
         let sound = new Tone.Player(convertFileSrc(filePath)).toDestination();
 
-        let soundType:string = options.soundType || SOUNDTYPE_LOCAL;
-
-        let muted:boolean  = typeof options.muted  == 'undefined' ? false : options.muted;
-        let solo:boolean   = typeof options.solo   == 'undefined' ? false : options.solo;
-        let paused:boolean = typeof options.paused == 'undefined' ? false : options.paused;
-        let locked:boolean = typeof options.locked == 'undefined' ? false : options.locked;
-
-        let volume:number  = typeof options.volume == 'undefined' ? 1 : options.volume;
-        let seek:number    = typeof options.seek   == 'undefined' ? 0 : options.seek;
-        let order:number   = typeof options.order  == 'undefined' ? 1 : options.order;
-
         let randPt = getRandomPointInViewport(R.getMap());
         
-        let lat:number               = options.lat    || randPt.lat;
-        let lng:number               = options.lng    || randPt.lng;
-        let radius:number            = options.radius || 100;
-        let points:[number,number][] = options.points || [[randPt.lat-50, randPt.lng-50],[randPt.lat-50, randPt.lng+50],[randPt.lat+50, randPt.lng+50],[randPt.lat+50, randPt.lng-50]];
+        let lat:number               = typeof o.lat    == 'undefined' ? randPt.lat : o.lat;
+        let lng:number               = typeof o.lng    == 'undefined' ? randPt.lng : o.lng;
+        let points:[number,number][] = typeof o.points == 'undefined' ? [[randPt.lat-50, randPt.lng-50],[randPt.lat-50, randPt.lng+50],[randPt.lat+50, randPt.lng+50],[randPt.lat+50, randPt.lng-50]] : o.points;
 
-        let emitter = await createEmitter(soundType, lat, lng, radius, points, locked);
+        let emitter = await createEmitter(o.soundType, lat, lng, o.radius, points, o.locked);
 
         let startTime = Date.now(); // needed to track playback position
 
         sound.loop = true;
-        if (muted) sound.mute = true; // mute if muted
+        if (o.muted) sound.mute = true; // mute if muted
 
         Tone.loaded().then(() => {
-            sound.start(0, seek); // play sound from seek position
+            sound.start(0, o.seek); // play sound from seek position
         });
 
-        if(paused) sound.stop();  // pause if sound should be paused
+        if(o.paused) sound.stop();  // pause if sound should be paused
 
-        R.addToSoundList(filePath, sound, soundType, emitter, startTime, volume, muted, solo, order);
+        R.addToSoundList(filePath, sound, o.soundType, emitter, startTime, o.volume, o.muted, o.solo, o.order);
         
         // update volumes
         setMapSoundVolumes();
