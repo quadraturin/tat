@@ -502,7 +502,7 @@ on:wheel|preventDefault={()=>{}}>
                     on:mouseover={()=>{help(data.help.map.soundSeek)}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
-                        <div style={"width: "+((item.sound.sampleTime/item.startTime)*100).toString()+"%"} class="sound-item-progress-bar"></div>
+                        <div style={"width: "+((item.sound.buffer.duration/item.startTime)*100).toString()+"%"} class="sound-item-progress-bar"></div>
                     </button>
                 </div>
             {/each}
