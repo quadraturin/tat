@@ -77,6 +77,7 @@
     onMount( () => 
     {
         appWindow.setMinSize(new LogicalSize(480,320));
+        //appWindow.setContentProtected(false);
 
         loadUserSettings();
         
