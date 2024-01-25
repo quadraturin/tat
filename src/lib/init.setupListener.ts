@@ -1,6 +1,5 @@
 import L from "leaflet";
 import {t} from "$lib/registry";
-import { setMapSoundVolumes } from "./media.setMapSoundVolumes";
 import { help } from "./util.help";
 
 /**
