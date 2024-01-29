@@ -15,10 +15,10 @@ export async function closeAllMenus() {
  */
 export async function toggleAboutMenu() {
     if (R.getIsAboutMenuOpen()) {
-        document.getElementById("about")?.setAttribute("style", "display:none");
-        R.setIsAboutMenuOpen(false);
+        closeAllMenus();
     }
     else {
+        closeAllMenus();
         document.getElementById("about")?.setAttribute("style", "display:block");
         R.setIsAboutMenuOpen(true);
     }
@@ -29,10 +29,10 @@ export async function toggleAboutMenu() {
  */
 export async function toggleSettingsMenu() {
     if (R.getIsSettingsMenuOpen()) {
-        document.getElementById("settings")?.setAttribute("style", "display:none");
-        R.setIsSettingsMenuOpen(false);
+        closeAllMenus();
     }
     else {
+        closeAllMenus();
         document.getElementById("settings")?.setAttribute("style", "display:block");
         R.setIsSettingsMenuOpen(true);
     }
