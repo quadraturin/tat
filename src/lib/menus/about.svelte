@@ -60,7 +60,15 @@
 
         <h2>{data.about.changelogTitle}</h2>
 
-        <h3>v0.1a -- initial alpha release to kickstarter backers</h3>
+        <h3>v0.2.0: better for streaming (2024-01-29)</h3>
+        <ul>
+            <li>settings option to hide window contents from stream</li>
+            <li>fix for sometimes broken map at startup</li>
+            <li>opening settings or about menu now closes other menus</li>
+            <li>changelog corrections</li>
+        </ul>
+
+        <h3>v0.1.0: initial alpha release to kickstarter backers (2024-01-25)</h3>
         <ul>
             <li>create projects</li>
             <li>save (+save as) projects: copies media files to folder, deletes unused media, writes project json</li>
@@ -84,14 +92,17 @@
             <li>duplicate sounds and images</li>
             <li>adjust opacity of images</li>
             <li>adjust volume of sounds</li>
-            <li>local sound type: emanates from a point with falloff</li>
-            <li>area sound type: constant volume within a polygon</li>
-            <li>global sound type: audible everywhere</li>
+            <li>adjust global volume</li>
+            <li>sound type - local: emanates from a point with falloff</li>
+            <li>sound type - area: constant volume within a polygon</li>
+            <li>sound type - global: audible everywhere</li>
             <li>change sound type: cycle between local, area, and global</li>
             <li>mute/unmute sounds</li>
             <li>solo/unsolo sounds</li>
             <li>pause/play sounds</li>
             <li>interactive sound playback display</li>
+            <li>move listener with WASD</li>
+            <li>user settings: reverse scroll direction, listener movement speed, default to proportional image scaling</li>
         </ul>
 
         <h2>{data.about.licensesTitle}</h2>

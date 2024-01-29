@@ -15,6 +15,7 @@ export const load:PageLoad = async ({}) => {
             "invertVolumeScroll": "invert volume scroll direction",
             "proportionalScaleOnByDefault": "proportional image scaling on by default (shift turns off)",
             "listenerMoveSpeed": "listener movement speed (WASD)",
+            "hideWindowContentsFromStream": "hide window contents from stream",
             "themeTitle": "theme",
             "reset": "reset to defaults",
             "autoSave": "(all settings changes are immediately applied.)"

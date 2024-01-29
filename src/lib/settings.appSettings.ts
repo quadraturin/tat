@@ -43,5 +43,6 @@ export const defaultUserSettings = {
     invertVolumeScroll: false,
     listenerMoveSpeed: 5,
     language: "en-us",
-    helpOpen: true
+    helpOpen: true,
+    hideWindowContentsFromStream: false
 }

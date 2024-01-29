@@ -1,7 +1,8 @@
 import { exists, readTextFile } from "@tauri-apps/api/fs";
 import { appDataDir, join } from "@tauri-apps/api/path";
-import { overwriteUserSettings } from "./settings.userSettings";
+import { getUserSettings, overwriteUserSettings } from "./settings.userSettings";
 import { saveUserSettings } from "./settings.saveUserSettings";
+import { appWindow } from "@tauri-apps/api/window";
 
 /**
  * load the user settings from file. if it doesn't exist, load and save the defaults.
@@ -17,6 +18,7 @@ export async function loadUserSettings() {
             console.log('No settings.json found in directory', await appDataDir());
             saveUserSettings(); // saves default settings
         }
+        appWindow.setContentProtected(getUserSettings().hideWindowContentsFromStream);
     } catch (err) {
         console.error(err);
     }

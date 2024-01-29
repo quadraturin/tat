@@ -76,10 +76,9 @@
     // initialize
     onMount( () => 
     {
-        appWindow.setMinSize(new LogicalSize(480,320));
-        //appWindow.setContentProtected(false);
-
         loadUserSettings();
+
+        appWindow.setMinSize(new LogicalSize(480,320));
         
         // set up title bar window controls
         const titlebarMinimize = document.getElementById('titlebar-minimize') as HTMLElement;
@@ -216,9 +215,12 @@
 
     let soundTrack:HTMLButtonElement;
 
-    /*document.addEventListener('contextmenu', event => {
-        event.preventDefault();
-        R.getMap().flyTo(R.getMap().containerPointToLatLng([event.x, event.y]));
+    /*document.addEventListener('auxclick', event => {
+        console.log(event.button)
+            R.getMap().flyTo(R.getMap().containerPointToLatLng([event.x, event.y]));
+        if (event.button == 1) {
+            event.preventDefault();
+        }
     });*/
 
     let sidebarHidden = false;

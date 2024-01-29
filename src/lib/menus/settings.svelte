@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as R from '$lib/registry';
 	import { getUserSettings, resetUserSettings, setUserSetting } from '$lib/settings.userSettings';
+	import { appWindow } from '@tauri-apps/api/window';
 	import type { LayoutData } from '../../routes/$types';
     export let data:LayoutData;
 
@@ -12,10 +13,21 @@
         listenerMoveSpeed = userSettings.listenerMoveSpeed;
     }, 15);
     
+    //appWindow.setContentProtected(true);
 </script>
 
 <div class="menu" id="settings">
     <h2>{data.settings.settingsTitle}</h2>
+
+    <div class="setting">
+        <input type="checkbox" id="hideWindowContentsFromStream" class="fancyCheck" 
+        checked={userSettings?.hideWindowContentsFromStream}
+        on:click={()=>{
+            appWindow.setContentProtected(!userSettings?.hideWindowContentsFromStream);
+            setUserSetting("hideWindowContentsFromStream", !userSettings.hideWindowContentsFromStream);
+            }} /> 
+        <label for="hideWindowContentsFromStream">{data.settings.hideWindowContentsFromStream}</label>
+    </div>
 
     <div class="setting">
         <input type="checkbox" id="invertVolumeScroll" class="fancyCheck" 

@@ -65,5 +65,7 @@ export function setupMap(): L.Map
 
     grid().addTo(map);
 
+    map.invalidateSize();
+
     return map;
 }

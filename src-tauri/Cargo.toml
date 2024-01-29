@@ -1,11 +1,11 @@
 [package]
-name = "app"
-version = "0.1.0"
-description = "A Tauri App"
+name = "tat"
+version = "0.2.0"
+description = "a tabletop audio tool from paradiso"
 authors = ["quadra"]
-license = ""
+license = " "
 repository = ""
-default-run = "app"
+default-run = "tat"
 edition = "2021"
 rust-version = "1.60"
 
@@ -24,3 +24,6 @@ tauri = { version = "1.5.4", features = [ "protocol-all", "shell-all", "window-a
 # If you use cargo directly instead of tauri's cli you can use this feature flag to switch between tauri's `dev` and `build` modes.
 # DO NOT REMOVE!!
 custom-protocol = [ "tauri/custom-protocol" ]
+
+[profile.release]
+strip = true # strip symbols from the binary.
