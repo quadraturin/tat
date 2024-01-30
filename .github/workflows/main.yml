@@ -76,7 +76,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          releaseId: ${{ needs.create-release.outputs.release_id }}
+          releaseId: ${{ process.env.PACKAGE_VERSION }}
 
   publish-release:
     permissions:
@@ -89,7 +89,7 @@ jobs:
         id: publish-release
         uses: actions/github-script@v6
         env:
-          release_id: ${{ needs.create-release.outputs.release_id }}
+          release_id: ${{ process.env.PACKAGE_VERSION }}
         with:
           script: |
             github.rest.repos.updateRelease({
