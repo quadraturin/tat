@@ -1,6 +1,6 @@
 {
-	"name": "wbr-mus",
-	"version": "0.0.1",
+	"name": "tat",
+	"version": "0.2.1",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
