@@ -1,4 +1,4 @@
-import { createDir, exists, writeTextFile } from "@tauri-apps/api/fs";
+import { mkdir, exists, writeTextFile } from "@tauri-apps/plugin-fs";
 import { appDataDir, join } from "@tauri-apps/api/path";
 import { getUserSettings } from "./settings.userSettings";
 
@@ -10,7 +10,7 @@ export async function saveUserSettings() {
         console.log('saving user settings', getUserSettings());
         const jsonPath = await join(await appDataDir(), 'settings.json');
         if(!await exists(await appDataDir())) {
-            createDir(await appDataDir());
+            mkdir(await appDataDir());
         }
         writeTextFile(jsonPath, JSON.stringify(getUserSettings()));
     } catch (err) {

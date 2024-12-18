@@ -39,7 +39,7 @@ export async function changeBaseVolume(sound:MapSound, event:WheelEvent) {
     if (getUserSettings().invertVolumeScroll) delta *= -1;
 
     // adjust and clamp volume.
-    sound.volume += delta*0.01;
+    sound.volume += delta * 0.01 * getUserSettings().uiScrollSensitivity;
     if (sound.volume < 0) sound.volume = 0;
     else if (sound.volume > 1) sound.volume = 1;
 }
@@ -57,6 +57,6 @@ export async function changeMasterVolume(event:WheelEvent) {
     console.log(delta);
 
     // adjust and clamp volume.
-    H.Howler.volume(H.Howler.volume() + delta*0.01);
+    H.Howler.volume(H.Howler.volume() + delta * 0.01 * getUserSettings().uiScrollSensitivity);
     console.log('changing master volume', H.Howler.volume())
 }

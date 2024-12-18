@@ -9,7 +9,7 @@ import type { MapSound } from './classes/MapSound';
 import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from './settings.appSettings';
 import { help } from './util.help';
 import { basename } from '@tauri-apps/api/path';
-import { convertFileSrc } from '@tauri-apps/api/tauri';
+import { convertFileSrc } from '@tauri-apps/api/core';
 
 /**
  *  options definition for new sounds.

@@ -8,7 +8,8 @@
     // modules
     import * as R from '$lib/registry';
     import { onMount } from 'svelte'
-    import { LogicalSize, appWindow } from '@tauri-apps/api/window'
+    import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
+    import { LogicalSize } from '@tauri-apps/api/window'
     import L from "leaflet";
 	import { setupMap } from '$lib/init.setupMap';
 	import { setupListener } from '$lib/init.setupListener';
@@ -57,6 +58,7 @@
 	import IconCollapse from '$lib/icons/iconCollapse.svelte';
 	import IconExpand from '$lib/icons/iconExpand.svelte';
 	import { setMapSoundVolumes } from '$lib/media.setMapSoundVolumes';
+const appWindow = getCurrentWebviewWindow()
     //import IconAdd from '$lib/icons/iconAdd.svelte'
     //import IconPlay from '$lib/icons/iconPlay.svelte'
     //import IconLevels from '$lib/icons/iconLevels.svelte'

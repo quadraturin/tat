@@ -8,7 +8,12 @@
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"sourceMap": true,
-		"strict": true
+		"strict": true,
+		// workaround for https://github.com/vuejs/tsconfig/issues/6
+		"preserveValueImports": false,
+		"importsNotUsedAsValues": "remove",
+		"verbatimModuleSyntax": true,
+		// end workaround
 	}
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//

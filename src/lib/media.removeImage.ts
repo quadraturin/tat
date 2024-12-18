@@ -1,5 +1,5 @@
 import * as R from '$lib/registry'
-import { ask } from "@tauri-apps/api/dialog";
+import { ask } from "@tauri-apps/plugin-dialog";
 import type L from 'leaflet'
 
 /**

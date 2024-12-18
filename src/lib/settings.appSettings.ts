@@ -44,5 +44,6 @@ export const defaultUserSettings = {
     listenerMoveSpeed: 5,
     language: "en-us",
     helpOpen: true,
-    hideWindowContentsFromStream: false
+    hideWindowContentsFromStream: false,
+    uiScrollSensitivity: 1
 }

@@ -1,13 +1,13 @@
-import { open } from '@tauri-apps/api/dialog';
+import { open } from '@tauri-apps/plugin-dialog';
 import { projectExt } from './settings.appSettings';
-import { exists, readTextFile } from '@tauri-apps/api/fs';
+import { exists, readTextFile } from '@tauri-apps/plugin-fs';
 import { basename, join, sep } from '@tauri-apps/api/path';
 import { loadImageFile, newImage } from './media.loadImage';
 import { newSound } from './media.loadSound';
 import * as R from '$lib/registry'
 import { clearProject } from './project.clearProject';
 import { closeModal, openLoadingModal } from './ui.modals';
-import { convertFileSrc } from '@tauri-apps/api/tauri';
+import { convertFileSrc } from '@tauri-apps/api/core';
 
 /**
  * load a project.
@@ -57,7 +57,8 @@ export async function loadProject()
             // find unique images
             for (let j=0; j<project.maps[i].images.length; j++) {
                 const obj = project.maps[i].images[j];
-                let src = R.getProjectPath() + sep + "images" + sep + obj.src
+                let src = R.getProjectPath() as string + sep() + "images" + sep() + obj.src
+                console.log(src);
                 newImage({
                     src: src, 
                     height: obj.height, 
@@ -73,7 +74,8 @@ export async function loadProject()
             // find unique sounds
             for (let j=0; j<project.maps[i].sounds.length; j++) {
                 const obj = project.maps[i].sounds[j];
-                let src = R.getProjectPath() + sep + "sounds" + sep + obj.src
+                let src = R.getProjectPath() as string + sep() + "sounds" + sep() + obj.src
+                console.log(src);
                 newSound({
                     src: src,
                     soundType: obj.soundType,

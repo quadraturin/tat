@@ -12,7 +12,8 @@ export const load:PageLoad = async ({}) => {
     return {
         "settings": {
             "settingsTitle": "settings",
-            "invertVolumeScroll": "invert volume scroll direction",
+            "invertVolumeScroll": "invert UI scroll direction",
+            "uiScrollSensitivity": "UI scroll sensitivity multiplier",
             "proportionalScaleOnByDefault": "proportional image scaling on by default (shift turns off)",
             "listenerMoveSpeed": "listener movement speed (WASD)",
             "hideWindowContentsFromStream": "hide window contents from stream",

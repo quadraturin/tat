@@ -34,7 +34,7 @@ export function getUserSettings() {
  * @param value user setting value to set.
  */
 export function setUserSetting(key:string, value:any) {
-    console.log('setting user setting', key, value)
+    //console.log('setting user setting', key, value)
     userSettings[key] = value;
     saveUserSettings();
 }
@@ -44,7 +44,7 @@ export function setUserSetting(key:string, value:any) {
  * @param newSettings the new settings.
  */
 export function overwriteUserSettings(newSettings:{}) {
-    console.log('overwriting user settings', newSettings)
+    //console.log('overwriting user settings', newSettings)
     userSettings = newSettings;
     R.setIsProportionalScaleOn(userSettings.proportionalScaleOnByDefault);
 }
@@ -53,6 +53,6 @@ export function overwriteUserSettings(newSettings:{}) {
  * reset the user settings to defaults.
  */
 export function resetUserSettings() {
-    userSettings = defaultUserSettings;
+    overwriteUserSettings(defaultUserSettings);
     saveUserSettings();
 }

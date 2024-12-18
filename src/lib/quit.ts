@@ -1,7 +1,8 @@
-import { ask } from "@tauri-apps/api/dialog";
+import { ask } from "@tauri-apps/plugin-dialog";
 import { getisProjectDirty } from "./registry";
-import { appWindow } from "@tauri-apps/api/window";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import * as R from '$lib/registry';
+const appWindow = getCurrentWebviewWindow()
 
 
 /**

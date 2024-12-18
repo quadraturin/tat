@@ -11,7 +11,6 @@
 	import IconTikTok from "$lib/icons/iconTikTok.svelte";
 	import IconTraaash from "$lib/icons/iconTraaash.svelte";
 	import IconTumblr from "$lib/icons/iconTumblr.svelte";
-	import IconTwitter from "$lib/icons/iconTwitter.svelte";
 	import IconYouTube from "$lib/icons/iconYouTube.svelte";
 	import type { LayoutData } from '../../routes/$types';
     export let data:LayoutData;
@@ -32,12 +31,11 @@
             
             {data.about.followSocial}:
             <a href="https://www.youtube.com/@ultraparadiso" target="_blank" title="YouTube"><IconYouTube/></a>
+            <a href="https://bsky.app/profile/traaa.sh" target="_blank" title="Bluesky"><IconBluesky/></a>
+            <a href="https://www.instagram.com/quadratraaash/" target="_blank" title="Instagram"><IconInstagram/></a>
             <a href="https://www.tiktok.com/@paradiso102" target="_blank" title="TikTok"><IconTikTok/></a>
             <a href="https://dice.camp/@quadra" target="_blank" title="Mastodon"><IconMastodon/></a>
             <a href="https://www.tumblr.com/quadratrash" target="_blank" title="Tumblr"><IconTumblr/></a>
-            <a href="https://bsky.app/profile/traaa.sh" target="_blank" title="Bluesky"><IconBluesky/></a>
-            <a href="https://twitter.com/quadratrash" target="_blank" title="Twitter"><IconTwitter/></a>
-            <a href="https://www.instagram.com/quadratraaash/" target="_blank" title="Instagram"><IconInstagram/></a>
             <a href="https://www.reddit.com/user/quadrazone/" target="_blank" title="Reddit"><IconReddit/></a>
             <a href="https://github.com/quadraturin" target="_blank" title="GitHub"><IconGitHub/></a>
 
@@ -59,6 +57,13 @@
         <p>{@html data.about.projectFiles}</p>
 
         <h2>{data.about.changelogTitle}</h2>
+
+        <h3>v0.3.0: upgrades & tweaks</h3>
+        <ul>
+            <li>upgraded to tauri 2</li>
+            <li>added UI scroll sensitivity setting</li>
+            <li>updated social media links on about page</li>
+        </ul>
 
         <h3>v0.2.0: better for streaming (2024-01-29)</h3>
         <ul>

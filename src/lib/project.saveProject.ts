@@ -1,7 +1,7 @@
 import * as R from '$lib/registry';
 import L from 'leaflet';
-import { message, save } from "@tauri-apps/api/dialog";
-import { createDir, writeTextFile, exists, readDir, removeFile, copyFile } from "@tauri-apps/api/fs";
+import { message, save } from "@tauri-apps/plugin-dialog";
+import { mkdir, writeTextFile, exists, readDir, remove, copyFile } from "@tauri-apps/plugin-fs";
 import { join, basename, sep } from "@tauri-apps/api/path";
 import type { MapImage } from './classes/MapImage';
 import type { MapSound } from './classes/MapSound';
@@ -55,9 +55,9 @@ export async function saveProject(saveAs=false): Promise<boolean>
     let promises = new Array<Promise<any>>;
 
     // make a project directory with 'sounds' and 'images' directories inside
-    await createDir(filePath, { recursive: true });
-    await createDir(await join(filePath, 'sounds'), { recursive: true });
-    await createDir(await join(filePath, 'images'), { recursive: true });
+    await mkdir(filePath, { recursive: true });
+    await mkdir(await join(filePath, 'sounds'), { recursive: true });
+    await mkdir(await join(filePath, 'images'), { recursive: true });
 
     // cycle through loaded images, adding each to the project object
     let i = 0;
@@ -180,7 +180,7 @@ async function deleteUnused(fileType:string) {
         }
         if (notInUse) {
             //console.log(fileList[i].name as string + " is not in use. deleting...")
-            removeFile(path + sep + fileType + sep + fileList[i].name as string);
+            remove(path + sep + fileType + sep + fileList[i].name as string);
         }
     }
 }

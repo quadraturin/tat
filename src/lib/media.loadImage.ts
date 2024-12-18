@@ -1,5 +1,5 @@
 import * as R from '$lib/registry'
-import { readBinaryFile } from "@tauri-apps/api/fs";
+import { readFile } from "@tauri-apps/plugin-fs";
 import { basename, extname } from '@tauri-apps/api/path';
 import L from 'leaflet';
 import 'leaflet-editable';
@@ -8,7 +8,7 @@ import { updateLoadingModal } from './ui.modals';
 import type { MapImage } from './classes/MapImage';
 import { getRandomPointInViewport } from './util.getRandomPointInViewport';
 import { help } from './util.help';
-import { convertFileSrc } from '@tauri-apps/api/tauri';
+import { convertFileSrc } from '@tauri-apps/api/core';
 
 /**
  * load an image file.
@@ -18,7 +18,7 @@ import { convertFileSrc } from '@tauri-apps/api/tauri';
 export async function loadImageFile(filePath:string):Promise<File|undefined> {
     try {
         updateLoadingModal(filePath);
-        const content = await readBinaryFile(filePath);
+        const content = await readFile(filePath);
         const fileName = await basename(filePath);
         const ext = await extname(filePath);
         return new File([content], fileName, {type: 'image/' + ext});

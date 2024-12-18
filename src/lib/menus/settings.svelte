@@ -1,16 +1,19 @@
 <script lang="ts">
 	import * as R from '$lib/registry';
 	import { getUserSettings, resetUserSettings, setUserSetting } from '$lib/settings.userSettings';
-	import { appWindow } from '@tauri-apps/api/window';
+	import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 	import type { LayoutData } from '../../routes/$types';
+const appWindow = getCurrentWebviewWindow()
     export let data:LayoutData;
 
     let userSettings:any = getUserSettings();
     let listenerMoveSpeed:number = getUserSettings().listenerMoveSpeed;
+    let uiScrollSensitivity:number = getUserSettings().uiScrollSensitivity;
 
     setInterval(() => {
         userSettings = getUserSettings();
         listenerMoveSpeed = userSettings.listenerMoveSpeed;
+        uiScrollSensitivity = userSettings.uiScrollSensitivity;
     }, 15);
     
     //appWindow.setContentProtected(true);
@@ -34,6 +37,14 @@
         checked={userSettings?.invertVolumeScroll}
         on:click={()=>{setUserSetting("invertVolumeScroll", !userSettings.invertVolumeScroll)}} /> 
         <label for="invertVolumeScroll">{data.settings.invertVolumeScroll}</label>
+    </div>
+
+    <div class="setting">
+        <input type="input" id="uiScrollSensitivity" class="fancyText"
+        placeholder={uiScrollSensitivity.toString()}
+        bind:value={uiScrollSensitivity} 
+        on:input={()=>{setUserSetting("uiScrollSensitivity", uiScrollSensitivity)}}/> 
+        <label for="uiScrollSensitivity">{data.settings.uiScrollSensitivity}</label>
     </div>
 
     <div class="setting">
