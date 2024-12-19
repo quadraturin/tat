@@ -57,6 +57,10 @@ a { color: var(--highlight-color); }
     position: fixed;
     top: var(--title-bar-height);
 }
+#map-wrapper.imagesHidden .leaflet-overlay-pane,
+#map-wrapper.soundsHidden .leaflet-sound-pane {
+    display: none;
+}
 #map {
     min-width: 100%;
     min-height: 100%;
@@ -363,6 +367,19 @@ a { color: var(--highlight-color); }
     -ms-user-select: none;      /* IE 10+ */
     user-select: none;          /* Likely future */  
     cursor: default;
+}
+.browser-heading svg {
+    height: 14px;
+}
+.browser-heading-button {
+    float:right;
+    background:none;
+    border: none;
+    color: coral;
+    padding: 0;
+}
+#browser .browser-heading-button:hover {
+    color: white;
 }
 #browser.sidebarHidden {
     display:none;

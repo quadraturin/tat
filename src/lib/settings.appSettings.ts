@@ -53,6 +53,8 @@ export class UserSettings {
     helpOpen: boolean;
     hideWindowContentsFromStream: boolean;
     uiScrollSensitivity: number;
+    soundsHidden: boolean;
+    imagesHidden: boolean;
     constructor(){
         this.proportionalScaleOnByDefault = false,
         this.invertVolumeScroll = false,
@@ -60,7 +62,9 @@ export class UserSettings {
         this.language = SupportedLanguages.EnUs,
         this.helpOpen = true,
         this.hideWindowContentsFromStream = false,
-        this.uiScrollSensitivity = 1
+        this.uiScrollSensitivity = 1,
+        this.soundsHidden = false,
+        this.imagesHidden = false
     }
 }
 export const defaultUserSettings = new UserSettings;

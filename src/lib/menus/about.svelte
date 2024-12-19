@@ -60,9 +60,11 @@
 
         <h3>v0.3.0: upgrades & tweaks</h3>
         <ul>
-            <li>upgraded to tauri 2</li>
+            <li>upgraded wrapper to tauri 2</li>
             <li>added UI scroll sensitivity setting</li>
             <li>updated social media links on about page</li>
+            <li>reset to default user settings now works properly</li>
+            <li>added show/hide toggles for images and sounds</li>
         </ul>
 
         <h3>v0.2.0: better for streaming (2024-01-29)</h3>

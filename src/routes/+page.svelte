@@ -58,11 +58,13 @@
 	import IconCollapse from '$lib/icons/iconCollapse.svelte';
 	import IconExpand from '$lib/icons/iconExpand.svelte';
 	import { setMapSoundVolumes } from '$lib/media.setMapSoundVolumes';
-const appWindow = getCurrentWebviewWindow()
-    //import IconAdd from '$lib/icons/iconAdd.svelte'
-    //import IconPlay from '$lib/icons/iconPlay.svelte'
+    import IconEye from '$lib/icons/iconEye.svelte';
+    import IconEyeOff from '$lib/icons/iconEyeOff.svelte';
+	import { saveUserSettings } from '$lib/settings.saveUserSettings';
     //import IconLevels from '$lib/icons/iconLevels.svelte'
     //import IconAudioFile from '$lib/icons/iconAudioFile.svelte'
+
+    const appWindow = getCurrentWebviewWindow()
 
     let isSaving = false;
     let isDirty = false;
@@ -226,6 +228,8 @@ const appWindow = getCurrentWebviewWindow()
     });*/
 
     let sidebarHidden = false;
+    let imagesHidden = false;
+    let soundsHidden = false;
 
     function toggleSidebar() {
         sidebarHidden = !sidebarHidden;
@@ -362,7 +366,7 @@ on:wheel|preventDefault={()=>{}}>
     </button>
 </div>
 
-<div id="map-wrapper">
+<div id="map-wrapper" class:imagesHidden class:soundsHidden>
     <div id="map"></div>
 </div>
 
@@ -521,7 +525,7 @@ on:wheel|preventDefault={()=>{}}>
                     </button>
                 </div>
             {/each}
-            <div role="heading" aria-level="2" 
+            <div role="heading" class="browser-heading" aria-level="2" 
             on:wheel|preventDefault={(event) => changeMasterVolume(event)}
             on:focus={()=>{}} 
             on:mouseover={()=>{help(data.help.map.soundsTitle)}}
@@ -531,6 +535,10 @@ on:wheel|preventDefault={()=>{}}>
                     <div id="master-volume-bar" style={"height:"+(masterVolume*100)+"%"}></div>
                 </div>
                 <span>sounds</span>
+                
+                <button class="browser-heading-button" id="hide-sounds-toggle" on:click={()=>{soundsHidden = !soundsHidden;}}>
+                    {#if soundsHidden}<IconEye/>{:else}<IconEyeOff/>{/if}
+                </button>
             </div>
         </div>
     {/if}
@@ -574,12 +582,15 @@ on:wheel|preventDefault={()=>{}}>
                 </div>
             {/each}
 
-            <div role="heading" aria-level="2" 
+            <div role="heading" class="browser-heading" aria-level="2" 
             on:focus={()=>{}} 
             on:mouseover={()=>{help(data.help.map.imagesTitle)}}
             on:mouseout={()=>{help()}}
             on:blur={()=>{}}>
                 images
+                <button class="browser-heading-button" id="hide-images-toggle" on:click={()=>{imagesHidden = !imagesHidden;}}>
+                    {#if imagesHidden}<IconEye/>{:else}<IconEyeOff/>{/if}
+                </button>
             </div>
         </div>
     {/if}
