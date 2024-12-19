@@ -44,7 +44,7 @@
 
         <h2>{data.about.aboutTitle}</h2>
         
-        <p><em>{data.about.version} 0.1a</em></p>
+        <p><em>{data.about.version} 0.3.0</em></p>
         
         <p>{@html data.about.blurb}</p>
         
