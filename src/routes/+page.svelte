@@ -35,6 +35,10 @@
 	import { changeOpacity } from '$lib/media.controlOpacity';
 	import { clearProject } from '$lib/project.clearProject';
 	import { closeAllMenus, toggleAboutMenu, toggleSettingsMenu } from '$lib/ui.menus';
+	import { setMapSoundVolumes } from '$lib/media.setMapSoundVolumes';
+    import { getCurrentWindow } from '@tauri-apps/api/window';
+    import { dragDrop } from '$lib/util.dragDrop';
+	import { saveUserSettings } from '$lib/settings.saveUserSettings';
 
     import type { PageData } from './$types';
     export let data:PageData;
@@ -57,15 +61,11 @@
 	import IconRecenter from '$lib/icons/iconRecenter.svelte';
 	import IconCollapse from '$lib/icons/iconCollapse.svelte';
 	import IconExpand from '$lib/icons/iconExpand.svelte';
-	import { setMapSoundVolumes } from '$lib/media.setMapSoundVolumes';
     import IconEye from '$lib/icons/iconEye.svelte';
     import IconEyeOff from '$lib/icons/iconEyeOff.svelte';
-    import { getCurrentWindow } from '@tauri-apps/api/window';
-	import { saveUserSettings } from '$lib/settings.saveUserSettings';
+	import IconAdd from '$lib/icons/iconAdd.svelte';
     //import IconLevels from '$lib/icons/iconLevels.svelte'
     //import IconAudioFile from '$lib/icons/iconAudioFile.svelte'
-
-    const appWindow = getCurrentWindow()
 
     let isSaving = false;
     let isDirty = false;
@@ -77,6 +77,8 @@
     let imageList = R.getImageList();
     let soundList = R.getSoundList();
     let masterVolume = 0;
+
+    const appWindow = getCurrentWindow();
     
     // initialize
     onMount( () => 
@@ -113,25 +115,8 @@
         // set up text
         R.setText(data);
 
+        dragDrop();
     })
-
-    // catch js file input (input element, drag-and-drop etc)
-	/*$: if (files) 
-    {
-		console.log(files);
-		for (const file of files) 
-        {
-			console.log(`${file.name}: ${file.type}, ${file.size} bytes`);
-            let fileurl = URL.createObjectURL(file);
-            fileSound = new Howl
-            ({
-                src: [fileurl], 
-                format: [file.type.split("/")[1]], //only uses mime subtype
-                loop: true
-            });
-            createMapSound(fileSound, map);
-		}
-	}*/
 
     /*$: if(R.getIsSaving()) {
         isSaving = R.getIsSaving();
@@ -370,17 +355,6 @@ on:wheel|preventDefault={()=>{}}>
 <div id="map-wrapper" class:imagesHidden class:soundsHidden>
     <div id="map"></div>
 </div>
-
-<!--<div
-    id="drag"
-    style="
-    position: fixed;
-    top: env(titlebar-area-y);
-    left: env(titlebar-area-x);
-    height: env(titlebar-area-height);
-    width: env(titlebar-area-width);
-    -webkit-app-region: drag;">
-</div>-->
 
 <div id="controls" class:sidebarHidden>
     <button id="zoom-in"

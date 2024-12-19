@@ -1,6 +1,6 @@
 {
 	"name": "tat",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -18,6 +18,7 @@
 		"@sveltejs/kit": "^1.20.4",
 		"@tauri-apps/cli": "^2.1.0",
 		"@types/leaflet": "^1.9.4",
+		"@types/leaflet-mouse-position": "^1.2.4",
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
 		"@typescript-eslint/parser": "^6.0.0",
 		"eslint": "^8.28.0",
@@ -46,6 +47,7 @@
 		"leaflet-contextmenu": "^1.4.0",
 		"leaflet-distortableimage": "^0.21.9",
 		"leaflet-editable": "^1.2.0",
+		"leaflet-mouse-position": "^1.2.0",
 		"leaflet-path-transform": "^1.8.0-beta.4",
 		"leaflet.path.drag": "^0.0.6",
 		"panzoom": "^9.4.3",

@@ -64,7 +64,7 @@ export async function newImage(options:newImageOptions) {
             // get the original image dimensions.
             let originalW:number = img.width;
             let originalH:number = img.height;
-            console.log (originalW, originalH);
+            //console.log (originalW, originalH);
             if (typeof o.width == "undefined") o.width = originalW;
             if (typeof o.height == "undefined") o.height = originalH;
 
