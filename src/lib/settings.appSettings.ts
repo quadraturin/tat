@@ -36,14 +36,31 @@ export const SOUNDTYPE_GLOBAL = "global";
 export const SOUNDTYPE_AREA = "area";
 
 /**
+ * supported languages
+ */
+export enum SupportedLanguages {
+    EnUs = "en-us",
+}
+
+/**
  * the default user settings.
  */
-export const defaultUserSettings = {
-    proportionalScaleOnByDefault: false,
-    invertVolumeScroll: false,
-    listenerMoveSpeed: 5,
-    language: "en-us",
-    helpOpen: true,
-    hideWindowContentsFromStream: false,
-    uiScrollSensitivity: 1
+export class UserSettings {
+    proportionalScaleOnByDefault: boolean;
+    invertVolumeScroll: boolean;
+    listenerMoveSpeed: number;
+    language: SupportedLanguages;
+    helpOpen: boolean;
+    hideWindowContentsFromStream: boolean;
+    uiScrollSensitivity: number;
+    constructor(){
+        this.proportionalScaleOnByDefault = false,
+        this.invertVolumeScroll = false,
+        this.listenerMoveSpeed = 5,
+        this.language = SupportedLanguages.EnUs,
+        this.helpOpen = true,
+        this.hideWindowContentsFromStream = false,
+        this.uiScrollSensitivity = 1
+    }
 }
+export const defaultUserSettings = new UserSettings;

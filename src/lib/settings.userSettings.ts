@@ -1,4 +1,4 @@
-import { defaultUserSettings } from "./settings.appSettings";
+import { defaultUserSettings, UserSettings } from "./settings.appSettings";
 import { saveUserSettings } from "./settings.saveUserSettings";
 import * as R from '$lib/registry'
 
@@ -18,7 +18,7 @@ export let theme = {
 /**
  * the user settings.
  */
-export let userSettings:any = defaultUserSettings;
+export let userSettings:UserSettings = defaultUserSettings;
 
 /**
  * get the user settings.
@@ -29,22 +29,11 @@ export function getUserSettings() {
 }
 
 /**
- * set a single user setting.
- * @param key user setting id to set.
- * @param value user setting value to set.
- */
-export function setUserSetting(key:string, value:any) {
-    //console.log('setting user setting', key, value)
-    userSettings[key] = value;
-    saveUserSettings();
-}
-
-/**
  * overwrite the current user settings with new ones.
  * @param newSettings the new settings.
  */
-export function overwriteUserSettings(newSettings:{}) {
-    //console.log('overwriting user settings', newSettings)
+export function overwriteUserSettings(newSettings:UserSettings) {
+    console.log('overwriting user settings', newSettings)
     userSettings = newSettings;
     R.setIsProportionalScaleOn(userSettings.proportionalScaleOnByDefault);
 }
@@ -53,6 +42,6 @@ export function overwriteUserSettings(newSettings:{}) {
  * reset the user settings to defaults.
  */
 export function resetUserSettings() {
-    overwriteUserSettings(defaultUserSettings);
+    overwriteUserSettings(new UserSettings);
     saveUserSettings();
 }

@@ -1,19 +1,20 @@
 <script lang="ts">
 	import * as R from '$lib/registry';
-	import { getUserSettings, resetUserSettings, setUserSetting } from '$lib/settings.userSettings';
+	import { getUserSettings, resetUserSettings } from '$lib/settings.userSettings';
 	import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 	import type { LayoutData } from '../../routes/$types';
-const appWindow = getCurrentWebviewWindow()
+	import { saveUserSettings } from '$lib/settings.saveUserSettings';
+    const appWindow = getCurrentWebviewWindow()
     export let data:LayoutData;
 
-    let userSettings:any = getUserSettings();
+    let currentUserSettings:any = getUserSettings();
     let listenerMoveSpeed:number = getUserSettings().listenerMoveSpeed;
     let uiScrollSensitivity:number = getUserSettings().uiScrollSensitivity;
 
     setInterval(() => {
-        userSettings = getUserSettings();
-        listenerMoveSpeed = userSettings.listenerMoveSpeed;
-        uiScrollSensitivity = userSettings.uiScrollSensitivity;
+        currentUserSettings = getUserSettings();
+        listenerMoveSpeed = currentUserSettings.listenerMoveSpeed;
+        uiScrollSensitivity = currentUserSettings.uiScrollSensitivity;
     }, 15);
     
     //appWindow.setContentProtected(true);
@@ -24,18 +25,22 @@ const appWindow = getCurrentWebviewWindow()
 
     <div class="setting">
         <input type="checkbox" id="hideWindowContentsFromStream" class="fancyCheck" 
-        checked={userSettings?.hideWindowContentsFromStream}
+        checked={currentUserSettings?.hideWindowContentsFromStream}
         on:click={()=>{
-            appWindow.setContentProtected(!userSettings?.hideWindowContentsFromStream);
-            setUserSetting("hideWindowContentsFromStream", !userSettings.hideWindowContentsFromStream);
+            appWindow.setContentProtected(!currentUserSettings?.hideWindowContentsFromStream);
+            getUserSettings().hideWindowContentsFromStream = !currentUserSettings.hideWindowContentsFromStream;
+            saveUserSettings();
             }} /> 
         <label for="hideWindowContentsFromStream">{data.settings.hideWindowContentsFromStream}</label>
     </div>
 
     <div class="setting">
         <input type="checkbox" id="invertVolumeScroll" class="fancyCheck" 
-        checked={userSettings?.invertVolumeScroll}
-        on:click={()=>{setUserSetting("invertVolumeScroll", !userSettings.invertVolumeScroll)}} /> 
+        checked={currentUserSettings?.invertVolumeScroll}
+        on:click={()=>{
+            getUserSettings().invertVolumeScroll = !currentUserSettings.invertVolumeScroll;
+            saveUserSettings();
+            }} /> 
         <label for="invertVolumeScroll">{data.settings.invertVolumeScroll}</label>
     </div>
 
@@ -43,16 +48,21 @@ const appWindow = getCurrentWebviewWindow()
         <input type="input" id="uiScrollSensitivity" class="fancyText"
         placeholder={uiScrollSensitivity.toString()}
         bind:value={uiScrollSensitivity} 
-        on:input={()=>{setUserSetting("uiScrollSensitivity", uiScrollSensitivity)}}/> 
+        on:input={()=>{
+            getUserSettings().uiScrollSensitivity = uiScrollSensitivity;
+            saveUserSettings();
+            }}/> 
         <label for="uiScrollSensitivity">{data.settings.uiScrollSensitivity}</label>
     </div>
 
     <div class="setting">
         <input type="checkbox" id="proportionalScaleOnByDefault" class="fancyCheck"
-        checked={userSettings?.proportionalScaleOnByDefault}
+        checked={currentUserSettings?.proportionalScaleOnByDefault}
         on:click={()=>{
-            setUserSetting("proportionalScaleOnByDefault", !userSettings.proportionalScaleOnByDefault);
-            R.toggleProportionalScale()}}  /> 
+            getUserSettings().proportionalScaleOnByDefault = ! currentUserSettings.proportionalScaleOnByDefault;
+            saveUserSettings();
+            R.toggleProportionalScale();
+            }}  /> 
         <label for="proportionalScaleOnByDefault">{data.settings.proportionalScaleOnByDefault}</label>
     </div>
 
@@ -60,14 +70,16 @@ const appWindow = getCurrentWebviewWindow()
         <input type="input" id="listenerMoveSpeed" class="fancyText"
         placeholder={listenerMoveSpeed.toString()}
         bind:value={listenerMoveSpeed} 
-        on:input={()=>{setUserSetting("listenerMoveSpeed", listenerMoveSpeed)}}/> 
+        on:input={()=>{ 
+            getUserSettings().listenerMoveSpeed = listenerMoveSpeed;
+            saveUserSettings();
+            }}/> 
         <label for="listenerMoveSpeed">{data.settings.listenerMoveSpeed}</label>
     </div>
 
     <div class="setting">
         <button id="resetSettings"
-        on:click={()=>{
-            resetUserSettings(); }}>
+        on:click={()=>{ resetUserSettings() }}>
             {data.settings.reset}
         </button>
         <em>{data.settings.autoSave}</em>
