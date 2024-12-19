@@ -58,7 +58,12 @@
 
         <h2>{data.about.changelogTitle}</h2>
 
-        <h3>v0.3.0: upgrades & tweaks</h3>
+        <h3>v0.3.1: TK (TBD)</h3>
+        <ul>
+            <li>fixed maximize toggle</li>
+        </ul>
+
+        <h3>v0.3.0: upgrades & tweaks (2024-12-19)</h3>
         <ul>
             <li>upgraded wrapper to tauri 2</li>
             <li>added UI scroll sensitivity setting</li>

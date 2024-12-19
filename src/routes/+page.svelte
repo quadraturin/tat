@@ -60,11 +60,12 @@
 	import { setMapSoundVolumes } from '$lib/media.setMapSoundVolumes';
     import IconEye from '$lib/icons/iconEye.svelte';
     import IconEyeOff from '$lib/icons/iconEyeOff.svelte';
+    import { getCurrentWindow } from '@tauri-apps/api/window';
 	import { saveUserSettings } from '$lib/settings.saveUserSettings';
     //import IconLevels from '$lib/icons/iconLevels.svelte'
     //import IconAudioFile from '$lib/icons/iconAudioFile.svelte'
 
-    const appWindow = getCurrentWebviewWindow()
+    const appWindow = getCurrentWindow()
 
     let isSaving = false;
     let isDirty = false;
