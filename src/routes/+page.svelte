@@ -526,17 +526,26 @@ on:wheel|preventDefault={()=>{}}>
                 </div>
             {/each}
             <div role="heading" class="browser-heading" aria-level="2" 
-            on:wheel|preventDefault={(event) => changeMasterVolume(event)}
-            on:focus={()=>{}} 
-            on:mouseover={()=>{help(data.help.map.soundsTitle)}}
-            on:mouseout={()=>{help()}}
-            on:blur={()=>{}}>
+            on:wheel|preventDefault={(event) => changeMasterVolume(event)}>
                 <div id="master-volume">
                     <div id="master-volume-bar" style={"height:"+(masterVolume*100)+"%"}></div>
                 </div>
-                <span>sounds</span>
+                <span role="heading" aria-level="3"
+                on:focus={()=>{}} 
+                on:mouseover={()=>{help(data.help.map.soundsTitle)}}
+                on:mouseout={()=>{help()}}
+                on:blur={()=>{}}>
+                    sounds
+                </span>
                 
-                <button class="browser-heading-button" id="hide-sounds-toggle" on:click={()=>{soundsHidden = !soundsHidden;}}>
+                <button class="browser-heading-button" id="hide-sounds-toggle" class:soundsHidden
+                on:click={()=>{
+                    soundsHidden = !soundsHidden;
+                    soundsHidden ? help(data.help.map.soundsShow) : help(data.help.map.soundsHide)}}
+                on:focus={()=>{}} 
+                on:mouseover={()=>{soundsHidden ? help(data.help.map.soundsShow) : help(data.help.map.soundsHide)}}
+                on:mouseout={()=>{help()}}
+                on:blur={()=>{}}>
                     {#if soundsHidden}<IconEye/>{:else}<IconEyeOff/>{/if}
                 </button>
             </div>
@@ -582,13 +591,21 @@ on:wheel|preventDefault={()=>{}}>
                 </div>
             {/each}
 
-            <div role="heading" class="browser-heading" aria-level="2" 
-            on:focus={()=>{}} 
-            on:mouseover={()=>{help(data.help.map.imagesTitle)}}
-            on:mouseout={()=>{help()}}
-            on:blur={()=>{}}>
-                images
-                <button class="browser-heading-button" id="hide-images-toggle" on:click={()=>{imagesHidden = !imagesHidden;}}>
+            <div role="heading" class="browser-heading" aria-level="2">
+                <span role="heading" aria-level="3"
+                on:focus={()=>{}} 
+                on:mouseover={()=>{help(data.help.map.imagesTitle)}}
+                on:mouseout={()=>{help()}}
+                on:blur={()=>{}}>images</span>
+                <button class="browser-heading-button" id="hide-images-toggle"  class:imagesHidden
+                on:click={()=>{
+                    imagesHidden = !imagesHidden;
+                    imagesHidden ? help(data.help.map.imagesShow) : help(data.help.map.imagesHide)
+                    }}
+                on:focus={()=>{}} 
+                on:mouseover={()=>{imagesHidden ? help(data.help.map.imagesShow) : help(data.help.map.imagesHide)}}
+                on:mouseout={()=>{help()}}
+                on:blur={()=>{}}>
                     {#if imagesHidden}<IconEye/>{:else}<IconEyeOff/>{/if}
                 </button>
             </div>

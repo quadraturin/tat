@@ -233,7 +233,14 @@ a { color: var(--highlight-color); }
 /* classes for leaflet markers: leaflet-marker-icon leaflet-div-icon leaflet-vertex-icon leaflet-zoom-animated leaflet-interactive leaflet-marker-draggable */
 .leaflet-vertex-icon {
     background: var(--text-color);
+
     border: none;
+    border-radius: 9999px;
+}
+.leaflet-middle-icon {
+    background: none;
+    border: 1px solid var(--text-color);
+    opacity: 100% !important;
     border-radius: 9999px;
 }
 
@@ -378,7 +385,9 @@ a { color: var(--highlight-color); }
     color: coral;
     padding: 0;
 }
-#browser .browser-heading-button:hover {
+.browser-heading-button:hover,
+.browser-heading-button.soundsHidden,
+.browser-heading-button.imagesHidden {
     color: white;
 }
 #browser.sidebarHidden {

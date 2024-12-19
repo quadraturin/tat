@@ -124,6 +124,8 @@ export const load:PageLoad = async ({}) => {
                 "itemUnselectedActions": "<strong>click:</strong> select.",
     
                 "imagesTitle": "<strong>images:</strong> the list of images in your project. images higher on the list are closer to the front.",
+                "imagesHide": "<strong>hide images:</strong> click to hide all images on the map.",
+                "imagesShow": "<strong>show images:</strong> click to show all images on the map. (images are currently hidden)",
                 "image": "<strong>image:</strong> represents the game environtment. a map, or something more abstract.",
                 "imageItemActions": "<strong>scroll:</strong> adjust opacity.",
                 "imageDuplicate": "<strong>duplicate image:</strong> make a copy of this image on the map.",
@@ -131,6 +133,8 @@ export const load:PageLoad = async ({}) => {
                 "imageActions": "<strong>drag:</strong> move. <strong>drag corner:</strong> resize (<strong>+shift:</strong> proportional resize). <strong>alt/opt+click:</strong> delete.",
                 
                 "soundsTitle": "<strong>sounds:</strong> the list of sounds in your project. sounds higher on the list are closer to the front. <strong>scroll:</strong> adjust master volume.",
+                "soundsHide": "<strong>hide sounds:</strong> click to hide all sounds on the map. this can be useful for accessing images underneath sound areas.",
+                "soundsShow": "<strong>show sounds:</strong> click to show all sounds on the map. (sounds are currently hidden)",
                 "soundTypeGlobal": "<strong>global sound:</strong> plays everywhere and does not have an emitter on the map.",
                 "soundTypeLocal": "<strong>local sound:</strong> emanates from a single point on the map.",
                 "soundTypeArea": "<strong>area sound:</strong> plays at a constant volume across an area.",

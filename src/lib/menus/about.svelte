@@ -65,6 +65,7 @@
             <li>updated social media links on about page</li>
             <li>reset to default user settings now works properly</li>
             <li>added show/hide toggles for images and sounds</li>
+            <li>nicer look for polygon middle anchors</li>
         </ul>
 
         <h3>v0.2.0: better for streaming (2024-01-29)</h3>
