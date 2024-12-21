@@ -9,7 +9,7 @@ import { newImage } from "./media.loadImage";
  */
 export async function loadFile(filePath: string): Promise<void> {
     try {
-        const ext = await extname(filePath);
+        const ext = (await extname(filePath)).toLowerCase();
         if (imageFileTypes.includes(ext)) { 
             // file is an image.
             newImage({src:filePath});
