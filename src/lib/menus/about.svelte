@@ -44,7 +44,7 @@
 
         <h2>{data.about.aboutTitle}</h2>
         
-        <p><em>{data.about.version} 0.3.0</em></p>
+        <p><em>{data.about.version} 0.4.1</em></p>
         
         <p>{@html data.about.blurb}</p>
         
@@ -58,7 +58,7 @@
 
         <h2>{data.about.changelogTitle}</h2>
 
-        <h3>v0.4.0: drag-and-drop (2024-12-22)</h3>
+        <h3>v0.4.1: drag-and-drop (2024-12-22)</h3>
         <ul>
             <li>added drag-and-drop support for media files</li>
             <li>fixed maximize button</li>
