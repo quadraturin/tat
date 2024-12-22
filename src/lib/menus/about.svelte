@@ -58,9 +58,10 @@
 
         <h2>{data.about.changelogTitle}</h2>
 
-        <h3>v0.3.1: TK (TBD)</h3>
+        <h3>v0.4.0: drag-and-drop (2024-12-22)</h3>
         <ul>
-            <li>fixed maximize toggle</li>
+            <li>added drag-and-drop support for media files</li>
+            <li>fixed maximize button</li>
         </ul>
 
         <h3>v0.3.0: upgrades & tweaks (2024-12-19)</h3>

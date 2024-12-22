@@ -39,7 +39,7 @@
 		"@tauri-apps/plugin-fs": "^2.2.0",
 		"@tauri-apps/plugin-shell": "^2.2.0",
 		"@turf/turf": "^6.5.0",
-		"@types/howler": "^2.2.11",
+		"@types/howler": "^2.2.12",
 		"@types/leaflet-contextmenu": "^1.4.3",
 		"@types/leaflet-editable": "^1.2.3",
 		"howler": "^2.2.4",
