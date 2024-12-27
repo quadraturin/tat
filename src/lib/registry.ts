@@ -505,20 +505,6 @@ export function setIsSettingsMenuOpen(val:boolean) {
 
 
 /**
- * all of the application's text.
- */
-export let t:any;
-/**
- * set the application's text.
- * @param data the text to set.
- */
-export async function setText(data:any) {
-    t = data;
-}
-
-
-
-/**
  * whether or not help is active.
  */
 let helpActive = true;

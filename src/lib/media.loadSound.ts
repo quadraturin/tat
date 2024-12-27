@@ -10,6 +10,7 @@ import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from './settings.ap
 import { help } from './util.help';
 import { basename } from '@tauri-apps/api/path';
 import { convertFileSrc } from '@tauri-apps/api/core';
+import { t, locales, locale } from '$lib/util.translations';
 
 /**
  *  options definition for new sounds.
@@ -227,19 +228,18 @@ export async function createEmitter(options:newEmitterOptions):Promise<L.Polygon
         emitter.on('mouseover', () => {
             if (o.soundType == SOUNDTYPE_AREA) { 
                 // area sound.
-                if (!emitter.editEnabled()) help(R.t.help.map.locked, R.t.help.map.soundTypeArea, R.t.help.map.itemLocked, R.t.help.map.itemLockedActions);
-                else if(R.getIsSelected(emitter)) help(R.t.help.map.selected, R.t.help.map.soundTypeArea, R.t.help.map.soundAreaActions, R.t.help.map.itemSelectedActions);
-                else help(R.t.help.map.soundTypeArea, R.t.help.map.soundAreaActions, R.t.help.map.itemUnselectedActions);
+                if (!emitter.editEnabled()) help(t.get('help.map.locked'), t.get('help.map.soundTypeArea'), t.get('help.map.itemLocked'), t.get('help.map.itemLockedActions'));
+                else if(R.getIsSelected(emitter)) help(t.get('help.map.selected'), t.get('help.map.soundTypeArea'), t.get('help.map.soundAreaActions'), t.get('help.map.itemSelectedActions'));
+                else help(t.get('help.map.soundTypeArea'), t.get('help.map.soundAreaActions'), t.get('help.map.itemUnselectedActions'));
             } else { 
                 // local sound.
-                if (!emitter.editEnabled()) help(R.t.help.map.locked, R.t.help.map.soundTypeLocal, R.t.help.map.itemLocked, R.t.help.map.itemLockedActions);
-                else if(R.getIsSelected(emitter)) help(R.t.help.map.selected, R.t.help.map.soundTypeLocal, R.t.help.map.soundLocalActions, R.t.help.map.itemSelectedActions);
-                else help(R.t.help.map.soundTypeLocal, R.t.help.map.soundLocalActions, R.t.help.map.itemUnselectedActions);
+                if (!emitter.editEnabled()) help(t.get('help.map.locked'), t.get('help.map.soundTypeLocal'), t.get('help.map.itemLocked'), t.get('help.map.itemLockedActions'));
+                else if(R.getIsSelected(emitter)) help(t.get('help.map.selected'), t.get('help.map.soundTypeLocal'), t.get('help.map.soundLocalActions'), t.get('help.map.itemSelectedActions'));
+                else help(t.get('help.map.soundTypeLocal'), t.get('help.map.soundLocalActions'), t.get('help.map.itemUnselectedActions'));
             }
         });
         emitter.on('mouseout', () => {help()});
         //emitter.on('editable:vertex:dragend', deselectEmitter);
-        //emitter.bindPopup("I am an audio emitter.");
 
         // lock the emitter if it's supposed to be.
         if (o.locked) toggleSoundEdit(emitter);

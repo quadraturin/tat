@@ -569,20 +569,22 @@ a { color: var(--highlight-color); }
     margin-top: 30px;
 }
 
-/* fancy checkboxes */
-.fancyCheck {
+/* fancy inputs */
+input[type=checkbox] {
+    cursor: default;
     appearance: none;
     background: transparent;
     border-style: none;
     flex-shrink: 0;
     height: 16px;
-    margin: 0;
     position: relative;
     width: 30px;
     border: 1px solid var(--text-color);
     vertical-align: middle;
+    transition-duration: 0s;
+    border-radius: 1px;
 }
-.fancyCheck::before {
+input[type=checkbox]::before {
     bottom: -6px;
     content: "";
     left: -6px;
@@ -590,10 +592,10 @@ a { color: var(--highlight-color); }
     right: -6px;
     top: -6px;
 }
-.fancyCheck, .fancyCheck::after {
+input[type=checkbox], input[type=checkbox]::after {
     transition: all 100ms ease-out;
 }
-.fancyCheck::after {
+input[type=checkbox]::after {
     background-color: var(--text-color);
     content: "";
     height: 10px;
@@ -602,42 +604,21 @@ a { color: var(--highlight-color); }
     top: 2px;
     width: 10px;
 }
-input[type=checkbox] {
-    cursor: default;
-}
-.fancyCheck {
-    transition-duration: 0s;
-    border-radius: 1px;
-}
-.fancyCheck:hover::after {
+
+input[type=checkbox]:hover::after {
     background-color: var(--text-color);
 }
-.fancyCheck:checked {
-    border-color: var(--highlight-color);
-}
-.fancyCheck:checked::after {
-    background-color: var(--highlight-color);
+input[type=checkbox]:checked::after {
     left: 16px;
 }
-.fancyCheck:checked:hover::after {
-    background-color: var(--highlight-color);
-}
-.fancyCheck:checked+label, .fancyText+label {
-    color: var(--highlight-color);
-}
-.fancyText {
+input[type=range], select {
+    appearance: none;
     background: transparent;
-    border: 1px solid var(--highlight-color);
-    color: var(--highlight-color);
-    width: 30px;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    width: 50px;
     text-align: center;
     border-radius: 1px;
-}
-.fancyText::selection {
-    background-color: var(--text-color);
-}
-.fancyText:focus {
-    outline: none;
 }
 .setting button {
     border-radius: 2px;
@@ -646,6 +627,86 @@ input[type=checkbox] {
     color: var(--background-color);
 }
 .setting button:hover {
+    background-color: var(--highlight-color);
+}
+select {
+    font-family: inherit;
+    width: 100px;
+    text-align: center;
+    padding: 0 10px;
+}
+input:focus, select:focus, button:focus {
+    outline: 1px solid var(--highlight-color);
+    outline-offset: 1px;
+}
+input[type=range] {
+    height: 16px;
+    width: 200px;
+    padding: 2px;
+    vertical-align: middle;
+    cursor: default;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 10px;
+    width: 10px;
+    margin: 0;
+    background: var(--text-color);
+    cursor: default;
+  }
+
+input[type=range]::-moz-range-thumb {
+    appearance: none;
+    height: 10px;
+    width: 10px;
+    margin: 0;
+    background: var(--text-color);
+    cursor: default;
+  }
+.rangeValue {
+    background: var(--text-color);
+    color: var(--background-color);
+    height: 16px;
+    padding: 1px 5px;
+    border-radius: 1px;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 10px;
+    width: 40px;
+    text-align: center;
+}
+.rangeValue::after {
+    content: "";
+    position: absolute;
+    border-top: 3px solid transparent;
+    border-right: 3px solid var(--text-color);
+    border-bottom: 3px solid transparent;
+    height: 6px;
+    width: 6px;
+    top: 5px;
+    left: -6px;
+}
+
+.changed label, .changed select {
+    color: var(--highlight-color);
+}
+.changed input, .changed select {
+    border-color: var(--highlight-color);
+}
+.changed input[type=range]::-webkit-slider-thumb {
+    background-color: var(--highlight-color);
+}
+.changed input[type=range]::-moz-range-thumb {
+    background-color: var(--highlight-color);
+}
+.changed .rangeValue {
+    background-color: var(--highlight-color);
+}
+.changed .rangeValue::after {
+    border-right: 3px solid var(--highlight-color);
+}
+.changed input[type=checkbox]::after {
     background-color: var(--highlight-color);
 }
 

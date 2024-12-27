@@ -1,6 +1,7 @@
 import { defaultUserSettings, UserSettings } from "./settings.appSettings";
 import { saveUserSettings } from "./settings.saveUserSettings";
 import * as R from '$lib/registry'
+import { t, locales, locale } from '$lib/util.translations';
 
 /**
  * application visual theme.
@@ -29,12 +30,21 @@ export function getUserSettings() {
 }
 
 /**
+ * get the default user settings.
+ * @returns the user settings.
+ */
+export function getDefaultUserSettings() {
+    return new UserSettings;
+}
+
+/**
  * overwrite the current user settings with new ones.
  * @param newSettings the new settings.
  */
 export function overwriteUserSettings(newSettings:UserSettings) {
     console.log('overwriting user settings', newSettings)
     userSettings = newSettings;
+    locale.set(userSettings.language);
     R.setIsProportionalScaleOn(userSettings.proportionalScaleOnByDefault);
 }
 

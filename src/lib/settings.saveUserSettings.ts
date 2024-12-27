@@ -9,6 +9,7 @@ export async function saveUserSettings() {
     try {
         console.log('saving user settings', getUserSettings());
         const jsonPath = await join(await appDataDir(), 'settings.json');
+        console.log(await appDataDir());
         if(!await exists(await appDataDir())) {
             mkdir(await appDataDir());
         }

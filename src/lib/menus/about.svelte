@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { t, locales, locale } from '$lib/util.translations';
 	import IconBluesky from "$lib/icons/iconBluesky.svelte";
 	import IconDiscord from "$lib/icons/iconDiscord.svelte";
 	import IconDriveThruRpg from "$lib/icons/iconDriveThruRPG.svelte";
@@ -13,23 +14,22 @@
 	import IconTumblr from "$lib/icons/iconTumblr.svelte";
 	import IconYouTube from "$lib/icons/iconYouTube.svelte";
 	import type { LayoutData } from '../../routes/$types';
-    export let data:LayoutData;
 </script>
 
 <div class="menu" id="about">
     <div>
-        <h2>{data.about.followTitle}</h2>
+        <h2>{$t('about.followTitle')}</h2>
 
         <p class="links">
-            {data.about.followWeb}:
+            {$t('about.followWeb')}:
             <a href="https://www.paradiso.zone" target="_blank" title="Paradiso Homepage"><IconParadiso/></a>
             <a href="https://www.traaa.sh" target="_blank" title="TRAAA.SH RPG Blog"><IconTraaash/></a>
             
-            {data.about.followShop}:
+            {$t('about.followShop')}:
             <a href="https://ultraparadiso.itch.io/" target="_blank" title="Itch.io"><IconItch/></a>
             <a href="https://www.drivethrurpg.com/browse/pub/23556/Paradiso" target="_blank" title="DriveThruRPG"><IconDriveThruRpg/></a>
             
-            {data.about.followSocial}:
+            {$t('about.followSocial')}:
             <a href="https://www.youtube.com/@ultraparadiso" target="_blank" title="YouTube"><IconYouTube/></a>
             <a href="https://bsky.app/profile/traaa.sh" target="_blank" title="Bluesky"><IconBluesky/></a>
             <a href="https://www.instagram.com/quadratraaash/" target="_blank" title="Instagram"><IconInstagram/></a>
@@ -42,21 +42,27 @@
             <!--<a href="" target="_blank" title="Discord"><IconDiscord/></a>-->
         </p>
 
-        <h2>{data.about.aboutTitle}</h2>
+        <h2>{$t('about.aboutTitle')}</h2>
         
-        <p><em>{data.about.version} 0.4.1</em></p>
+        <p><em>{$t('about.version')} 0.5.0</em></p>
         
-        <p>{@html data.about.blurb}</p>
+        <p>{@html $t('about.blurb')}</p>
         
-        <p>{@html data.about.credits}</p>
+        <p>{@html $t('about.credits')}</p>
         
-        <p>{@html data.about.video}</p>
+        <p>{@html $t('about.video')}</p>
         
-        <p>{@html data.about.howToUse}</p>
+        <p>{@html $t('about.howToUse')}</p>
 
-        <p>{@html data.about.projectFiles}</p>
+        <p>{@html $t('about.projectFiles')}</p>
 
-        <h2>{data.about.changelogTitle}</h2>
+        <h2>{$t('about.changelogTitle')}</h2>
+
+        <h3>v0.5.0: settings & localization (2024-12-29)</h3>
+        <ul>
+            <li>added localization support</li>
+            <li>reworked settings menu</li>
+        </ul>
 
         <h3>v0.4.1: drag-and-drop (2024-12-22)</h3>
         <ul>
@@ -119,8 +125,8 @@
             <li>user settings: reverse scroll direction, listener movement speed, default to proportional image scaling</li>
         </ul>
 
-        <h2>{data.about.licensesTitle}</h2>
-        <p>{@html data.about.licenses}</p>
+        <h2>{$t('about.licensesTitle')}</h2>
+        <p>{@html $t('about.licenses')}</p>
 
 <h3>tauri</h3>
 <pre>MIT License

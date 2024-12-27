@@ -1,5 +1,5 @@
 import L from "leaflet";
-import {t} from "$lib/registry";
+import { t, locales, locale } from '$lib/util.translations';
 import { help } from "./util.help";
 
 /**
@@ -34,9 +34,9 @@ export function setupListener(map:L.Map): L.Marker<any>
 
     // listener help text.
     listener.on('mouseover', () => {
-        help(t.help.map.listener, t.help.map.listenerActions);
+        help(t.get('help.map.listener'), t.get('help.map.listenerActions'));
     });
-    listener.on('mouseout', () => {help()});
+    listener.on('mouseout', () => { help() });
 
     return listener;
 }

@@ -1,0 +1,95 @@
+{
+    "titlebar":{
+        "title": "your project has no unsaved changes.",
+        "titleDirty": "your project has unsaved changes.",
+
+        "addMedia": "<strong>add media:</strong> add images and/or audio to your project. these will be copied to your project folder when you save.",
+        "addMediaShortcut": "<strong>(ctrl/cmd+i)</strong>",
+
+        "save": "<strong>save:</strong> save your project.",
+        "saveShortcut": "<strong>(ctrl/cmd+s)</strong>",
+
+        "saveAs": "<strong>save as:</strong> save a copy of your project to a new location.",
+        "saveAsShortcut": "<strong>(ctrl/cmd+shift+s)</strong>",
+
+        "openProject": "<strong>open:</strong> open an existing project.",
+        "openProjectShortcut": "<strong>(ctrl/cmd+o)</strong>",
+
+        "newProject": "<strong>new:</strong> create a new project.",
+        "newProjectShortcut": "<strong>(ctrl/cmd+n)</strong>",
+
+        "settings": "<strong>settings:</strong>view the application settings.",
+        "settingsShortcut": "<strong>(ctrl/cmd+1)</strong>",
+
+        "about": "<strong>about:</strong> what is this anyway?.",
+        "aboutShortcut": "<strong>(ctrl/cmd+2)</strong>",
+
+        "minimize": "<strong>minimize</strong> this window.",
+        "minimizeShortcut": "<strong>ctrl/cmd+m</strong>",
+
+        "maximize": "<strong>maximize</strong> this window.",
+        "maximizeShortcut": "<strong>(ctrl/cmd+shift+m)</strong>",
+        
+        "close": "<strong>close</strong> tat.",
+        "closeShortcut": "<strong>(ctrl/cmd+w)</strong>"
+    },
+    "map": {
+        "helpArea": "<strong>info:</strong> mouse over things in the application to show information about them here. click the \"?\" button to collapse.",
+        
+        "zoomIn": "<strong>zoom in:</strong> zoom in on the map.",
+        "zoomInDisabled": "you are currently as zoomed is as you can be!",
+        "zoomInShortcut": "<strong>(mouse wheel or + or =)</strong>",
+
+        "zoomOut": "<strong>zoom out:</strong> zoom out on the map.",
+        "zoomOutShortcut": "<strong>(mouse wheel or - or _)</strong>",
+        "zoomOutDisabled": "you are currently as zoomed out as you can be!",
+
+        "recenter": "<strong>recenter:</strong> center the view on the listener.",
+        "recenterShortcut": "<strong>(c)</strong>",
+
+        "hideSidebar": "<strong>hide sidebar:</strong> hide the sidebar interface.",
+        "showSidebar": "<strong>show sidebar:</strong> show the sidebar interface.",
+        "toggleSidebarShortcut": "<strong>(h)</strong>",
+        
+        "listener": "<strong>listener:</strong> represents the players' location. you will hear sounds when the listener is overlapping them.",
+        "listenerActions": "<strong>drag:</strong> move. <strong>W/A/S/D:</strong> move.",
+        
+        "locked": "<strong>locked</strong>",
+        "selected": "<strong>selected</strong>",
+        "itemLocked": "map objects cannot be moved or edited while locked.",
+        "itemLockedActions": "<strong>double-click:<strong> unlock.",
+        "itemSelectedActions": "<strong>click:</strong> deselect. <strong>delete/backspace:</strong> delete.",
+        "itemUnselectedActions": "<strong>click:</strong> select.",
+
+        "imagesTitle": "<strong>images:</strong> the list of images in your project. images higher on the list are closer to the front.",
+        "imagesHide": "<strong>hide images:</strong> click to hide all images on the map.",
+        "imagesShow": "<strong>show images:</strong> click to show all images on the map. (images are currently hidden)",
+        "image": "<strong>image:</strong> represents the game environtment. a map, or something more abstract.",
+        "imageItemActions": "<strong>scroll:</strong> adjust opacity.",
+        "imageDuplicate": "<strong>duplicate image:</strong> make a copy of this image on the map.",
+        "imageDelete": "<strong>delete image:</strong> delete this image from the map.",
+        "imageActions": "<strong>drag:</strong> move. <strong>drag corner:</strong> resize (<strong>+shift:</strong> proportional resize). <strong>alt/opt+click:</strong> delete.",
+        
+        "soundsTitle": "<strong>sounds:</strong> the list of sounds in your project. sounds higher on the list are closer to the front. <strong>scroll:</strong> adjust master volume.",
+        "soundsHide": "<strong>hide sounds:</strong> click to hide all sounds on the map. this can be useful for accessing images underneath sound areas.",
+        "soundsShow": "<strong>show sounds:</strong> click to show all sounds on the map. (sounds are currently hidden)",
+        "soundTypeGlobal": "<strong>global sound:</strong> plays everywhere and does not have an emitter on the map.",
+        "soundTypeLocal": "<strong>local sound:</strong> emanates from a single point on the map.",
+        "soundTypeArea": "<strong>area sound:</strong> plays at a constant volume across an area.",
+        "soundTypeGlobalActions": "<strong>click:</strong> change to a local sound.",
+        "soundTypeLocalActions": "<strong>click:</strong> change to a area sound.",
+        "soundTypeAreaActions": "<strong>click:</strong> change to a global sound.",
+        "soundItemActions": "<strong>scroll:</strong> adjust volume.",
+        "soundPause": "<strong>play/pause:</strong> this sound is playing. <strong>click:</strong> pause this sound.",
+        "soundUnPause": "<strong>play/pause:</strong> this sound is paused. <strong>click:</strong> play this sound.",
+        "soundMute": "<strong>mute:</strong> this sound is muted. <strong>click:</strong> unmute this sound.",
+        "soundUnMute": "<strong>mute:</strong> this sound is not muted. <strong>click:</strong> mute this sound.",
+        "soundSolo": "<strong>solo:</strong> this sound is not soloed. <strong>click:</strong> solo this sound. this will silence all other sounds.",
+        "soundUnSolo": "<strong>solo:</strong> this sound is currently soloed, meaning all other sounds are silenced. <strong>click</strong> unsolo.",
+        "soundDuplicate": "<strong>duplicate sound:</strong> make a copy of this sound on the map.",
+        "soundDelete": "<strong>delete sound:</strong> delete this sound from the map.",
+        "soundSeek": "<strong>seek:</strong> seek to a playback position in the sound.",
+        "soundLocalActions": "<strong>drag:</strong> move. <strong>drag edge handle:</strong> resize. <strong>double-click:</strong> lock. <strong>alt/opt+click:</strong> delete.",
+        "soundAreaActions": "<strong>drag:</strong> move. <strong>drag corner:</strong> reshape. <strong>drag edge handle:</strong> create corner. <strong>click corner handle:</strong> remove corner."
+    }
+}

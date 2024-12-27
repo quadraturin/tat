@@ -6,6 +6,7 @@
     import '../app.css'
 
     // modules
+    import { t, locales, locale } from '$lib/util.translations';
     import * as R from '$lib/registry';
     import { onMount } from 'svelte'
     import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
@@ -39,9 +40,6 @@
     import { getCurrentWindow } from '@tauri-apps/api/window';
     import { dragDrop } from '$lib/util.dragDrop';
 	import { saveUserSettings } from '$lib/settings.saveUserSettings';
-
-    import type { PageData } from './$types';
-    export let data:PageData;
 
     // icons
     import IconLoading from '$lib/icons/iconLoading.svelte';
@@ -112,9 +110,6 @@
         // set up listener
         R.setListener(setupListener(R.getMap()));
 
-        // set up text
-        R.setText(data);
-
         dragDrop();
     })
 
@@ -138,7 +133,6 @@
     $: isHelpActive = R.getIsHelpActive();
 
     function onKeyDown(e:KeyboardEvent) { 
-        //console.log(e);
         let speed:number = getUserSettings().listenerMoveSpeed;
         if (e.key=="Shift") {
             if(getUserSettings().proportionalScaleOnByDefault) R.setIsProportionalScaleOn(false);
@@ -233,7 +227,7 @@
 on:wheel|preventDefault={()=>{}}>
     <h1 data-tauri-drag-region  
     on:focus={()=>{}} 
-    on:mouseover={()=>{isDirty ? help(data.help.titlebar.titleDirty) : help(data.help.titlebar.title)}}
+    on:mouseover={()=>{isDirty ? help($t('help.titlebar.titleDirty')) : help($t('help.titlebar.title'))}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         <span data-tauri-drag-region class="project-name">{projectName}</span>
@@ -243,12 +237,12 @@ on:wheel|preventDefault={()=>{}}>
     <button class="toolbar-button" 
     on:click={readFiles} 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.addMedia, data.help.titlebar.addMediaShortcut)}}
+    on:mouseover={()=>{help($t('help.titlebar.addMedia'), $t('help.titlebar.addMediaShortcut'))}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconImageFile />{/if}
-        <span class="button-title-short">{data.ui.addMediaShort}</span>
-        <span class="button-title-full">{data.ui.addMedia}</span>
+        <span class="button-title-short">{$t('ui.addMediaShort')}</span>
+        <span class="button-title-full">{$t('ui.addMedia')}</span>
     </button>
 
     <span data-tauri-drag-region class="toolbar-spacer"></span>
@@ -256,23 +250,23 @@ on:wheel|preventDefault={()=>{}}>
     <button class="toolbar-button"
     on:click={() => saveProject(false)} 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.save, data.help.titlebar.saveShortcut)}}
+    on:mouseover={()=>{help($t('help.titlebar.save'), $t('help.titlebar.saveShortcut'))}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         {#if R.getIsSaving()}<IconLoading />{:else}<IconSave />{/if}
-        <span class="button-title-short">{data.ui.saveShort}</span>
-        <span class="button-title-full">{data.ui.save}</span>
+        <span class="button-title-short">{$t('ui.saveShort')}</span>
+        <span class="button-title-full">{$t('ui.save')}</span>
     </button>
     
     <button class="toolbar-button"
     on:click={() => saveProject(true)}
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.saveAs, data.help.titlebar.saveAsShortcut)}}
+    on:mouseover={()=>{help($t('help.titlebar.saveAs'), $t('help.titlebar.saveAsShortcut'))}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         {#if R.getIsSaving()}<IconLoading />{:else}<IconSaveAs />{/if}
-        <span class="button-title-short">{data.ui.saveAsShort}</span>
-        <span class="button-title-full">{data.ui.saveAs}</span>
+        <span class="button-title-short">{$t('ui.saveAsShort')}</span>
+        <span class="button-title-full">{$t('ui.saveAs')}</span>
     </button>
     
     <span data-tauri-drag-region class="toolbar-spacer"></span>
@@ -280,23 +274,23 @@ on:wheel|preventDefault={()=>{}}>
     <button class="toolbar-button"
     on:click={loadProject} 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.openProject, data.help.titlebar.openProjectShortcut)}}
+    on:mouseover={()=>{help($t('help.titlebar.openProject'), $t('help.titlebar.openProjectShortcut'))}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconLoad />{/if}
-        <span class="button-title-short">{data.ui.openProjectShort}</span>
-        <span class="button-title-full">{data.ui.openProject}</span>
+        <span class="button-title-short">{$t('ui.openProjectShort')}</span>
+        <span class="button-title-full">{$t('ui.openProject')}</span>
     </button>
     
     <button class="toolbar-button"  title="new project" 
     on:click={clearProject} 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.newProject, data.help.titlebar.newProjectShortcut)}}
+    on:mouseover={()=>{help($t('help.titlebar.newProject'), $t('help.titlebar.newProjectShortcut'))}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         <IconNew />
-        <span class="button-title-short">{data.ui.newProjectShort}</span>
-        <span class="button-title-full">{data.ui.newProject}</span>
+        <span class="button-title-short">{$t('ui.newProjectShort')}</span>
+        <span class="button-title-full">{$t('ui.newProject')}</span>
     </button>
     
     <span data-tauri-drag-region class="toolbar-spacer"></span>
@@ -304,23 +298,23 @@ on:wheel|preventDefault={()=>{}}>
     <button class="toolbar-button" id="settings-button"
     on:click={toggleSettingsMenu} 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.settings, data.help.titlebar.settingsShortcut)}}
+    on:mouseover={()=>{help($t('help.titlebar.settings'), $t('help.titlebar.settingsShortcut'))}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         <IconSettings />
-        <span class="button-title-short">{data.ui.settingsShort}</span>
-        <span class="button-title-full">{data.ui.settings}</span>
+        <span class="button-title-short">{$t('ui.settingsShort')}</span>
+        <span class="button-title-full">{$t('ui.settings')}</span>
     </button>
 
     <button class="toolbar-button" id="about-button" 
     on:click={toggleAboutMenu} 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.about, data.help.titlebar.aboutShortcut)}}
+    on:mouseover={()=>{help($t('help.titlebar.about'), $t('help.titlebar.aboutShortcut'))}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         <IconAbout />
-        <span class="button-title-short">{data.ui.aboutShort}</span>
-        <span class="button-title-full">{data.ui.about}</span>
+        <span class="button-title-short">{$t('ui.aboutShort')}</span>
+        <span class="button-title-full">{$t('ui.about')}</span>
     </button>
     
     <!--<input accept="audio/wav, audio/mpeg" bind:files id="audioInput" name="audioInput" type="file" />-->
@@ -329,7 +323,7 @@ on:wheel|preventDefault={()=>{}}>
     
     <button class="titlebar-button" id="titlebar-minimize" title="minimize" 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.minimize)}}
+    on:mouseover={()=>{help($t('help.titlebar.minimize'))}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g transform="rotate(-90 12 12)"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M10 12L13 9M10 12L13 15"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g></g></svg>
@@ -337,7 +331,7 @@ on:wheel|preventDefault={()=>{}}>
 
     <button class="titlebar-button" id="titlebar-maximize" title="maximize" 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.maximize)}}
+    on:mouseover={()=>{help($t('help.titlebar.maximize'))}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g transform="rotate(-90 12 12) translate(24 0) scale(-1 1)"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M10 12L13 9M10 12L13 15"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g></g></svg>
@@ -345,7 +339,7 @@ on:wheel|preventDefault={()=>{}}>
 
     <button class="titlebar-button" id="titlebar-close" title="close" 
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.titlebar.close, data.help.titlebar.closeShortcut)}}
+    on:mouseover={()=>{help($t('help.titlebar.close'), $t('help.titlebar.closeShortcut'))}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="8" stroke-dashoffset="8" d="M12 12L16 16M12 12L8 8M12 12L8 16M12 12L16 8"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="8;0"/></path></g></svg>
@@ -360,7 +354,7 @@ on:wheel|preventDefault={()=>{}}>
     <button id="zoom-in"
     on:click={()=>{R.getMap().zoomIn()}}
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.map.zoomIn, data.help.map.zoomInShortcut)}}
+    on:mouseover={()=>{help($t('help.map.zoomIn'), $t('help.map.zoomInShortcut'))}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         <IconZoomIn/>
@@ -369,7 +363,7 @@ on:wheel|preventDefault={()=>{}}>
     <button id="zoom-out"
     on:click={()=>{R.getMap().zoomOut()}}
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.map.zoomOut, data.help.map.zoomOutShortcut)}}
+    on:mouseover={()=>{help($t('help.map.zoomOut'), $t('help.map.zoomOutShortcut'))}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         <IconZoomOut/>
@@ -380,7 +374,7 @@ on:wheel|preventDefault={()=>{}}>
     <button id="recenter"
     on:click={()=>{R.getMap().flyTo(R.getListener().getLatLng())}}
     on:focus={()=>{}} 
-    on:mouseover={()=>{help(data.help.map.recenter, data.help.map.recenterShortcut)}}
+    on:mouseover={()=>{help($t('help.map.recenter'), $t('help.map.recenterShortcut'))}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         <IconRecenter/>
@@ -391,7 +385,7 @@ on:wheel|preventDefault={()=>{}}>
     <button id="hide-show"
     on:click={toggleSidebar}
     on:focus={()=>{}} 
-    on:mouseover={()=>{sidebarHidden? help(data.help.map.showSidebar, data.help.map.toggleSidebarShortcut) : help(data.help.map.hideSidebar, data.help.map.toggleSidebarShortcut)}}
+    on:mouseover={()=>{sidebarHidden? help($t('help.map.showSidebar'), $t('help.map.toggleSidebarShortcut')) : help($t('help.map.hideSidebar'), $t('help.map.toggleSidebarShortcut'))}}
     on:mouseout={()=>{help()}}
     on:blur={()=>{}}>
         {#if sidebarHidden}<IconExpand/>{:else}<IconCollapse/>{/if}
@@ -414,16 +408,16 @@ on:wheel|preventDefault={()=>{}}>
                     on:focus={()=>{}} 
                     on:mouseover={()=>{
                         if (item.soundType == S.SOUNDTYPE_GLOBAL) {
-                            help(data.help.map.soundTypeGlobal, data.help.map.soundItemActions);
+                            help($t('help.map.soundTypeGlobal'), $t('help.map.soundItemActions'));
                         } else if (R.getIsSelected(item.emitter)) {
-                            if (item.soundType == S.SOUNDTYPE_AREA) help(data.help.map.selected, data.help.map.soundTypeArea, data.help.map.soundItemActions, data.help.map.itemSelectedActions);
-                            else help(data.help.map.selected, data.help.map.soundTypeLocal, data.help.map.soundItemActions, data.help.map.itemSelectedActions);
+                            if (item.soundType == S.SOUNDTYPE_AREA) help($t('help.map.selected'), $t('help.map.soundTypeArea'), $t('help.map.soundItemActions'), $t('help.map.itemSelectedActions'));
+                            else help($t('help.map.selected'), $t('help.map.soundTypeLocal'), $t('help.map.soundItemActions'), $t('help.map.itemSelectedActions'));
                         } else if (R.getIsLocked(item.emitter)){
-                            if (item.soundType == S.SOUNDTYPE_AREA) help(data.help.map.locked, data.help.map.soundTypeArea, data.help.map.itemLocked, data.help.map.soundItemActions, data.help.map.itemLockedActions);
-                            else help(data.help.map.locked, data.help.map.soundTypeLocal, data.help.map.itemLocked, data.help.map.soundItemActions, data.help.map.itemLockedActions);
+                            if (item.soundType == S.SOUNDTYPE_AREA) help($t('help.map.locked'), $t('help.map.soundTypeArea'), $t('help.map.itemLocked'), $t('help.map.soundItemActions'), $t('help.map.itemLockedActions'));
+                            else help($t('help.map.locked'), $t('help.map.soundTypeLocal'), $t('help.map.itemLocked'), $t('help.map.soundItemActions'), $t('help.map.itemLockedActions'));
                         } else {
-                            if (item.soundType == S.SOUNDTYPE_AREA) help(data.help.map.soundTypeArea, data.help.map.soundItemActions, data.help.map.itemUnselectedActions);
-                            else help(data.help.map.soundTypeLocal, data.help.map.soundItemActions, data.help.map.itemUnselectedActions);
+                            if (item.soundType == S.SOUNDTYPE_AREA) help($t('help.map.soundTypeArea'), $t('help.map.soundItemActions'), $t('help.map.itemUnselectedActions'));
+                            else help($t('help.map.soundTypeLocal'), $t('help.map.soundItemActions'), $t('help.map.itemUnselectedActions'));
                         }
                     }}
                     on:mouseout={()=>{help()}}
@@ -435,9 +429,9 @@ on:wheel|preventDefault={()=>{}}>
                     on:click={() => {cycleSoundType(item)}} 
                     on:focus={()=>{}} 
                     on:mouseover={()=>{
-                        if (item.soundType == S.SOUNDTYPE_AREA) help(data.help.map.soundTypeArea, data.help.map.soundTypeAreaActions);
-                        else if (item.soundType == S.SOUNDTYPE_GLOBAL) help(data.help.map.soundTypeGlobal, data.help.map.soundTypeGlobalActions);
-                        else help(data.help.map.soundTypeLocal, data.help.map.soundTypeLocalActions)}}
+                        if (item.soundType == S.SOUNDTYPE_AREA) help($t('help.map.soundTypeArea'), $t('help.map.soundTypeAreaActions'));
+                        else if (item.soundType == S.SOUNDTYPE_GLOBAL) help($t('help.map.soundTypeGlobal'), $t('help.map.soundTypeGlobalActions'));
+                        else help($t('help.map.soundTypeLocal'), $t('help.map.soundTypeLocalActions'))}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
                         {#if item.soundType == S.SOUNDTYPE_AREA}<IconSoundArea/>{:else if item.soundType == S.SOUNDTYPE_GLOBAL}<IconSoundGlobal/>{:else}<IconSoundLocal/>{/if}
@@ -446,7 +440,7 @@ on:wheel|preventDefault={()=>{}}>
                     <button class="item-button item-pause" class:activated={!item.sound.playing()}  
                     on:click={() => togglePause(item)}
                     on:focus={()=>{}} 
-                    on:mouseover={()=>{item.sound.playing() ? help(data.help.map.soundPause) : help(data.help.map.soundUnPause)}}
+                    on:mouseover={()=>{item.sound.playing() ? help($t('help.map.soundPause')) : help($t('help.map.soundUnPause'))}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
                         <IconSoundPause/>
@@ -455,7 +449,7 @@ on:wheel|preventDefault={()=>{}}>
                     <button class="item-button item-mute" class:activated={item.muted} 
                     on:click={() => toggleMute(i)}
                     on:focus={()=>{}} 
-                    on:mouseover={()=>{item.muted? help(data.help.map.soundMute) : help(data.help.map.soundUnMute)}}
+                    on:mouseover={()=>{item.muted? help($t('help.map.soundMute')) : help($t('help.map.soundUnMute'))}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
                         M
@@ -464,7 +458,7 @@ on:wheel|preventDefault={()=>{}}>
                     <button class="item-button item-solo" class:activated={item.solo} 
                     on:click={() => toggleSolo(i)}
                     on:focus={()=>{}} 
-                    on:mouseover={()=>{item.solo ? help(data.help.map.soundUnSolo) : help(data.help.map.soundSolo)}}
+                    on:mouseover={()=>{item.solo ? help($t('help.map.soundUnSolo')) : help($t('help.map.soundSolo'))}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
                         S
@@ -473,7 +467,7 @@ on:wheel|preventDefault={()=>{}}>
                     <button class="item-button item-add" 
                     on:click={() => duplicateSound(item)}
                     on:focus={()=>{}} 
-                    on:mouseover={()=>{help(data.help.map.soundDuplicate)}}
+                    on:mouseover={()=>{help($t('help.map.soundDuplicate'))}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
                         +
@@ -482,7 +476,7 @@ on:wheel|preventDefault={()=>{}}>
                     <button class="item-button item-delete" 
                     on:click={() => removeSound(i)}
                     on:focus={()=>{}} 
-                    on:mouseover={()=>{help(data.help.map.soundDelete)}}
+                    on:mouseover={()=>{help($t('help.map.soundDelete'))}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
                         ×
@@ -493,7 +487,7 @@ on:wheel|preventDefault={()=>{}}>
                     on:mousemove={handleMousemove} 
                     on:click={() => seekToByClick(item, mousePos.x)}
                     on:focus={()=>{}} 
-                    on:mouseover={()=>{help(data.help.map.soundSeek)}}
+                    on:mouseover={()=>{help($t('help.map.soundSeek'))}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
                         <div style={"width: "+((item.sound.seek()/item.sound.duration())*100).toString()+"%"} class="sound-item-progress-bar"></div>
@@ -507,7 +501,7 @@ on:wheel|preventDefault={()=>{}}>
                 </div>
                 <span role="heading" aria-level="3"
                 on:focus={()=>{}} 
-                on:mouseover={()=>{help(data.help.map.soundsTitle)}}
+                on:mouseover={()=>{help($t('help.map.soundsTitle'))}}
                 on:mouseout={()=>{help()}}
                 on:blur={()=>{}}>
                     sounds
@@ -516,9 +510,9 @@ on:wheel|preventDefault={()=>{}}>
                 <button class="browser-heading-button" id="hide-sounds-toggle" class:soundsHidden
                 on:click={()=>{
                     soundsHidden = !soundsHidden;
-                    soundsHidden ? help(data.help.map.soundsShow) : help(data.help.map.soundsHide)}}
+                    soundsHidden ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))}}
                 on:focus={()=>{}} 
-                on:mouseover={()=>{soundsHidden ? help(data.help.map.soundsShow) : help(data.help.map.soundsHide)}}
+                on:mouseover={()=>{soundsHidden ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))}}
                 on:mouseout={()=>{help()}}
                 on:blur={()=>{}}>
                     {#if soundsHidden}<IconEye/>{:else}<IconEyeOff/>{/if}
@@ -538,9 +532,9 @@ on:wheel|preventDefault={()=>{}}>
                     on:dblclick={() => { toggleImageEdit(item.rect);}}
                     on:focus={()=>{}} 
                     on:mouseover={()=>{
-                        if (R.getIsSelected(item.rect)) help(data.help.map.selected, data.help.map.image, data.help.map.imageItemActions, data.help.map.itemSelectedActions);
-                        else if (!item.rect.editEnabled()) help(data.help.map.locked, data.help.map.image, data.help.map.imageItemActions, data.help.map.itemLockedActions);
-                        else help(data.help.map.image, data.help.map.imageItemActions, data.help.map.itemUnselectedActions)}}
+                        if (R.getIsSelected(item.rect)) help($t('help.map.selected'), $t('help.map.image'), $t('help.map.imageItemActions'), $t('help.map.itemSelectedActions'));
+                        else if (!item.rect.editEnabled()) help($t('help.map.locked'), $t('help.map.image'), $t('help.map.imageItemActions'), $t('help.map.itemLockedActions'));
+                        else help($t('help.map.image'), $t('help.map.imageItemActions'), $t('help.map.itemUnselectedActions'))}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
                         {item.niceName}
@@ -549,7 +543,7 @@ on:wheel|preventDefault={()=>{}}>
                     <button class="item-button item-add" title="duplicate image" 
                     on:click={() => duplicateImage(item)}
                     on:focus={()=>{}} 
-                    on:mouseover={()=>{help(data.help.map.imageDuplicate)}}
+                    on:mouseover={()=>{help($t('help.map.imageDuplicate'))}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
                         +
@@ -558,7 +552,7 @@ on:wheel|preventDefault={()=>{}}>
                     <button class="item-button item-delete" title="delete image" 
                     on:click={() => removeImage(i)}
                     on:focus={()=>{}} 
-                    on:mouseover={()=>{help(data.help.map.imageDelete)}}
+                    on:mouseover={()=>{help($t('help.map.imageDelete'))}}
                     on:mouseout={()=>{help()}}
                     on:blur={()=>{}}>
                         ×
@@ -569,16 +563,16 @@ on:wheel|preventDefault={()=>{}}>
             <div role="heading" class="browser-heading" aria-level="2">
                 <span role="heading" aria-level="3"
                 on:focus={()=>{}} 
-                on:mouseover={()=>{help(data.help.map.imagesTitle)}}
+                on:mouseover={()=>{help($t('help.map.imagesTitle'))}}
                 on:mouseout={()=>{help()}}
                 on:blur={()=>{}}>images</span>
                 <button class="browser-heading-button" id="hide-images-toggle"  class:imagesHidden
                 on:click={()=>{
                     imagesHidden = !imagesHidden;
-                    imagesHidden ? help(data.help.map.imagesShow) : help(data.help.map.imagesHide)
+                    imagesHidden ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))
                     }}
                 on:focus={()=>{}} 
-                on:mouseover={()=>{imagesHidden ? help(data.help.map.imagesShow) : help(data.help.map.imagesHide)}}
+                on:mouseover={()=>{imagesHidden ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))}}
                 on:mouseout={()=>{help()}}
                 on:blur={()=>{}}>
                     {#if imagesHidden}<IconEye/>{:else}<IconEyeOff/>{/if}
@@ -596,9 +590,9 @@ on:wheel|preventDefault={()=>{}}>
     <span id="help-text"></span>
 </div>
 
-<Settings data={data} />
+<Settings />
 
-<About data={data} />
+<About />
 
 <Loading />
 

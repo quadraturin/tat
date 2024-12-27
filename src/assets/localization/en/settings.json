@@ -1,0 +1,12 @@
+{
+    "settingsTitle": "settings",
+    "invertVolumeScroll": "invert UI scroll direction",
+    "uiScrollSensitivity": "UI scroll sensitivity multiplier",
+    "proportionalScaleOnByDefault": "proportional image scaling on by default (shift turns off)",
+    "listenerMoveSpeed": "listener movement speed (WASD)",
+    "hideWindowContentsFromStream": "hide window contents from stream",
+    "language": "Language",
+    "themeTitle": "theme",
+    "reset": "reset to defaults",
+    "autoSave": "(all settings changes are immediately applied.)"
+}

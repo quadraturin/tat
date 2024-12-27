@@ -9,6 +9,7 @@ import type { MapImage } from './classes/MapImage';
 import { getRandomPointInViewport } from './util.getRandomPointInViewport';
 import { help } from './util.help';
 import { convertFileSrc } from '@tauri-apps/api/core';
+import { t, locales, locale } from '$lib/util.translations';
 
 /**
  * load an image file.
@@ -101,9 +102,9 @@ export async function newImage(options:newImageOptions) {
             imageRect.enableEdit();
             imageRect.on('dblclick', L.DomEvent.stop).on('dblclick', () => {toggleImageEdit(imageRect)});
             imageRect.on('mouseover', () => {
-                if (!imageRect.editEnabled()) help(R.t.help.map.locked, R.t.help.map.image, R.t.help.map.itemLocked, R.t.help.map.itemLockedActions);
-                else if(R.getIsSelected(imageRect)) help(R.t.help.map.selected, R.t.help.map.image, R.t.help.map.imageActions, R.t.help.map.itemSelectedActions);
-                else help(R.t.help.map.image, R.t.help.map.imageActions, R.t.help.map.itemUnselectedActions);
+                if (!imageRect.editEnabled()) help(t.get('help.map.locked'), t.get('help.map.image'), t.get('help.map.itemLocked'), t.get('help.map.itemLockedActions'));
+                else if(R.getIsSelected(imageRect)) help(t.get('help.map.selected'), t.get('help.map.image'), t.get('help.map.imageActions'), t.get('help.map.itemSelectedActions'));
+                else help(t.get('help.map.image'), t.get('help.map.imageActions'), t.get('help.map.itemUnselectedActions'));
             });
             imageRect.on('mouseout', () => {help()});
 

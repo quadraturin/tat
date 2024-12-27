@@ -1,6 +1,6 @@
 {
 	"name": "tat",
-	"version": "0.4.1",
+	"version": "0.5.0",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -51,6 +51,7 @@
 		"leaflet-path-transform": "^1.8.0-beta.4",
 		"leaflet.path.drag": "^0.0.6",
 		"panzoom": "^9.4.3",
+		"sveltekit-i18n": "^2.4.2",
 		"uint8-util": "^2.2.4"
 	}
 }

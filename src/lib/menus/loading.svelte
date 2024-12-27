@@ -1,6 +1,6 @@
 <script>
+    import { t, locales, locale } from '$lib/util.translations';
 	import IconLoading from "$lib/icons/iconLoading.svelte";
-
 </script>
 <div id="modal-background">
     <div id="modal">
