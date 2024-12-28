@@ -7,6 +7,7 @@ import type { MapImage } from './classes/MapImage';
 import type { MapSound } from './classes/MapSound';
 import { closeAllMenus } from './ui.menus';
 import { closeModal, openSavingModal } from './ui.modals';
+import { t } from './util.translations';
 
 
 /**
@@ -123,7 +124,7 @@ export async function saveProject(saveAs=false): Promise<boolean>
     await Promise.allSettled(promises);
     R.setIsSaving(false);
 
-    await message(R.t.dialog.projectSaved);
+    await message(t.get("dialog.projectSaved"));
     closeModal();
 
     return true;

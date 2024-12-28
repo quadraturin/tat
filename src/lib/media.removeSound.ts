@@ -1,6 +1,7 @@
 import * as R from '$lib/registry'
 import { ask } from "@tauri-apps/plugin-dialog";
 import type L from 'leaflet'
+import { t } from './util.translations';
 
 /**
  * remove a sound from the map, using its emitter as an identifier.
@@ -39,7 +40,7 @@ export async function removeSound(id:number, removeFromList:boolean = true, forc
                 }
             }
             if (unique) {
-                let approveDelete = await ask(R.t.dialog.confirmDeleteSound);
+                let approveDelete = await ask(t.get('dialog.confirmDeleteSound'));
                 if (!approveDelete) return;
             }
         }

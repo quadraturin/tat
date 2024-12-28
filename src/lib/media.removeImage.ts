@@ -1,6 +1,7 @@
 import * as R from '$lib/registry'
 import { ask } from "@tauri-apps/plugin-dialog";
 import type L from 'leaflet'
+import { t } from './util.translations';
 
 /**
  * remove an image from the map, using its rectangle as an identifier.
@@ -35,7 +36,7 @@ export async function removeImage(id:number, removeFromList:boolean = true, forc
                 }
             }
             if (unique) {
-                let approveDelete = await ask(R.t.dialog.confirmDeleteImage);
+                let approveDelete = await ask(t.get('dialog.confirmDeleteImage'));
                 if (!approveDelete) return;
             }
         }
