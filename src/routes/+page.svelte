@@ -316,8 +316,6 @@ on:wheel|preventDefault={()=>{}}>
         <span class="button-title-short">{$t('ui.aboutShort')}</span>
         <span class="button-title-full">{$t('ui.about')}</span>
     </button>
-    
-    <!--<input accept="audio/wav, audio/mpeg" bind:files id="audioInput" name="audioInput" type="file" />-->
 
     <div data-tauri-drag-region class="titlebar-drag"></div>
     

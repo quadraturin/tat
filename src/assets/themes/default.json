@@ -1,0 +1,20 @@
+{
+    "name": "Default",
+    "description": "The default theme for tat. Nice and neutral.",
+    "author": "Quadra",
+
+    "cUI": "lightblue",
+	"cUIAccent": "darkturquoise",
+	"cText": "black",
+	"cHighlight": "pink",
+    "cMap": "darkgrey",
+    "cMapGrid": "lightgrey",
+    "cMenu": "white",
+    "cMenuText": "forestgreen",
+    "cMenuHighlight": "hotpink",
+    "cMapListener": "yellow",
+    "cMapListenerAccent": "red",
+    "cMapShape": "blue",
+
+    "fUI": "monospace"
+}

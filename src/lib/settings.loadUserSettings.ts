@@ -10,13 +10,14 @@ const appWindow = getCurrentWebviewWindow()
  */
 export async function loadUserSettings() {
     try {
-        // if settings.json exists in the folder, read it
+        // try to get settings.json from the app data folder
         const jsonPath = await join(await appDataDir(), 'settings.json');
+
+        // if it exists, read it and load the settings
         if (await exists(jsonPath)){
-            console.log("loading user settings", await appDataDir());
             overwriteUserSettings(JSON.parse(await readTextFile(jsonPath)));
+        // if it doesn't, create it with the default settings
         } else {
-            console.log('No settings.json found in directory', await appDataDir());
             saveUserSettings(); // saves default settings
         }
         appWindow.setContentProtected(getUserSettings().hideWindowContentsFromStream);

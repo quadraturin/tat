@@ -13,6 +13,7 @@
 	import IconTraaash from "$lib/icons/iconTraaash.svelte";
 	import IconTumblr from "$lib/icons/iconTumblr.svelte";
 	import IconYouTube from "$lib/icons/iconYouTube.svelte";
+    import IconBook from '$lib/icons/iconBook.svelte';
 	import type { LayoutData } from '../../routes/$types';
 </script>
 
@@ -24,13 +25,14 @@
             {$t('about.followWeb')}:
             <a href="https://www.paradiso.zone" target="_blank" title="Paradiso Homepage"><IconParadiso/></a>
             <a href="https://www.traaa.sh" target="_blank" title="TRAAA.SH RPG Blog"><IconTraaash/></a>
+            <a href="https://www.youtube.com/@ultraparadiso" target="_blank" title="YouTube"><IconYouTube/></a>
             
             {$t('about.followShop')}:
+            <a href="https://paradiso.works/" target="_blank" title="Paradiso Works Shop"><IconBook/></a>
             <a href="https://ultraparadiso.itch.io/" target="_blank" title="Itch.io"><IconItch/></a>
             <a href="https://www.drivethrurpg.com/browse/pub/23556/Paradiso" target="_blank" title="DriveThruRPG"><IconDriveThruRpg/></a>
             
             {$t('about.followSocial')}:
-            <a href="https://www.youtube.com/@ultraparadiso" target="_blank" title="YouTube"><IconYouTube/></a>
             <a href="https://bsky.app/profile/traaa.sh" target="_blank" title="Bluesky"><IconBluesky/></a>
             <a href="https://www.instagram.com/quadratraaash/" target="_blank" title="Instagram"><IconInstagram/></a>
             <a href="https://www.tiktok.com/@paradiso102" target="_blank" title="TikTok"><IconTikTok/></a>
@@ -62,6 +64,7 @@
         <ul>
             <li>added localization support</li>
             <li>reworked settings menu</li>
+            <li>about page links edits</li>
         </ul>
 
         <h3>v0.4.1: drag-and-drop (2024-12-22)</h3>
@@ -294,6 +297,29 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</pre>
+
+<h3>sveltekit-i18n</h3>
+<pre>MIT License
+
+Copyright (c) 2022 sveltekit-i18n
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</pre>
 
 <h3>leaflet.editable</h3>
 <pre>DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE

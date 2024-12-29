@@ -1,0 +1,20 @@
+{
+    "name": "Warped",
+    "description": "The Warped Beyond Recognition theme.",
+    "author": "Quadra",
+
+    "cUI": "coral",
+	"cUIAccent": "brown",
+	"cText": "black",
+	"cHighlight": "white",
+    "cMap": "black",
+    "cMapGrid": "coral",
+    "cMenu": "black",
+    "cMenuText": "coral",
+    "cMenuHighlight": "white",
+    "cMapListener": "white",
+    "cMapListenerAccent": "black",
+    "cMapShape": "coral",
+    
+    "fUI": "monospace"
+}

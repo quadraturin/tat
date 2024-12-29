@@ -30,26 +30,35 @@
     isolation: isolate;
   }
 
-/* app themes */
+/* Variables */
+
 :root {
-    --text-color: coral;
-    --background-color: black;
-    --highlight-color: white;
+    /* debug theme */
+    --c-ui: gray;
+    --c-ui-accent: darkgray;
+    --c-text: lightgray;
+    --c-highlight: white;
+    --c-map: navy;
+    --c-map-grid: skyblue;
+    --c-menu: black;
+    --c-menu-text: gray;
+    --c-menu-highlight: yellow;
+    --c-map-listener: red;
+    --c-map-listener-accent: black;
+    --c-map-shape: orange;
+    --f-ui: monospace;
+    
     --title-bar-height: 30px;
 }
+
 /* app styles */
-html {
-    font-family:'Courier New', Courier, monospace;
-    color: var(--text-color);
-    background-color: var(--background-color);
-}
-body {
+
+body { 
     display: flex;
+    font-family:'Courier New', Courier, monospace;
 }
 
-p { margin-bottom: 1rem; }
-
-a { color: var(--highlight-color); }
+/* Map */
 
 #map-wrapper {
     width: 100%;
@@ -65,7 +74,7 @@ a { color: var(--highlight-color); }
     min-width: 100%;
     min-height: 100%;
     z-index: -100;
-    background-color: var(--background-color);
+    background-color: var(--c-map);
 }
 #map *:focus {
     outline: none;
@@ -77,6 +86,9 @@ a { color: var(--highlight-color); }
     width: 100%;
     height: 100%;
 }
+
+/* Tool Bar */
+
 .titlebar h1 {
     float:left;
     display: block;
@@ -87,10 +99,10 @@ a { color: var(--highlight-color); }
     flex: auto;
 }
 .toolbar-button {
-    color: var(--text-color);
+    color: var(--c-ui);
     border: none;
     margin: 2px 0px 2px 2px;
-    background-color: var(--background-color);
+    background-color: var(--c-text);
     border-radius: 4px;
     font-weight: bold;
     padding: 0;
@@ -101,7 +113,7 @@ a { color: var(--highlight-color); }
     margin-bottom: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    color: var(--highlight-color);
+    color: var(--c-highlight);
 }
 .toolbar-button svg {
     display: inline-block;
@@ -116,26 +128,17 @@ a { color: var(--highlight-color); }
     text-decoration: underline;
 }
 .toolbar-button:hover {
-    background-color: var(--highlight-color);
-    color: var(--text-color);
+    background-color: var(--c-highlight);
+    color: var(--c-text);
 }
 .toolbar-spacer {
     display: flex;
     flex-basis: 8px;
 }
-.toolbar-input {
-    color: var(--text-color);
-    border: 1px solid var(--text-color);
-    background-color: var(--background-color);
-    border-radius: 4px;
-    font-weight: bold;
-    padding: 5px;
-    font-size: 10pt;
-}
 .titlebar {
     height: var(--title-bar-height);
     width: 100%;
-    background: var(--text-color);
+    background: var(--c-ui);
     display: flex;
     justify-content: flex-end;
     position: fixed;
@@ -143,7 +146,7 @@ a { color: var(--highlight-color); }
     left: 0;
     right: 0;
     z-index: 100;
-    color: var(--background-color);
+    color: var(--c-text);
 }
 .titlebar, .titlebar * {
     -webkit-user-select: none;  /* Chrome all / Safari all */
@@ -172,80 +175,46 @@ a { color: var(--highlight-color); }
     border: none;
 }
 .titlebar-button:hover {
-    color: var(--highlight-color);
-}
-.draggable {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50px;
-    height: 50px;
-    border: 2px solid var(--highlight-color);
-    background-color: var(--background-color);
-    border-radius: 25px;
-}
-.listener {
-    background-color: var(--text-color);
+    color: var(--c-highlight);
 }
 
+/* Leaflet Map Frame */
 
-/* leaflet */
 .leaflet-touch {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    border: 2px solid var(--text-color);
+    background-color: var(--c-ui);
+    color: var(--c-text);
+    border: 2px solid var(--c-ui);
     border-top: none;
 }
-.leaflet-bar {
-    border-radius: 4px;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    width: 12rem;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border: none !important;
-    padding: 2px;
-}
-.leaflet-bar a{
-    background-color: var(--text-color);
-    color: var(--background-color);
-    user-select: none;
-    -webkit-user-select: none;
-    border: none;
-    flex: 1 !important;
-    height: 20px !important;
-    width:unset !important;
-    border-radius: 2px;
-    font-size: 18px !important;
-    line-height: 18px !important;
-    cursor: default;
-}
-.leaflet-bar a:hover{
-    background-color: var(--highlight-color);
-}
-.leaflet-bar a:first-child {
-    margin-right: 2px;
-}
-/* not showing real world maps */
+
+/* Not showing real world maps - hide attribution */
+
 .leaflet-control-attribution {
     display: none;
 }
-/* classes for leaflet markers: leaflet-marker-icon leaflet-div-icon leaflet-vertex-icon leaflet-zoom-animated leaflet-interactive leaflet-marker-draggable */
-.leaflet-vertex-icon {
-    background: var(--text-color);
 
+/*  Classes for leaflet markers: 
+    leaflet-marker-icon 
+    leaflet-div-icon 
+    leaflet-vertex-icon 
+    leaflet-zoom-animated 
+    leaflet-interactive 
+    leaflet-marker-draggable  */
+
+.leaflet-vertex-icon {
+    background: var(--c-ui);
     border: none;
     border-radius: 9999px;
 }
 .leaflet-middle-icon {
     background: none;
-    border: 1px solid var(--text-color);
+    border: 1px solid var(--c-ui);
     opacity: 100% !important;
     border-radius: 9999px;
 }
 
-
 /* help area */
+
 #help {
     z-index: 10000;
     position: absolute;
@@ -265,19 +234,18 @@ a { color: var(--highlight-color); }
     display:block; 
 }
 #help.activated #help-toggle {
-    background: var(--text-color);
-    color: var(--background-color);
+    background: var(--c-ui);
+    color: var(--c-text);
 }
 #help.activated #help-toggle:hover {
-    background: var(--text-color);
-    color: var(--highlight-color);
+    background: var(--c-highlight);
 }
 #help-toggle {
-    border: 1px solid var(--text-color);
+    border: 1px solid var(--c-ui);
     border-bottom: 0;
     border-left: 0;
     background: transparent;
-    color: var(--text-color);
+    color: var(--c-ui);
     border-radius: 0 4px 0 0;
     font-weight: bold;
     padding: 0;
@@ -285,19 +253,21 @@ a { color: var(--highlight-color); }
     height: 18px;
 }
 #help-toggle:hover {
-    border-color: var(--highlight-color);
-    color: var(--highlight-color);
+    border-color: var(--c-highlight);
+    background-color: var(--c-highlight);
 }
 #help-text {
     display: none;
-    background-color: var(--text-color);
-    color: var(--background-color);
+    background-color: var(--c-ui);
+    color: var(--c-text);
     min-height:1rem;
     min-width: 100%;
 }
 #help-text strong {
     text-transform: uppercase;
 }
+
+/* Map Controls */
 
 #controls{
     z-index: 10000;
@@ -325,12 +295,11 @@ a { color: var(--highlight-color); }
     padding: 0;
     border-radius: 2px;
     border: none;
-    background-color: var(--text-color);
-    color: var(--background-color);
+    background-color: var(--c-ui);
+    color: var(--c-text);
 }
 #controls button:hover {
-    background-color: var(--highlight-color);
-    color: var(--text-color);
+    background-color: var(--c-highlight);
 }
 #controls button svg {
     margin: 0 auto;
@@ -360,7 +329,8 @@ a { color: var(--highlight-color); }
     min-width: 16px;
 }
 
-/* media browser */
+/* Media Browser */
+
 #browser {
     z-index: 10000;
     position: absolute;
@@ -382,13 +352,13 @@ a { color: var(--highlight-color); }
     float:right;
     background:none;
     border: none;
-    color: coral;
+    color: var(--c-ui);
     padding: 0;
 }
 .browser-heading-button:hover,
 .browser-heading-button.soundsHidden,
 .browser-heading-button.imagesHidden {
-    color: white;
+    color: var(--c-highlight);
 }
 #browser.sidebarHidden {
     display:none;
@@ -406,8 +376,8 @@ a { color: var(--highlight-color); }
     margin-bottom: 12px;
 }
 #browser .item {
-    background-color: rgb(192, 79, 47);
-    color: var(--background-color);
+    background-color: var(--c-ui-accent);
+    color: var(--c-text);
     border-radius: 2px;
     margin: 1px 0;
     padding: 2px;
@@ -417,11 +387,11 @@ a { color: var(--highlight-color); }
     position: relative;
 }
 #browser .item.selected {
-    border: 1px solid var(--highlight-color) !important;
+    border: 1px solid var(--c-highlight) !important;
     padding: 1px;
 }
 #browser .item.locked {
-    border: 1px dashed var(--background-color) !important;
+    border: 1px dashed var(--c-ui) !important;
     padding: 1px;
 }
 #browser .item:first-child {
@@ -439,8 +409,8 @@ a { color: var(--highlight-color); }
 }
 #browser .item-button {
     flex: 1;
-    background-color: var(--background-color);
-    color: var(--text-color);
+    background-color: var(--c-text);
+    color: var(--c-ui);
     margin-left: 2px;
     padding: 0;
     border-radius: 2px;
@@ -448,22 +418,22 @@ a { color: var(--highlight-color); }
     z-index: 10;
 }
 #browser .item-button:hover {
-    background-color: var(--highlight-color);
+    background-color: var(--c-highlight);
 }
 #browser .item-button svg {
     margin: 0 auto;
 }
 #browser .activated {
-    color: var(--highlight-color) !important;
+    color: var(--c-highlight) !important;
 }
 #browser .activated:hover {
-    color: var(--text-color) !important;
+    color: var(--c-ui) !important;
 }
 .sound-item-progress-track {
     flex-basis: 100%;
     height: 4px;
     border-radius: 2px;
-    background-color: var(--background-color);
+    background-color: var(--c-text);
     margin-top: 2px;
     border: none;
     padding: 1px;
@@ -472,7 +442,7 @@ a { color: var(--highlight-color); }
 .sound-item-progress-bar {
     height: 2px;
     border-radius: 2px;
-    background-color: var(--highlight-color);
+    background-color: var(--c-highlight);
     min-width: 2px;
     width: 50%;
     border: none;
@@ -484,7 +454,7 @@ a { color: var(--highlight-color); }
     bottom:0;
     left:0;
     height: 80%;
-    background: var(--text-color);
+    background: var(--c-ui);
     z-index: 0;
     border-radius: 2px;
 }
@@ -498,28 +468,28 @@ a { color: var(--highlight-color); }
     width: .5em;
     height: 1.3em;
     display: inline-block;
-    background-color: var(--background-color);
+    background-color: var(--c-ui-accent);
     position: relative;
-    border: 1px solid var(--text-color);
+    border: 1px solid var(--c-ui);
     vertical-align: top;
     border-radius: 1px;
 }
 #master-volume-bar {
-    background-color: var(--text-color);
+    background-color: var(--c-ui);
     width: 100%;
     position: absolute;
     bottom: 0;
 }
 
-/* menus*/
+/* Menus */
 
 .menu {
     z-index: 10000;
     position: absolute;
     top: var(--title-bar-height);
-    background-color: var(--background-color);
-    color: var(--text-color);
-    border: 2px solid var(--text-color);
+    background-color: var(--c-menu);
+    color: var(--c-menu-text);
+    border: 2px solid var(--c-ui);
     border-top: none;
     width: 100%;
     height: calc(100% - 30px);
@@ -527,33 +497,36 @@ a { color: var(--highlight-color); }
     display: none;
     font-size: 0.8rem;
     overflow-y: scroll;
-    scrollbar-color: var(--text-color) var(--background-color);
+    scrollbar-color: var(--c-menu) var(--c-menu-text);
     font-weight: bold;
 }
 .menu::-webkit-scrollbar {
-    background-color: var(--background-color);
+    background-color: var(--c-menu);
     width: 5px;
 }
 .menu::-webkit-scrollbar:horizontal {
     height: 5px;
 }
 .menu::-webkit-scrollbar-corner, .menu::-webkit-resizer {
-    background-color: var(--text-color);
+    background-color: var(--c-menu-text);
 }
 .menu::-webkit-scrollbar-thumb {
-    background-color: var(--text-color);
+    background-color: var(--c-menu-text);
 }
-.menu h2, .menu h3 {margin-top: 1rem;}
-
+.menu h2, .menu h3 {
+    margin-top: 1rem;
+}
 .menu h2 {
-    color: var(--background-color);
-    background-color: var(--text-color);
+    color: var(--c-menu);
+    background-color: var(--c-menu-text);
     padding: 0 8px;
     border-radius: 1px;
 }
-
 .menu h3 {
     text-decoration: underline;
+}
+.menu a {
+    color: var(--c-menu-highlight);
 }
 .links {
     margin-top: 1rem;
@@ -570,6 +543,7 @@ a { color: var(--highlight-color); }
 }
 
 /* fancy inputs */
+
 input[type=checkbox] {
     cursor: default;
     appearance: none;
@@ -579,7 +553,7 @@ input[type=checkbox] {
     height: 16px;
     position: relative;
     width: 30px;
-    border: 1px solid var(--text-color);
+    border: 1px solid var(--c-menu-text);
     vertical-align: middle;
     transition-duration: 0s;
     border-radius: 1px;
@@ -596,7 +570,7 @@ input[type=checkbox], input[type=checkbox]::after {
     transition: all 100ms ease-out;
 }
 input[type=checkbox]::after {
-    background-color: var(--text-color);
+    background-color: var(--c-menu-text);
     content: "";
     height: 10px;
     left: 2px;
@@ -606,7 +580,7 @@ input[type=checkbox]::after {
 }
 
 input[type=checkbox]:hover::after {
-    background-color: var(--text-color);
+    background-color: var(--c-menu-text);
 }
 input[type=checkbox]:checked::after {
     left: 16px;
@@ -614,8 +588,8 @@ input[type=checkbox]:checked::after {
 input[type=range], select {
     appearance: none;
     background: transparent;
-    border: 1px solid var(--text-color);
-    color: var(--text-color);
+    border: 1px solid var(--c-menu-text);
+    color: var(--c-menu-text);
     width: 50px;
     text-align: center;
     border-radius: 1px;
@@ -623,11 +597,11 @@ input[type=range], select {
 .setting button {
     border-radius: 2px;
     border: none;
-    background-color: var(--text-color);
-    color: var(--background-color);
+    background-color: var(--c-menu-text);
+    color: var(--c-menu);
 }
 .setting button:hover {
-    background-color: var(--highlight-color);
+    background-color: var(--c-menu-highlight);
 }
 select {
     font-family: inherit;
@@ -636,7 +610,7 @@ select {
     padding: 0 10px;
 }
 input:focus, select:focus, button:focus {
-    outline: 1px solid var(--highlight-color);
+    outline: 1px solid var(--c-menu-highlight);
     outline-offset: 1px;
 }
 input[type=range] {
@@ -651,7 +625,7 @@ input[type=range]::-webkit-slider-thumb {
     height: 10px;
     width: 10px;
     margin: 0;
-    background: var(--text-color);
+    background: var(--c-menu-text);
     cursor: default;
   }
 
@@ -660,12 +634,12 @@ input[type=range]::-moz-range-thumb {
     height: 10px;
     width: 10px;
     margin: 0;
-    background: var(--text-color);
+    background: var(--c-menu-text);
     cursor: default;
   }
 .rangeValue {
-    background: var(--text-color);
-    color: var(--background-color);
+    background: var(--c-menu-text);
+    color: var(--c-menu);
     height: 16px;
     padding: 1px 5px;
     border-radius: 1px;
@@ -680,7 +654,7 @@ input[type=range]::-moz-range-thumb {
     content: "";
     position: absolute;
     border-top: 3px solid transparent;
-    border-right: 3px solid var(--text-color);
+    border-right: 3px solid var(--c-menu-text);
     border-bottom: 3px solid transparent;
     height: 6px;
     width: 6px;
@@ -689,25 +663,25 @@ input[type=range]::-moz-range-thumb {
 }
 
 .changed label, .changed select {
-    color: var(--highlight-color);
+    color: var(--c-menu-highlight);
 }
 .changed input, .changed select {
-    border-color: var(--highlight-color);
+    border-color: var(--c-menu-highlight);
 }
 .changed input[type=range]::-webkit-slider-thumb {
-    background-color: var(--highlight-color);
+    background-color: var(--c-menu-highlight);
 }
 .changed input[type=range]::-moz-range-thumb {
-    background-color: var(--highlight-color);
+    background-color: var(--c-menu-highlight);
 }
 .changed .rangeValue {
-    background-color: var(--highlight-color);
+    background-color: var(--c-menu-highlight);
 }
 .changed .rangeValue::after {
-    border-right: 3px solid var(--highlight-color);
+    border-right: 3px solid var(--c-menu-highlight);
 }
 .changed input[type=checkbox]::after {
-    background-color: var(--highlight-color);
+    background-color: var(--c-menu-highlight);
 }
 
 /* modal */
@@ -727,9 +701,9 @@ input[type=range]::-moz-range-thumb {
     max-width: 50rem;
     margin: 10% auto;
     padding: 1rem;
-    background-color: var(--text-color);
-    color: var(--background-color);
-    border-radius: 4px;
+    background-color: var(--c-ui);
+    color: var(--c-text);
+    border-radius: 2px;
 }
 #modal svg {
     display: inline-block;
