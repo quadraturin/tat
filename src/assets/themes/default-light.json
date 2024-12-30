@@ -1,0 +1,24 @@
+{
+    "name": "Light",
+    "description": "The default theme for tat. Nice and neutral.",
+    "author": "Quadra",
+
+    "c0": "#ddd",
+	"c1": "#aaa",
+	"c2": "#444",
+	"c3": "#fff",
+    "c4": "#bbb",
+    "c5": "#444",
+    "c6": "#444",
+    "c7": "#ddd",
+    "c8": "#fff",
+    "c9": "#fff",
+    "cA": "#333",
+    "cB": "#fff",
+    "cC": "#fff",
+    "cD": "#fff",
+    "cE": "#fff",
+    "cF": "#fff",
+
+    "f0": "monospace"
+}

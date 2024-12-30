@@ -10,19 +10,23 @@
 
 	$effect(() => {
         let theme = ""
-        theme += "--c-ui:" +                  R.activeTheme.cUI +                ";";
-        theme += "--c-ui-accent:" +           R.activeTheme.cUIAccent +          ";";
-        theme += "--c-text:" +                R.activeTheme.cText +              ";";
-        theme += "--c-highlight:" +           R.activeTheme.cHighlight +         ";";
-        theme += "--c-map:" +                 R.activeTheme.cMap +               ";";
-        theme += "--c-map-grid:" +            R.activeTheme.cMapGrid +           ";";
-        theme += "--c-menu:" +                R.activeTheme.cMenu +              ";";
-        theme += "--c-menu-text:" +           R.activeTheme.cMenuText +          ";";
-        theme += "--c-menu-highlight:" +      R.activeTheme.cMenuHighlight +     ";";
-        theme += "--c-map-listener:" +        R.activeTheme.cMapListener +       ";";
-        theme += "--c-map-listener-accent:" + R.activeTheme.cMapListenerAccent + ";";
-        theme += "--c-map-shape:" +           R.activeTheme.cMapShape +          ";";
-        theme += "--f-ui:" +                  R.activeTheme.fUI +                ";";
+        theme += "--c0:" + R.activeTheme.c0 + ";";
+        theme += "--c1:" + R.activeTheme.c1 + ";";
+        theme += "--c2:" + R.activeTheme.c2 + ";";
+        theme += "--c3:" + R.activeTheme.c3 + ";";
+        theme += "--c4:" + R.activeTheme.c4 + ";";
+        theme += "--c5:" + R.activeTheme.c5 + ";";
+        theme += "--c6:" + R.activeTheme.c6 + ";";
+        theme += "--c7:" + R.activeTheme.c7 + ";";
+        theme += "--c8:" + R.activeTheme.c8 + ";";
+        theme += "--c9:" + R.activeTheme.c9 + ";";
+        theme += "--cA:" + R.activeTheme.cA + ";";
+        theme += "--cB:" + R.activeTheme.cB + ";";
+        theme += "--cC:" + R.activeTheme.cC + ";";
+        theme += "--cD:" + R.activeTheme.cD + ";";
+        theme += "--cE:" + R.activeTheme.cE + ";";
+        theme += "--cF:" + R.activeTheme.cF + ";";
+        theme += "--f0:" + R.activeTheme.f0 + ";";
 
         console.log("THEME:", R.activeTheme);
         document.getElementById('themeWrapper')?.setAttribute('style',theme);

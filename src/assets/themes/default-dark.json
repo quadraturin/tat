@@ -1,0 +1,24 @@
+{
+    "name": "Dark",
+    "description": "The default dark theme for tat. Nice and neutral.",
+    "author": "Quadra",
+
+    "c0": "#334",
+	"c1": "#223",
+	"c2": "#112",
+	"c3": "#bbc",
+    "c4": "#112",
+    "c5": "#667",
+    "c6": "#223",
+    "c7": "#556",
+    "c8": "#bbc",
+    "c9": "#fff",
+    "cA": "#333",
+    "cB": "#fff",
+    "cC": "#fff",
+    "cD": "#fff",
+    "cE": "#fff",
+    "cF": "#fff",
+
+    "f0": "monospace"
+}

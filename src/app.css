@@ -35,21 +35,250 @@
 :root {
     overscroll-behavior: none;
     /* debug theme */
-    --c-ui: gray;
-    --c-ui-accent: darkgray;
-    --c-text: lightgray;
-    --c-highlight: white;
-    --c-map: navy;
-    --c-map-grid: skyblue;
-    --c-menu: black;
-    --c-menu-text: gray;
-    --c-menu-highlight: yellow;
-    --c-map-listener: red;
-    --c-map-listener-accent: black;
-    --c-map-shape: orange;
-    --f-ui: monospace;
+    --c0: gray;
+    --c1: darkgray;
+    --c2: lightgray;
+    --c3: white;
+    --c4: navy;
+    --c5: skyblue;
+    --c6: black;
+    --c7: gray;
+    --c8: yellow;
+    --c9: red;
+    --cA: black;
+    --cB: orange;
+    --cC: orange;
+    --cD: orange;
+    --cE: orange;
+    --cF: orange;
+
+    --f0: monospace;
     
     --title-bar-height: 30px;
+}
+
+/* App Colors */
+
+/* c0 */
+#map { 
+    background-color: var(--c0); 
+}
+
+/* c1 */
+.toolbar-button,
+#controls button, 
+#browser .item-name, 
+#browser .item-button { 
+    color:darkgreen; 
+}
+
+/* c2 */
+.leaflet-tile { 
+    color: red; 
+}
+.leaflet-vertex-icon { 
+    background: red; 
+}
+.leaflet-middle-icon { 
+    border: 1px solid red; 
+}
+.leaflet-interactive { 
+    stroke: red; 
+}
+.leaflet-sound-pane 
+.leaflet-interactive { 
+    fill: red; 
+}
+
+/* c3 */
+.titlebar, 
+#help-text, 
+#help-toggle,
+#browser-sounds, 
+#browser-images, 
+#controls, 
+.sound-item-progress-track { 
+    background-color: green; 
+}
+#browser .item.locked { 
+    border: 1px dashed green !important; 
+}
+.leaflet-touch, 
+.menu { 
+    border: 2px solid green; 
+    border-top: none; 
+}
+
+/* c4 */
+#browser .item, 
+#master-volume { 
+    background-color: yellowgreen; 
+}
+
+/* c5 */
+.titlebar, 
+#help, 
+#help-toggle,
+#browser-sounds, 
+#browser-images { 
+    color: greenyellow; 
+}
+#browser .volume { 
+    background-color: greenyellow;
+}
+
+/* c6 */
+.toolbar-button,
+#controls button, 
+.sound-item-progress-bar, 
+#browser .item-button, 
+#master-volume-bar { 
+    background-color: yellow; 
+}
+.browser-heading-button,
+.titlebar-button { 
+    color: yellow; 
+}
+#master-volume { 
+    border: 1px solid yellow; 
+}
+#browser .item.selected { 
+    border: 1px solid yellow !important; 
+}
+
+/* c7 */
+.toolbar-button.selected, 
+.menu, 
+.menu::-webkit-scrollbar { 
+    background-color: darkslategray !important; 
+}
+.menu h2, 
+.setting button, 
+.rangeValue {
+    color: darkslategray; 
+};
+
+/* c7-8 */
+.menu { 
+    scrollbar-color: darkslategray aquamarine; 
+}
+
+/* c8 */
+.menu h2,
+input[type=checkbox]::after, 
+input[type=checkbox]:hover::after, 
+.setting button, 
+input[type=range]::-webkit-slider-thumb {
+    background-color: aquamarine; 
+}
+.menu::-webkit-scrollbar-corner, 
+.menu::-webkit-resizer, 
+.menu::-webkit-scrollbar-thumb, 
+input[type=range]::-webkit-slider-thumb,
+.rangeValue {
+    background-color: aquamarine; 
+}
+input[type=range]::-moz-range-thumb {
+    background-color: aquamarine; 
+}    
+.menu, input[type=range], 
+select, 
+.toolbar-button.selected { 
+    color:aquamarine !important; 
+}
+input[type=checkbox] {
+    border: 1px solid aquamarine !important;
+} 
+input[type=range], 
+select {
+    border: 1px solid aquamarine;
+}
+.rangeValue::after {
+    border-right: 3px solid aquamarine;
+}
+
+/* c9 */
+input:focus, 
+select:focus, 
+button:focus {
+    outline: 1px solid blanchedalmond;
+}
+.changed label, .changed select, .menu a {
+    color:blanchedalmond;
+}
+.changed input, .changed select {
+    border-color: blanchedalmond !important;
+}
+.changed input[type=range]::-webkit-slider-thumb {
+    background-color: blanchedalmond;
+}
+.changed input[type=range]::-moz-range-thumb {
+    background-color: blanchedalmond;
+}
+.changed .rangeValue {
+    background-color: blanchedalmond;
+}
+.changed .rangeValue::after {
+    border-right: 3px solid blanchedalmond;
+}
+.changed input[type=checkbox]::after {
+    background-color: blanchedalmond;
+}
+
+/* cA */
+#browser .activated {
+    color:pink !important;
+}
+
+/* cB */
+#browser .activated {
+    background-color:blueviolet !important;
+}
+
+/* cC */
+
+
+
+
+/* cD */
+
+
+/* cE */
+#controls button:hover, 
+.toolbar-button:hover, 
+#browser .item-button:hover, 
+.setting button:hover { 
+    background-color: white; 
+}
+.titlebar .titlebar-button:hover, 
+.browser-heading-button:hover, 
+.browser-heading-button.soundsHidden,
+.browser-heading-button.imagesHidden,
+.menu a:hover { 
+    color: white; 
+}
+#browser button.activated:hover {
+    color: white !important;
+}
+
+/* cF */
+#controls button:hover, 
+.toolbar-button:hover, 
+#browser .item-button:hover, 
+.setting button:hover { 
+    color: orange; 
+}
+#browser .activated:hover {
+    color: orange !important;
+}
+
+
+
+
+
+#modal {
+    background-color: black;
+    color: white;
 }
 
 /* app styles */
@@ -75,7 +304,6 @@ body {
     min-width: 100%;
     min-height: 100%;
     z-index: -100;
-    background-color: var(--c-map);
 }
 #map *:focus {
     outline: none;
@@ -100,10 +328,8 @@ body {
     flex: auto;
 }
 .toolbar-button {
-    color: var(--c-ui);
     border: none;
     margin: 2px 0px 2px 2px;
-    background-color: var(--c-text);
     border-radius: 4px;
     font-weight: bold;
     padding: 0;
@@ -114,7 +340,6 @@ body {
     margin-bottom: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    color: var(--c-highlight);
 }
 .toolbar-button svg {
     display: inline-block;
@@ -128,10 +353,6 @@ body {
 .button-title-full span, .button-title-short span {
     text-decoration: underline;
 }
-.toolbar-button:hover {
-    background-color: var(--c-highlight);
-    color: var(--c-text);
-}
 .toolbar-spacer {
     display: flex;
     flex-basis: 8px;
@@ -139,7 +360,6 @@ body {
 .titlebar {
     height: var(--title-bar-height);
     width: 100%;
-    background: var(--c-ui);
     display: flex;
     justify-content: flex-end;
     position: fixed;
@@ -147,7 +367,6 @@ body {
     left: 0;
     right: 0;
     z-index: 100;
-    color: var(--c-text);
 }
 .titlebar, .titlebar * {
     -webkit-user-select: none;  /* Chrome all / Safari all */
@@ -175,18 +394,6 @@ body {
     padding: 0;
     border: none;
 }
-.titlebar-button:hover {
-    color: var(--c-highlight);
-}
-
-/* Leaflet Map Frame */
-
-.leaflet-touch {
-    background-color: var(--c-ui);
-    color: var(--c-text);
-    border: 2px solid var(--c-ui);
-    border-top: none;
-}
 
 /* Not showing real world maps - hide attribution */
 
@@ -203,13 +410,11 @@ body {
     leaflet-marker-draggable  */
 
 .leaflet-vertex-icon {
-    background: var(--c-ui);
     border: none;
     border-radius: 9999px;
 }
 .leaflet-middle-icon {
     background: none;
-    border: 1px solid var(--c-ui);
     opacity: 100% !important;
     border-radius: 9999px;
 }
@@ -234,35 +439,19 @@ body {
 #help.activated #help-text { 
     display:block; 
 }
-#help.activated #help-toggle {
-    background: var(--c-ui);
-    color: var(--c-text);
-}
-#help.activated #help-toggle:hover {
-    background: var(--c-highlight);
-}
 #help-toggle {
-    border: 1px solid var(--c-ui);
-    border-bottom: 0;
-    border-left: 0;
-    background: transparent;
-    color: var(--c-ui);
+    border: none;
     border-radius: 0 4px 0 0;
     font-weight: bold;
     padding: 0;
     width: 18px;
     height: 18px;
 }
-#help-toggle:hover {
-    border-color: var(--c-highlight);
-    background-color: var(--c-highlight);
-}
 #help-text {
     display: none;
-    background-color: var(--c-ui);
-    color: var(--c-text);
     min-height:1rem;
     min-width: 100%;
+    padding: 0 4px;
 }
 #help-text strong {
     text-transform: uppercase;
@@ -278,7 +467,6 @@ body {
     width: 12rem;
     font-size: 0.7rem;
     font-weight: bold;
-    background: rgba(0,0,0,0.5);
     border-radius: 4px;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
@@ -296,11 +484,6 @@ body {
     padding: 0;
     border-radius: 2px;
     border: none;
-    background-color: var(--c-ui);
-    color: var(--c-text);
-}
-#controls button:hover {
-    background-color: var(--c-highlight);
 }
 #controls button svg {
     margin: 0 auto;
@@ -349,20 +532,11 @@ body {
 .browser-heading svg {
     height: 14px;
 }
-.browser-heading span {
-    color: var(--c-ui);
-}
 .browser-heading-button {
     float:right;
     background:none;
     border: none;
-    color: var(--c-ui);
     padding: 0;
-}
-.browser-heading-button:hover,
-.browser-heading-button.soundsHidden,
-.browser-heading-button.imagesHidden {
-    color: var(--c-highlight);
 }
 #browser.sidebarHidden {
     display:none;
@@ -370,7 +544,6 @@ body {
 #browser-sounds, #browser-images { /* display lists in reverse order to reflect stacking */
     display:flex;
     flex-direction: column-reverse;
-    background: rgba(0,0,0,0.5);
     border-radius: 4px;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
@@ -380,8 +553,6 @@ body {
     margin-bottom: 12px;
 }
 #browser .item {
-    background-color: var(--c-ui-accent);
-    color: var(--c-text);
     border-radius: 2px;
     margin: 1px 0;
     padding: 2px;
@@ -391,11 +562,9 @@ body {
     position: relative;
 }
 #browser .item.selected {
-    border: 1px solid var(--c-highlight) !important;
     padding: 1px;
 }
 #browser .item.locked {
-    border: 1px dashed var(--c-ui) !important;
     padding: 1px;
 }
 #browser .item:first-child {
@@ -413,31 +582,19 @@ body {
 }
 #browser .item-button {
     flex: 1;
-    background-color: var(--c-text);
-    color: var(--c-ui);
     margin-left: 2px;
     padding: 0;
     border-radius: 2px;
     border: none;
     z-index: 10;
 }
-#browser .item-button:hover {
-    background-color: var(--c-highlight);
-}
 #browser .item-button svg {
     margin: 0 auto;
-}
-#browser .activated {
-    color: var(--c-highlight) !important;
-}
-#browser .activated:hover {
-    color: var(--c-ui) !important;
 }
 .sound-item-progress-track {
     flex-basis: 100%;
     height: 4px;
     border-radius: 2px;
-    background-color: var(--c-text);
     margin-top: 2px;
     border: none;
     padding: 1px;
@@ -446,7 +603,6 @@ body {
 .sound-item-progress-bar {
     height: 2px;
     border-radius: 2px;
-    background-color: var(--c-highlight);
     min-width: 2px;
     width: 0%;
     border: none;
@@ -458,7 +614,6 @@ body {
     bottom:0;
     left:0;
     height: 80%;
-    background: var(--c-ui);
     z-index: 0;
     border-radius: 2px;
 }
@@ -472,14 +627,11 @@ body {
     width: .5em;
     height: 1.3em;
     display: inline-block;
-    background-color: var(--c-ui-accent);
     position: relative;
-    border: 1px solid var(--c-ui);
     vertical-align: top;
     border-radius: 1px;
 }
 #master-volume-bar {
-    background-color: var(--c-ui);
     width: 100%;
     position: absolute;
     bottom: 0;
@@ -491,9 +643,6 @@ body {
     z-index: 10000;
     position: absolute;
     top: var(--title-bar-height);
-    background-color: var(--c-menu);
-    color: var(--c-menu-text);
-    border: 2px solid var(--c-ui);
     border-top: none;
     width: 100%;
     height: calc(100% - 30px);
@@ -501,28 +650,18 @@ body {
     display: none;
     font-size: 0.8rem;
     overflow-y: scroll;
-    scrollbar-color: var(--c-menu) var(--c-menu-text);
     font-weight: bold;
 }
 .menu::-webkit-scrollbar {
-    background-color: var(--c-menu);
     width: 5px;
 }
 .menu::-webkit-scrollbar:horizontal {
     height: 5px;
 }
-.menu::-webkit-scrollbar-corner, .menu::-webkit-resizer {
-    background-color: var(--c-menu-text);
-}
-.menu::-webkit-scrollbar-thumb {
-    background-color: var(--c-menu-text);
-}
 .menu h2, .menu h3 {
     margin-top: 1rem;
 }
 .menu h2 {
-    color: var(--c-menu);
-    background-color: var(--c-menu-text);
     padding: 0 8px;
     border-radius: 1px;
 }
@@ -531,9 +670,6 @@ body {
 }
 .menu p {
     margin-bottom: 1rem;
-}
-.menu a {
-    color: var(--c-menu-highlight);
 }
 .links {
     margin-top: 1rem;
@@ -560,7 +696,6 @@ input[type=checkbox] {
     height: 16px;
     position: relative;
     width: 30px;
-    border: 1px solid var(--c-menu-text);
     vertical-align: middle;
     transition-duration: 0s;
     border-radius: 1px;
@@ -577,7 +712,6 @@ input[type=checkbox], input[type=checkbox]::after {
     transition: all 100ms ease-out;
 }
 input[type=checkbox]::after {
-    background-color: var(--c-menu-text);
     content: "";
     height: 10px;
     left: 2px;
@@ -585,18 +719,12 @@ input[type=checkbox]::after {
     top: 2px;
     width: 10px;
 }
-
-input[type=checkbox]:hover::after {
-    background-color: var(--c-menu-text);
-}
 input[type=checkbox]:checked::after {
     left: 16px;
 }
 input[type=range], select {
     appearance: none;
     background: transparent;
-    border: 1px solid var(--c-menu-text);
-    color: var(--c-menu-text);
     width: 50px;
     text-align: center;
     border-radius: 1px;
@@ -604,11 +732,6 @@ input[type=range], select {
 .setting button {
     border-radius: 2px;
     border: none;
-    background-color: var(--c-menu-text);
-    color: var(--c-menu);
-}
-.setting button:hover {
-    background-color: var(--c-menu-highlight);
 }
 select {
     font-family: inherit;
@@ -617,7 +740,6 @@ select {
     padding: 0 10px;
 }
 input:focus, select:focus, button:focus {
-    outline: 1px solid var(--c-menu-highlight);
     outline-offset: 1px;
 }
 input[type=range] {
@@ -632,7 +754,6 @@ input[type=range]::-webkit-slider-thumb {
     height: 10px;
     width: 10px;
     margin: 0;
-    background: var(--c-menu-text);
     cursor: default;
   }
 
@@ -641,12 +762,9 @@ input[type=range]::-moz-range-thumb {
     height: 10px;
     width: 10px;
     margin: 0;
-    background: var(--c-menu-text);
     cursor: default;
-  }
+}
 .rangeValue {
-    background: var(--c-menu-text);
-    color: var(--c-menu);
     height: 16px;
     padding: 1px 5px;
     border-radius: 1px;
@@ -661,34 +779,11 @@ input[type=range]::-moz-range-thumb {
     content: "";
     position: absolute;
     border-top: 3px solid transparent;
-    border-right: 3px solid var(--c-menu-text);
     border-bottom: 3px solid transparent;
     height: 6px;
     width: 6px;
     top: 5px;
     left: -6px;
-}
-
-.changed label, .changed select {
-    color: var(--c-menu-highlight);
-}
-.changed input, .changed select {
-    border-color: var(--c-menu-highlight);
-}
-.changed input[type=range]::-webkit-slider-thumb {
-    background-color: var(--c-menu-highlight);
-}
-.changed input[type=range]::-moz-range-thumb {
-    background-color: var(--c-menu-highlight);
-}
-.changed .rangeValue {
-    background-color: var(--c-menu-highlight);
-}
-.changed .rangeValue::after {
-    border-right: 3px solid var(--c-menu-highlight);
-}
-.changed input[type=checkbox]::after {
-    background-color: var(--c-menu-highlight);
 }
 
 /* modal */
@@ -708,8 +803,6 @@ input[type=range]::-moz-range-thumb {
     max-width: 50rem;
     margin: 10% auto;
     padding: 1rem;
-    background-color: var(--c-ui);
-    color: var(--c-text);
     border-radius: 2px;
 }
 #modal svg {

@@ -8,7 +8,7 @@ export const defaults = {
     "uiScrollSensitivity":          1,
     "soundsHidden":                 false,
     "imagesHidden":                 false,
-    "theme":                        "Default",
+    "theme":                        "Dark",
 }
 
 /**

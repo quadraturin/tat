@@ -56,7 +56,7 @@ onwheel = {(event) => { event.preventDefault(); changeOpacity(item, event)}}>
 
     <!-- Image Delete Button -->
     <button class="item-button item-delete" title="delete image" 
-    onclick     = {() => removeImage(i)}
+    onclick     = {()=>removeImage(i)}
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.map.imageDelete'))}}
     onmouseout  = {()=>{help()}}
