@@ -239,6 +239,9 @@
         <span data-tauri-drag-region>{#if isDirty}*{/if}</span>
     </h1>
 
+    <!-- Spacer -->
+    <span data-tauri-drag-region class="toolbar-spacer"></span>
+
     <!-- Add Media Button -->
     <button class="toolbar-button" 
     onclick     = {readFiles} 
@@ -294,7 +297,7 @@
     </button>
 
     <!-- New Project Button -->
-    <button class="toolbar-button"  title="new project" 
+    <button class="toolbar-button"
     onclick     = {clearProject} 
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.newProject'), $t('help.titlebar.newProjectShortcut'))}}
