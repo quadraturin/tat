@@ -25,7 +25,7 @@
             getUserSettings().hideWindowContentsFromStream = !userSettings.hideWindowContentsFromStream;
             saveUserSettings();
             }} /> 
-        <label for="hideWindowContentsFromStream">{$t('settings.hideWindowContentsFromStream')} {getDefaultUserSettings().hideWindowContentsFromStream} {userSettings.hideWindowContentsFromStream}</label>
+        <label for="hideWindowContentsFromStream">{$t('settings.hideWindowContentsFromStream')}</label>
     </div>
 
     <!-- Invert Volume Scroll-->
@@ -99,6 +99,7 @@
     <div class="setting" class:changed={getDefaultUserSettings().theme != userSettings.theme}>
         <select bind:value={userSettings.theme} id="theme" class="fancy"
         onchange={()=>{ 
+            R.setTheme(userSettings.theme);
             saveUserSettings();
             }}>
             {#each themesList as theme}

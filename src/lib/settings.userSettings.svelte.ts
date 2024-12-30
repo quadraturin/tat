@@ -2,6 +2,7 @@ import { defaultUserSettings } from "./settings.appSettings";
 import { saveUserSettings } from "./settings.saveUserSettings";
 import { defaults, UserSettings } from "./classes/UserSettings.svelte";
 import { locale } from "./util.localization";
+import * as R from "$lib/registry.svelte"
 
 /**
  * the user settings.
@@ -51,5 +52,6 @@ export function resetUserSettings() {
     console.log('RESETTING', def)
     userSettings.update(def);
     locale.set(userSettings.language);
+    R.setTheme(userSettings.theme);
     saveUserSettings();
 }

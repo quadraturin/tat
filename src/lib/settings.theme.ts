@@ -13,8 +13,7 @@ export function getThemesList():AppTheme[] {
     // second, user themes
     
     // third, built-in themes
-    themesList.push(tDefault, tWarped);
-
+    themesList.push(new AppTheme(tDefault), new AppTheme(tWarped));
     return themesList;
 }
 

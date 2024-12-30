@@ -31,10 +31,7 @@
     // media
 	import { readFiles } from '$lib/media.readFiles';
     import { removeSelected } from '$lib/media.removeSelected';
-	import { removeImage } from '$lib/media.removeImage';
-	import { duplicateImage, toggleImageEdit } from '$lib/media.loadImage';
 	import { changeMasterVolume } from '$lib/media.controlSound';
-	import { changeOpacity } from '$lib/media.controlOpacity';
 	import { setMapSoundVolumes } from '$lib/media.setMapSoundVolumes';
 
     // ui
@@ -158,8 +155,8 @@
         // Set minimum window size
         appWindow.setMinSize(new LogicalSize(480,320));
 
-        // Load the user's settings, or, if none, the defaults
-        loadUserSettings();
+        // Load the user's settings, or, if none, the defaults, then set the theme.
+        loadUserSettings().then(()=>{R.setTheme(getUserSettings().theme)})
         
         // Set up title bar window controls
         const titlebarMinimize = document.getElementById('titlebar-minimize') as HTMLElement;

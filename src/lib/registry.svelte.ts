@@ -4,6 +4,7 @@ import { MapSound } from "./classes/MapSound.svelte";
 import type { MapInfo } from "./classes/MapInfo";
 import type * as H from 'howler';
 import { AppTheme } from "./classes/AppTheme.svelte";
+import { getThemesList } from "./settings.theme";
 
 
 
@@ -528,10 +529,19 @@ export function getIsHelpActive():boolean {
 /**
  * The theme.
  */
-let activeTheme = new AppTheme();
-export function getTheme():AppTheme {
-    return activeTheme;
-}
-export function setTheme(newThemeText:{}) {
-    activeTheme = new AppTheme(newThemeText);
+export let activeTheme = $state(new AppTheme());
+
+export function setTheme(themeName:string) {
+    //console.log('set theme:', themeName);
+    const themesList = getThemesList();
+    for (let i = 0; i < themesList.length; i++) {
+        //console.log(themesList[i].name);
+        if(themeName == themesList[i].name){
+            activeTheme.update(themesList[i]);
+        }
+    }
+
+    console.log('active theme:', activeTheme);
+        
+    //activeTheme = new AppTheme(newThemeText);
 }
