@@ -1,7 +1,7 @@
 import * as R from '$lib/registry'
 import { ask } from "@tauri-apps/plugin-dialog";
 import type L from 'leaflet'
-import { t } from './util.translations';
+import { t } from './util.localization';
 
 /**
  * remove an image from the map, using its rectangle as an identifier.

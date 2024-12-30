@@ -1,6 +1,6 @@
-import type { MapSound } from "./classes/MapSound";
+import type { MapSound } from "./classes/MapSound.svelte";
 import { setMapSoundVolumes } from "./media.setMapSoundVolumes";
-import { getUserSettings } from "./settings.userSettings";
+import { getUserSettings } from "./settings.userSettings.svelte";
 import * as H from 'howler';
 
 /**
@@ -8,11 +8,13 @@ import * as H from 'howler';
  * @param sound the sound to pause or play.
  */
 export async function togglePause(sound:MapSound) {
-    if (sound.sound.playing()) {
-        sound.sound.pause();
-    }
-    else {
-        sound.sound.play();
+    if (sound.sound){
+        if (sound.sound.playing()) {
+            sound.sound.pause();
+        }
+        else {
+            sound.sound.play();
+        }
     }
 }
 
@@ -22,9 +24,11 @@ export async function togglePause(sound:MapSound) {
  * @param mouseX the mouse's x position.
  */
 export async function seekToByClick(sound:MapSound, mouseX:number) {
-    let pct = (mouseX-18)/182; // 18px from left edge of screen, 182px wide
-    let pos = sound.sound.duration() * pct;
-    sound.sound.seek(pos);
+    if (sound.sound) {
+        let pct = (mouseX-18)/182; // 18px from left edge of screen, 182px wide
+        let pos = sound.sound.duration() * pct;
+        sound.sound.seek(pos);
+    }
 }
 
 /**
@@ -54,9 +58,8 @@ export async function changeMasterVolume(event:WheelEvent) {
     // invert based on user settings.
     if (getUserSettings().invertVolumeScroll) delta *= -1;
 
-    console.log(delta);
-
     // adjust and clamp volume.
     H.Howler.volume(H.Howler.volume() + delta * 0.01 * getUserSettings().uiScrollSensitivity);
-    console.log('changing master volume', H.Howler.volume())
+    
+    //console.log('changing master volume', H.Howler.volume())
 }

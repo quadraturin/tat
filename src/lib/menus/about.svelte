@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { t, locales, locale } from '$lib/util.translations';
+    import { t, locales, locale } from '$lib/util.localization';
 	import IconBluesky from "$lib/icons/iconBluesky.svelte";
 	import IconDiscord from "$lib/icons/iconDiscord.svelte";
 	import IconDriveThruRpg from "$lib/icons/iconDriveThruRPG.svelte";
@@ -14,7 +14,6 @@
 	import IconTumblr from "$lib/icons/iconTumblr.svelte";
 	import IconYouTube from "$lib/icons/iconYouTube.svelte";
     import IconBook from '$lib/icons/iconBook.svelte';
-	import type { LayoutData } from '../../routes/$types';
 </script>
 
 <div class="menu" id="about">
@@ -53,18 +52,23 @@
         <p>{@html $t('about.credits')}</p>
         
         <p>{@html $t('about.video')}</p>
-        
+
+        <p><a href="https://youtu.be/LQraTyCoS4E" target="_blank">https://youtu.be/LQraTyCoS4E</a></p>
+
         <p>{@html $t('about.howToUse')}</p>
 
         <p>{@html $t('about.projectFiles')}</p>
 
         <h2>{$t('about.changelogTitle')}</h2>
 
-        <h3>v0.5.0: settings & localization (2024-12-29)</h3>
+        <h3>v0.5.0: Settings & localization (2024-12-29)</h3>
         <ul>
-            <li>added localization support</li>
-            <li>reworked settings menu</li>
-            <li>about page links edits</li>
+            <li>Added localization support</li>
+            <li>Reworked settings menu</li>
+            <li>About page links edits</li>
+            <li>Removed overscroll bounce affecting entire app</li>
+            <li>Upgraded to Svelte 5 and Sveltekit 2</li>
+            <li>Added capital letters</li>
         </ul>
 
         <h3>v0.4.1: drag-and-drop (2024-12-22)</h3>

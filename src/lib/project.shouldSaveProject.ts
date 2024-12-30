@@ -1,6 +1,6 @@
 import * as R from '$lib/registry';
 import { ask } from '@tauri-apps/plugin-dialog';
-import { t } from './util.translations';
+import { t } from './util.localization';
 
 
 /**

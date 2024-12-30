@@ -1,7 +1,7 @@
 {
-    "confirmDeleteImage": "this is the only instance of this image file in this project!\n\nif you remove it and save the project, the image file will be deleted from the project folder.\n\ndo you still want to remove the image?",
-    "confirmDeleteSound": "this is the only instance of this sound file in this project!\n\nif you remove it and save the project, the sound file will be deleted from the project folder.\n\ndo you still want to remove the sound?",
-    "projectSaved": "project saved!",
-    "closeProjectUnsavedChanges": "your project has unsaved changes. are you sure you want to close this project and lose all unsaved changes?",
-    "quitUnsavedChanges": "you have unsaved changes! are you sure you want to quit?"
+    "confirmDeleteImage": "This is the only instance of this image file in this project!\n\nIf you remove it and save the project, the image file will be deleted from the project folder.\n\nDo you still want to remove the image?",
+    "confirmDeleteSound": "This is the only instance of this sound file in this project!\n\nIf you remove it and save the project, the sound file will be deleted from the project folder.\n\nDo you still want to remove the sound?",
+    "projectSaved": "Project saved!",
+    "closeProjectUnsavedChanges": "Your project has unsaved changes. Are you sure you want to close this project and lose all unsaved changes?",
+    "quitUnsavedChanges": "You have unsaved changes! are you sure you want to quit?"
 }

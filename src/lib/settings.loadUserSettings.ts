@@ -1,8 +1,9 @@
 import { exists, readTextFile } from "@tauri-apps/plugin-fs";
 import { appDataDir, join } from "@tauri-apps/api/path";
-import { getUserSettings, overwriteUserSettings } from "./settings.userSettings";
+import { getUserSettings } from "./settings.userSettings.svelte";
 import { saveUserSettings } from "./settings.saveUserSettings";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { locale } from "./util.localization";
 const appWindow = getCurrentWebviewWindow()
 
 /**
@@ -15,7 +16,9 @@ export async function loadUserSettings() {
 
         // if it exists, read it and load the settings
         if (await exists(jsonPath)){
-            overwriteUserSettings(JSON.parse(await readTextFile(jsonPath)));
+            console.log(JSON.parse(await readTextFile(jsonPath)));
+            getUserSettings().update(JSON.parse(await readTextFile(jsonPath)));
+            locale.set(getUserSettings().language);
         // if it doesn't, create it with the default settings
         } else {
             saveUserSettings(); // saves default settings

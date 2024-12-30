@@ -24,7 +24,7 @@ export class MapImage {
     rect:L.Rectangle;
     originalWidth:number;
     originalHeight:number;
-    opacity:number;
+    opacity:number = $state(1);
     order:number;
     name:string;
     niceName:string;

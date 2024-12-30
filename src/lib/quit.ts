@@ -1,7 +1,7 @@
 import { ask } from "@tauri-apps/plugin-dialog";
 import { getisProjectDirty } from "./registry";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-import * as R from '$lib/registry';
+import { t } from "./util.localization";
 const appWindow = getCurrentWebviewWindow()
 
 
@@ -11,10 +11,8 @@ const appWindow = getCurrentWebviewWindow()
  */
 export async function tryQuit() {
     if (getisProjectDirty()) {
-        let discardChanges = await ask(R.t.dialog.quitUnsavedChanges);
+        let discardChanges = await ask(t.get('dialog.quitUnsavedChanges'));
         if (!discardChanges) return;
     }
-
     appWindow.close();
-    
 }

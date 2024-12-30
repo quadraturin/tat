@@ -1,45 +1,58 @@
 <script lang="ts">
 
+    /**
+     * Imports
+     */
+
     // styles
     import 'leaflet/dist/leaflet.css'
     import 'leaflet-contextmenu/dist/leaflet.contextmenu.css'
     import '../app.css'
 
     // modules
-    import { t, locales, locale } from '$lib/util.translations';
     import * as R from '$lib/registry';
-    import { onMount } from 'svelte'
-    import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
-    import { LogicalSize } from '@tauri-apps/api/window'
+    import * as S from '$lib/settings.appSettings';
     import L from "leaflet";
+    import * as H from 'howler';
+    import { onMount } from 'svelte'
+    import { LogicalSize } from '@tauri-apps/api/window'
+    import { getCurrentWindow } from '@tauri-apps/api/window';
+	import { tryQuit } from '$lib/quit';
+
+    // init
 	import { setupMap } from '$lib/init.setupMap';
 	import { setupListener } from '$lib/init.setupListener';
+
+    // project
 	import { saveProject } from '$lib/project.saveProject';
-	import { readFiles } from '$lib/media.readFiles';
 	import { loadProject } from '$lib/project.loadProject';
+	import { clearProject } from '$lib/project.clearProject';
+
+    // media
+	import { readFiles } from '$lib/media.readFiles';
     import { removeSelected } from '$lib/media.removeSelected';
-    import * as S from '$lib/settings.appSettings';
-    import { getUserSettings } from '$lib/settings.userSettings'
+	import { removeImage } from '$lib/media.removeImage';
+	import { duplicateImage, toggleImageEdit } from '$lib/media.loadImage';
+	import { changeMasterVolume } from '$lib/media.controlSound';
+	import { changeOpacity } from '$lib/media.controlOpacity';
+	import { setMapSoundVolumes } from '$lib/media.setMapSoundVolumes';
+
+    // ui
+	import { closeAllMenus, toggleAboutMenu, toggleSettingsMenu } from '$lib/ui.menus';
+
+    // util
+    import { t } from '$lib/util.localization';
+	import { help } from '$lib/util.help';
+    import { dragDrop } from '$lib/util.dragDrop';
+
+    // settings
+    import { getUserSettings } from '$lib/settings.userSettings.svelte'
 	import { loadUserSettings } from '$lib/settings.loadUserSettings';
-    import * as H from 'howler';
+
+    // menus
+	import Loading from '$lib/menus/loading.svelte';
 	import About from '$lib/menus/about.svelte';
 	import Settings from '$lib/menus/settings.svelte';
-	import { tryQuit } from '$lib/quit';
-	import Loading from '$lib/menus/loading.svelte';
-	import { toggleMute, toggleSolo } from '$lib/media.mixSound';
-	import { removeImage } from '$lib/media.removeImage';
-	import { removeSound } from '$lib/media.removeSound';
-	import { duplicateImage, toggleImageEdit } from '$lib/media.loadImage';
-	import { cycleSoundType, duplicateSound, toggleSoundEdit } from '$lib/media.loadSound';
-	import { changeBaseVolume, changeMasterVolume, seekToByClick, togglePause } from '$lib/media.controlSound';
-	import { help } from '$lib/util.help';
-	import { changeOpacity } from '$lib/media.controlOpacity';
-	import { clearProject } from '$lib/project.clearProject';
-	import { closeAllMenus, toggleAboutMenu, toggleSettingsMenu } from '$lib/ui.menus';
-	import { setMapSoundVolumes } from '$lib/media.setMapSoundVolumes';
-    import { getCurrentWindow } from '@tauri-apps/api/window';
-    import { dragDrop } from '$lib/util.dragDrop';
-	import { saveUserSettings } from '$lib/settings.saveUserSettings';
 
     // icons
     import IconLoading from '$lib/icons/iconLoading.svelte';
@@ -50,10 +63,6 @@
     import IconSaveAs from '$lib/icons/iconSaveAs.svelte';
     import IconNew from '$lib/icons/iconNew.svelte'
 	import IconAbout from '$lib/icons/iconAbout.svelte';
-	import IconSoundGlobal from '$lib/icons/iconSoundGlobal.svelte';
-	import IconSoundLocal from '$lib/icons/iconSoundLocal.svelte';
-	import IconSoundArea from '$lib/icons/iconSoundArea.svelte';
-	import IconSoundPause from '$lib/icons/iconSoundPause.svelte';
 	import IconZoomIn from '$lib/icons/iconZoomIn.svelte';
 	import IconZoomOut from '$lib/icons/iconZoomOut.svelte';
 	import IconRecenter from '$lib/icons/iconRecenter.svelte';
@@ -61,77 +70,34 @@
 	import IconExpand from '$lib/icons/iconExpand.svelte';
     import IconEye from '$lib/icons/iconEye.svelte';
     import IconEyeOff from '$lib/icons/iconEyeOff.svelte';
-	import IconAdd from '$lib/icons/iconAdd.svelte';
-    //import IconLevels from '$lib/icons/iconLevels.svelte'
-    //import IconAudioFile from '$lib/icons/iconAudioFile.svelte'
+	import IconMinimize from '$lib/icons/IconMinimize.svelte';
+	import IconMaximize from '$lib/icons/iconMaximize.svelte';
+	import IconQuit from '$lib/icons/iconQuit.svelte';
+	import SoundListItem from '$lib/fragments/soundListItem.svelte';
+	import ImageListItem from '$lib/fragments/imageListItem.svelte';
 
-    let isSaving = false;
-    let isDirty = false;
-    let hasMedia = false;
-    let isAboutMenuOpen = false;
-    let isSettingsMenuOpen = false;
-    let isHelpActive = false;
-    let projectName:string;
-    let imageList = R.getImageList();
-    let soundList = R.getSoundList();
-    let masterVolume = 0;
+    /**
+     * Variables
+     */
 
     const appWindow = getCurrentWindow();
-    
-    // initialize
-    onMount( () => 
-    {
-        loadUserSettings();
 
-        appWindow.setMinSize(new LogicalSize(480,320));
-        
-        // set up title bar window controls
-        const titlebarMinimize = document.getElementById('titlebar-minimize') as HTMLElement;
-        titlebarMinimize.addEventListener('click', () => appWindow.minimize());
-        const titlebarMaximize = document.getElementById('titlebar-maximize') as HTMLElement;
-        titlebarMaximize.addEventListener('click', () => appWindow.toggleMaximize());
-        const titlebarClose = document.getElementById('titlebar-close') as HTMLElement;
-        titlebarClose.addEventListener('click', () => tryQuit());
-        
-        // override so circle scaling doesn't break when using L.CRS.Simple map coords
-        L.LatLng.prototype.distanceTo = function (currentPostion:L.LatLng) 
-        {
-            var dx = currentPostion.lng - this.lng;
-            var dy = currentPostion.lat - this.lat;
-            return Math.sqrt(dx*dx + dy*dy);
-        }
+    let isDirty = $state(R.getisProjectDirty());
+    let isAboutMenuOpen = $state(R.getIsAboutMenuOpen());
+    let isSettingsMenuOpen = $state(R.getIsSettingsMenuOpen());
+    let isHelpActive = $state(R.getIsHelpActive());
+    let projectName = $state("");
+    let imageList = $state(R.getImageList());
+    let soundList = $state(R.getSoundList());
+    let masterVolume = $state(H.Howler.volume());
+    let sidebarHidden = $state(false);
+    let imagesHidden = $state(false);
+    let soundsHidden = $state(false);
 
-        // default project name
-        R.setProjectName(S.defaultProjectName);
-
-        // set up map
-        R.setMap(setupMap());
-
-        // set up listener
-        R.setListener(setupListener(R.getMap()));
-
-        dragDrop();
-    })
-
-    /*$: if(R.getIsSaving()) {
-        isSaving = R.getIsSaving();
-    }
-    $: if(R.getisProjectDirty()) {
-        isDirty = R.getisProjectDirty();
-    }*/
-
-    $: isAboutMenuOpen = R.getIsAboutMenuOpen(), isAboutMenuOpen ? document.getElementById("about-button")?.setAttribute('class', 'toolbar-button selected') : document.getElementById("about-button")?.setAttribute('class', 'toolbar-button');
-    
-    $: isSettingsMenuOpen = R.getIsSettingsMenuOpen(), isSettingsMenuOpen ? document.getElementById("settings-button")?.setAttribute('class', 'toolbar-button selected') : document.getElementById("settings-button")?.setAttribute('class', 'toolbar-button');
-
-    $: isDirty = R.getisProjectDirty();
-
-    $: imageList = R.getImageList();
-
-    $: soundList = R.getSoundList();
-
-    $: isHelpActive = R.getIsHelpActive();
-
+    /**
+     * Triggers when keys are pressed. Handles keyboard shortcuts and controls.
+     * @param e
+     */
     function onKeyDown(e:KeyboardEvent) { 
         let speed:number = getUserSettings().listenerMoveSpeed;
         if (e.key=="Shift") {
@@ -162,23 +128,87 @@
             R.getListener().setLatLng([R.getListener().getLatLng().lat - +speed, R.getListener().getLatLng().lng]);
         else if (e.key == "d") 
             R.getListener().setLatLng([R.getListener().getLatLng().lat, R.getListener().getLatLng().lng + +speed]);
-    };
+    }
+
+    /**
+     * Triggers when keys are released. Used for controlling proportional scale and delete mode.
+     * @param e
+     */
     function onKeyUp(e:KeyboardEvent) {
-        //console.log(e); 
         if (e.key=="Shift") {
             if(getUserSettings().proportionalScaleOnByDefault) R.setIsProportionalScaleOn(true);
             else R.setIsProportionalScaleOn(false);
         } 
         else if (e.key == "Alt") R.setIsInDeleteMode(false);
-    };
-    function onDrag(e:any) {
-        console.log(e);
     }
+
+    /**
+     * Show/hide the sidebar.
+     */
+    function toggleSidebar() {
+        sidebarHidden = !sidebarHidden;
+    }
+
+    /**
+     * Initialize
+     */
+    
+    onMount( () => 
+    {
+        // Set minimum window size
+        appWindow.setMinSize(new LogicalSize(480,320));
+
+        // Load the user's settings, or, if none, the defaults
+        loadUserSettings();
+        
+        // Set up title bar window controls
+        const titlebarMinimize = document.getElementById('titlebar-minimize') as HTMLElement;
+        titlebarMinimize.addEventListener('click', () => appWindow.minimize());
+        const titlebarMaximize = document.getElementById('titlebar-maximize') as HTMLElement;
+        titlebarMaximize.addEventListener('click', () => appWindow.toggleMaximize());
+        const titlebarClose = document.getElementById('titlebar-close') as HTMLElement;
+        titlebarClose.addEventListener('click', () => tryQuit());
+        
+        // Override so circle scaling doesn't break when using L.CRS.Simple map coordinates
+        L.LatLng.prototype.distanceTo = function (currentPostion:L.LatLng) 
+        {
+            var dx = currentPostion.lng - this.lng;
+            var dy = currentPostion.lat - this.lat;
+            return Math.sqrt(dx*dx + dy*dy);
+        }
+
+        // Set the default project name
+        R.setProjectName(S.defaultProjectName);
+
+        // Set up the map
+        R.setMap(setupMap());
+
+        // Set up the listener
+        R.setListener(setupListener(R.getMap()));
+
+        // Set up the drag-and-drop handler
+        dragDrop();
+    })
+
+    /**
+     * Update menu tab visuals
+     */
+
+    $effect(()=>{
+        isAboutMenuOpen ? 
+            document.getElementById("about-button")?.setAttribute('class', 'toolbar-button selected') : 
+            document.getElementById("about-button")?.setAttribute('class', 'toolbar-button');
+        isSettingsMenuOpen ? 
+            document.getElementById("settings-button")?.setAttribute('class', 'toolbar-button selected') : 
+            document.getElementById("settings-button")?.setAttribute('class', 'toolbar-button');
+    });
     
     /**
-     * main update loop
-    */
+     * Main update loop
+     */
+
     setInterval(() => {
+        masterVolume = H.Howler.volume();
         isDirty = R.getisProjectDirty();
         projectName = R.getProjectName();
         isAboutMenuOpen = R.getIsAboutMenuOpen();
@@ -186,393 +216,305 @@
         imageList = R.getImageList();
         soundList = R.getSoundList();
         isHelpActive = R.getIsHelpActive();
-        masterVolume = H.Howler.volume();
         setMapSoundVolumes();
     }, 15);
-
-    let mousePos = { x: 0, y: 0 };
-
-	function handleMousemove(event:MouseEvent) {
-		mousePos.x = event.clientX;
-		mousePos.y = event.clientY;
-	}
-
-    let soundTrack:HTMLButtonElement;
-
-    /*document.addEventListener('auxclick', event => {
-        console.log(event.button)
-            R.getMap().flyTo(R.getMap().containerPointToLatLng([event.x, event.y]));
-        if (event.button == 1) {
-            event.preventDefault();
-        }
-    });*/
-
-    let sidebarHidden = false;
-    let imagesHidden = false;
-    let soundsHidden = false;
-
-    function toggleSidebar() {
-        sidebarHidden = !sidebarHidden;
-    }
-
 </script>
 
 <svelte:window
-    on:keydown={onKeyDown}
-    on:keyup={onKeyUp}
-    on:drag={onDrag}
+    onkeydown={onKeyDown}
+    onkeyup={onKeyUp}
+    ondrag={ondrag}
 />
 
-<div data-tauri-drag-region class="titlebar" 
-on:wheel|preventDefault={()=>{}}>
+
+
+<!-- The Window Titlebar -->
+
+<div data-tauri-drag-region class="titlebar" onwheel={(event) => { event.preventDefault() }}>
+
+    <!-- Project Name -->
     <h1 data-tauri-drag-region  
-    on:focus={()=>{}} 
-    on:mouseover={()=>{isDirty ? help($t('help.titlebar.titleDirty')) : help($t('help.titlebar.title'))}}
-    on:mouseout={()=>{help()}}
-    on:blur={()=>{}}>
+    onfocus     = {()=>{}} 
+    onmouseover = {()=>{isDirty ? help($t('help.titlebar.titleDirty')) : help($t('help.titlebar.title'))}}
+    onmouseout  = {()=>{help()}}
+    onblur      = {()=>{}}>
         <span data-tauri-drag-region class="project-name">{projectName}</span>
         <span data-tauri-drag-region>{#if isDirty}*{/if}</span>
     </h1>
-    
+
+    <!-- Add Media Button -->
     <button class="toolbar-button" 
-    on:click={readFiles} 
-    on:focus={()=>{}} 
-    on:mouseover={()=>{help($t('help.titlebar.addMedia'), $t('help.titlebar.addMediaShortcut'))}}
-    on:mouseout={()=>{help()}}
-    on:blur={()=>{}}>
+    onclick     = {readFiles} 
+    onfocus     = {()=>{}} 
+    onmouseover = {()=>{help($t('help.titlebar.addMedia'), $t('help.titlebar.addMediaShortcut'))}}
+    onmouseout  = {()=>{help()}}
+    onblur      = {()=>{}}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconImageFile />{/if}
         <span class="button-title-short">{$t('ui.addMediaShort')}</span>
         <span class="button-title-full">{$t('ui.addMedia')}</span>
     </button>
-
-    <span data-tauri-drag-region class="toolbar-spacer"></span>
     
+    <!-- Spacer -->
+    <span data-tauri-drag-region class="toolbar-spacer"></span>
+
+    <!-- Save Button -->
     <button class="toolbar-button"
-    on:click={() => saveProject(false)} 
-    on:focus={()=>{}} 
-    on:mouseover={()=>{help($t('help.titlebar.save'), $t('help.titlebar.saveShortcut'))}}
-    on:mouseout={()=>{help()}}
-    on:blur={()=>{}}>
+    onclick     = {()=>saveProject(false)} 
+    onfocus     = {()=>{}} 
+    onmouseover = {()=>{help($t('help.titlebar.save'), $t('help.titlebar.saveShortcut'))}}
+    onmouseout  = {()=>{help()}}
+    onblur      = {()=>{}}>
         {#if R.getIsSaving()}<IconLoading />{:else}<IconSave />{/if}
         <span class="button-title-short">{$t('ui.saveShort')}</span>
         <span class="button-title-full">{$t('ui.save')}</span>
     </button>
-    
+
+    <!-- Save As Button -->
     <button class="toolbar-button"
-    on:click={() => saveProject(true)}
-    on:focus={()=>{}} 
-    on:mouseover={()=>{help($t('help.titlebar.saveAs'), $t('help.titlebar.saveAsShortcut'))}}
-    on:mouseout={()=>{help()}}
-    on:blur={()=>{}}>
+    onclick     = {()=>saveProject(true)}
+    onfocus     = {()=>{}} 
+    onmouseover = {()=>{help($t('help.titlebar.saveAs'), $t('help.titlebar.saveAsShortcut'))}}
+    onmouseout  = {()=>{help()}}
+    onblur      = {()=>{}}>
         {#if R.getIsSaving()}<IconLoading />{:else}<IconSaveAs />{/if}
         <span class="button-title-short">{$t('ui.saveAsShort')}</span>
         <span class="button-title-full">{$t('ui.saveAs')}</span>
     </button>
-    
+
+    <!-- Spacer -->
     <span data-tauri-drag-region class="toolbar-spacer"></span>
-    
+
+    <!-- Open Project Button -->
     <button class="toolbar-button"
-    on:click={loadProject} 
-    on:focus={()=>{}} 
-    on:mouseover={()=>{help($t('help.titlebar.openProject'), $t('help.titlebar.openProjectShortcut'))}}
-    on:mouseout={()=>{help()}}
-    on:blur={()=>{}}>
+    onclick     = {loadProject} 
+    onfocus     = {()=>{}} 
+    onmouseover = {()=>{help($t('help.titlebar.openProject'), $t('help.titlebar.openProjectShortcut'))}}
+    onmouseout  = {()=>{help()}}
+    onblur      = {()=>{}}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconLoad />{/if}
         <span class="button-title-short">{$t('ui.openProjectShort')}</span>
         <span class="button-title-full">{$t('ui.openProject')}</span>
     </button>
-    
+
+    <!-- New Project Button -->
     <button class="toolbar-button"  title="new project" 
-    on:click={clearProject} 
-    on:focus={()=>{}} 
-    on:mouseover={()=>{help($t('help.titlebar.newProject'), $t('help.titlebar.newProjectShortcut'))}}
-    on:mouseout={()=>{help()}}
-    on:blur={()=>{}}>
+    onclick     = {clearProject} 
+    onfocus     = {()=>{}} 
+    onmouseover = {()=>{help($t('help.titlebar.newProject'), $t('help.titlebar.newProjectShortcut'))}}
+    onmouseout  = {()=>{help()}}
+    onblur      = {()=>{}}>
         <IconNew />
         <span class="button-title-short">{$t('ui.newProjectShort')}</span>
         <span class="button-title-full">{$t('ui.newProject')}</span>
     </button>
-    
+
+    <!-- Spacer -->
     <span data-tauri-drag-region class="toolbar-spacer"></span>
-    
+
+    <!-- Settings Menu Button -->
     <button class="toolbar-button" id="settings-button"
-    on:click={toggleSettingsMenu} 
-    on:focus={()=>{}} 
-    on:mouseover={()=>{help($t('help.titlebar.settings'), $t('help.titlebar.settingsShortcut'))}}
-    on:mouseout={()=>{help()}}
-    on:blur={()=>{}}>
+    onclick     = {toggleSettingsMenu} 
+    onfocus     = {()=>{}} 
+    onmouseover = {()=>{help($t('help.titlebar.settings'), $t('help.titlebar.settingsShortcut'))}}
+    onmouseout  = {()=>{help()}}
+    onblur      = {()=>{}}>
         <IconSettings />
         <span class="button-title-short">{$t('ui.settingsShort')}</span>
         <span class="button-title-full">{$t('ui.settings')}</span>
     </button>
 
+    <!-- About Menu Button -->
     <button class="toolbar-button" id="about-button" 
-    on:click={toggleAboutMenu} 
-    on:focus={()=>{}} 
-    on:mouseover={()=>{help($t('help.titlebar.about'), $t('help.titlebar.aboutShortcut'))}}
-    on:mouseout={()=>{help()}}
-    on:blur={()=>{}}>
+    onclick     = {toggleAboutMenu} 
+    onfocus     = {()=>{}} 
+    onmouseover = {()=>{help($t('help.titlebar.about'), $t('help.titlebar.aboutShortcut'))}}
+    onmouseout  = {()=>{help()}}
+    onblur      = {()=>{}}>
         <IconAbout />
         <span class="button-title-short">{$t('ui.aboutShort')}</span>
         <span class="button-title-full">{$t('ui.about')}</span>
     </button>
 
+    <!-- Spacer -->
     <div data-tauri-drag-region class="titlebar-drag"></div>
-    
-    <button class="titlebar-button" id="titlebar-minimize" title="minimize" 
-    on:focus={()=>{}} 
-    on:mouseover={()=>{help($t('help.titlebar.minimize'))}}
-    on:mouseout={()=>{help()}}
-    on:blur={()=>{}}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g transform="rotate(-90 12 12)"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M10 12L13 9M10 12L13 15"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g></g></svg>
+
+    <!-- Minimize Button -->
+    <button class="titlebar-button" id="titlebar-minimize" title="minimize" aria-label="minimize"
+    onfocus     = {()=>{}} 
+    onmouseover = {()=>{help($t('help.titlebar.minimize'))}}
+    onmouseout  = {()=>{help()}}
+    onblur      = {()=>{}}>
+        <IconMinimize />
     </button>
 
-    <button class="titlebar-button" id="titlebar-maximize" title="maximize" 
-    on:focus={()=>{}} 
-    on:mouseover={()=>{help($t('help.titlebar.maximize'))}}
-    on:mouseout={()=>{help()}}
-    on:blur={()=>{}}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g transform="rotate(-90 12 12) translate(24 0) scale(-1 1)"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M10 12L13 9M10 12L13 15"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g></g></svg>
+    <!-- Maximize Button -->
+    <button class="titlebar-button" id="titlebar-maximize" title="maximize" aria-label="maximize"
+    onfocus     = {()=>{}} 
+    onmouseover = {()=>{help($t('help.titlebar.maximize'))}}
+    onmouseout  = {()=>{help()}}
+    onblur      = {()=>{}}>
+        <IconMaximize />
     </button>
 
-    <button class="titlebar-button" id="titlebar-close" title="close" 
-    on:focus={()=>{}} 
-    on:mouseover={()=>{help($t('help.titlebar.close'), $t('help.titlebar.closeShortcut'))}}
-    on:mouseout={()=>{help()}}
-    on:blur={()=>{}}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="8" stroke-dashoffset="8" d="M12 12L16 16M12 12L8 8M12 12L8 16M12 12L16 8"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="8;0"/></path></g></svg>
+    <!-- Quit Button -->
+    <button class="titlebar-button" id="titlebar-close" title="close" aria-label="close"
+    onfocus     = {()=>{}} 
+    onmouseover = {()=>{help($t('help.titlebar.close'), $t('help.titlebar.closeShortcut'))}}
+    onmouseout  = {()=>{help()}}
+    onblur      = {()=>{}}>
+        <IconQuit />
     </button>
 </div>
+
+
+
+<!-- The Map -->
 
 <div id="map-wrapper" class:imagesHidden class:soundsHidden>
     <div id="map"></div>
 </div>
 
-<div id="controls" class:sidebarHidden>
+
+
+<!-- The Sidebar Controls -->
+
+<div id="controls" class:sidebarHidden onwheel={(event) => {
+    event.preventDefault(); 
+}}>
+
+    <!-- Zoom In Button -->
     <button id="zoom-in"
-    on:click={()=>{R.getMap().zoomIn()}}
-    on:focus={()=>{}} 
-    on:mouseover={()=>{help($t('help.map.zoomIn'), $t('help.map.zoomInShortcut'))}}
-    on:mouseout={()=>{help()}}
-    on:blur={()=>{}}>
+    onclick     = {()=>{R.getMap().zoomIn()}}
+    onfocus     = {()=>{}} 
+    onmouseover = {()=>{help($t('help.map.zoomIn'), $t('help.map.zoomInShortcut'))}}
+    onmouseout  = {()=>{help()}}
+    onblur      = {()=>{}}>
         <IconZoomIn/>
     </button>
 
+    <!-- Zoom Out Button -->
     <button id="zoom-out"
-    on:click={()=>{R.getMap().zoomOut()}}
-    on:focus={()=>{}} 
-    on:mouseover={()=>{help($t('help.map.zoomOut'), $t('help.map.zoomOutShortcut'))}}
-    on:mouseout={()=>{help()}}
-    on:blur={()=>{}}>
+    onclick     = {()=>{R.getMap().zoomOut()}}
+    onfocus     = {()=>{}} 
+    onmouseover = {()=>{help($t('help.map.zoomOut'), $t('help.map.zoomOutShortcut'))}}
+    onmouseout  = {()=>{help()}}
+    onblur      = {()=>{}}>
         <IconZoomOut/>
     </button>
 
+    <!-- Spacer -->
     <div class="control-spacer"></div>
 
+    <!-- Recenter View Button -->
     <button id="recenter"
-    on:click={()=>{R.getMap().flyTo(R.getListener().getLatLng())}}
-    on:focus={()=>{}} 
-    on:mouseover={()=>{help($t('help.map.recenter'), $t('help.map.recenterShortcut'))}}
-    on:mouseout={()=>{help()}}
-    on:blur={()=>{}}>
+    onclick     = {()=>{R.getMap().flyTo(R.getListener().getLatLng())}}
+    onfocus     = {()=>{}} 
+    onmouseover = {()=>{help($t('help.map.recenter'), $t('help.map.recenterShortcut'))}}
+    onmouseout  = {()=>{help()}}
+    onblur      = {()=>{}}>
         <IconRecenter/>
     </button>
     
+    <!-- Spacer -->
     <div class="control-spacer"></div>
     
+    <!-- Toggle Sidebar Visibilty Button -->
     <button id="hide-show"
-    on:click={toggleSidebar}
-    on:focus={()=>{}} 
-    on:mouseover={()=>{sidebarHidden? help($t('help.map.showSidebar'), $t('help.map.toggleSidebarShortcut')) : help($t('help.map.hideSidebar'), $t('help.map.toggleSidebarShortcut'))}}
-    on:mouseout={()=>{help()}}
-    on:blur={()=>{}}>
+    onclick     = {toggleSidebar}
+    onfocus     = {()=>{}} 
+    onmouseover = {()=>{
+        sidebarHidden? 
+            help($t('help.map.showSidebar'), $t('help.map.toggleSidebarShortcut')) : 
+            help($t('help.map.hideSidebar'), $t('help.map.toggleSidebarShortcut'))}}
+    onmouseout  = {()=>{help()}}
+    onblur      = {()=>{}}>
         {#if sidebarHidden}<IconExpand/>{:else}<IconCollapse/>{/if}
     </button>
 </div>
 
+
+
+<!-- The Sidebar Media Browser -->
+
 <div id="browser" class:sidebarHidden>
     {#if soundList.length>0}
+
+        <!-- The Sounds Browser -->
         <div id="browser-sounds">
             {#each soundList as item, i }
-                <div class="item sound-item" class:selected={R.getIsSelected(item.emitter)} id="sound-item-{i}" 
-                class:locked={R.getIsLocked(item.emitter)}
-                on:wheel|preventDefault={(event) => changeBaseVolume(item, event)}>
-
-                    <div class="volume" style={"height: "+(item.volume*100)+"%"}></div>
-
-                    <button class="item-name" 
-                    on:click={() => {R.toggleSelected(item.emitter)}}
-                    on:dblclick={() => { if(item.soundType != S.SOUNDTYPE_GLOBAL) toggleSoundEdit(item.emitter);}}
-                    on:focus={()=>{}} 
-                    on:mouseover={()=>{
-                        if (item.soundType == S.SOUNDTYPE_GLOBAL) {
-                            help($t('help.map.soundTypeGlobal'), $t('help.map.soundItemActions'));
-                        } else if (R.getIsSelected(item.emitter)) {
-                            if (item.soundType == S.SOUNDTYPE_AREA) help($t('help.map.selected'), $t('help.map.soundTypeArea'), $t('help.map.soundItemActions'), $t('help.map.itemSelectedActions'));
-                            else help($t('help.map.selected'), $t('help.map.soundTypeLocal'), $t('help.map.soundItemActions'), $t('help.map.itemSelectedActions'));
-                        } else if (R.getIsLocked(item.emitter)){
-                            if (item.soundType == S.SOUNDTYPE_AREA) help($t('help.map.locked'), $t('help.map.soundTypeArea'), $t('help.map.itemLocked'), $t('help.map.soundItemActions'), $t('help.map.itemLockedActions'));
-                            else help($t('help.map.locked'), $t('help.map.soundTypeLocal'), $t('help.map.itemLocked'), $t('help.map.soundItemActions'), $t('help.map.itemLockedActions'));
-                        } else {
-                            if (item.soundType == S.SOUNDTYPE_AREA) help($t('help.map.soundTypeArea'), $t('help.map.soundItemActions'), $t('help.map.itemUnselectedActions'));
-                            else help($t('help.map.soundTypeLocal'), $t('help.map.soundItemActions'), $t('help.map.itemUnselectedActions'));
-                        }
-                    }}
-                    on:mouseout={()=>{help()}}
-                    on:blur={()=>{}}>
-                        {item.niceName}
-                    </button>
-                    
-                    <button class="item-button item-type" 
-                    on:click={() => {cycleSoundType(item)}} 
-                    on:focus={()=>{}} 
-                    on:mouseover={()=>{
-                        if (item.soundType == S.SOUNDTYPE_AREA) help($t('help.map.soundTypeArea'), $t('help.map.soundTypeAreaActions'));
-                        else if (item.soundType == S.SOUNDTYPE_GLOBAL) help($t('help.map.soundTypeGlobal'), $t('help.map.soundTypeGlobalActions'));
-                        else help($t('help.map.soundTypeLocal'), $t('help.map.soundTypeLocalActions'))}}
-                    on:mouseout={()=>{help()}}
-                    on:blur={()=>{}}>
-                        {#if item.soundType == S.SOUNDTYPE_AREA}<IconSoundArea/>{:else if item.soundType == S.SOUNDTYPE_GLOBAL}<IconSoundGlobal/>{:else}<IconSoundLocal/>{/if}
-                    </button>
-                    
-                    <button class="item-button item-pause" class:activated={!item.sound.playing()}  
-                    on:click={() => togglePause(item)}
-                    on:focus={()=>{}} 
-                    on:mouseover={()=>{item.sound.playing() ? help($t('help.map.soundPause')) : help($t('help.map.soundUnPause'))}}
-                    on:mouseout={()=>{help()}}
-                    on:blur={()=>{}}>
-                        <IconSoundPause/>
-                    </button>
-                    
-                    <button class="item-button item-mute" class:activated={item.muted} 
-                    on:click={() => toggleMute(i)}
-                    on:focus={()=>{}} 
-                    on:mouseover={()=>{item.muted? help($t('help.map.soundMute')) : help($t('help.map.soundUnMute'))}}
-                    on:mouseout={()=>{help()}}
-                    on:blur={()=>{}}>
-                        M
-                    </button>
-                    
-                    <button class="item-button item-solo" class:activated={item.solo} 
-                    on:click={() => toggleSolo(i)}
-                    on:focus={()=>{}} 
-                    on:mouseover={()=>{item.solo ? help($t('help.map.soundUnSolo')) : help($t('help.map.soundSolo'))}}
-                    on:mouseout={()=>{help()}}
-                    on:blur={()=>{}}>
-                        S
-                    </button>
-                    
-                    <button class="item-button item-add" 
-                    on:click={() => duplicateSound(item)}
-                    on:focus={()=>{}} 
-                    on:mouseover={()=>{help($t('help.map.soundDuplicate'))}}
-                    on:mouseout={()=>{help()}}
-                    on:blur={()=>{}}>
-                        +
-                    </button>
-                    
-                    <button class="item-button item-delete" 
-                    on:click={() => removeSound(i)}
-                    on:focus={()=>{}} 
-                    on:mouseover={()=>{help($t('help.map.soundDelete'))}}
-                    on:mouseout={()=>{help()}}
-                    on:blur={()=>{}}>
-                        ×
-                    </button>
-                    
-                    <button class="sound-item-progress-track" 
-                    bind:this={soundTrack} 
-                    on:mousemove={handleMousemove} 
-                    on:click={() => seekToByClick(item, mousePos.x)}
-                    on:focus={()=>{}} 
-                    on:mouseover={()=>{help($t('help.map.soundSeek'))}}
-                    on:mouseout={()=>{help()}}
-                    on:blur={()=>{}}>
-                        <div style={"width: "+((item.sound.seek()/item.sound.duration())*100).toString()+"%"} class="sound-item-progress-bar"></div>
-                    </button>
-                </div>
+                <SoundListItem item={item} i={i} />
             {/each}
+
+            <!-- Sound List Header -->
             <div role="heading" class="browser-heading" aria-level="2" 
-            on:wheel|preventDefault={(event) => changeMasterVolume(event)}>
+            onwheel={(event) => {
+                event.preventDefault(); 
+                changeMasterVolume(event);
+            }}>
+
+                <!-- Master Volume -->
                 <div id="master-volume">
                     <div id="master-volume-bar" style={"height:"+(masterVolume*100)+"%"}></div>
                 </div>
+
+                <!-- Sound List Title -->
                 <span role="heading" aria-level="3"
-                on:focus={()=>{}} 
-                on:mouseover={()=>{help($t('help.map.soundsTitle'))}}
-                on:mouseout={()=>{help()}}
-                on:blur={()=>{}}>
-                    sounds
+                onfocus     = {()=>{}} 
+                onblur      = {()=>{}}
+                onmouseout  = {()=>{help()}}
+                onmouseover = {()=>{help($t('help.map.soundsTitle'))}}>
+                {$t('ui.sounds')}
                 </span>
-                
+
+                <!-- Sound List Show / Hide Toggle -->
                 <button class="browser-heading-button" id="hide-sounds-toggle" class:soundsHidden
-                on:click={()=>{
+                onclick     = {()=>{
                     soundsHidden = !soundsHidden;
                     soundsHidden ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))}}
-                on:focus={()=>{}} 
-                on:mouseover={()=>{soundsHidden ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))}}
-                on:mouseout={()=>{help()}}
-                on:blur={()=>{}}>
+                onfocus     = {()=>{}} 
+                onblur      = {()=>{}}
+                onmouseout  = {()=>{help()}}
+                onmouseover = {()=>{
+                    soundsHidden ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))
+                }}>
                     {#if soundsHidden}<IconEye/>{:else}<IconEyeOff/>{/if}
                 </button>
             </div>
         </div>
     {/if}
+
+    <!-- The Images Browser -->
     {#if imageList.length > 0}
         <div id="browser-images">
             {#each imageList as item, i}
-                <div class="item image-item" id="image-item-{i}" class:selected={R.getIsSelected(item.rect)} class:locked={!item.rect.editEnabled()} role="listitem"
-                on:wheel|preventDefault={(event) => changeOpacity(item, event)}>
-                    <div class="volume" style={"height: "+(item.opacity*100)+"%"}></div>
-
-                    <button class="item-name" 
-                    on:click={() => {R.toggleSelected(item.rect)}}
-                    on:dblclick={() => { toggleImageEdit(item.rect);}}
-                    on:focus={()=>{}} 
-                    on:mouseover={()=>{
-                        if (R.getIsSelected(item.rect)) help($t('help.map.selected'), $t('help.map.image'), $t('help.map.imageItemActions'), $t('help.map.itemSelectedActions'));
-                        else if (!item.rect.editEnabled()) help($t('help.map.locked'), $t('help.map.image'), $t('help.map.imageItemActions'), $t('help.map.itemLockedActions'));
-                        else help($t('help.map.image'), $t('help.map.imageItemActions'), $t('help.map.itemUnselectedActions'))}}
-                    on:mouseout={()=>{help()}}
-                    on:blur={()=>{}}>
-                        {item.niceName}
-                    </button>
-
-                    <button class="item-button item-add" title="duplicate image" 
-                    on:click={() => duplicateImage(item)}
-                    on:focus={()=>{}} 
-                    on:mouseover={()=>{help($t('help.map.imageDuplicate'))}}
-                    on:mouseout={()=>{help()}}
-                    on:blur={()=>{}}>
-                        +
-                    </button>
-                    
-                    <button class="item-button item-delete" title="delete image" 
-                    on:click={() => removeImage(i)}
-                    on:focus={()=>{}} 
-                    on:mouseover={()=>{help($t('help.map.imageDelete'))}}
-                    on:mouseout={()=>{help()}}
-                    on:blur={()=>{}}>
-                        ×
-                    </button>
-                </div>
+                <ImageListItem item={item} i={i} />
             {/each}
 
-            <div role="heading" class="browser-heading" aria-level="2">
+            <!-- Image List Heading -->
+            <div role="heading" class="browser-heading" aria-level="2"onwheel={(event) => {
+                event.preventDefault();
+            }}>
+
+                <!-- Image List Title -->
                 <span role="heading" aria-level="3"
-                on:focus={()=>{}} 
-                on:mouseover={()=>{help($t('help.map.imagesTitle'))}}
-                on:mouseout={()=>{help()}}
-                on:blur={()=>{}}>images</span>
+                onfocus     = {()=>{}} 
+                onmouseover = {()=>{help($t('help.map.imagesTitle'))}}
+                onmouseout  = {()=>{help()}}
+                onblur      = {()=>{}}>
+                    {$t('ui.images')}
+                </span>
+
+                <!-- Image List Show / Hide Toggle -->
                 <button class="browser-heading-button" id="hide-images-toggle"  class:imagesHidden
-                on:click={()=>{
+                onclick={()=>{
                     imagesHidden = !imagesHidden;
+                    imagesHidden ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))}}
+                onfocus={()=>{}} 
+                onblur={()=>{}}
+                onmouseout={()=>{help()}}
+                onmouseover = {()=>{
                     imagesHidden ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))
-                    }}
-                on:focus={()=>{}} 
-                on:mouseover={()=>{imagesHidden ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))}}
-                on:mouseout={()=>{help()}}
-                on:blur={()=>{}}>
+                }}>
                     {#if imagesHidden}<IconEye/>{:else}<IconEyeOff/>{/if}
                 </button>
             </div>
@@ -580,19 +522,43 @@ on:wheel|preventDefault={()=>{}}>
     {/if}
 </div>
 
+
+
+<!-- Help Text Display Area -->
+
 <div id="help" class:activated={isHelpActive}>
+
+    <!-- Help Text Show / Hide Toggle -->
     <button id="help-toggle" 
-    on:click={()=>{R.toggleHelpActive()}}>
+    onclick={()=>{R.toggleHelpActive()}}>
         ?
     </button>
+
+    <!-- Help Text -->
     <span id="help-text"></span>
 </div>
 
+
+
+<!-- Settings Menu -->
+
 <Settings />
+
+
+
+<!-- About Menu -->
 
 <About />
 
+
+
+<!-- Loading Menu -->
+
 <Loading />
+
+
+
+<!-- Window Toolbar -->
 
 <div id="toolbar">
 </div>

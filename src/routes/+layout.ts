@@ -1,6 +1,6 @@
 export const prerender = true;
 export const ssr = false;
-import { loadTranslations } from '$lib/util.translations';
+import { loadTranslations } from '$lib/util.localization';
 
 export const load = async () => {
     const initialLocale = 'en';

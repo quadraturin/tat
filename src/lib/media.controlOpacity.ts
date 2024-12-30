@@ -1,5 +1,5 @@
-import type { MapImage } from "./classes/MapImage";
-import { getUserSettings } from "./settings.userSettings";
+import type { MapImage } from "./classes/MapImage.svelte";
+import { getUserSettings } from "./settings.userSettings.svelte";
 
 /**
  * change the opacity of an image based on scrolling the mouse wheel.

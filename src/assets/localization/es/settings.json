@@ -6,7 +6,7 @@
     "listenerMoveSpeed": "Velocidad de movimiento del oyente (WASD)",
     "hideWindowContentsFromStream": "Ocultar el contenido de la ventana de la transmisión",
     "language": "Idioma",
-    "themeTitle": "Tema",
+    "theme": "Tema",
     "reset": "Restablecer valores predeterminados",
     "autoSave": "(Todos los cambios de configuración se aplican inmediatamente)."
 }

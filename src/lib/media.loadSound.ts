@@ -5,12 +5,12 @@ import 'leaflet-editable';
 import 'leaflet.path.drag';
 import { removeSoundbyEmitter } from './media.removeSound';
 import { updateLoadingModal } from './ui.modals';
-import type { MapSound } from './classes/MapSound';
+import type { MapSound } from './classes/MapSound.svelte';
 import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from './settings.appSettings';
 import { help } from './util.help';
 import { basename } from '@tauri-apps/api/path';
 import { convertFileSrc } from '@tauri-apps/api/core';
-import { t, locales, locale } from '$lib/util.translations';
+import { t, locales, locale } from '$lib/util.localization';
 
 /**
  *  options definition for new sounds.
@@ -126,20 +126,22 @@ export async function duplicateSound(sound:MapSound) {
  * @param sound map sound to change.
  */
 export async function cycleSoundType(sound:MapSound) {
-    if (sound.soundType == SOUNDTYPE_AREA) {
-        sound.soundType = SOUNDTYPE_GLOBAL;
-        await removeSoundbyEmitter(sound.emitter, false, true);
-    } else if (sound.soundType == SOUNDTYPE_GLOBAL) {
-        sound.soundType = SOUNDTYPE_LOCAL;
-        await removeSoundbyEmitter(sound.emitter, false, true);
-        sound.emitter = await createEmitter({soundType:sound.soundType});
-    } else { 
-        // assume local as default
-        sound.soundType = SOUNDTYPE_AREA;
-        await removeSoundbyEmitter(sound.emitter, false, true);
-        sound.emitter = await createEmitter({soundType:sound.soundType});
+    if (sound.sound) {
+        if (sound.soundType == SOUNDTYPE_AREA) {
+            sound.soundType = SOUNDTYPE_GLOBAL;
+            await removeSoundbyEmitter(sound.emitter, false, true);
+        } else if (sound.soundType == SOUNDTYPE_GLOBAL) {
+            sound.soundType = SOUNDTYPE_LOCAL;
+            await removeSoundbyEmitter(sound.emitter, false, true);
+            sound.emitter = await createEmitter({soundType:sound.soundType});
+        } else { 
+            // assume local as default
+            sound.soundType = SOUNDTYPE_AREA;
+            await removeSoundbyEmitter(sound.emitter, false, true);
+            sound.emitter = await createEmitter({soundType:sound.soundType});
+        }
+        sound.sound.play();
     }
-    sound.sound.play();
 }
 
 /**

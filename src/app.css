@@ -33,6 +33,7 @@
 /* Variables */
 
 :root {
+    overscroll-behavior: none;
     /* debug theme */
     --c-ui: gray;
     --c-ui-accent: darkgray;
@@ -348,6 +349,9 @@ body {
 .browser-heading svg {
     height: 14px;
 }
+.browser-heading span {
+    color: var(--c-ui);
+}
 .browser-heading-button {
     float:right;
     background:none;
@@ -444,7 +448,7 @@ body {
     border-radius: 2px;
     background-color: var(--c-highlight);
     min-width: 2px;
-    width: 50%;
+    width: 0%;
     border: none;
     z-index: 10;
 }
@@ -524,6 +528,9 @@ body {
 }
 .menu h3 {
     text-decoration: underline;
+}
+.menu p {
+    margin-bottom: 1rem;
 }
 .menu a {
     color: var(--c-menu-highlight);

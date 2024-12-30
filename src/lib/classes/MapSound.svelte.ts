@@ -24,14 +24,14 @@ export class MapSound
 {
     src:string;
     name:string;
-    sound:H.Howl;
-    emitter:L.Circle|L.Polygon|undefined;
-    soundType:string;
-    volume:number;
-    muted:boolean;
-    solo:boolean;
-    order:number; 
-    niceName:string;
+    sound:H.Howl|undefined = $state();
+    emitter:L.Circle|L.Polygon|undefined = $state();
+    soundType:string = $state("");
+    volume:number = $state(0);
+    muted:boolean = $state(false);
+    solo:boolean = $state(false);
+    order:number = $state(1); 
+    niceName:string = $state("");
     
     constructor(options:mapSoundOptions)
     {

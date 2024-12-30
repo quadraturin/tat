@@ -1,8 +1,9 @@
 import L from "leaflet";
-import { MapImage } from "./classes/MapImage";
-import { MapSound } from "./classes/MapSound";
+import { MapImage } from "./classes/MapImage.svelte";
+import { MapSound } from "./classes/MapSound.svelte";
 import type { MapInfo } from "./classes/MapInfo";
 import type * as H from 'howler';
+import { AppTheme } from "./classes/AppTheme.svelte";
 
 
 
@@ -520,4 +521,17 @@ export function toggleHelpActive() {
  */
 export function getIsHelpActive():boolean {
     return helpActive;
+}
+
+
+
+/**
+ * The theme.
+ */
+let theme = new AppTheme();
+export function getTheme():AppTheme {
+    return theme;
+}
+export function setTheme(newThemeText:{}) {
+    theme = new AppTheme(newThemeText);
 }

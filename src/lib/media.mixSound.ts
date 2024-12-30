@@ -1,5 +1,5 @@
 import * as R from '$lib/registry';
-import type { MapSound } from './classes/MapSound';
+import { MapSound } from './classes/MapSound.svelte';
 
 /**
  * toggle a sound muted/unmuted by index.
@@ -16,7 +16,7 @@ export async function toggleMute(id:number) {
  * @param toMute whether to mute (true) or unmute (false) the sound.
  */
 async function mute(sound:MapSound, toMute:boolean) {
-    sound.sound.mute(toMute)
+    if (sound.sound) sound.sound.mute(toMute)
     sound.muted = toMute;
 }
 
@@ -37,26 +37,29 @@ export async function toggleSolo(id:number) {
 async function solo(sound:MapSound, toSolo:boolean) {
     let soundList = R.getSoundList();
     for (let i=0; i<soundList.length; i++) {
-        if (sound == R.getSoundList()[i]) {
-            if (toSolo) {
-                R.getSoundList()[i].sound.mute(false);
-                R.getSoundList()[i].muted = false;
-                R.getSoundList()[i].solo = true;
-            }
-            else{
-                // restore muted state.
-                R.getSoundList()[i].sound.mute(R.getSoundList()[i].muted); 
+        if (R.getSoundList()[i].sound instanceof Howl) {
+            const s:Howl = R.getSoundList()[i].sound as Howl;
+            if (sound == R.getSoundList()[i]) {
+                if (toSolo) {
+                    s.mute(false);
+                    R.getSoundList()[i].muted = false;
+                    R.getSoundList()[i].solo = true;
+                }
+                else{
+                    // restore muted state.
+                    s.mute(R.getSoundList()[i].muted); 
+                    R.getSoundList()[i].solo = false;
+                }
+            } else {
+                if (toSolo) {
+                    // mute all but solo (don't set muted state).
+                    s.mute(true); 
+                } else {
+                    // restore muted state.
+                    s.mute(R.getSoundList()[i].muted); 
+                }
                 R.getSoundList()[i].solo = false;
             }
-        } else {
-            if (toSolo) {
-                // mute all but solo (don't set muted state).
-                R.getSoundList()[i].sound.mute(true); 
-            } else {
-                // restore muted state.
-                R.getSoundList()[i].sound.mute(R.getSoundList()[i].muted); 
-            }
-            R.getSoundList()[i].solo = false;
         }
     }
 }

@@ -3,11 +3,11 @@ import L from 'leaflet';
 import { message, save } from "@tauri-apps/plugin-dialog";
 import { mkdir, writeTextFile, exists, readDir, remove, copyFile } from "@tauri-apps/plugin-fs";
 import { join, basename, sep } from "@tauri-apps/api/path";
-import type { MapImage } from './classes/MapImage';
-import type { MapSound } from './classes/MapSound';
+import type { MapImage } from './classes/MapImage.svelte';
+import type { MapSound } from './classes/MapSound.svelte';
 import { closeAllMenus } from './ui.menus';
 import { closeModal, openSavingModal } from './ui.modals';
-import { t } from './util.translations';
+import { t } from './util.localization';
 
 
 /**
@@ -82,7 +82,7 @@ export async function saveProject(saveAs=false): Promise<boolean>
     // cycle through loaded sounds, adding each to the project object
     i = 0;
     soundList.forEach(e => {
-        project.maps[0].sounds[i] = {
+        if (e.sound) project.maps[0].sounds[i] = {
             src: e.name,
             soundType: e.soundType,
             volume: e.volume,
@@ -167,7 +167,7 @@ async function deleteUnused(fileType:string) {
     let path = R.getProjectPath();
     if (typeof path == "undefined") return;
 
-    let fileList = await readDir(path + sep + fileType);
+    let fileList = await readDir(path + sep() + fileType);
 
     for (let i=0; i<fileList.length; i++) {
         let notInUse = true;
@@ -181,7 +181,7 @@ async function deleteUnused(fileType:string) {
         }
         if (notInUse) {
             //console.log(fileList[i].name as string + " is not in use. deleting...")
-            remove(path + sep + fileType + sep + fileList[i].name as string);
+            remove(path + sep() + fileType + sep() + fileList[i].name as string);
         }
     }
 }

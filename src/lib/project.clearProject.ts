@@ -2,8 +2,8 @@ import * as R from "$lib/registry"
 import * as S from "$lib/settings.appSettings"
 import { removeImageByRect } from "./media.removeImage";
 import { removeSoundbyEmitter } from "./media.removeSound";
-import type { MapSound } from "./classes/MapSound";
-import type { MapImage } from "./classes/MapImage";
+import type { MapSound } from "./classes/MapSound.svelte";
+import type { MapImage } from "./classes/MapImage.svelte";
 import { shouldSaveProject } from "./project.shouldSaveProject";
 import { closeAllMenus } from "./ui.menus";
 

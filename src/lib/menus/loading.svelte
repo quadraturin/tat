@@ -1,5 +1,5 @@
 <script>
-    import { t, locales, locale } from '$lib/util.translations';
+    import { t, locales, locale } from '$lib/util.localization';
 	import IconLoading from "$lib/icons/iconLoading.svelte";
 </script>
 <div id="modal-background">

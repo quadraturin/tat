@@ -5,11 +5,11 @@ import L from 'leaflet';
 import 'leaflet-editable';
 import { removeImageByRect } from './media.removeImage';
 import { updateLoadingModal } from './ui.modals';
-import type { MapImage } from './classes/MapImage';
+import type { MapImage } from './classes/MapImage.svelte';
 import { getRandomPointInViewport } from './util.getRandomPointInViewport';
 import { help } from './util.help';
 import { convertFileSrc } from '@tauri-apps/api/core';
-import { t, locales, locale } from '$lib/util.translations';
+import { t } from '$lib/util.localization';
 
 /**
  * load an image file.
