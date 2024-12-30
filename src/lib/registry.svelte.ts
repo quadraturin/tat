@@ -241,8 +241,8 @@ export function sortImageList() {
         return a.order-b.order;
     });
     for(let image of imageList) {
-        image.overlay.bringToFront();
-        image.rect.bringToFront();
+        if (image.overlay) image.overlay.bringToFront();
+        if (image.rect) image.rect.bringToFront();
     }
 }
 
@@ -403,7 +403,7 @@ let selected = new Array<L.Rectangle|L.Circle|L.Polygon>;
  */
 export function addToSelection(item:L.Rectangle|L.Circle|L.Polygon) {
     selected.push(item);
-    item.setStyle({color:"white"});
+    item.getElement()?.classList.toggle("selected");
 }
 /**
  * remove a map object from the selection.
@@ -416,7 +416,7 @@ export function removeFromSelection(item:L.Rectangle|L.Circle|L.Polygon) {
             break;
         }
     }
-    item.setStyle({color:"coral"});
+    item.getElement()?.classList.toggle("selected");
 }
 /**
  * check if a map object is selected.
@@ -446,6 +446,7 @@ export function getSelectedList():Array<L.Rectangle|L.Circle|L.Polygon> {
  */
 export function toggleSelected(item:L.Rectangle|L.Circle|L.Polygon|undefined) {
     if (typeof item == "undefined") return;
+    if (!item.editEnabled()) return;
     if (getIsSelected(item)) {
         removeFromSelection(item);
     } else {

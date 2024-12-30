@@ -142,9 +142,6 @@
 #master-volume { 
     border: 1px solid yellow; 
 }
-#browser .item.selected { 
-    border: 1px solid yellow !important; 
-}
 
 /* c7 */
 .toolbar-button.selected, 
@@ -236,7 +233,12 @@ button:focus {
 }
 
 /* cC */
-
+.leaflet-interactive.selected { 
+    stroke:deepskyblue; 
+}
+#browser .item.selected { 
+    border: 1px solid deepskyblue !important; 
+}
 
 
 

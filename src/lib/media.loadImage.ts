@@ -65,7 +65,6 @@ export async function newImage(options:newImageOptions) {
             // get the original image dimensions.
             let originalW:number = img.width;
             let originalH:number = img.height;
-            //console.log (originalW, originalH);
             if (typeof o.width == "undefined") o.width = originalW;
             if (typeof o.height == "undefined") o.height = originalH;
 
@@ -148,7 +147,8 @@ export async function duplicateImage(image:MapImage) {
  * set/unset editability of an image rectangle. called when double-clicking.
  * @param imageRect the edit rectangle to toggle.
  */
-export function toggleImageEdit(imageRect:L.Rectangle) {
+export function toggleImageEdit(imageRect:L.Rectangle|undefined) {
+    if (!imageRect) return;
     if (imageRect.editEnabled()) imageRect.setStyle({opacity:0});
     else imageRect.setStyle({opacity:1});
     imageRect.toggleEdit();

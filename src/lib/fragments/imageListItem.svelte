@@ -8,11 +8,12 @@
 	import type { MapImage } from '$lib/classes/MapImage.svelte';
 
     let {item, i} : {item:MapImage, i:number} = $props();
+
 </script>
 
 <!-- An Image Item -->
 <div  id="image-item-{i}" role="listitem"
-class={["item image-item", (R.getIsSelected(item.rect)) && "selected", (!item.rect.editEnabled()) && "locked"]}
+class={["item image-item", item.selected && "selected", !item.editEnabled && "locked"]}
 onwheel = {(event) => { event.preventDefault(); changeOpacity(item, event)}}>
 
     <!-- Opacity Display -->
@@ -20,8 +21,12 @@ onwheel = {(event) => { event.preventDefault(); changeOpacity(item, event)}}>
 
     <!-- Image Name -->
     <button class="item-name" 
-    onclick     = {()=>{R.toggleSelected(item.rect)}}
-    ondblclick  = {()=>{toggleImageEdit(item.rect)}}
+    onclick     = {()=>{
+        R.toggleSelected(item.rect); 
+        item.selected = R.getIsSelected(item.rect); }}
+    ondblclick  = {()=>{
+        toggleImageEdit(item.rect); 
+        item.editEnabled = item.rect?.editEnabled() as boolean; }}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
@@ -31,7 +36,7 @@ onwheel = {(event) => { event.preventDefault(); changeOpacity(item, event)}}>
             $t('help.map.image'), 
             $t('help.map.imageItemActions'), 
             $t('help.map.itemSelectedActions'));
-        else if (!item.rect.editEnabled()) 
+        else if (item.rect && !item.rect.editEnabled()) 
             help($t('help.map.locked'), 
             $t('help.map.image'), 
             $t('help.map.imageItemActions'), 
