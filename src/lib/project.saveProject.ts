@@ -1,4 +1,4 @@
-import * as R from '$lib/registry';
+import * as R from '$lib/registry.svelte';
 import L from 'leaflet';
 import { message, save } from "@tauri-apps/plugin-dialog";
 import { mkdir, writeTextFile, exists, readDir, remove, copyFile } from "@tauri-apps/plugin-fs";

@@ -1,4 +1,4 @@
-import * as R from '$lib/registry'
+import * as R from '$lib/registry.svelte'
 import { readFile } from "@tauri-apps/plugin-fs";
 import { basename, extname } from '@tauri-apps/api/path';
 import L from 'leaflet';
@@ -315,4 +315,3 @@ function bindEventsToImageRect(imageRect:L.Rectangle, overlay:L.ImageOverlay, wi
     imageRect.on('dragend', () => onClick(imageRect, overlay));
     imageRect.on('mouseup', () => onClick(imageRect, overlay));
 }
-

@@ -1,5 +1,4 @@
 import type { MapSound } from "./classes/MapSound.svelte";
-import { setMapSoundVolumes } from "./media.setMapSoundVolumes";
 import { getUserSettings } from "./settings.userSettings.svelte";
 import * as H from 'howler';
 

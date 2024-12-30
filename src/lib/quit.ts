@@ -1,5 +1,5 @@
 import { ask } from "@tauri-apps/plugin-dialog";
-import { getisProjectDirty } from "./registry";
+import { getisProjectDirty } from "./registry.svelte";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { t } from "./util.localization";
 const appWindow = getCurrentWebviewWindow()

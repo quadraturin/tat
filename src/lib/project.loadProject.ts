@@ -2,12 +2,11 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { projectExt } from './settings.appSettings';
 import { exists, readTextFile } from '@tauri-apps/plugin-fs';
 import { basename, join, sep } from '@tauri-apps/api/path';
-import { loadImageFile, newImage } from './media.loadImage';
+import { newImage } from './media.loadImage';
 import { newSound } from './media.loadSound';
-import * as R from '$lib/registry'
+import * as R from '$lib/registry.svelte'
 import { clearProject } from './project.clearProject';
 import { closeModal, openLoadingModal } from './ui.modals';
-import { convertFileSrc } from '@tauri-apps/api/core';
 
 /**
  * load a project.

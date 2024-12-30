@@ -1,4 +1,4 @@
-import * as R from '$lib/registry'
+import * as R from '$lib/registry.svelte'
 import L from 'leaflet'
 import { removeImageByRect } from './media.removeImage'
 import { removeSoundbyEmitter } from './media.removeSound'

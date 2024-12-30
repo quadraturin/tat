@@ -1,4 +1,4 @@
-import * as R from '$lib/registry';
+import * as R from '$lib/registry.svelte';
 import { MapSound } from './classes/MapSound.svelte';
 
 /**

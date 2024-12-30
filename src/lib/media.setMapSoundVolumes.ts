@@ -1,4 +1,4 @@
-import * as R from "$lib/registry"
+import * as R from "$lib/registry.svelte"
 import L from "leaflet";
 import * as T from '@turf/turf'
 import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from "./settings.appSettings";

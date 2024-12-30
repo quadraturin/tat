@@ -528,10 +528,10 @@ export function getIsHelpActive():boolean {
 /**
  * The theme.
  */
-let theme = new AppTheme();
+let activeTheme = new AppTheme();
 export function getTheme():AppTheme {
-    return theme;
+    return activeTheme;
 }
 export function setTheme(newThemeText:{}) {
-    theme = new AppTheme(newThemeText);
+    activeTheme = new AppTheme(newThemeText);
 }

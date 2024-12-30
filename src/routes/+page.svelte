@@ -10,7 +10,7 @@
     import '../app.css'
 
     // modules
-    import * as R from '$lib/registry';
+    import * as R from '$lib/registry.svelte';
     import * as S from '$lib/settings.appSettings';
     import L from "leaflet";
     import * as H from 'howler';

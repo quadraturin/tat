@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { getThemesList } from "$lib/settings.theme";
-	import * as R from '$lib/registry';
 
     interface Props {
         children?: import('svelte').Snippet;

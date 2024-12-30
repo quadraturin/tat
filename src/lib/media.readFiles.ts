@@ -1,4 +1,4 @@
-import * as R from '$lib/registry'
+import * as R from '$lib/registry.svelte'
 import { open } from "@tauri-apps/plugin-dialog";
 import { imageFileTypes, soundFileTypes } from '$lib/settings.appSettings';
 import { loadFile } from "./media.loadFile";
@@ -55,4 +55,3 @@ export async function readFiles() {
         console.error(err);
     }
 }
-

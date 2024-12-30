@@ -1,4 +1,4 @@
-import * as R from '$lib/registry';
+import * as R from '$lib/registry.svelte';
 import { getRandomPointInViewport } from "./util.getRandomPointInViewport";
 import L from "leaflet";
 import 'leaflet-editable';

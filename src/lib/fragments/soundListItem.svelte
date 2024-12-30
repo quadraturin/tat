@@ -1,5 +1,5 @@
 <script lang="ts">
-    import * as R from '$lib/registry';
+    import * as R from '$lib/registry.svelte';
     import * as S from '$lib/settings.appSettings';
     import { t } from '$lib/util.localization';
 	import { toggleMute, toggleSolo } from '$lib/media.mixSound';

@@ -1,4 +1,4 @@
-import * as R from '$lib/registry';
+import * as R from '$lib/registry.svelte';
 import { ask } from '@tauri-apps/plugin-dialog';
 import { t } from './util.localization';
 

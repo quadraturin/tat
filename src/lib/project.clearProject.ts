@@ -1,4 +1,4 @@
-import * as R from "$lib/registry"
+import * as R from "$lib/registry.svelte"
 import * as S from "$lib/settings.appSettings"
 import { removeImageByRect } from "./media.removeImage";
 import { removeSoundbyEmitter } from "./media.removeSound";

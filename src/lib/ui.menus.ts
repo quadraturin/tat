@@ -1,4 +1,4 @@
-import * as R from '$lib/registry';
+import * as R from '$lib/registry.svelte';
 
 /**
  * close all open menus.

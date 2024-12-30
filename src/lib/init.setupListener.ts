@@ -1,5 +1,5 @@
 import L from "leaflet";
-import { t, locales, locale } from '$lib/util.localization';
+import { t } from '$lib/util.localization';
 import { help } from "./util.help";
 
 /**

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import * as R from '$lib/registry';
+    import * as R from '$lib/registry.svelte';
 	import { removeImage } from '$lib/media.removeImage';
 	import { duplicateImage, toggleImageEdit } from '$lib/media.loadImage';
 	import { changeOpacity } from '$lib/media.controlOpacity';
@@ -11,18 +11,17 @@
 </script>
 
 <!-- An Image Item -->
-<div class="item image-item" id="image-item-{i}" role="listitem"
-class:selected = {R.getIsSelected(item.rect)} 
-class:locked   = {!item.rect.editEnabled()} 
-onwheel        = {(event) => { event.preventDefault(); changeOpacity(item, event)}}>
+<div  id="image-item-{i}" role="listitem"
+class={["item image-item", (R.getIsSelected(item.rect)) && "selected", (!item.rect.editEnabled()) && "locked"]}
+onwheel = {(event) => { event.preventDefault(); changeOpacity(item, event)}}>
 
     <!-- Opacity Display -->
     <div class="volume" style={"height: "+ item.opacity*100 +"%"}></div>
 
     <!-- Image Name -->
     <button class="item-name" 
-    onclick     = {() => {R.toggleSelected(item.rect)}}
-    ondblclick  = {() => {toggleImageEdit(item.rect)}}
+    onclick     = {()=>{R.toggleSelected(item.rect)}}
+    ondblclick  = {()=>{toggleImageEdit(item.rect)}}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
@@ -47,7 +46,7 @@ onwheel        = {(event) => { event.preventDefault(); changeOpacity(item, event
 
     <!-- Image Add Button -->
     <button class="item-button item-add" title="duplicate image" 
-    onclick     = {() => duplicateImage(item)}
+    onclick     = {()=>duplicateImage(item)}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseover = {()=>{help($t('help.map.imageDuplicate'))}}

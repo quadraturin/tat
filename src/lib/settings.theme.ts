@@ -17,3 +17,4 @@ export function getThemesList():AppTheme[] {
 
     return themesList;
 }
+

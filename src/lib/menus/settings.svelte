@@ -1,6 +1,6 @@
 <script lang="ts">
     import { t, locales, locale } from '$lib/util.localization';
-	import * as R from '$lib/registry';
+	import * as R from '$lib/registry.svelte';
 	import { getDefaultUserSettings, getUserSettings, resetUserSettings, userSettings } from '$lib/settings.userSettings.svelte';
 	import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 	import { saveUserSettings } from '$lib/settings.saveUserSettings';
