@@ -520,7 +520,7 @@ body {
     position: absolute;
     bottom: 0;
     left: 0;
-    padding: 1px;
+    padding: 0 1px 1px 1px;
     font-size: 0.7rem;
     font-weight: bold;
     -webkit-user-select: none;  /* Chrome all / Safari all */
@@ -530,16 +530,24 @@ body {
     cursor: default;
     width: 100%;
     display: flex;
-    align-items: end;
+}
+#help.activated {
+    box-shadow: 0 0 5px rgba(0,0,0,0.25);
 }
 #help.activated #help-text { 
     display:block; 
+}
+#help.activated #help-toggle {
+    border-radius: 0;
+    box-shadow: none;
 }
 #help-toggle {
     font-weight: bold;
     padding: 0;
     flex-basis: 18px;
-    height: 18px;
+    width: 18px;
+    border-top-right-radius: 8px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.25);
 }
 #help-text {
     display: none;
