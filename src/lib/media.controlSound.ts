@@ -24,7 +24,7 @@ export async function togglePause(sound:MapSound) {
  */
 export async function seekToByClick(sound:MapSound, mouseX:number) {
     if (sound.sound) {
-        let pct = (mouseX-26)/162; // 18px from left edge of screen, 170px wide
+        let pct = (mouseX-24)/192; // 18px from left edge of screen, 170px wide
         let pos = sound.sound.duration() * pct;
         sound.sound.seek(pos);
     }
