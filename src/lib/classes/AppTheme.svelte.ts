@@ -64,11 +64,11 @@ export class AppTheme {
             if (themeJSON.c8) this.c8 = themeJSON.c8;
             if (themeJSON.c9) this.c9 = themeJSON.c9;
             if (themeJSON.cA) this.cA = themeJSON.cA;
-            if (themeJSON.cB) this.cB = themeJSON.cC;
-            if (themeJSON.cC) this.cC = themeJSON.cD;
-            if (themeJSON.cD) this.cD = themeJSON.cE;
-            if (themeJSON.cE) this.cE = themeJSON.cF;
-            if (themeJSON.cF) this.cF = themeJSON.cB;
+            if (themeJSON.cB) this.cB = themeJSON.cB;
+            if (themeJSON.cC) this.cC = themeJSON.cC;
+            if (themeJSON.cD) this.cD = themeJSON.cD;
+            if (themeJSON.cE) this.cE = themeJSON.cE;
+            if (themeJSON.cF) this.cF = themeJSON.cF;
             if (themeJSON.f0) this.f0 = themeJSON.f0;
         }
     }

@@ -72,36 +72,36 @@
 #browser-images, 
 #controls, 
 .sound-item-progress-track { 
-    background-color: green; 
+    background-color: var(--c1); 
 }
 #browser .item.locked { 
-    border: 1px dashed green !important; 
+    border: 1px dashed var(--c1) !important; 
 }
 .leaflet-touch, 
 .menu { 
-    border: 2px solid green; 
+    border: 2px solid var(--c1); 
     border-top: none; 
 }
 
 /* c2: Map items */
 .leaflet-tile { 
-    color: red; 
+    color: var(--c2); 
 }
 .leaflet-vertex-icon { 
-    background: red; 
+    background: var(--c2); 
 }
 .leaflet-middle-icon { 
-    border: 1px solid red; 
+    border: 1px solid var(--c2); 
 }
 .leaflet-interactive { 
-    stroke: red; 
+    stroke: var(--c2); 
 }
 .leaflet-sound-pane 
 .leaflet-interactive { 
-    fill: red; 
+    fill: var(--c2); 
 }
 .listener-stroke {
-    stroke: red;
+    stroke: var(--c2);
 }
 
 /* c3: Button text */
@@ -109,25 +109,25 @@
 #controls button, 
 #browser .item-name, 
 #browser .item-button { 
-    color:darkgreen; 
+    color: var(--c3); 
 }
 
-/* c4: Item list backgrounds */
+/* c4: List item backgrounds */
 #browser .item, 
 #master-volume { 
-    background-color: yellowgreen; 
+    background-color: var(--c4); 
 }
 
-/* c5: UI foregrounds & item list backgrounds */
+/* c5: UI foregrounds & list item volume */
 .titlebar, 
 #help, 
 #help-toggle,
 #browser-sounds, 
 #browser-images { 
-    color: greenyellow; 
+    color: var(--c5); 
 }
 #browser .volume { 
-    background-color: greenyellow;
+    background-color: var(--c5);
 }
 
 /* c6: Button backgrounds */
@@ -136,31 +136,31 @@
 .sound-item-progress-bar, 
 #browser .item-button, 
 #master-volume-bar { 
-    background-color: yellow; 
+    background-color: var(--c6); 
 }
 .browser-heading-button,
 .titlebar-button { 
-    color: yellow; 
+    color: var(--c6); 
 }
 #master-volume { 
-    border: 1px solid yellow; 
+    border: 1px solid var(--c6); 
 }
 
 /* c7: Menu & tab background */
 .toolbar-button.selected, 
 .menu, 
 .menu::-webkit-scrollbar { 
-    background-color: darkslategray !important; 
+    background-color: var(--c7) !important; 
 }
 .menu h2, 
 .setting button, 
 .rangeValue {
-    color: darkslategray; 
+    color: var(--c7); 
 };
 
 /* c7-8: Menu scrollbar */
 .menu { 
-    scrollbar-color: darkslategray aquamarine; 
+    scrollbar-color: var(--c7) var(--c8); 
 }
 
 /* c8: Menu & tab foreground */
@@ -169,86 +169,86 @@ input[type=checkbox]::after,
 input[type=checkbox]:hover::after, 
 .setting button, 
 input[type=range]::-webkit-slider-thumb {
-    background-color: aquamarine; 
+    background-color: var(--c8); 
 }
 .menu::-webkit-scrollbar-corner, 
 .menu::-webkit-resizer, 
 .menu::-webkit-scrollbar-thumb, 
 input[type=range]::-webkit-slider-thumb,
 .rangeValue {
-    background-color: aquamarine; 
+    background-color: var(--c8); 
 }
 input[type=range]::-moz-range-thumb {
-    background-color: aquamarine; 
+    background-color: var(--c8); 
 }    
 .menu, input[type=range], 
 select, 
 .toolbar-button.selected { 
-    color:aquamarine !important; 
+    color:var(--c8) !important; 
 }
 input[type=checkbox] {
-    border: 1px solid aquamarine !important;
+    border: 1px solid var(--c8) !important;
 } 
 input[type=range], 
 select {
-    border: 1px solid aquamarine;
+    border: 1px solid var(--c8);
 }
 .rangeValue::after {
-    border-right: 3px solid aquamarine;
+    border-right: 3px solid var(--c8);
 }
 
 /* c9: Menu highlights & links */
 input:focus, 
 select:focus, 
 button:focus {
-    outline: 1px solid blanchedalmond;
+    outline: 1px solid var(--c9);
 }
 .changed label, .menu a {
-    color:blanchedalmond;
+    color:var(--c9);
 }
 .changed select {
-    color:blanchedalmond !important;
+    color:var(--c9) !important;
 }
 .changed input, .changed select {
-    border-color: blanchedalmond !important;
+    border-color: var(--c9) !important;
 }
 .changed input[type=range]::-webkit-slider-thumb {
-    background-color: blanchedalmond;
+    background-color: var(--c9);
 }
 .changed input[type=range]::-moz-range-thumb {
-    background-color: blanchedalmond;
+    background-color: var(--c9);
 }
 .changed .rangeValue {
-    background-color: blanchedalmond;
+    background-color: var(--c9);
 }
 .changed .rangeValue::after {
-    border-right: 3px solid blanchedalmond;
+    border-right: 3px solid var(--c9);
 }
 .changed input[type=checkbox]::after {
-    background-color: blanchedalmond;
+    background-color: var(--c9);
 }
 
 /* cA: Activated button foreground */
 #browser .activated {
-    color:pink !important;
+    color: var(--cA) !important;
 }
 
 /* cB: Activated button background */
 #browser .activated {
-    background-color:blueviolet !important;
+    background-color: var(--cB) !important;
 }
 
 /* cC: Selected item highlights */
 .leaflet-interactive.selected { 
-    stroke:deepskyblue; 
+    stroke:var(--cC); 
 }
 #browser .item.selected { 
-    border: 1px solid deepskyblue !important; 
+    border: 1px solid var(--cC) !important; 
 }
 
 /* cD: Listener */
 .listener-stroke {
-    fill:violet;
+    fill: var(--cD);
 }
 
 /* cE: Hover backgrounds */
@@ -256,17 +256,17 @@ button:focus {
 .toolbar-button:hover, 
 #browser .item-button:hover, 
 .setting button:hover { 
-    background-color: white; 
+    background-color: var(--cE); 
 }
 .titlebar .titlebar-button:hover, 
 .browser-heading-button:hover, 
 .browser-heading-button.soundsHidden,
 .browser-heading-button.imagesHidden,
 .menu a:hover { 
-    color: white; 
+    color: var(--cE); 
 }
 #browser button.activated:hover {
-    color: white !important;
+    color: var(--cE) !important;
 }
 
 /* cF: Hover foregrounds */
@@ -274,10 +274,10 @@ button:focus {
 .toolbar-button:hover, 
 #browser .item-button:hover, 
 .setting button:hover { 
-    color: orange; 
+    color: var(--cF); 
 }
 #browser .activated:hover {
-    color: orange !important;
+    color: var(--cF) !important;
 }
 
 
@@ -286,10 +286,14 @@ button:focus {
     border: none;
 }
 
+.listener-stroke {
+    stroke-width: 2px;
+}
 
 .listener-shadow {
-    fill: rgba(0,0,0,0.8);
-    stroke: rgba(0,0,0,0.8);
+    fill: rgba(0,0,0,0.5);
+    stroke: rgba(0,0,0,0.5);
+    
 }
 
 
