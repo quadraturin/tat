@@ -682,6 +682,9 @@ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</pre>
 
+<h3>Solar Icons</h3>
+
+<p><a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> (Modified) - <a target="_blank" href="https://www.figma.com/community/file/1166831539721848736/solar-icons-set">Solar Icon Set by 480 Design</a></p>
 
 <h3>tabler icons</h3>
 

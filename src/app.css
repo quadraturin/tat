@@ -283,7 +283,7 @@ button:focus {
 }
 
 .listener-stroke {
-    stroke-width: 2px;
+    stroke-width: 1px;
 }
 
 .listener-shadow {
@@ -313,6 +313,13 @@ button:focus {
 #browser .item-button {
     border: 1px solid var(--c5);
 }
+.titlebar-button .svg-outer {
+    stroke: var(--c5);
+    stroke-width: 1px;
+}
+.titlebar-button .svg-inner {
+    fill: var(--c3);
+}
 #controls,
 #browser,
 .titlebar,
@@ -322,9 +329,7 @@ button:focus {
 .menu { 
     border: 1px solid #93a1a1;
 }
-.titlebar {
-    border-bottom: none;
-}
+.leaflet-touch {border-top: none;}
 #help-text {
     border-bottom: none;
     border-right: none;
@@ -421,9 +426,10 @@ body {
     margin-left: 0;
 }
 .toolbar-button.selected {
-    margin-bottom: 0;
+    margin-bottom: -1px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+    border-bottom: none;
 }
 .toolbar-button svg {
     display: inline-block;
@@ -752,7 +758,7 @@ body {
     top: var(--title-bar-height);
     border-top: none;
     width: 100%;
-    height: calc(100% - 30px);
+    height: calc(100% - var(--title-bar-height));
     padding: 1rem 5rem;
     display: none;
     font-size: 0.8rem;
@@ -770,7 +776,7 @@ body {
 }
 .menu h2 {
     padding: 0 8px;
-    border-radius: 1px;
+    border-radius: 2px;
 }
 .menu h3 {
     text-decoration: underline;
