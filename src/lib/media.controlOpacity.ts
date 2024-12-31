@@ -8,10 +8,13 @@ import { getUserSettings } from "./settings.userSettings.svelte";
  */
 export async function changeOpacity(image:MapImage, event:WheelEvent) {
     try {
-        image.opacity += event.deltaY * 0.01 * getUserSettings().uiScrollSensitivity;
+        let delta = event.deltaY;
+        // invert based on user settings.
+        if (getUserSettings().invertVolumeScroll) delta *= -1;
+        image.opacity += delta * 0.01 * getUserSettings().uiScrollSensitivity;
         if (image.opacity < 0) image.opacity = 0;
         else if (image.opacity > 1) image.opacity = 1;
-        image.overlay.setOpacity(image.opacity);
+        image.overlay?.setOpacity(image.opacity);
     } catch(err) {
         console.error(err);
     }
