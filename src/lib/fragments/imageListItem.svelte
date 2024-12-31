@@ -13,11 +13,12 @@
 
 <!-- An Image Item -->
 <div  id="image-item-{i}" role="listitem"
-class={["item image-item", item.selected && "selected", !item.editEnabled && "locked"]}
-onwheel = {(event) => { event.preventDefault(); changeOpacity(item, event)}}>
+class={["item image-item", item.selected && "selected", !item.editEnabled && "locked"]}>
 
     <!-- Opacity Display -->
-    <div class="volume" style={"height: "+ item.opacity*100 +"%"}></div>
+    <div class="item-volume" onwheel = {(event) => { event.preventDefault(); changeOpacity(item, event)}}>
+        <div class="volume" style={"height: "+ item.opacity*100 +"%"}></div>
+    </div>
 
     <!-- Image Name -->
     <button class="item-name" 
@@ -50,7 +51,7 @@ onwheel = {(event) => { event.preventDefault(); changeOpacity(item, event)}}>
     </button>
 
     <!-- Image Add Button -->
-    <button class="item-button item-add" title="duplicate image" 
+    <button class="item-button item-add button-l" title="duplicate image" 
     onclick     = {()=>duplicateImage(item)}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
@@ -60,7 +61,7 @@ onwheel = {(event) => { event.preventDefault(); changeOpacity(item, event)}}>
     </button>
 
     <!-- Image Delete Button -->
-    <button class="item-button item-delete" title="delete image" 
+    <button class="item-button item-delete button-r" title="delete image" 
     onclick     = {()=>removeImage(i)}
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.map.imageDelete'))}}

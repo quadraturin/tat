@@ -1,5 +1,6 @@
 <script lang="ts">
 
+
     /**
      * Imports
      */
@@ -72,6 +73,7 @@
 	import IconQuit from '$lib/icons/iconQuit.svelte';
 	import SoundListItem from '$lib/fragments/soundListItem.svelte';
 	import ImageListItem from '$lib/fragments/imageListItem.svelte';
+	import { image } from '@tauri-apps/api';
 
     /**
      * Variables
@@ -258,7 +260,7 @@
     <span data-tauri-drag-region class="toolbar-spacer"></span>
 
     <!-- Save Button -->
-    <button class="toolbar-button"
+    <button class="toolbar-button button-l"
     onclick     = {()=>saveProject(false)} 
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.save'), $t('help.titlebar.saveShortcut'))}}
@@ -270,7 +272,7 @@
     </button>
 
     <!-- Save As Button -->
-    <button class="toolbar-button"
+    <button class="toolbar-button button-r"
     onclick     = {()=>saveProject(true)}
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.saveAs'), $t('help.titlebar.saveAsShortcut'))}}
@@ -285,7 +287,7 @@
     <span data-tauri-drag-region class="toolbar-spacer"></span>
 
     <!-- Open Project Button -->
-    <button class="toolbar-button"
+    <button class="toolbar-button button-l"
     onclick     = {loadProject} 
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.openProject'), $t('help.titlebar.openProjectShortcut'))}}
@@ -297,7 +299,7 @@
     </button>
 
     <!-- New Project Button -->
-    <button class="toolbar-button"
+    <button class="toolbar-button button-r"
     onclick     = {clearProject} 
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.newProject'), $t('help.titlebar.newProjectShortcut'))}}
@@ -312,7 +314,7 @@
     <span data-tauri-drag-region class="toolbar-spacer"></span>
 
     <!-- Settings Menu Button -->
-    <button class="toolbar-button" id="settings-button"
+    <button class="toolbar-button button-l" id="settings-button"
     onclick     = {toggleSettingsMenu} 
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.settings'), $t('help.titlebar.settingsShortcut'))}}
@@ -323,8 +325,11 @@
         <span class="button-title-full">{$t('ui.settings')}</span>
     </button>
 
+    <!-- Spacer -->
+    <span data-tauri-drag-region class="toolbar-spacer"></span>
+
     <!-- About Menu Button -->
-    <button class="toolbar-button" id="about-button" 
+    <button class="toolbar-button button-r" id="about-button" 
     onclick     = {toggleAboutMenu} 
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.about'), $t('help.titlebar.aboutShortcut'))}}
@@ -383,7 +388,7 @@
 }}>
 
     <!-- Zoom In Button -->
-    <button id="zoom-in"
+    <button id="zoom-in" class="button-l"
     onclick     = {()=>{R.getMap().zoomIn()}}
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.map.zoomIn'), $t('help.map.zoomInShortcut'))}}
@@ -393,7 +398,7 @@
     </button>
 
     <!-- Zoom Out Button -->
-    <button id="zoom-out"
+    <button id="zoom-out" class="button-r"
     onclick     = {()=>{R.getMap().zoomOut()}}
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.map.zoomOut'), $t('help.map.zoomOutShortcut'))}}
@@ -436,6 +441,7 @@
 
 <!-- The Sidebar Media Browser -->
 
+{#if (soundList.length>0 || imageList.length>0)}
 <div id="browser" class:sidebarHidden>
     {#if soundList.length>0}
 
@@ -521,7 +527,7 @@
         </div>
     {/if}
 </div>
-
+{/if}
 
 
 <!-- Help Text Display Area -->

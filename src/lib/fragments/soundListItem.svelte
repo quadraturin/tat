@@ -31,11 +31,12 @@
 <!-- A Sound Item -->
 <div class="item sound-item" id="sound-item-{i}"
 class:selected={R.getIsSelected(item.emitter)}  
-class:locked={R.getIsLocked(item.emitter)}
-onwheel={(event) =>{ event.preventDefault(); changeBaseVolume(item, event)}}>
+class:locked={R.getIsLocked(item.emitter)}>
 
     <!-- Volume Display -->
-    <div class="volume" style={"height: "+(item.volume*100)+"%"}></div>
+    <div class="item-volume" onwheel={(event) =>{ event.preventDefault(); changeBaseVolume(item, event)}}>
+        <div class="volume" style={"height: "+(item.volume*100)+"%"}></div>
+    </div>
 
     <!-- Sound Name -->
     <button class="item-name" 
@@ -109,7 +110,7 @@ onwheel={(event) =>{ event.preventDefault(); changeBaseVolume(item, event)}}>
     </button>
 
     <!-- Sound Pause Button -->
-    <button class={["item-button item-pause", !playing && "activated"]}  
+    <button class={["item-button item-pause button-l", !playing && "activated"]}  
     onclick     = {()=>togglePause(item)}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
@@ -121,7 +122,7 @@ onwheel={(event) =>{ event.preventDefault(); changeBaseVolume(item, event)}}>
     </button>
 
     <!-- Sound Mute Button -->
-    <button class="item-button item-mute" class:activated={item.muted} 
+    <button class="item-button item-mute button-m" class:activated={item.muted} 
     onclick     = {()=>toggleMute(i)}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
@@ -133,7 +134,7 @@ onwheel={(event) =>{ event.preventDefault(); changeBaseVolume(item, event)}}>
     </button>
 
     <!-- Sound Solo Button -->
-    <button class="item-button item-solo" class:activated={item.solo} 
+    <button class="item-button item-solo button-r" class:activated={item.solo} 
     onclick     = {()=>toggleSolo(i)}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
@@ -145,7 +146,7 @@ onwheel={(event) =>{ event.preventDefault(); changeBaseVolume(item, event)}}>
     </button>
 
     <!-- Sound Add Button -->
-    <button class="item-button item-add" 
+    <button class="item-button item-add button-l" 
     onclick     = {()=>duplicateSound(item)}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
@@ -155,7 +156,7 @@ onwheel={(event) =>{ event.preventDefault(); changeBaseVolume(item, event)}}>
     </button>
 
     <!-- Sound Delete Button -->
-    <button class="item-button item-delete" 
+    <button class="item-button item-delete button-r" 
     onclick     = {()=>removeSound(i)}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}

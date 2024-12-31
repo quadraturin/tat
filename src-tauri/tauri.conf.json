@@ -56,7 +56,8 @@
         "title": "tat",
         "width": 800,
         "decorations": false,
-        "useHttpsScheme": true
+        "useHttpsScheme": true,
+        "transparent": true
       }
     ],
     "security": {

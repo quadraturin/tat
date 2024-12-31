@@ -113,7 +113,7 @@ export function getProjectName():string { return projectName; };
 /**
  * if the project has any media.
  */
-let hasMedia = false;
+let hasMedia = $state(false);
 /**
  * get if the project has media.
  * @returns if the project has media in it.
