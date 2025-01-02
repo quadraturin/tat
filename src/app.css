@@ -74,9 +74,6 @@
 .sound-item-progress-bar { 
     background-color: var(--c1); 
 }
-#browser .item.locked { 
-    border: 1px dashed var(--c1) !important; 
-}
 
 /* c2: Map items */
 .leaflet-tile { 
@@ -328,6 +325,11 @@ button:focus {
 #help-toggle,
 .menu { 
     border: 1px solid #93a1a1;
+}
+
+#browser .item.locked { 
+    border: 1px dashed var(--c5); 
+    border-left-style: solid;
 }
 .leaflet-touch {border-top: none;}
 #help-text {
