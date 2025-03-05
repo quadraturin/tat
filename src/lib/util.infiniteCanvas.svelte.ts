@@ -10,7 +10,7 @@ export class InfiniteCanvas {
     #touchMode: "single" | "double" = "single";
     #prevTouch: [Touch | null, Touch | null] = [null, null];
   
-    constructor(cellSize = 50) {
+    constructor(cellSize = 100) {
       this.cellSize = cellSize;
   
       const canvas = document.getElementById("canvas");
@@ -52,8 +52,9 @@ export class InfiniteCanvas {
       return (this.canvas?.clientWidth ?? 0) / this.#scale;
     }
   
-    zoom(amount: number): void {
-      this.#scale *= amount;
+    zoom(amount?: number): void {
+      if (amount) this.#scale *= amount;
+      else this.#scale = window.devicePixelRatio;
       this.#draw();
     }
   
@@ -267,5 +268,8 @@ export class InfiniteCanvas {
         this.context.stroke();
       }
     }
+
+    #drawCircle(x:number, y:number, r:number):void{}
+    #drawImage(x:number, y:number, w:number, h:number):void{}
   }
   

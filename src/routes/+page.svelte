@@ -129,6 +129,14 @@
             R.getListener().setLatLng([R.getListener().getLatLng().lat - +speed, R.getListener().getLatLng().lng]);
         else if (e.key == "d") 
             R.getListener().setLatLng([R.getListener().getLatLng().lat, R.getListener().getLatLng().lng + +speed]);
+        // canvas controls
+        else if (e.key == "ArrowUp") R.getCanvas().offsetDown(10);
+        else if (e.key == "ArrowDown") R.getCanvas().offsetUp(10);
+        else if (e.key == "ArrowLeft") R.getCanvas().offsetRight(10);
+        else if (e.key == "ArrowRight") R.getCanvas().offsetLeft(10);
+        else if (e.key == "-") R.getCanvas().zoom(0.95);
+        else if (e.key == "=") R.getCanvas().zoom(1.05);
+        else if (e.key == "0") R.getCanvas().zoom();
     }
 
     /**
@@ -192,33 +200,33 @@
 
 
         // infinite canvas
+        R.setCanvas();
 
-        const infiniteCanvas = new InfiniteCanvas();
         //document.addEventListener("contextmenu", (e) => e.preventDefault(), false);
         
         document
         .getElementById("zoom-in")!
-        .addEventListener("click", () => infiniteCanvas.zoom(1.05));
+        .addEventListener("click", () => R.getCanvas().zoom(1.05));
 
         document
         .getElementById("zoom-out")!
-        .addEventListener("click", () => infiniteCanvas.zoom(0.95));
+        .addEventListener("click", () => R.getCanvas().zoom(0.95));
 
         document
         .getElementById("move-left")!
-        .addEventListener("click", () => infiniteCanvas.offsetLeft(10));
+        .addEventListener("click", () => R.getCanvas().offsetLeft(10));
 
         document
         .getElementById("move-right")!
-        .addEventListener("click", () => infiniteCanvas.offsetRight(10));
+        .addEventListener("click", () => R.getCanvas().offsetRight(10));
 
         document
         .getElementById("move-up")!
-        .addEventListener("click", () => infiniteCanvas.offsetUp(10));
+        .addEventListener("click", () => R.getCanvas().offsetUp(10));
 
         document
         .getElementById("move-down")!
-        .addEventListener("click", () => infiniteCanvas.offsetDown(10));
+        .addEventListener("click", () => R.getCanvas().offsetDown(10));
 
     })
 

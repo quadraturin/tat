@@ -5,8 +5,15 @@ import type { MapInfo } from "./classes/MapInfo";
 import type * as H from 'howler';
 import { AppTheme } from "./classes/AppTheme.svelte";
 import { getThemesList } from "./settings.theme";
+import { InfiniteCanvas } from "./util.infiniteCanvas.svelte";
 
-
+let canvas:InfiniteCanvas;
+export function getCanvas() {
+    return canvas;
+}
+export function setCanvas(gridSize?:number) {
+    canvas = new InfiniteCanvas(gridSize);
+}
 
 /**
  * the map.
