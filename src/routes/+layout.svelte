@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { getThemesList } from "$lib/settings.theme";
     import * as R from '$lib/registry.svelte';
 
     interface Props {
@@ -28,12 +27,8 @@
         theme += "--cF:" + R.activeTheme.cF + ";";
         theme += "--f0:" + R.activeTheme.f0 + ";";
 
-        console.log("THEME:", R.activeTheme);
         document.getElementById('themeWrapper')?.setAttribute('style',theme);
     });
-
-    const themes = getThemesList();
-    console.log(themes);
 </script>
 
 <div id="themeWrapper">

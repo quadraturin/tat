@@ -75,6 +75,8 @@
 	import ImageListItem from '$lib/fragments/imageListItem.svelte';
 	import { image } from '@tauri-apps/api';
 
+    import { InfiniteCanvas } from '$lib/util.infiniteCanvas.svelte';
+
     /**
      * Variables
      */
@@ -187,6 +189,37 @@
 
         // Set up the drag-and-drop handler
         dragDrop();
+
+
+        // infinite canvas
+
+        const infiniteCanvas = new InfiniteCanvas();
+        //document.addEventListener("contextmenu", (e) => e.preventDefault(), false);
+        
+        document
+        .getElementById("zoom-in")!
+        .addEventListener("click", () => infiniteCanvas.zoom(1.05));
+
+        document
+        .getElementById("zoom-out")!
+        .addEventListener("click", () => infiniteCanvas.zoom(0.95));
+
+        document
+        .getElementById("move-left")!
+        .addEventListener("click", () => infiniteCanvas.offsetLeft(10));
+
+        document
+        .getElementById("move-right")!
+        .addEventListener("click", () => infiniteCanvas.offsetRight(10));
+
+        document
+        .getElementById("move-up")!
+        .addEventListener("click", () => infiniteCanvas.offsetUp(10));
+
+        document
+        .getElementById("move-down")!
+        .addEventListener("click", () => infiniteCanvas.offsetDown(10));
+
     })
 
     /**
@@ -217,6 +250,7 @@
         isHelpActive = R.getIsHelpActive();
         setMapSoundVolumes();
     }, 15);
+
 </script>
 
 <svelte:window
@@ -373,21 +407,32 @@
 
 
 
+
 <!-- The Map -->
 
-<div id="map-wrapper" class:imagesHidden class:soundsHidden>
+<div id="map-wrapper" class:imagesHidden class:soundsHidden style="display:none;">
     <div id="map"></div>
 </div>
 
+<div class="container">
+    <canvas id="canvas"></canvas>
 
+    <div id="controls">
+        <button type="button" id="zoom-in">+</button>
+        <button type="button" id="zoom-out">-</button>
+        <button type="button" id="move-left">&lt;</button>
+        <button type="button" id="move-right">&gt;</button>
+        <button type="button" id="move-up">^</button>
+        <button type="button" id="move-down">v</button>
+    </div>
+</div>
 
 <!-- The Sidebar Controls -->
-
+<!--
 <div id="controls" class:sidebarHidden onwheel={(event) => {
     event.preventDefault(); 
 }}>
 
-    <!-- Zoom In Button -->
     <button id="zoom-in" class="button-l"
     onclick     = {()=>{R.getMap().zoomIn()}}
     onfocus     = {()=>{}} 
@@ -397,7 +442,6 @@
         <IconZoomIn/>
     </button>
 
-    <!-- Zoom Out Button -->
     <button id="zoom-out" class="button-r"
     onclick     = {()=>{R.getMap().zoomOut()}}
     onfocus     = {()=>{}} 
@@ -407,10 +451,8 @@
         <IconZoomOut/>
     </button>
 
-    <!-- Spacer -->
     <div class="control-spacer"></div>
 
-    <!-- Recenter View Button -->
     <button id="recenter"
     onclick     = {()=>{R.getMap().flyTo(R.getListener().getLatLng())}}
     onfocus     = {()=>{}} 
@@ -420,10 +462,8 @@
         <IconRecenter/>
     </button>
     
-    <!-- Spacer -->
     <div class="control-spacer"></div>
     
-    <!-- Toggle Sidebar Visibilty Button -->
     <button id="hide-show"
     onclick     = {toggleSidebar}
     onfocus     = {()=>{}} 
@@ -436,7 +476,7 @@
         {#if sidebarHidden}<IconExpand/>{:else}<IconCollapse/>{/if}
     </button>
 </div>
-
+-->
 
 
 <!-- The Sidebar Media Browser -->
