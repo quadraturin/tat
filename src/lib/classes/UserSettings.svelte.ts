@@ -37,6 +37,5 @@ export class UserSettings {
         this.soundsHidden =                 "soundsHidden" in o ?                 o.soundsHidden as boolean :                 defaults.soundsHidden;
         this.imagesHidden =                 "imagesHidden" in o ?                 o.imagesHidden as boolean :                 defaults.imagesHidden;
         this.theme =                        "theme" in o ?                        o.theme as string :                         defaults.theme;
-        console.log(this.proportionalScaleOnByDefault)
     }
 }

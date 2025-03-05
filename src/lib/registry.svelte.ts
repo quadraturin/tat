@@ -541,8 +541,4 @@ export function setTheme(themeName:string) {
             activeTheme.update(themesList[i]);
         }
     }
-
-    console.log('active theme:', activeTheme);
-        
-    //activeTheme = new AppTheme(newThemeText);
 }

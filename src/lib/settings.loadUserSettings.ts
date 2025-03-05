@@ -16,7 +16,6 @@ export async function loadUserSettings() {
 
         // if it exists, read it and load the settings
         if (await exists(jsonPath)){
-            console.log(JSON.parse(await readTextFile(jsonPath)));
             getUserSettings().update(JSON.parse(await readTextFile(jsonPath)));
             locale.set(getUserSettings().language);
         // if it doesn't, create it with the default settings
