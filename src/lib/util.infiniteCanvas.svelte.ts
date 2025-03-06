@@ -7,6 +7,7 @@ export class InfiniteCanvas {
     cellSize: number;
   
     #scale = window.devicePixelRatio; 
+    #z = 1;
     #offsetX = 0;
     #offsetY = 0;
   
@@ -35,16 +36,16 @@ export class InfiniteCanvas {
     }
   
     toVirtualX(xReal: number): number {
-      return (xReal + this.#offsetX) * this.#scale;
+      return (xReal + this.#offsetX) * this.#scale * this.#z;
     }
     toVirtualY(yReal: number): number {
-      return (yReal + this.#offsetY) * this.#scale;
+      return (yReal + this.#offsetY) * this.#scale * this.#z;
     }
     toRealX(xVirtual: number): number {
-      return xVirtual / this.#scale - this.#offsetX;
+      return xVirtual / (this.#scale * this.#z) - this.#offsetX;
     }
     toRealY(yVirtual: number): number {
-      return yVirtual / this.#scale - this.#offsetY;
+      return yVirtual / (this.#scale * this.#z) - this.#offsetY;
     }
   
     virtualHeight(): number {
@@ -56,8 +57,8 @@ export class InfiniteCanvas {
     }
   
     zoom(amount?: number): void {
-      if (amount) this.#scale *= amount;
-      else this.#scale = window.devicePixelRatio;
+      if (amount) this.#z *= amount;
+      else this.#z = 1;
       this.#draw();
     }
   
@@ -241,7 +242,9 @@ export class InfiniteCanvas {
         const height = this.canvas.clientHeight;
   
         // draw vertical lines
-        for (let x = this.#offsetX % this.cellSize * this.#scale; x <= width; x += this.cellSize * this.#scale) {
+        for (let x = this.#offsetX % this.cellSize * this.#scale * this.#z; 
+            x <= width; 
+            x += this.cellSize * this.#scale * this.#z) {
           const source = x;
           this.context.moveTo(source, 0);
           this.context.lineTo(source, height);
@@ -249,7 +252,9 @@ export class InfiniteCanvas {
         }
         
         // draw horizontal lines
-        for (let y = this.#offsetY % this.cellSize * this.#scale; y <= height; y += this.cellSize * this.#scale) {
+        for (let y = this.#offsetY % this.cellSize * this.#scale * this.#z; 
+            y <= height; 
+            y += this.cellSize * this.#scale * this.#z) {
           const destination = y;
           this.context.moveTo(0, destination);
           this.context.lineTo(width, destination);
@@ -264,17 +269,17 @@ export class InfiniteCanvas {
         this.context.beginPath();
         this.context.strokeStyle = "rgb(246, 102, 186)";
         this.context.rect(
-          25 * this.#scale + this.#offsetX * this.#scale, 
-          75 * this.#scale + this.#offsetY * this.#scale, 
-          100 * this.#scale, 
-          150 * this.#scale);
+          25 * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z, 
+          75 * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z, 
+          100 * this.#scale * this.#z, 
+          150 * this.#scale * this.#z);
         this.context.stroke();
 
         this.context.beginPath();
         this.context.arc(
-          150 * this.#scale + this.#offsetX * this.#scale,
-          250 * this.#scale + this.#offsetY * this.#scale,
-          25 * this.#scale,
+          150 * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
+          250 * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
+          25 * this.#scale * this.#z,
           0,360);
         this.context.stroke();
       }
@@ -286,8 +291,8 @@ export class InfiniteCanvas {
         img.image, 
         this.toVirtualX(img.x), 
         this.toVirtualY(img.y), 
-        img.width * this.#scale, 
-        img.height * this.#scale
+        img.width * this.#scale * this.#z, 
+        img.height * this.#scale * this.#z
       );
     }
   }
