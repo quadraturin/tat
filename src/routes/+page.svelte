@@ -151,6 +151,15 @@
         else if (e.key == "Alt") R.setIsInDeleteMode(false);
     }
 
+    function onWheel(e:WheelEvent) {
+        //console.log('dx', e.deltaX, 'dy', e.deltaY, 'dz', e.deltaZ);
+        if (e.deltaY < 0){
+            R.getCanvas().zoom(1.01);
+        } else if (e.deltaY > 0) {
+            R.getCanvas().zoom(0.99)
+        }
+    }
+
     /**
      * Show/hide the sidebar.
      */
@@ -265,6 +274,7 @@
     onkeydown={onKeyDown}
     onkeyup={onKeyUp}
     ondrag={ondrag}
+    onwheel={onWheel}
 />
 
 
