@@ -1,3 +1,6 @@
+import * as R from "$lib/registry.svelte";
+import type { CanvasImage } from "./classes/CanvasImage.svelte";
+
 export class InfiniteCanvas {
     canvas: HTMLCanvasElement | null = null;
     context: CanvasRenderingContext2D | null = null;
@@ -78,6 +81,10 @@ export class InfiniteCanvas {
       this.#draw();
     }
 
+    update():void {
+      this.#draw();
+    }
+
     #draw(): void {
       if (this.canvas && this.context) {
         this.canvas.width  = Math.floor((document.body.clientWidth-2) * this.#scale);
@@ -90,6 +97,10 @@ export class InfiniteCanvas {
 
         this.#drawGrid();
         this.#drawBox();
+
+        for (let i=0; i<R.getImages().length; i++){
+          this.#drawImage(R.getImages()[i]);
+        }
       }
     }
 
@@ -270,6 +281,14 @@ export class InfiniteCanvas {
     }
 
     #drawCircle(x:number, y:number, r:number):void{}
-    #drawImage(x:number, y:number, w:number, h:number):void{}
+    #drawImage(img:CanvasImage):void {
+      R.getCanvas().context?.drawImage(
+        img.image, 
+        this.toVirtualX(img.x), 
+        this.toVirtualY(img.y), 
+        img.width * this.#scale, 
+        img.height * this.#scale
+      );
+    }
   }
   

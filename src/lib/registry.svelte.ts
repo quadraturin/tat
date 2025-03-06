@@ -6,7 +6,12 @@ import type * as H from 'howler';
 import { AppTheme } from "./classes/AppTheme.svelte";
 import { getThemesList } from "./settings.theme";
 import { InfiniteCanvas } from "./util.infiniteCanvas.svelte";
+import { CanvasImage } from "./classes/CanvasImage.svelte";
+import type { canvasImageOptions } from "./classes/CanvasImage.svelte";
 
+/**
+ * the canvas.
+ */
 let canvas:InfiniteCanvas;
 export function getCanvas() {
     return canvas;
@@ -62,14 +67,14 @@ export function getIsLoading():boolean { return isLoading; };
  * set whether or not anything is loading.
  * @param value whether or not something is loading.
  */
-export function setIsLoading(value:boolean) {isLoading = value; };
+export function setIsLoading(value:boolean) { isLoading = value; };
 
 
 
 /**
  * the saving state.
  */
-let isSaving  = false;
+let isSaving = false;
 /**
  * get whether or not the app is saving.
  * @returns whether or not saving is in progress.
@@ -169,10 +174,20 @@ export function getMapList():Array<MapInfo> { return mapList; };
  */
 export function setMapList(newMapList:Array<MapInfo>) { mapList = newMapList; };
 
-
+/**
+ * The list of canvas images.
+ */
+let images = new Array<CanvasImage>;
+export function getImages():Array<CanvasImage> { return images; }
+export function setImages(newImages:Array<CanvasImage>) { images = newImages; }
+export function addToImages(options:canvasImageOptions) { 
+    images.push(new CanvasImage(options)); 
+    console.log(images);
+}
 
 /**
  * the list of images.
+ * @todo replace this
  */
 let imageList = new Array<MapImage>;
 /**

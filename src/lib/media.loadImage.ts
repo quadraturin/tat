@@ -10,13 +10,14 @@ import { getRandomPointInViewport } from './util.getRandomPointInViewport';
 import { help } from './util.help';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { t } from '$lib/util.localization';
+import type { canvasImageOptions } from './classes/CanvasImage.svelte';
 
 /**
  * load an image file.
  * @param filePath path to image file.
  * @returns the image file.
  */
-export async function loadImageFile(filePath:string):Promise<File|undefined> {
+/*export async function loadImageFile(filePath:string):Promise<File|undefined> {
     try {
         updateLoadingModal(filePath);
         const content = await readFile(filePath);
@@ -27,51 +28,87 @@ export async function loadImageFile(filePath:string):Promise<File|undefined> {
         console.error(err);
         return;
     }
-}
+}*/
 
-type newImageOptions = {
-    src:string,
-    height?:number,
-    width?:number,
-    lat?:number,
-    lng?:number,
-    opacity?:number,
-    order?:number,
-    locked?:boolean
+export async function newImageFromPath(src:string, x?:number, y?:number) {
+    try {
+        // Construct canvas image options.
+        const img = new Image();
+        img.src = convertFileSrc(src);
+        const name = await basename(src);
+        console.log('loaded')
+        let options:canvasImageOptions = {
+            src: src,
+            image: img,
+            x: x? x : 0,
+            y: y? y : 0,
+            width: img.width,
+            height: img.height,
+            originalWidth: img.width,
+            originalHeight: img.height,
+            opacity: 1,
+            order: 0,
+            name: name,
+            niceName: name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim(),
+            editEnabled: true,
+            selected: false,
+            locked: false
+        }
+        // Create new image using canvas image options.
+        R.addToImages(options);
+        R.getCanvas().update();
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 /**
- * create a new image on the map.
+ * create a new image on the canvas.
  * @param options new image options.
  */
-export async function newImage(options:newImageOptions) {
+export async function newImage(options?:canvasImageOptions) {
     try {
-        // load defaults, overwrite with options.
+        // Load defaults, overwrite with options.
         let o = Object.assign({
             opacity: 1,
             locked: false
         }, options);
 
-        // make an image.
-        let img = new Image();
-
-        // nice name for the sound.
-        let name = await basename(o.src)
+        // Generate a nice name for the image based on the filename.
+        let name = await basename(o.src);
         let niceName = name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim();
 
-        // when the image loads, do everything else.
+        // Make an image.
+        let img = new Image();
+        img.src = convertFileSrc(o.src);
+
+        // When the image loads, do everything else.
         img.onload = function(){
 
-            // get the original image dimensions.
+            // Get the original image dimensions.
             let originalW:number = img.width;
             let originalH:number = img.height;
+
+            // If the current display dimensions are undefined, set them to the originals.
             if (typeof o.width == "undefined") o.width = originalW;
             if (typeof o.height == "undefined") o.height = originalH;
 
-            // create image id #
-            if (typeof o.order == "undefined") o.order = R.getImageList().length;
+            // Create image order based on current image list length.
+            if (typeof o.order == "undefined") o.order = R.getImages().length;
 
-            // determine the image origin point.
+            // Determine the image origin point coords if they haven't been provided.
+            if (typeof o.x == "undefined"){
+                if (typeof o.lng != "undefined") o.x = o.lng;
+                else o.x = 50; // todo: random location
+            }
+            if (typeof o.y == "undefined"){
+                if (typeof o.lat != "undefined") o.y = o.lat;
+                else o.y = 50; // todo: random location
+            }
+
+            //R.getCanvas().context?.drawImage(img, o.x, o.y, o.width, o.height);
+
+            /*
             if (typeof o.lat == "undefined" || typeof o.lng == "undefined") {
                 let point = getRandomPointInViewport(R.getMap())
                 o.lat = point.lat;
@@ -108,28 +145,18 @@ export async function newImage(options:newImageOptions) {
             imageRect.on('mouseout', () => {help()});
 
             bindEventsToImageRect(imageRect, overlay, o.width, o.height, originalW, originalH);
+            */
             R.setHasMedia(true);
-            overlay.setBounds(imageRect.getBounds());
-            bringImageToFront(imageRect, overlay);
+            //overlay.setBounds(imageRect.getBounds());
+            //bringImageToFront(imageRect, overlay);
             R.setProjectDirty;
 
             // add image data to registry.
-            R.addToImageList({
-                src:o.src, 
-                overlay:overlay, 
-                rect:imageRect, 
-                originalWidth:originalW, 
-                originalHeight:originalH, 
-                opacity:o.opacity, 
-                order:o.order,
-                name:name,
-                niceName:niceName
-            });
+            R.addToImages(o);
             
             // lock if locked.
-            if(o.locked) toggleImageEdit(imageRect);
+            //if(o.locked) toggleImageEdit(imageRect);
         }
-        img.src = convertFileSrc(options.src);
     } catch(err) {
         console.error(err);
     }
@@ -140,7 +167,7 @@ export async function newImage(options:newImageOptions) {
  * @param image the image to duplicate.
  */
 export async function duplicateImage(image:MapImage) {
-    newImage({src:image.src, opacity:image.opacity});
+    //newImage({src:image.src, opacity:image.opacity});
 }
 
 /**
