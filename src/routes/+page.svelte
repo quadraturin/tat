@@ -151,15 +151,6 @@
         else if (e.key == "Alt") R.setIsInDeleteMode(false);
     }
 
-    function onWheel(e:WheelEvent) {
-        //console.log('dx', e.deltaX, 'dy', e.deltaY, 'dz', e.deltaZ);
-        if (e.deltaY < 0){
-            R.getCanvas().zoom(1.01);
-        } else if (e.deltaY > 0) {
-            R.getCanvas().zoom(0.99)
-        }
-    }
-
     /**
      * Show/hide the sidebar.
      */
@@ -207,34 +198,59 @@
         // Set up the drag-and-drop handler
         dragDrop();
 
+        //document.addEventListener("contextmenu", (e) => e.preventDefault(), false);
 
-        // infinite canvas
+        // Infinite canvas setup
         R.setCanvas();
 
-        //document.addEventListener("contextmenu", (e) => e.preventDefault(), false);
-        
-        document
-        .getElementById("zoom-in")!
+        // Infinite canvas zoom
+        document.getElementById("canvas")!
+        .addEventListener("wheel", (e) => {
+            if (e.deltaY < 0){
+                R.getCanvas().zoom(1.01);
+            } else if (e.deltaY > 0) {
+                R.getCanvas().zoom(0.99)
+            }
+        });
+
+        // Infinite canvas pan
+        document.getElementById("canvas")!
+        .addEventListener("mousedown", (e) => {
+            R.startPanning(e.clientX, e.clientY);
+        });
+
+        document.getElementById("canvas")!
+        .addEventListener("mousemove", (e) => {
+            if (R.getPanning()) {
+                //console.log(e.clientX, e.clientY);
+                R.getCanvas().pan(R.getPanLastX(), R.getPanLastY(), e.clientX, e.clientY);
+                R.setPanLastX(e.clientX);
+                R.setPanLastY(e.clientY);
+                //R.startPanning(e.clientX, e.clientY);
+            }
+        });
+
+        document.getElementById("canvas")!
+        .addEventListener("mouseup", () => {
+            R.stopPanning();
+        });
+
+        document.getElementById("zoom-in")!
         .addEventListener("click", () => R.getCanvas().zoom(1.05));
 
-        document
-        .getElementById("zoom-out")!
+        document.getElementById("zoom-out")!
         .addEventListener("click", () => R.getCanvas().zoom(0.95));
 
-        document
-        .getElementById("move-left")!
+        document.getElementById("move-left")!
         .addEventListener("click", () => R.getCanvas().offsetLeft(10));
 
-        document
-        .getElementById("move-right")!
+        document.getElementById("move-right")!
         .addEventListener("click", () => R.getCanvas().offsetRight(10));
 
-        document
-        .getElementById("move-up")!
+        document.getElementById("move-up")!
         .addEventListener("click", () => R.getCanvas().offsetUp(10));
 
-        document
-        .getElementById("move-down")!
+        document.getElementById("move-down")!
         .addEventListener("click", () => R.getCanvas().offsetDown(10));
 
     })
@@ -274,7 +290,6 @@
     onkeydown={onKeyDown}
     onkeyup={onKeyUp}
     ondrag={ondrag}
-    onwheel={onWheel}
 />
 
 

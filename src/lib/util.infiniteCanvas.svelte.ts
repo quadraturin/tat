@@ -61,6 +61,11 @@ export class InfiniteCanvas {
       else this.#z = 1;
       this.#draw();
     }
+
+    pan(x1:number, y1:number, x2:number, y2:number):void {
+      this.offsetLeft((this.toRealX(x1) - this.toRealX(x2)));
+      this.offsetUp((this.toRealY(y1) - this.toRealY(y2)));
+    }
   
     offsetLeft(amount: number): void {
       this.#offsetX -= amount;

@@ -20,6 +20,20 @@ export function setCanvas(gridSize?:number) {
     canvas = new InfiniteCanvas(gridSize);
 }
 
+let panning = false;
+let panLastX = 0
+let panLastY = 0;
+export function startPanning(x:number, y:number) {
+    panLastX = x;
+    panLastY = y;
+    panning = true;
+}
+export function stopPanning() { panning = false;}
+export function getPanning():boolean { return panning; }
+export function getPanLastX():number { return panLastX; }
+export function getPanLastY():number { return panLastY; }
+export function setPanLastX(n:number) { panLastX = n; }
+export function setPanLastY(n:number) { panLastY = n; }
 /**
  * the map.
  */
