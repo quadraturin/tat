@@ -8,34 +8,227 @@ import { getThemesList } from "./settings.theme";
 import { InfiniteCanvas } from "./util.infiniteCanvas.svelte";
 import { CanvasImage } from "./classes/CanvasImage.svelte";
 import type { canvasImageOptions } from "./classes/CanvasImage.svelte";
+import { CanvasSound, type canvasSoundOptions } from "./classes/CanvasSound.svelte";
 
-/**
- * the canvas.
+
+
+/*
+ * +-----------------+
+ * | INFINITE CANVAS |
+ * +-----------------+
  */
-let canvas:InfiniteCanvas;
-export function getCanvas() {
-    return canvas;
-}
-export function setCanvas(gridSize?:number) {
-    canvas = new InfiniteCanvas(gridSize);
-}
 
+// ===== THE CANVAS =====
+
+/** The "infinite canvas" that all images, emitters, etc. get drawn to. */
+let canvas:InfiniteCanvas;
+
+/** Get the infinite canvas. @returns The infinite canvas. */
+export function getCanvas() { return canvas; }
+
+/** Set a new infinite canvas. @param gridSize The size of the grid to display on the canvas. */
+export function setCanvas(gridSize?:number) { canvas = new InfiniteCanvas(gridSize); }
+
+
+// ===== PANNING THE CANVAS =====
+
+/** Whether or not the user is currently panning. */
 let panning = false;
+
+/** The last X position of the cursor while panning. */
 let panLastX = 0
+
+/** The last Y position of the cursor while panning. */
 let panLastY = 0;
+
+/** Start panning the canvas. @param x X position of cursor. @param y Y position of cursor. */
 export function startPanning(x:number, y:number) {
     panLastX = x;
     panLastY = y;
     panning = true;
 }
+
+/** Stop panning the canvas. */
 export function stopPanning() { panning = false;}
+
+/** Get whether or not the user is currently panning. @returns If the user is currently panning. */
 export function getPanning():boolean { return panning; }
+
+/** Get the last cursor X position for panning the canvas. @returns The X position. */
 export function getPanLastX():number { return panLastX; }
+
+/** Get the last cursor Y position for panning the canvas. @returns The Y position. */
 export function getPanLastY():number { return panLastY; }
+
+/** Set the last cursor X position for panning the canvas. @param n The cursor X position. */
 export function setPanLastX(n:number) { panLastX = n; }
+
+/** Set the last cursor Y position for panning the canvas. @param n The cursor Y position. */
 export function setPanLastY(n:number) { panLastY = n; }
+
+
+
+/*
+ * +-----------------------------+
+ * | PROJECT CONTENTS MANAGEMENT |
+ * +-----------------------------+
+ */
+
+
+// ===== MAPS =====
+
+/** The list of maps in the current project. */
+let mapList = new Array<MapInfo>;
+
+/** Get the map list. @returns The map list. */
+export function getMapList():Array<MapInfo> { return mapList; };
+
+/** Set the map list to a new list. @param newMapList The new map list. */
+export function setMapList(newMapList:Array<MapInfo>) { mapList = newMapList; };
+
+
+
+// ===== IMAGES =====
+
+/** The list of images. */
+let images = new Array<CanvasImage>;
+
+/** Get the list of images. @returns The list of images. */
+export function getImages():Array<CanvasImage> { return images; }
+
+/** Set the list of images to a new list. @param newImages The new list of images. */
+export function setImages(newImages:Array<CanvasImage>) { images = newImages; }
+
+/** Add an image to the image list. @param options The new image information. */
+export function addToImages(options:canvasImageOptions) { 
+    images.push(new CanvasImage(options)); 
+    console.log(images);
+}
+
+
+
+// ===== SOUNDS =====
+
+/** The sound list. */
+let sounds = new Array<CanvasSound>;
+
+/** Get the sound list. @returns The sound list. */
+export function getSounds():Array<CanvasSound> { return sounds; }
+
+/** Set the sound list to a new sound list. @param newSounds The new sound list. */
+export function setSounds(newSounds:Array<CanvasSound>) { sounds = newSounds; }
+
+/** Add a sound to the sound list. @param options The new sound information. */
+export function addToSounds(options:canvasSoundOptions) { 
+    sounds.push(new CanvasSound(options)); 
+    console.log(sounds);
+}
+
+
+
+/*
+ * +----------------------+
+ * | APP STATE MANAGEMENT |
+ * +----------------------+ 
+ */
+
+
+// ===== LOADING =====
+
+/** The loading state. */
+let isLoading = false;
+
+/** Get whether or not anything is loading. @returns If the app is loading anything. */
+export function getIsLoading():boolean { return isLoading; };
+
+/** Set whether or not anything is loading. @param value If something is loading. */
+export function setIsLoading(value:boolean) { isLoading = value; };
+
+
+
+// ===== SAVING =====
+
+/** The saving state. */
+let isSaving = false;
+
+/** Get whether or not the app is saving. @returns If saving is in progress. */
+export function getIsSaving():boolean { return isSaving; };
+
+/** Set whether or not the app is saving. @param value If saving is in progress. */
+export function setIsSaving(value:boolean) {isSaving = value; };
+
+
+
+// ===== HAS MEDIA =====
+
+/** Whether or not the project has any media. */
+let hasMedia = $state(false);
+
+/** Get if the project has media. @returns If the project has media in it. */
+export function getHasMedia():boolean { return hasMedia; };
+
+/** Set if the project has media. @param b If the project has media. */
+export function setHasMedia(b:boolean) { hasMedia = b; };
+
+
+
+// ===== UNSAVED CHANGES =====
+
+/** Whether or not the project has unsaved changes. */
+let isProjectDirty = false;
+
+/** Get if the project has unsaved changes. @returns If the project has unsaved changes. */
+export function getisProjectDirty():boolean { return isProjectDirty; };
+
+/** Set the project to have unsaved changes. */
+export function setProjectDirty() { isProjectDirty = true; };
+
+/** Set the project to have no unsaved changes. */
+export function setProjectClean() { isProjectDirty = false; };
+
+
+
+/* 
+ * +---------------------+
+ * | PROJECT INFORMATION |
+ * +---------------------+
+ */
+
+
+// ===== PROJECT PATH =====
+
+/** The project path. */
+let projectPath:string | undefined;
+
+/** Set the path of the current project. @param p The project path. */
+export function setProjectPath(p:string) { projectPath = p; projectPath = projectPath || undefined };
+
+/** Get the path of the current project. @returns the project path. */
+export function getProjectPath():string|undefined { return projectPath; };
+
+
+// ===== PROJECT NAME =====
+
+/** The project name. */
+let projectName:string;
+
+/**  Set the name of the project.  @param p The name of the project. */
+export function setProjectName(p:string) { projectName = p; };
+
+/**  Get the name of the project. @returns the name of the project */
+export function getProjectName():string { return projectName; };
+
+
+
+
+
+
+
+// ------------------------------- ^ NEW STUFF ^
+
 /**
  * the map.
+ * @todo get rid of this
  */
 let map:L.Map;
 /**
@@ -53,6 +246,7 @@ export function setMap(newMap:L.Map) { map = newMap; };
 
 /**
  * the listener.
+ * @todo get rid of this
  */
 let listener:L.Marker;
 /**
@@ -68,136 +262,6 @@ export function setListener(newListener:L.Marker) { listener = newListener; };
 
 
 
-/**
- * the loading state.
- */
-let isLoading = false;
-/**
- * get whether or not anything is loading.
- * @returns whether or not the app is loading anything.
- */
-export function getIsLoading():boolean { return isLoading; };
-/**
- * set whether or not anything is loading.
- * @param value whether or not something is loading.
- */
-export function setIsLoading(value:boolean) { isLoading = value; };
-
-
-
-/**
- * the saving state.
- */
-let isSaving = false;
-/**
- * get whether or not the app is saving.
- * @returns whether or not saving is in progress.
- */
-export function getIsSaving():boolean { return isSaving; };
-/**
- * set whether or not the app is saving.
- * @param value whether or not saving is in progress.
- */
-export function setIsSaving(value:boolean) {isSaving = value; };
-
-
-
-/**
- * the project path.
- */
-let projectPath:string | undefined;
-/**
- * set the path of the current project.
- * @param p the project path.
- */
-export function setProjectPath(p:string) { projectPath = p; projectPath = projectPath || undefined };
-/**
- * get the path of the current project.
- * @returns the project path.
- */
-export function getProjectPath():string|undefined { return projectPath; };
-
-
-
-/**
- * the project name.
- */
-let projectName:string;
-/**
- * set the name of the project.
- * @param p the name of the project.
- */
-export function setProjectName(p:string) { projectName = p; };
-/**
- * get the name of the project.
- * @returns the name of the project
- */
-export function getProjectName():string { return projectName; };
-
-
-
-/**
- * if the project has any media.
- */
-let hasMedia = $state(false);
-/**
- * get if the project has media.
- * @returns if the project has media in it.
- */
-export function getHasMedia():boolean { return hasMedia; };
-/**
- * set if the project has media.
- * @param b if the project has media.
- */
-export function setHasMedia(b:boolean) { hasMedia = b; };
-
-
-
-/**
- * if the project has unsaved changes.
- */
-let isProjectDirty = false;
-/**
- * get if the project has unsaved changes.
- * @returns if the project has unsaved changes.
- */
-export function getisProjectDirty():boolean { return isProjectDirty; };
-/**
- * set the project to have unsaved changes.
- */
-export function setProjectDirty() { isProjectDirty = true; };
-/**
- * set the project to have no unsaved changes.
- */
-export function setProjectClean() { isProjectDirty = false; };
-
-
-
-/**
- * the list of maps.
- */
-let mapList = new Array<MapInfo>;
-/**
- * get the map list.
- * @returns the map list.
- */
-export function getMapList():Array<MapInfo> { return mapList; };
-/**
- * set the map list.
- * @param newMapList the map list.
- */
-export function setMapList(newMapList:Array<MapInfo>) { mapList = newMapList; };
-
-/**
- * The list of canvas images.
- */
-let images = new Array<CanvasImage>;
-export function getImages():Array<CanvasImage> { return images; }
-export function setImages(newImages:Array<CanvasImage>) { images = newImages; }
-export function addToImages(options:canvasImageOptions) { 
-    images.push(new CanvasImage(options)); 
-    console.log(images);
-}
 
 /**
  * the list of images.
@@ -207,11 +271,13 @@ let imageList = new Array<MapImage>;
 /**
  * get the image list.
  * @returns the image list.
+ * @todo replace this
  */
 export function getImageList():Array<MapImage> { return imageList; };
 /**
  * set the image list.
  * @param newImageList the new image list.
+ * @todo replace this
  */
 export function setImageList(newImageList:Array<MapImage>) { imageList = newImageList; };
 /**
@@ -223,6 +289,7 @@ export function setImageList(newImageList:Array<MapImage>) { imageList = newImag
  * @param oh the origina height of the image.
  * @param opacity the opacity of the image.
  * @param order the stacking order of the image.
+ * @todo replace this
  */
 type addToImageListOptions = {
     src:string,
@@ -281,6 +348,7 @@ export function sortImageList() {
         if (image.rect) image.rect.bringToFront();
     }
 }
+
 
 
 

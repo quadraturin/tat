@@ -11,6 +11,44 @@ import { help } from './util.help';
 import { basename } from '@tauri-apps/api/path';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { t, locales, locale } from '$lib/util.localization';
+import type { canvasSoundOptions } from './classes/CanvasSound.svelte';
+
+
+
+/**
+ * Create a new image in the project.
+ * @param src File path to the image.
+ * @param x X position of the image.
+ * @param y Y position of the image.
+ */
+export async function newSoundFromPath(src:string, x?:number, y?:number) {
+    try {
+        // Construct sound options.
+        const name = await basename(src);
+        console.log('loaded')
+        let options:canvasSoundOptions = {
+            src: src,
+            x: x? x : Math.random()*100,
+            y: y? y : Math.random()*100,
+            radius: 23,
+            order: 0,
+            name: name,
+            niceName: name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim(),
+            editEnabled: true,
+            selected: false,
+            locked: false,
+            soundType:"",
+            volume:1,
+            muted:false,
+            solo:false
+        }
+        // Create new sound using sound options.
+        R.addToSounds(options);
+        R.getCanvas().update();
+    } catch (err) {
+        console.error(err);
+    }
+}
 
 /**
  *  options definition for new sounds.

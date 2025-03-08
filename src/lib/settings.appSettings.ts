@@ -3,7 +3,7 @@ import { UserSettings } from "./classes/UserSettings.svelte";
 /**
  * Valid image file types.
  */
-export const imageFileTypes = ['png', 'gif', 'jpg', 'jpeg', 'webp'];
+export const imageFileTypes = ['png', 'gif', 'jpg', 'jpeg', 'webp', 'avif'];
 
 /**
  * Valid sound file types.

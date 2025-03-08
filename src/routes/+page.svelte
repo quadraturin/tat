@@ -207,9 +207,9 @@
         document.getElementById("canvas")!
         .addEventListener("wheel", (e) => {
             if (e.deltaY < 0){
-                R.getCanvas().zoom(1.01);
+                R.getCanvas().zoom(1.01, e.clientX, e.clientY);
             } else if (e.deltaY > 0) {
-                R.getCanvas().zoom(0.99)
+                R.getCanvas().zoom(0.99, e.clientX, e.clientY)
             }
         });
 

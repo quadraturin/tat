@@ -13,23 +13,11 @@ import { t } from '$lib/util.localization';
 import type { canvasImageOptions } from './classes/CanvasImage.svelte';
 
 /**
- * load an image file.
- * @param filePath path to image file.
- * @returns the image file.
+ * Create a new image in the project.
+ * @param src File path to the image.
+ * @param x X position of the image.
+ * @param y Y position of the image.
  */
-/*export async function loadImageFile(filePath:string):Promise<File|undefined> {
-    try {
-        updateLoadingModal(filePath);
-        const content = await readFile(filePath);
-        const fileName = await basename(filePath);
-        const ext = await extname(filePath);
-        return new File([content], fileName, {type: 'image/' + ext});
-    } catch(err) {
-        console.error(err);
-        return;
-    }
-}*/
-
 export async function newImageFromPath(src:string, x?:number, y?:number) {
     try {
         // Construct canvas image options.
@@ -40,8 +28,8 @@ export async function newImageFromPath(src:string, x?:number, y?:number) {
         let options:canvasImageOptions = {
             src: src,
             image: img,
-            x: x? x : 0,
-            y: y? y : 0,
+            x: x? x : Math.random()*100,
+            y: y? y : Math.random()*100,
             width: img.width,
             height: img.height,
             originalWidth: img.width,

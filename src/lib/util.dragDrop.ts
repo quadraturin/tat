@@ -1,5 +1,6 @@
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { loadFile } from "./media.loadFile";
+import { getCanvas } from "./registry.svelte";
 
 export async function dragDrop() {
     const unlisten = await getCurrentWebview().onDragDropEvent((event) => {
@@ -8,7 +9,11 @@ export async function dragDrop() {
         } else if (event.payload.type === 'drop') {
             console.log('User dropped', event.payload.paths);
             for (let i=0; i<event.payload.paths.length; i++) {
-                loadFile(event.payload.paths[i]);
+                loadFile(
+                    event.payload.paths[i], 
+                    getCanvas().toRealX(event.payload.position.x), 
+                    getCanvas().toRealY(event.payload.position.y)
+                );
             }
         } else {
             //console.log('File drop cancelled');
