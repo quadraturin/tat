@@ -40,6 +40,7 @@ export class InfiniteCanvas {
       if (context) {
         this.context = context;
         this.#draw();
+        this.flyToPoint(0,0);
       } else {
         console.error(`<canvas> element is missing context 2d`);
       }
@@ -103,7 +104,6 @@ export class InfiniteCanvas {
   flyToPoint(x:number, y:number) {
     this.#offsetX = (this.virtualWidth()/2) / this.#z - x;
     this.#offsetY = (this.virtualHeight()/2) / this.#z - y;
-    console.log(x, y);
     this.#draw();
   }
 
