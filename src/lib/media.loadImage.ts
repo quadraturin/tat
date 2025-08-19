@@ -40,6 +40,7 @@ export async function newImageFromPath(src:string, x?:number, y?:number) {
             niceName: name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim(),
             editEnabled: true,
             selected: false,
+            grabbed: false,
             locked: false
         }
         // Create new image using canvas image options.
@@ -86,12 +87,14 @@ export async function newImage(options?:canvasImageOptions) {
 
             // Determine the image origin point coords if they haven't been provided.
             if (typeof o.x == "undefined"){
-                if (typeof o.lng != "undefined") o.x = o.lng;
-                else o.x = 50; // todo: random location
+                //if (typeof o.lng != "undefined") o.x = o.lng;
+                //else 
+                o.x = 0; // todo: random location
             }
             if (typeof o.y == "undefined"){
-                if (typeof o.lat != "undefined") o.y = o.lat;
-                else o.y = 50; // todo: random location
+                //if (typeof o.lat != "undefined") o.y = o.lat;
+                //else 
+                o.y = 0; // todo: random location
             }
 
             //R.getCanvas().context?.drawImage(img, o.x, o.y, o.width, o.height);

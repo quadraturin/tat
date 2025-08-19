@@ -30,6 +30,15 @@ export function getCanvas() { return canvas; }
 /** Set a new infinite canvas. @param gridSize The size of the grid to display on the canvas. */
 export function setCanvas(gridSize?:number) { canvas = new InfiniteCanvas(gridSize); }
 
+// ===== DRAGGING ON THE CANVAS =====
+
+/** Whether or not the user is currently dragging something(s). */
+let dragging = false;
+export function getDragging() { return dragging; }
+export function setDragging(d?:boolean) {
+    if (typeof d == "undefined") dragging = !dragging;
+    else dragging = d;
+}
 
 // ===== PANNING THE CANVAS =====
 
@@ -276,6 +285,7 @@ export function setListener() {
         niceName: "Listener",
         editEnabled: true,
         selected: false,
+        grabbed: false,
         locked: false,
     }); 
 }

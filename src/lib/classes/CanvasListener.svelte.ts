@@ -9,6 +9,7 @@ export type canvasListenerOptions = {
     niceName:string,
     editEnabled:boolean,
     selected:boolean,
+    grabbed:boolean,
     locked:boolean,
 }
 
@@ -23,6 +24,7 @@ export class CanvasListener {
     #niceName:string;
     #editEnabled:boolean = $state(true);
     #selected:boolean = $state(false);
+    #grabbed:boolean = $state(false);
     #locked:boolean = $state(false);
 
     constructor(options:canvasListenerOptions) {
@@ -33,11 +35,31 @@ export class CanvasListener {
         this.#niceName = options.niceName;
         this.#editEnabled = options.editEnabled;
         this.#selected = options.selected;
+        this.#grabbed = options.grabbed;
         this.#locked = options.locked;
     }
 
-    setX(newX:number) { this.#x = newX; }
-    setY(newY:number) { this.#y = newY; }
     getX() { return this.#x; }
+    setX(newX:number) { this.#x = newX; }
+
     getY() { return this.#y; }
+    setY(newY:number) { this.#y = newY; }
+
+    getSelected() { return this.#selected; }
+    setSelected(s?:boolean) {
+        if(typeof s == "undefined") this.#selected = !this.#selected;
+        else this.#selected = s;
+    }
+
+    getGrabbed() { return this.#grabbed; }
+    setGrabbed(g?:boolean) {
+        if(typeof g == "undefined") this.#grabbed = !this.#grabbed;
+        else this.#grabbed = g;
+    }
+
+    getLocked() { return this.#locked; }
+    setLocked(l?:boolean) {
+        if(typeof l == "undefined") this.#locked = !this.#locked;
+        else this.#locked = l;
+    }
 }

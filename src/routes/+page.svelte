@@ -76,6 +76,7 @@
 	import { image } from '@tauri-apps/api';
 
     import { InfiniteCanvas } from '$lib/util.infiniteCanvas.svelte';
+	import { canvasClick } from '$lib/util.canvasObjects.svelte';
 
     /**
      * Variables
@@ -101,6 +102,7 @@
      */
     function onKeyDown(e:KeyboardEvent) { 
         let speed:number = getUserSettings().listenerMoveSpeed;
+        // key bindings
         if (e.key=="Shift") {
             if(getUserSettings().proportionalScaleOnByDefault) R.setIsProportionalScaleOn(false);
             else R.setIsProportionalScaleOn(true);
@@ -120,7 +122,7 @@
         else if (e.key == 'Escape') closeAllMenus();
         else if (e.key == "h") toggleSidebar();
         else if (e.key == "c") R.getCanvas().flyToPoint(R.getListener().getX(), R.getListener().getY());
-        // using unary + here to prevent weird concat issues
+        // move the listener
         else if (e.key == "w") 
             R.getListener().setY(R.getListener().getY() - speed);
         else if (e.key == "a") 
@@ -216,18 +218,21 @@
         // Infinite canvas pan start
         document.getElementById("canvas")!
         .addEventListener("mousedown", (e) => {
-            R.startPanning(e.clientX, e.clientY)
+            canvasClick(e);
         });
 
         // Infinite canvas panning
         document.getElementById("canvas")!
         .addEventListener("mousemove", (e) => {
             if (R.getPanning()) {
-                //console.log(e.clientX, e.clientY);
                 R.getCanvas().pan(R.getPanLastX(), R.getPanLastY(), e.clientX, e.clientY);
                 R.setPanLastX(e.clientX);
                 R.setPanLastY(e.clientY);
-                //R.startPanning(e.clientX, e.clientY);
+            } else if (R.getDragging()){
+                if (R.getListener().getGrabbed()) {
+                    R.getListener().setX(R.getCanvas().toWorldX(e.clientX));
+                    R.getListener().setY(R.getCanvas().toWorldY(e.clientY));
+                }
             }
         });
 
@@ -235,6 +240,8 @@
         document.getElementById("canvas")!
         .addEventListener("mouseup", () => {
             if (R.getPanning()) R.stopPanning();
+            if (R.getDragging()) R.setDragging(false);
+            if (R.getListener().getGrabbed()) R.getListener().setGrabbed(false);
         });
 
         document.getElementById("zoom-in")!

@@ -68,6 +68,15 @@ export class InfiniteCanvas {
   }
 
   /**
+   * Convert a world pixel length to a window one.
+   * @param len The "virtual" length to convert.
+   * @returns The "real" length.
+   */
+  toWindowLength(len: number): number {
+    return len / (this.#scale * this.#z);
+  }
+
+  /**
    * Convert a "virtual" (canvas) pixel x coordinate to a "real" (window) one.
    * @param xVirtual The "virtual" x pixel coordinate to convert.
    * @returns The "real" x coordinate.
@@ -83,6 +92,15 @@ export class InfiniteCanvas {
    */
   toWorldY(yVirtual: number): number {
     return yVirtual / (this.#scale * this.#z) - this.#offsetY;
+  }
+
+  /**
+   * Convert a "virtual" (canvas) pixel length to a "real" (window) one.
+   * @param len The "virtual" length to convert.
+   * @returns The "real" length.
+   */
+  toWorldLength(len: number): number {
+    return len / (this.#scale * this.#z);
   }
 
   /**
@@ -228,8 +246,6 @@ export class InfiniteCanvas {
 
       // Clear the canvas.
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-      //console.log(this.#offsetX, this.#offsetY)
 
       // Bottom layer: draw the canvas grid.
       this.#drawGrid(true);
@@ -574,17 +590,17 @@ export class InfiniteCanvas {
   #drawImage(img: CanvasImage): void {
     if (this.canvas && this.context) {
       this.context.drawImage(
-        img.image,
-        this.toWindowX(img.x),
-        this.toWindowY(img.y),
-        img.width * this.#scale * this.#z,
-        img.height * this.#scale * this.#z
+        img.getImage(),
+        this.toWindowX(img.getX()),
+        this.toWindowY(img.getY()),
+        img.getWidth() * this.#scale * this.#z,
+        img.getHeight() * this.#scale * this.#z
       );
-      this.#drawRect(img.x, img.y, img.width, img.height);
-      this.#drawHandle(img.x, img.y, 4);
-      this.#drawHandle(img.x, img.y + img.height, 4);
-      this.#drawHandle(img.x + img.width, img.y, 4);
-      this.#drawHandle(img.x + img.width, img.y + img.height, 4);
+      this.#drawRect(img.getX(), img.getY(), img.getWidth(), img.getHeight());
+      this.#drawHandle(img.getX(), img.getY(), 4);
+      this.#drawHandle(img.getX(), img.getY() + img.getHeight(), 4);
+      this.#drawHandle(img.getX() + img.getWidth(), img.getY(), 4);
+      this.#drawHandle(img.getX() + img.getWidth(), img.getY() + img.getHeight(), 4);
     }
   }
 }
