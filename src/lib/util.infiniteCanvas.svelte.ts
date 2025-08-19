@@ -104,16 +104,29 @@ export class InfiniteCanvas {
    * @param y The y position to center the zoom at.
    */
   zoom(amount?: number, x?: number, y?: number): void {
+    let preZoomX = 0;
+    let preZoomY = 0;
+    let postZoomX = 0;
+    let postZoomY = 0;
     if (typeof amount != "undefined") {
-      this.#z *= amount;
-      if (typeof x != "undefined" && typeof y != "undefined") {
-        //this.#offsetX = (x*2) / (this.#scale * this.#z) - this.#offsetX;
-        //this.#offsetY = (y*2) / (this.#scale * this.#z) - this.#offsetY;
-        //this.#offsetX = 300 / this.#z - 300
-      }
+      // default to 0
+      if (typeof x == "undefined") x = 0;
+      if (typeof y == "undefined") y = 0;
+
+      // get mouse pos in world space
+      preZoomX = this.toRealX(x);
+      preZoomY = this.toRealY(y);
+      this.#z*=amount;
+      postZoomX = this.toRealX(x);
+      postZoomY = this.toRealY(y);
+      this.#offsetX -= preZoomX - postZoomX;
+      this.#offsetY -= preZoomY - postZoomY;
+      //this.#offsetX = x / (this.#scale * this.#z) - (x * this.#scale * this.#z);
+      //this.#offsetY = y / (this.#scale * this.#z);
     } else {
       this.#z = 1;
     }
+    console.debug(this.#offsetX);
     this.#draw();
   }
 
@@ -206,7 +219,7 @@ export class InfiniteCanvas {
       }
 
       // Next, draw the audio listener.
-      this.#drawListener(225, 325, 10);
+      this.#drawListener(0, 0, 10);
     }
   }
 
