@@ -243,17 +243,8 @@
         document.getElementById("zoom-out")!
         .addEventListener("click", () => R.getCanvas().zoom(0.95));
 
-        document.getElementById("move-left")!
-        .addEventListener("click", () => R.getCanvas().offsetLeft(10));
-
-        document.getElementById("move-right")!
-        .addEventListener("click", () => R.getCanvas().offsetRight(10));
-
-        document.getElementById("move-up")!
-        .addEventListener("click", () => R.getCanvas().offsetUp(10));
-
-        document.getElementById("move-down")!
-        .addEventListener("click", () => R.getCanvas().offsetDown(10));
+        document.getElementById("center-on-listener")!
+        .addEventListener("click", () => R.getCanvas().flyToPoint(0,0));
 
     })
 
@@ -456,10 +447,7 @@
     <div id="controls">
         <button type="button" id="zoom-in">+</button>
         <button type="button" id="zoom-out">-</button>
-        <button type="button" id="move-left">&lt;</button>
-        <button type="button" id="move-right">&gt;</button>
-        <button type="button" id="move-up">^</button>
-        <button type="button" id="move-down">v</button>
+        <button type="button" id="center-on-listener">X</button>
     </div>
 </div>
 

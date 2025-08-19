@@ -99,6 +99,20 @@ export class InfiniteCanvas {
     return (this.canvas?.clientWidth ?? 0) / this.#scale;
   }
 
+  flyToPoint(x:number, y:number) {
+    this.#offsetX = x + this.virtualWidth()/2;
+    this.#offsetY = y + this.virtualHeight()/2;
+    console.log(this.#offsetX, this.#offsetY);
+    this.#draw();
+  }
+
+  here(){
+    return({
+      x:this.#offsetX, 
+      y:this.#offsetY
+    });
+  }
+
   /**
    * Zoom in or out, optionally centered on a point, or reset zoom.
    * @param amount The multiplier amount to zoom by. Omit to reset zoom.
@@ -146,7 +160,6 @@ export class InfiniteCanvas {
   /**
    * Pan inertia
    */
-
   panInertia() {
     if (Math.abs(this.#velocityX) > 0.1 && Math.abs(this.#velocityY) > 0.1 && !R.getPanning()) {
       this.#velocityX *= R.getFriction();
@@ -154,7 +167,6 @@ export class InfiniteCanvas {
       this.offsetLeft(this.#velocityX);
       this.offsetUp(this.#velocityY);
       this.#draw();
-      console.log(this.#velocityX);
     }
   }
 
