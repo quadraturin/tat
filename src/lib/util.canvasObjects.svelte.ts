@@ -5,19 +5,78 @@ export function canvasClick(e:MouseEvent) {
     const l = R.getListener();
     const c = R.getCanvas();
 
-    // Drag Listener
     if (pointCircleCollision(c.toWorldX(e.x), 
                              c.toWorldY(e.y), 
                              l.getX(), 
                              l.getY(), 
                              c.toWorldLength(R.getListenerRadius()))){
-        dragListener();
-    } else if (false) {
-        // placeholder for audio emitters
-    } else {
+        l.setSelected();
+    } 
+    // Select image
+    else {
         for (let i = 0; i < R.getImages().length; i++) {
             const img = R.getImages()[i];
             if (!img.getLocked() &&
+                pointRectCollision(c.toWorldX(e.x), 
+                                   c.toWorldY(e.y), 
+                                   img.getX(), 
+                                   img.getY(), 
+                                   img.getWidth(), 
+                                   img.getHeight())) {
+                img.setSelected();
+            }
+        }
+    } 
+}
+
+
+export function canvasDblClick(e:MouseEvent) {
+    const l = R.getListener();
+    const c = R.getCanvas();
+
+    if (pointCircleCollision(c.toWorldX(e.x), 
+                             c.toWorldY(e.y), 
+                             l.getX(), 
+                             l.getY(), 
+                             c.toWorldLength(R.getListenerRadius()))){
+        l.setEditable();
+    } 
+    // Select image
+    else {
+        for (let i = 0; i < R.getImages().length; i++) {
+            const img = R.getImages()[i];
+            if (!img.getLocked() &&
+                pointRectCollision(c.toWorldX(e.x), 
+                                   c.toWorldY(e.y), 
+                                   img.getX(), 
+                                   img.getY(), 
+                                   img.getWidth(), 
+                                   img.getHeight())) {
+                img.setEditable();
+            }
+        }
+    } 
+}
+
+export function canvasMouseDown(e:MouseEvent) {
+    const l = R.getListener();
+    const c = R.getCanvas();
+
+    // Drag Listener
+    if (l.getEditable() &&
+        pointCircleCollision(c.toWorldX(e.x), 
+                             c.toWorldY(e.y), 
+                             l.getX(), 
+                             l.getY(), 
+                             c.toWorldLength(R.getListenerRadius()))){
+        dragListener();
+    } 
+    // Drag image(s)
+    else {
+        for (let i = 0; i < R.getImages().length; i++) {
+            const img = R.getImages()[i];
+            if (img.getEditable() &&
+                !img.getLocked() &&
                 pointRectCollision(c.toWorldX(e.x), 
                                    c.toWorldY(e.y), 
                                    img.getX(), 

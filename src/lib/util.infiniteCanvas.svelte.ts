@@ -21,6 +21,10 @@ export class InfiniteCanvas {
   #prevTouch: [Touch | null, Touch | null] = [null, null];
   #velocityX = 0;
   #velocityY = 0;
+  #backgroundColor = "rgba(255, 255, 255, 1)"
+  #gridColor = "rgba(0, 0, 0, 0.1)"
+  #widgetColor = "rgba(246, 102, 186, 1)";
+  #widgetSelectedColor = "rgba(102, 246, 121, 1)";
 
   /**
    * Constructor for the Infinite Canvas.
@@ -426,7 +430,7 @@ export class InfiniteCanvas {
    */
   #drawGrid(showNumbers: boolean): void {
     if (this.canvas && this.context) {
-      this.context.strokeStyle = "rgb(102, 148, 246)";
+      this.context.strokeStyle = this.#gridColor;
       this.context.lineWidth = 1;
       this.context.font = "10px monospace";
       this.context.beginPath();
@@ -471,7 +475,7 @@ export class InfiniteCanvas {
   #drawTests(): void {
     if (this.canvas && this.context) {
       this.context.beginPath();
-      this.context.strokeStyle = "rgb(246, 102, 186)";
+      this.context.strokeStyle = this.#widgetColor;
       this.context.rect(
         25 * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
         75 * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
@@ -496,10 +500,11 @@ export class InfiniteCanvas {
    * @param width Width of the rectangle.
    * @param height Height of the rectangle.
    */
-  #drawRect(x: number, y: number, width: number, height: number) {
+  #drawRect(x: number, y: number, width: number, height: number, selected?:boolean) {
     if (this.canvas && this.context) {
       this.context.beginPath();
-      this.context.strokeStyle = "rgb(246, 102, 186)";
+      if (selected) this.context.strokeStyle = this.#widgetSelectedColor;
+      else this.context.strokeStyle = this.#widgetColor;
       this.context.rect(
         x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
         y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
@@ -549,8 +554,8 @@ export class InfiniteCanvas {
    */
   #drawHandle(x: number, y: number, r: number): void {
     if (this.canvas && this.context) {
-      this.context.strokeStyle = "rgb(246, 102, 186)";
-      this.context.fillStyle = "rgb(246, 102, 186)";
+      this.context.strokeStyle = this.#widgetColor;
+      this.context.fillStyle = this.#widgetColor;
       this.context.beginPath();
       this.context.arc(
         x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
@@ -570,15 +575,15 @@ export class InfiniteCanvas {
    */
   #drawListener(l:CanvasListener, r: number): void {
     if (this.canvas && this.context) {
-      this.context.strokeStyle = "rgb(246, 102, 186)";
-      this.context.fillStyle = "rgb(236, 170, 209)";
+      this.context.strokeStyle = this.#widgetColor;
+      this.context.fillStyle = this.#widgetColor;
       this.context.beginPath();
       this.context.arc(
         l.getX() * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
         l.getY() * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
         r,
         0, 360);
-      this.context.fill();
+      if(l.getEditable()) this.context.fill();
       this.context.stroke();
     }
   }
@@ -596,11 +601,13 @@ export class InfiniteCanvas {
         img.getWidth() * this.#scale * this.#z,
         img.getHeight() * this.#scale * this.#z
       );
-      this.#drawRect(img.getX(), img.getY(), img.getWidth(), img.getHeight());
-      this.#drawHandle(img.getX(), img.getY(), 4);
-      this.#drawHandle(img.getX(), img.getY() + img.getHeight(), 4);
-      this.#drawHandle(img.getX() + img.getWidth(), img.getY(), 4);
-      this.#drawHandle(img.getX() + img.getWidth(), img.getY() + img.getHeight(), 4);
+      if (img.getEditable()) { 
+        this.#drawRect(img.getX(), img.getY(), img.getWidth(), img.getHeight(), img.getSelected());
+        this.#drawHandle(img.getX(), img.getY(), 4);
+        this.#drawHandle(img.getX(), img.getY() + img.getHeight(), 4);
+        this.#drawHandle(img.getX() + img.getWidth(), img.getY(), 4);
+        this.#drawHandle(img.getX() + img.getWidth(), img.getY() + img.getHeight(), 4);
+      }
     }
   }
 }

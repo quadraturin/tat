@@ -76,7 +76,7 @@
 	import { image } from '@tauri-apps/api';
 
     import { InfiniteCanvas } from '$lib/util.infiniteCanvas.svelte';
-	import { canvasClick } from '$lib/util.canvasObjects.svelte';
+	import { canvasClick, canvasDblClick, canvasMouseDown } from '$lib/util.canvasObjects.svelte';
 
     /**
      * Variables
@@ -123,14 +123,23 @@
         else if (e.key == "h") toggleSidebar();
         else if (e.key == "c") R.getCanvas().flyToPoint(R.getListener().getX(), R.getListener().getY());
         // move the listener
-        else if (e.key == "w") 
-            R.getListener().setY(R.getListener().getY() - speed);
-        else if (e.key == "a") 
-            R.getListener().setX(R.getListener().getX() - speed);
-        else if (e.key == "s") 
-            R.getListener().setY(R.getListener().getY() + speed);
-        else if (e.key == "d") 
-            R.getListener().setX(R.getListener().getX() + speed);
+        else if (e.key == "w") {
+            if(R.getListener().getEditable()) {
+                R.getListener().setY(R.getListener().getY() - speed);
+            }
+        } else if (e.key == "a") {
+            if(R.getListener().getEditable()) { 
+                R.getListener().setX(R.getListener().getX() - speed);
+            }
+        } else if (e.key == "s") {
+            if(R.getListener().getEditable()) { 
+                R.getListener().setY(R.getListener().getY() + speed);
+            }
+        } else if (e.key == "d") {
+            if(R.getListener().getEditable()) { 
+                R.getListener().setX(R.getListener().getX() + speed);
+            }
+        }
         // canvas controls
         else if (e.key == "ArrowUp") R.getCanvas().offsetDown(10);
         else if (e.key == "ArrowDown") R.getCanvas().offsetUp(10);
@@ -205,9 +214,18 @@
         // Infinite canvas setup
         R.setCanvas();
 
+        // Infinite canvas click
+        document.getElementById("canvas")!.addEventListener("click", (e) => {
+            canvasClick(e);
+        });
+
+        // Infinite canvas double-click
+        document.getElementById("canvas")!.addEventListener("dblclick", (e) => {
+            canvasDblClick(e);
+        });
+
         // Infinite canvas zoom
-        document.getElementById("canvas")!
-        .addEventListener("wheel", (e) => {
+        document.getElementById("canvas")!.addEventListener("wheel", (e) => {
             if (e.deltaY < 0){
                 R.getCanvas().zoom(1.01, e.clientX, e.clientY);
             } else if (e.deltaY > 0) {
@@ -216,14 +234,12 @@
         });
 
         // Infinite canvas pan start
-        document.getElementById("canvas")!
-        .addEventListener("mousedown", (e) => {
-            canvasClick(e);
+        document.getElementById("canvas")!.addEventListener("mousedown", (e) => {
+            canvasMouseDown(e);
         });
 
         // Infinite canvas panning/dragging
-        document.getElementById("canvas")!
-        .addEventListener("mousemove", (e) => {
+        document.getElementById("canvas")!.addEventListener("mousemove", (e) => {
             // Pan
             if (R.getPanning()) {
                 R.getCanvas().pan(R.getPanLastX(), R.getPanLastY(), e.clientX, e.clientY);
@@ -251,8 +267,7 @@
         });
 
         // Stop panning/dragging
-        document.getElementById("canvas")!
-        .addEventListener("mouseup", () => {
+        document.getElementById("canvas")!.addEventListener("mouseup", () => {
             // Stop panning
             if (R.getPanning()) R.stopPanning();
             // Set dragging state to false

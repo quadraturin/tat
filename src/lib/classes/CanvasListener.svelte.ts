@@ -7,7 +7,7 @@ export type canvasListenerOptions = {
     order:number,
     name:string,
     niceName:string,
-    editEnabled:boolean,
+    editable:boolean,
     selected:boolean,
     grabbed:boolean,
     locked:boolean,
@@ -22,7 +22,7 @@ export class CanvasListener {
     #order:number = $state(0);
     #name:string;
     #niceName:string;
-    #editEnabled:boolean = $state(true);
+    #editable:boolean = $state(true);
     #selected:boolean = $state(false);
     #grabbed:boolean = $state(false);
     #locked:boolean = $state(false);
@@ -33,7 +33,7 @@ export class CanvasListener {
         this.#order = options.order;
         this.#name = options.name;
         this.#niceName = options.niceName;
-        this.#editEnabled = options.editEnabled;
+        this.#editable = options.editable;
         this.#selected = options.selected;
         this.#grabbed = options.grabbed;
         this.#locked = options.locked;
@@ -61,5 +61,11 @@ export class CanvasListener {
     setLocked(l?:boolean) {
         if(typeof l == "undefined") this.#locked = !this.#locked;
         else this.#locked = l;
+    }
+
+    getEditable() { return this.#editable; }
+    setEditable(enable?:boolean) {
+        if (typeof enable == "undefined") this.#editable = !this.#editable;
+        else this.#editable = enable;
     }
 }

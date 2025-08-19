@@ -38,7 +38,7 @@ export async function newImageFromPath(src:string, x?:number, y?:number) {
             order: 0,
             name: name,
             niceName: name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim(),
-            editEnabled: true,
+            editable: true,
             selected: false,
             grabbed: false,
             locked: false

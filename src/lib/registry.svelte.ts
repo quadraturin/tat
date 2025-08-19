@@ -283,7 +283,7 @@ export function setListener() {
         order: 0,
         name: "Listener",
         niceName: "Listener",
-        editEnabled: true,
+        editable: true,
         selected: false,
         grabbed: false,
         locked: false,
