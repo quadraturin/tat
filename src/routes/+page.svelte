@@ -221,27 +221,49 @@
             canvasClick(e);
         });
 
-        // Infinite canvas panning
+        // Infinite canvas panning/dragging
         document.getElementById("canvas")!
         .addEventListener("mousemove", (e) => {
+            // Pan
             if (R.getPanning()) {
                 R.getCanvas().pan(R.getPanLastX(), R.getPanLastY(), e.clientX, e.clientY);
                 R.setPanLastX(e.clientX);
                 R.setPanLastY(e.clientY);
-            } else if (R.getDragging()){
+            } 
+            // Drag
+            else if (R.getDragging()){
+                // Drag listener
                 if (R.getListener().getGrabbed()) {
                     R.getListener().setX(R.getCanvas().toWorldX(e.clientX));
                     R.getListener().setY(R.getCanvas().toWorldY(e.clientY));
                 }
+                // Drag image(s)
+                else {
+                    for (let i = 0; i < R.getImages().length; i++) {
+                        const img = R.getImages()[i];
+                        if (img.getGrabbed()) {
+                            img.setX(R.getCanvas().toWorldX(e.clientX));
+                            img.setY(R.getCanvas().toWorldY(e.clientY));
+                        }
+                    }
+                }
             }
         });
 
-        // Stop panning
+        // Stop panning/dragging
         document.getElementById("canvas")!
         .addEventListener("mouseup", () => {
+            // Stop panning
             if (R.getPanning()) R.stopPanning();
+            // Set dragging state to false
             if (R.getDragging()) R.setDragging(false);
+            // Release the listener
             if (R.getListener().getGrabbed()) R.getListener().setGrabbed(false);
+            // Release any images
+            for (let i = 0; i < R.getImages().length; i++) {
+                const img = R.getImages()[i];
+                if (img.getGrabbed()) img.setGrabbed(false);
+            }
         });
 
         document.getElementById("zoom-in")!

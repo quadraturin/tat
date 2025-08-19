@@ -65,4 +65,14 @@ export class CanvasImage {
     getY() { return this.#y; }
     getHeight() { return this.#height; }
     getWidth() { return this.#width; }
+    getName() { return this.#name; }
+    getLocked() { return this.#locked; }
+    getGrabbed() { return this.#grabbed; }
+
+    setX(newX:number) { this.#x = newX; }
+    setY(newY:number) { this.#y = newY; }
+    setGrabbed(g:boolean) {
+        if (typeof g == "undefined") this.#grabbed = !this.#grabbed;
+        else this.#grabbed = g;
+    }
 }
