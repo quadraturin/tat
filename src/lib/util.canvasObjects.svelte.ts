@@ -77,16 +77,16 @@ export function canvasMouseDown(e:MouseEvent) {
     else {
         for (let i = R.getImages().length - 1; i >= 0; i--) {
             const img = R.getImages()[i];
-            if (img.getEditable() &&
-                !img.getLocked() &&
-                pointRectCollision(c.toWorldX(e.x), 
+            if (pointRectCollision(c.toWorldX(e.x), 
                                    c.toWorldY(e.y), 
                                    img.getX(), 
                                    img.getY(), 
                                    img.getWidth(), 
                                    img.getHeight())) {
-                R.setClickedOnCanvasObject(img);
-                img.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
+                if(img.getEditable()) {
+                    R.setClickedOnCanvasObject(img);
+                    img.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
+                }
                 break;
             }
         }
