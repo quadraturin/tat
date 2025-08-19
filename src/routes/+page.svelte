@@ -119,16 +119,16 @@
         else if (e.key == "2" && (e.metaKey || e.ctrlKey)) toggleAboutMenu();
         else if (e.key == 'Escape') closeAllMenus();
         else if (e.key == "h") toggleSidebar();
-        else if (e.key == "c") R.getMap().flyTo(R.getListener().getLatLng());
+        else if (e.key == "c") R.getCanvas().flyToPoint(R.getListener().getX(), R.getListener().getY());
         // using unary + here to prevent weird concat issues
         else if (e.key == "w") 
-            R.getListener().setLatLng([R.getListener().getLatLng().lat + +speed, R.getListener().getLatLng().lng]);
+            R.getListener().setY(R.getListener().getY() - speed);
         else if (e.key == "a") 
-            R.getListener().setLatLng([R.getListener().getLatLng().lat, R.getListener().getLatLng().lng - +speed]);
+            R.getListener().setX(R.getListener().getX() - speed);
         else if (e.key == "s") 
-            R.getListener().setLatLng([R.getListener().getLatLng().lat - +speed, R.getListener().getLatLng().lng]);
+            R.getListener().setY(R.getListener().getY() + speed);
         else if (e.key == "d") 
-            R.getListener().setLatLng([R.getListener().getLatLng().lat, R.getListener().getLatLng().lng + +speed]);
+            R.getListener().setX(R.getListener().getX() + speed);
         // canvas controls
         else if (e.key == "ArrowUp") R.getCanvas().offsetDown(10);
         else if (e.key == "ArrowDown") R.getCanvas().offsetUp(10);
@@ -193,7 +193,7 @@
         R.setMap(setupMap());
 
         // Set up the listener
-        R.setListener(setupListener(R.getMap()));
+        R.setListener();
 
         // Set up the drag-and-drop handler
         dragDrop();
@@ -244,7 +244,7 @@
         .addEventListener("click", () => R.getCanvas().zoom(0.95));
 
         document.getElementById("center-on-listener")!
-        .addEventListener("click", () => R.getCanvas().flyToPoint(0,0));
+        .addEventListener("click", () => R.getCanvas().flyToPoint(R.getListener().getX(), R.getListener().getY()));
 
     })
 
@@ -276,6 +276,7 @@
         isHelpActive = R.getIsHelpActive();
         setMapSoundVolumes();
         R.getCanvas().panInertia();
+        R.getCanvas().update();
     }, 15);
 
 </script>

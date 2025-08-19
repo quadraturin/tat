@@ -1,5 +1,6 @@
 import * as R from "$lib/registry.svelte";
 import type { CanvasImage } from "./classes/CanvasImage.svelte";
+import type { CanvasListener } from "./classes/CanvasListener.svelte";
 import type { CanvasSound } from "./classes/CanvasSound.svelte";
 
 /**
@@ -100,9 +101,9 @@ export class InfiniteCanvas {
   }
 
   flyToPoint(x:number, y:number) {
-    this.#offsetX = x + (this.virtualWidth()/2) / this.#z;
-    this.#offsetY = y + (this.virtualHeight()/2) / this.#z;
-    console.log(this.virtualWidth(), this.virtualHeight());
+    this.#offsetX = (this.virtualWidth()/2) / this.#z - x;
+    this.#offsetY = (this.virtualHeight()/2) / this.#z - y;
+    console.log(x, y);
     this.#draw();
   }
 
@@ -247,7 +248,7 @@ export class InfiniteCanvas {
       }
 
       // Next, draw the audio listener.
-      this.#drawListener(0, 0, 10);
+      this.#drawListener(R.getListener(), R.getListenerRadius());
     }
   }
 
@@ -551,14 +552,14 @@ export class InfiniteCanvas {
    * @param y Y position of the center of the listener.
    * @param r Radius of the listener.
    */
-  #drawListener(x: number, y: number, r: number): void {
+  #drawListener(l:CanvasListener, r: number): void {
     if (this.canvas && this.context) {
       this.context.strokeStyle = "rgb(246, 102, 186)";
       this.context.fillStyle = "rgb(236, 170, 209)";
       this.context.beginPath();
       this.context.arc(
-        x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
-        y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
+        l.getX() * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
+        l.getY() * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
         r,
         0, 360);
       this.context.fill();

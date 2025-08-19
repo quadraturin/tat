@@ -9,6 +9,7 @@ import { InfiniteCanvas } from "./util.infiniteCanvas.svelte";
 import { CanvasImage } from "./classes/CanvasImage.svelte";
 import type { canvasImageOptions } from "./classes/CanvasImage.svelte";
 import { CanvasSound, type canvasSoundOptions } from "./classes/CanvasSound.svelte";
+import { CanvasListener } from "./classes/CanvasListener.svelte";
 
 
 
@@ -255,17 +256,31 @@ export function setMap(newMap:L.Map) { map = newMap; };
  * the listener.
  * @todo get rid of this
  */
-let listener:L.Marker;
+let listener:CanvasListener;
+let listenerRadius:number = 10;
 /**
  * get the listener.
  * @returns the listener.
  */
-export function getListener():L.Marker { return listener; };
+export function getListener():CanvasListener { return listener; }
 /**
  * sets a new listener.
  * @param newListener the new listener to set.
  */
-export function setListener(newListener:L.Marker) { listener = newListener; };
+export function setListener() { 
+    listener = new CanvasListener({
+        x: 0,
+        y: 0,
+        order: 0,
+        name: "Listener",
+        niceName: "Listener",
+        editEnabled: true,
+        selected: false,
+        locked: false,
+    }); 
+}
+export function getListenerRadius() { return listenerRadius; }
+export function setListenerRadius(newRadius:number) { listenerRadius = newRadius; }
 
 
 
