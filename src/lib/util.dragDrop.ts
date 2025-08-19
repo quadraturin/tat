@@ -11,8 +11,8 @@ export async function dragDrop() {
             for (let i=0; i<event.payload.paths.length; i++) {
                 loadFile(
                     event.payload.paths[i], 
-                    getCanvas().toRealX(event.payload.position.x), 
-                    getCanvas().toRealY(event.payload.position.y)
+                    getCanvas().toWorldX(event.payload.position.x), 
+                    getCanvas().toWorldY(event.payload.position.y)
                 );
             }
         } else {

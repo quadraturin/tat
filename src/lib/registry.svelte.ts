@@ -41,6 +41,11 @@ let panLastX = 0
 /** The last Y position of the cursor while panning. */
 let panLastY = 0;
 
+/** Friction for panning. */
+let friction = 0.94;
+
+export function getFriction() { return friction; }
+
 /** Start panning the canvas. @param x X position of cursor. @param y Y position of cursor. */
 export function startPanning(x:number, y:number) {
     panLastX = x;
@@ -49,7 +54,9 @@ export function startPanning(x:number, y:number) {
 }
 
 /** Stop panning the canvas. */
-export function stopPanning() { panning = false;}
+export function stopPanning() { 
+    panning = false;
+}
 
 /** Get whether or not the user is currently panning. @returns If the user is currently panning. */
 export function getPanning():boolean { return panning; }

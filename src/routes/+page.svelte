@@ -213,12 +213,13 @@
             }
         });
 
-        // Infinite canvas pan
+        // Infinite canvas pan start
         document.getElementById("canvas")!
         .addEventListener("mousedown", (e) => {
-            R.startPanning(e.clientX, e.clientY);
+            R.startPanning(e.clientX, e.clientY)
         });
 
+        // Infinite canvas panning
         document.getElementById("canvas")!
         .addEventListener("mousemove", (e) => {
             if (R.getPanning()) {
@@ -230,9 +231,10 @@
             }
         });
 
+        // Stop panning
         document.getElementById("canvas")!
         .addEventListener("mouseup", () => {
-            R.stopPanning();
+            if (R.getPanning()) R.stopPanning();
         });
 
         document.getElementById("zoom-in")!
@@ -282,6 +284,7 @@
         soundList = R.getSoundList();
         isHelpActive = R.getIsHelpActive();
         setMapSoundVolumes();
+        R.getCanvas().panInertia();
     }, 15);
 
 </script>

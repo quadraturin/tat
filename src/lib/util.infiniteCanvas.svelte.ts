@@ -18,6 +18,8 @@ export class InfiniteCanvas {
   #offsetY = 0;
   #touchMode: "single" | "double" = "single";
   #prevTouch: [Touch | null, Touch | null] = [null, null];
+  #velocityX = 0;
+  #velocityY = 0;
 
   /**
    * Constructor for the Infinite Canvas.
@@ -50,7 +52,7 @@ export class InfiniteCanvas {
    * @param xReal The "real" x pixel coordinate to convert.
    * @returns The "virtual" x coordinate.
    */
-  toVirtualX(xReal: number): number {
+  toWindowX(xReal: number): number {
     return (xReal + this.#offsetX) * this.#scale * this.#z;
   }
 
@@ -59,7 +61,7 @@ export class InfiniteCanvas {
    * @param yReal The "real" y pixel coordinate to convert.
    * @returns The "virtual" y coordinate.
    */
-  toVirtualY(yReal: number): number {
+  toWindowY(yReal: number): number {
     return (yReal + this.#offsetY) * this.#scale * this.#z;
   }
 
@@ -68,7 +70,7 @@ export class InfiniteCanvas {
    * @param xVirtual The "virtual" x pixel coordinate to convert.
    * @returns The "real" x coordinate.
    */
-  toRealX(xVirtual: number): number {
+  toWorldX(xVirtual: number): number {
     return xVirtual / (this.#scale * this.#z) - this.#offsetX;
   }
 
@@ -77,7 +79,7 @@ export class InfiniteCanvas {
    * @param xVirtual The "virtual" y pixel coordinate to convert.
    * @returns The "real" y coordinate.
    */
-  toRealY(yVirtual: number): number {
+  toWorldY(yVirtual: number): number {
     return yVirtual / (this.#scale * this.#z) - this.#offsetY;
   }
 
@@ -114,19 +116,16 @@ export class InfiniteCanvas {
       if (typeof y == "undefined") y = 0;
 
       // get mouse pos in world space
-      preZoomX = this.toRealX(x);
-      preZoomY = this.toRealY(y);
+      preZoomX = this.toWorldX(x);
+      preZoomY = this.toWorldY(y);
       this.#z*=amount;
-      postZoomX = this.toRealX(x);
-      postZoomY = this.toRealY(y);
+      postZoomX = this.toWorldX(x);
+      postZoomY = this.toWorldY(y);
       this.#offsetX -= preZoomX - postZoomX;
       this.#offsetY -= preZoomY - postZoomY;
-      //this.#offsetX = x / (this.#scale * this.#z) - (x * this.#scale * this.#z);
-      //this.#offsetY = y / (this.#scale * this.#z);
     } else {
       this.#z = 1;
     }
-    console.debug(this.#offsetX);
     this.#draw();
   }
 
@@ -138,8 +137,25 @@ export class InfiniteCanvas {
    * @param y2 Y coordinate to pan to.
    */
   pan(x1: number, y1: number, x2: number, y2: number): void {
-    this.offsetLeft((this.toRealX(x1) - this.toRealX(x2)));
-    this.offsetUp((this.toRealY(y1) - this.toRealY(y2)));
+    this.#velocityX = x1 - x2;
+    this.#velocityY = y1 - y2;
+    this.offsetLeft((this.toWorldX(x1) - this.toWorldX(x2)));
+    this.offsetUp((this.toWorldY(y1) - this.toWorldY(y2)));
+  }
+
+  /**
+   * Pan inertia
+   */
+
+  panInertia() {
+    if (Math.abs(this.#velocityX) > 0.1 && Math.abs(this.#velocityY) > 0.1 && !R.getPanning()) {
+      this.#velocityX *= R.getFriction();
+      this.#velocityY *= R.getFriction();
+      this.offsetLeft(this.#velocityX);
+      this.offsetUp(this.#velocityY);
+      this.#draw();
+      console.log(this.#velocityX);
+    }
   }
 
   /**
@@ -397,7 +413,7 @@ export class InfiniteCanvas {
         this.context.moveTo(source, 0);
         this.context.lineTo(source, height);
         if (showNumbers) {
-          let num = this.toRealX(source).toFixed(0);
+          let num = this.toWorldX(source).toFixed(0);
           if (num == "-0") num = "0";
           this.context.fillText(`${num}`, source, height - 20);
         }
@@ -411,7 +427,7 @@ export class InfiniteCanvas {
         this.context.moveTo(0, destination);
         this.context.lineTo(width, destination);
         if (showNumbers) {
-          let num = this.toRealY(destination).toFixed(0);
+          let num = this.toWorldY(destination).toFixed(0);
           if (num == "-0") num = "0";
           this.context.fillText(`${num}`, 0, destination);
         }
@@ -546,8 +562,8 @@ export class InfiniteCanvas {
     if (this.canvas && this.context) {
       this.context.drawImage(
         img.image,
-        this.toVirtualX(img.x),
-        this.toVirtualY(img.y),
+        this.toWindowX(img.x),
+        this.toWindowY(img.y),
         img.width * this.#scale * this.#z,
         img.height * this.#scale * this.#z
       );
