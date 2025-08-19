@@ -15,6 +15,8 @@ export class InfiniteCanvas {
   // Setup internal vars.
   #scale = window.devicePixelRatio;
   #z = 1;
+  #maxZ = 50;
+  #minZ = 0.05;
   #offsetX = 0;
   #offsetY = 0;
   #touchMode: "single" | "double" = "single";
@@ -30,7 +32,7 @@ export class InfiniteCanvas {
    * Constructor for the Infinite Canvas.
    * @param cellSize Determines size of the grid.
    */
-  constructor(cellSize = 100) {
+  constructor(cellSize = 120) {
     this.cellSize = cellSize;
     const canvas = document.getElementById("canvas");
 
@@ -147,22 +149,30 @@ export class InfiniteCanvas {
     let preZoomY = 0;
     let postZoomX = 0;
     let postZoomY = 0;
-    if (typeof amount != "undefined") {
-      // default to 0
-      if (typeof x == "undefined") x = 0;
-      if (typeof y == "undefined") y = 0;
 
-      // get mouse pos in world space
-      preZoomX = this.toWorldX(x);
-      preZoomY = this.toWorldY(y);
-      this.#z*=amount;
-      postZoomX = this.toWorldX(x);
-      postZoomY = this.toWorldY(y);
-      this.#offsetX -= preZoomX - postZoomX;
-      this.#offsetY -= preZoomY - postZoomY;
+    if (typeof amount != "undefined") {
+      if ((this.#z < this.#maxZ && this.#z > this.#minZ) ||
+          (this.#z >= this.#maxZ && amount < 1) ||
+          (this.#z <= this.#minZ && amount > 1)) {
+        // default to 0
+        if (typeof x == "undefined") x = 0;
+        if (typeof y == "undefined") y = 0;
+
+        // get mouse pos in world space
+        preZoomX = this.toWorldX(x);
+        preZoomY = this.toWorldY(y);
+        this.#z*=amount;
+        postZoomX = this.toWorldX(x);
+        postZoomY = this.toWorldY(y);
+        this.#offsetX -= preZoomX - postZoomX;
+        this.#offsetY -= preZoomY - postZoomY;
+      }
     } else {
       this.#z = 1;
     }
+    if (this.#z > this.#maxZ) this.#z = this.#maxZ;
+    if (this.#z < this.#minZ) this.#z = this.#minZ;
+    console.log(this.#z);
     this.#draw();
   }
 
@@ -252,6 +262,7 @@ export class InfiniteCanvas {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
       // Bottom layer: draw the canvas grid.
+      this.#drawSubGrid(true);
       this.#drawGrid(true);
 
       // Next, draw test shapes. TODO: remove this.
@@ -424,13 +435,14 @@ export class InfiniteCanvas {
     return scaleAmount;
   }
 
-  /**
+/**
    * Draw the grid on the canvas.
    * @param showNumbers Whether or not to display the grid numbers.
    */
-  #drawGrid(showNumbers: boolean): void {
+  #drawSubGrid(showNumbers: boolean): void {
     if (this.canvas && this.context) {
-      this.context.strokeStyle = this.#gridColor;
+      this.context.globalAlpha = 0.1;
+      this.context.strokeStyle = "rgb(0,0,0)";
       this.context.lineWidth = 1;
       this.context.font = "10px monospace";
       this.context.beginPath();
@@ -438,13 +450,20 @@ export class InfiniteCanvas {
       const width = this.canvas.clientWidth;
       const height = this.canvas.clientHeight;
 
+      let inc = this.cellSize * this.#scale * this.#z;
+
+      while (inc > this.cellSize) {
+        inc = inc / 2;
+      }
+
       // draw vertical lines
-      for (let x = this.#offsetX % this.cellSize * this.#scale * this.#z;
-        x <= width;
-        x += this.cellSize * this.#scale * this.#z) {
+      for (let x = this.#offsetX % this.cellSize * this.#scale * this.#z - (this.cellSize * this.#scale * this.#z) - inc/2;
+            x <= width;
+            x += inc) {
         const source = x;
         this.context.moveTo(source, 0);
         this.context.lineTo(source, height);
+
         if (showNumbers) {
           let num = this.toWorldX(source).toFixed(0);
           if (num == "-0") num = "0";
@@ -453,9 +472,9 @@ export class InfiniteCanvas {
       }
 
       // draw horizontal lines
-      for (let y = this.#offsetY % this.cellSize * this.#scale * this.#z;
+      for (let y = this.#offsetY % this.cellSize * this.#scale * this.#z - (this.cellSize * this.#scale * this.#z) - inc/2;
         y <= height;
-        y += this.cellSize * this.#scale * this.#z) {
+        y += inc) {
         const destination = y;
         this.context.moveTo(0, destination);
         this.context.lineTo(width, destination);
@@ -466,6 +485,61 @@ export class InfiniteCanvas {
         }
       }
       this.context.stroke();
+      this.context.globalAlpha = 1;
+    }
+  }
+
+  /**
+   * Draw the grid on the canvas.
+   * @param showNumbers Whether or not to display the grid numbers.
+   */
+  #drawGrid(showNumbers: boolean): void {
+    if (this.canvas && this.context) {
+      this.context.globalAlpha = 0.2;
+      this.context.strokeStyle = "rgb(0,0,0)";
+      this.context.lineWidth = 1;
+      this.context.font = "10px monospace";
+      this.context.beginPath();
+
+      const width = this.canvas.clientWidth;
+      const height = this.canvas.clientHeight;
+
+      let inc = this.cellSize * this.#scale * this.#z;
+
+      while (inc > this.cellSize) {
+        inc = inc / 2;
+      }
+
+      // draw vertical lines
+      for (let x = this.#offsetX % this.cellSize * this.#scale * this.#z - (this.cellSize * this.#scale * this.#z);
+           x <= width;
+           x += inc) {
+        const source = x;
+        this.context.moveTo(source, 0);
+        this.context.lineTo(source, height);
+
+        if (showNumbers) {
+          let num = this.toWorldX(source).toFixed(0);
+          if (num == "-0") num = "0";
+          this.context.fillText(`${num}`, source, height - 20);
+        }
+      }
+
+      // draw horizontal lines
+      for (let y = this.#offsetY % this.cellSize * this.#scale * this.#z - (this.cellSize * this.#scale * this.#z);
+        y <= height;
+        y += inc) {
+        const destination = y;
+        this.context.moveTo(0, destination);
+        this.context.lineTo(width, destination);
+        if (showNumbers) {
+          let num = this.toWorldY(destination).toFixed(0);
+          if (num == "-0") num = "0";
+          this.context.fillText(`${num}`, 0, destination);
+        }
+      }
+      this.context.stroke();
+      this.context.globalAlpha = 1;
     }
   }
 
