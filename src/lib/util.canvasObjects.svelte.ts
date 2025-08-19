@@ -24,7 +24,7 @@ export function canvasClick(e:MouseEvent) {
                                    img.getY(), 
                                    img.getWidth(), 
                                    img.getHeight())) {
-                dragImage(img);
+                dragImage(img, e);
             }
         }
     } 
@@ -42,7 +42,7 @@ function pointCircleCollision(pX:number, pY:number, cX:number, cY:number, cR:num
 function pointRectCollision(pX:number, pY:number, rX:number, rY:number, rW:number, rH:number):boolean {
     console.log("px", pX, "py", pY, "rx", rX, "ry", rY, "rw", rW, "rh", rH);
     if (pX >= rX && 
-        pY >=rY && 
+        pY >= rY && 
         pX <= rX + rW && 
         pY <= rY + rH) { 
         return true; 
@@ -54,7 +54,8 @@ function dragListener() {
     R.setDragging(true);
 }
 
-function dragImage(img:CanvasImage) {
-    img.setGrabbed(true);
+function dragImage(img:CanvasImage, e:MouseEvent) {
+    const c = R.getCanvas();
+    img.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
     R.setDragging(true);
 }

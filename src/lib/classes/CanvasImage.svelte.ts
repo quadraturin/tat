@@ -39,6 +39,8 @@ export class CanvasImage {
     #editEnabled:boolean = $state(true);
     #selected:boolean = $state(false);
     #grabbed:boolean = $state(false);
+    #grabOffsetX:number = $state(0);
+    #grabOffsetY:number = $state(0);
     #locked:boolean = $state(false);
 
     constructor(options:canvasImageOptions) {
@@ -68,11 +70,25 @@ export class CanvasImage {
     getName() { return this.#name; }
     getLocked() { return this.#locked; }
     getGrabbed() { return this.#grabbed; }
+    getGrabOffsetX() { return this.#grabOffsetX; }
+    getGrabOffsetY() { return this.#grabOffsetY; }
 
     setX(newX:number) { this.#x = newX; }
     setY(newY:number) { this.#y = newY; }
-    setGrabbed(g:boolean) {
+
+    setGrabbed(g?:boolean, x?:number, y?:number) {
         if (typeof g == "undefined") this.#grabbed = !this.#grabbed;
         else this.#grabbed = g;
+
+        if (this.#grabbed) {
+            if (typeof x == "undefined" || typeof y == "undefined") {
+                this.#grabOffsetX = 0;
+                this.#grabOffsetY = 0;
+            } else {
+                this.#grabOffsetX = this.#x - x;
+                this.#grabOffsetY = this.#y - y;
+            }
+            console.log(this.#grabOffsetX, this.#grabOffsetY);
+        }
     }
 }

@@ -242,8 +242,8 @@
                     for (let i = 0; i < R.getImages().length; i++) {
                         const img = R.getImages()[i];
                         if (img.getGrabbed()) {
-                            img.setX(R.getCanvas().toWorldX(e.clientX));
-                            img.setY(R.getCanvas().toWorldY(e.clientY));
+                            img.setX(R.getCanvas().toWorldX(e.clientX) + img.getGrabOffsetX());
+                            img.setY(R.getCanvas().toWorldY(e.clientY) + img.getGrabOffsetY());
                         }
                     }
                 }
