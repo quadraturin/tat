@@ -30,6 +30,15 @@ export function getCanvas() { return canvas; }
 /** Set a new infinite canvas. @param gridSize The size of the grid to display on the canvas. */
 export function setCanvas(gridSize?:number) { canvas = new InfiniteCanvas(gridSize); }
 
+// ===== CANVAS OBJECT HANDLING =====
+let clickedOnCanvasObject:CanvasListener|CanvasImage|boolean = false;
+export function getClickedOnCanvasObject() { 
+    return clickedOnCanvasObject; 
+}
+export function setClickedOnCanvasObject(obj:CanvasListener|CanvasImage|boolean) {
+    clickedOnCanvasObject = obj;
+}
+
 // ===== DRAGGING ON THE CANVAS =====
 
 /** Whether or not the user is currently dragging something(s). */
@@ -41,6 +50,13 @@ export function setDragging(d?:boolean) {
 }
 
 // ===== PANNING THE CANVAS =====
+
+let mouseDown = false;
+export function getMouseDown() { return mouseDown; }
+export function setMouseDown(down?:boolean) {
+    if (typeof down =="undefined") mouseDown = !mouseDown;
+    else mouseDown = down;
+}
 
 /** Whether or not the user is currently panning. */
 let panning = false;

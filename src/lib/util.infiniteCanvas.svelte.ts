@@ -575,7 +575,7 @@ export class InfiniteCanvas {
    */
   #drawListener(l:CanvasListener, r: number): void {
     if (this.canvas && this.context) {
-      this.context.strokeStyle = this.#widgetColor;
+      this.context.strokeStyle = l.getSelected() ? this.#widgetSelectedColor : this.#widgetColor;
       this.context.fillStyle = this.#widgetColor;
       this.context.beginPath();
       this.context.arc(

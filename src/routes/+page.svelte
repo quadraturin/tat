@@ -76,7 +76,7 @@
 	import { image } from '@tauri-apps/api';
 
     import { InfiniteCanvas } from '$lib/util.infiniteCanvas.svelte';
-	import { canvasClick, canvasDblClick, canvasMouseDown } from '$lib/util.canvasObjects.svelte';
+	import { canvasMouseUp, canvasDblClick, canvasMouseDown, canvasMouseMove, canvasWheel } from '$lib/util.canvasObjects.svelte';
 
     /**
      * Variables
@@ -211,84 +211,21 @@
 
         //document.addEventListener("contextmenu", (e) => e.preventDefault(), false);
 
-        // Infinite canvas setup
+        // Canvas setup
         R.setCanvas();
 
-        // Infinite canvas click
-        document.getElementById("canvas")!.addEventListener("click", (e) => {
-            canvasClick(e);
-        });
+        // Canvas mouse actions
+        document.getElementById("canvas")!.addEventListener("dblclick",  (e) => { canvasDblClick(e);  });
+        document.getElementById("canvas")!.addEventListener("wheel",     (e) => { canvasWheel(e);     });
+        document.getElementById("canvas")!.addEventListener("mousedown", (e) => { canvasMouseDown(e); });
+        document.getElementById("canvas")!.addEventListener("mousemove", (e) => { canvasMouseMove(e); });
+        document.getElementById("canvas")!.addEventListener("mouseup",   (e) => { canvasMouseUp(e);   });
 
-        // Infinite canvas double-click
-        document.getElementById("canvas")!.addEventListener("dblclick", (e) => {
-            canvasDblClick(e);
-        });
-
-        // Infinite canvas zoom
-        document.getElementById("canvas")!.addEventListener("wheel", (e) => {
-            if (e.deltaY < 0){
-                R.getCanvas().zoom(1.01, e.clientX, e.clientY);
-            } else if (e.deltaY > 0) {
-                R.getCanvas().zoom(0.99, e.clientX, e.clientY)
-            }
-        });
-
-        // Infinite canvas pan start
-        document.getElementById("canvas")!.addEventListener("mousedown", (e) => {
-            canvasMouseDown(e);
-        });
-
-        // Infinite canvas panning/dragging
-        document.getElementById("canvas")!.addEventListener("mousemove", (e) => {
-            // Pan
-            if (R.getPanning()) {
-                R.getCanvas().pan(R.getPanLastX(), R.getPanLastY(), e.clientX, e.clientY);
-                R.setPanLastX(e.clientX);
-                R.setPanLastY(e.clientY);
-            } 
-            // Drag
-            else if (R.getDragging()){
-                // Drag listener
-                if (R.getListener().getGrabbed()) {
-                    R.getListener().setX(R.getCanvas().toWorldX(e.clientX));
-                    R.getListener().setY(R.getCanvas().toWorldY(e.clientY));
-                }
-                // Drag image(s)
-                else {
-                    for (let i = 0; i < R.getImages().length; i++) {
-                        const img = R.getImages()[i];
-                        if (img.getGrabbed()) {
-                            img.setX(R.getCanvas().toWorldX(e.clientX) + img.getGrabOffsetX());
-                            img.setY(R.getCanvas().toWorldY(e.clientY) + img.getGrabOffsetY());
-                        }
-                    }
-                }
-            }
-        });
-
-        // Stop panning/dragging
-        document.getElementById("canvas")!.addEventListener("mouseup", () => {
-            // Stop panning
-            if (R.getPanning()) R.stopPanning();
-            // Set dragging state to false
-            if (R.getDragging()) R.setDragging(false);
-            // Release the listener
-            if (R.getListener().getGrabbed()) R.getListener().setGrabbed(false);
-            // Release any images
-            for (let i = 0; i < R.getImages().length; i++) {
-                const img = R.getImages()[i];
-                if (img.getGrabbed()) img.setGrabbed(false);
-            }
-        });
-
-        document.getElementById("zoom-in")!
-        .addEventListener("click", () => R.getCanvas().zoom(1.05));
-
-        document.getElementById("zoom-out")!
-        .addEventListener("click", () => R.getCanvas().zoom(0.95));
-
-        document.getElementById("center-on-listener")!
-        .addEventListener("click", () => R.getCanvas().flyToPoint(R.getListener().getX(), R.getListener().getY()));
+        // Navigation buttons
+        document.getElementById("zoom-in")!.addEventListener("click",  () => R.getCanvas().zoom(1.05));
+        document.getElementById("zoom-out")!.addEventListener("click", () => R.getCanvas().zoom(0.95));
+        document.getElementById("center-on-listener")!.addEventListener("click", () => {
+            R.getCanvas().flyToPoint(R.getListener().getX(), R.getListener().getY())});
 
     })
 
