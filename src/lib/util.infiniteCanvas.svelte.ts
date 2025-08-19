@@ -100,9 +100,9 @@ export class InfiniteCanvas {
   }
 
   flyToPoint(x:number, y:number) {
-    this.#offsetX = x + this.virtualWidth()/2;
-    this.#offsetY = y + this.virtualHeight()/2;
-    console.log(this.#offsetX, this.#offsetY);
+    this.#offsetX = x + (this.virtualWidth()/2) / this.#z;
+    this.#offsetY = y + (this.virtualHeight()/2) / this.#z;
+    console.log(this.virtualWidth(), this.virtualHeight());
     this.#draw();
   }
 
