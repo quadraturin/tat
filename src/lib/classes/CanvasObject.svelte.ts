@@ -66,7 +66,6 @@ export class CanvasObject {
                 this.#grabOffsetX = this.#x - x;
                 this.#grabOffsetY = this.#y - y;
             }
-            console.log(this.#grabOffsetX, this.#grabOffsetY);
         }
     }
 
