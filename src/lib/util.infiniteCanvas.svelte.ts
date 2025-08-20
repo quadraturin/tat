@@ -32,7 +32,7 @@ export class InfiniteCanvas {
    * Constructor for the Infinite Canvas.
    * @param cellSize Determines size of the grid.
    */
-  constructor(cellSize = 120) {
+  constructor(cellSize = 240) {
     this.cellSize = cellSize;
     const canvas = document.getElementById("canvas");
 
@@ -172,7 +172,6 @@ export class InfiniteCanvas {
     }
     if (this.#z > this.#maxZ) this.#z = this.#maxZ;
     if (this.#z < this.#minZ) this.#z = this.#minZ;
-    console.log(this.#z);
     this.#draw();
   }
 
@@ -262,8 +261,9 @@ export class InfiniteCanvas {
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
       // Bottom layer: draw the canvas grid.
-      this.#drawSubGrid(true);
-      this.#drawGrid(true);
+      this.#drawGrid(true, false, true, 0.25, 0.1);
+      this.#drawGrid(true, true, false, 0.5, 0.1);
+      this.#drawGrid(false, true, true, 1, 0.1);
 
       // Next, draw test shapes. TODO: remove this.
       this.#drawTests();
@@ -435,65 +435,11 @@ export class InfiniteCanvas {
     return scaleAmount;
   }
 
-/**
-   * Draw the grid on the canvas.
-   * @param showNumbers Whether or not to display the grid numbers.
-   */
-  #drawSubGrid(showNumbers: boolean): void {
-    if (this.canvas && this.context) {
-      this.context.globalAlpha = 0.1;
-      this.context.strokeStyle = "rgb(0,0,0)";
-      this.context.lineWidth = 1;
-      this.context.font = "10px monospace";
-      this.context.beginPath();
-
-      const width = this.canvas.clientWidth;
-      const height = this.canvas.clientHeight;
-
-      let inc = this.cellSize * this.#scale * this.#z;
-
-      while (inc > this.cellSize) {
-        inc = inc / 2;
-      }
-
-      // draw vertical lines
-      for (let x = this.#offsetX % this.cellSize * this.#scale * this.#z - (this.cellSize * this.#scale * this.#z) - inc/2;
-            x <= width;
-            x += inc) {
-        const source = x;
-        this.context.moveTo(source, 0);
-        this.context.lineTo(source, height);
-
-        if (showNumbers) {
-          let num = this.toWorldX(source).toFixed(0);
-          if (num == "-0") num = "0";
-          this.context.fillText(`${num}`, source, height - 20);
-        }
-      }
-
-      // draw horizontal lines
-      for (let y = this.#offsetY % this.cellSize * this.#scale * this.#z - (this.cellSize * this.#scale * this.#z) - inc/2;
-        y <= height;
-        y += inc) {
-        const destination = y;
-        this.context.moveTo(0, destination);
-        this.context.lineTo(width, destination);
-        if (showNumbers) {
-          let num = this.toWorldY(destination).toFixed(0);
-          if (num == "-0") num = "0";
-          this.context.fillText(`${num}`, 0, destination);
-        }
-      }
-      this.context.stroke();
-      this.context.globalAlpha = 1;
-    }
-  }
-
   /**
    * Draw the grid on the canvas.
    * @param showNumbers Whether or not to display the grid numbers.
    */
-  #drawGrid(showNumbers: boolean): void {
+  #drawGrid(showNumbers: boolean, adaptive:boolean, fade:boolean, gridSize?:number, maxAlpha?:number): void {
     if (this.canvas && this.context) {
       this.context.globalAlpha = 0.2;
       this.context.strokeStyle = "rgb(0,0,0)";
@@ -501,13 +447,25 @@ export class InfiniteCanvas {
       this.context.font = "10px monospace";
       this.context.beginPath();
 
+      if (typeof gridSize == "undefined") gridSize = 1;
+      if (typeof maxAlpha == "undefined") maxAlpha = 1;
+      
       const width = this.canvas.clientWidth;
       const height = this.canvas.clientHeight;
 
-      let inc = this.cellSize * this.#scale * this.#z;
+      let inc = this.cellSize * gridSize * this.#scale * this.#z;
 
-      while (inc > this.cellSize) {
-        inc = inc / 2;
+      if (adaptive) {
+        while (inc > this.cellSize * gridSize) {
+          inc = inc / 2;
+        }
+        if (fade) {
+          let a = 2*(1-inc/(this.cellSize*gridSize));
+          let alpha = Math.pow(Math.E,(0 - (((a-0.5)**2)) / 0.04));
+          this.context.globalAlpha = Math.min(maxAlpha, alpha);
+        } else {
+          this.context.globalAlpha = maxAlpha;
+        }
       }
 
       // draw vertical lines
@@ -518,7 +476,7 @@ export class InfiniteCanvas {
         this.context.moveTo(source, 0);
         this.context.lineTo(source, height);
 
-        if (showNumbers) {
+        if (showNumbers && this.#z >= 0.2) {
           let num = this.toWorldX(source).toFixed(0);
           if (num == "-0") num = "0";
           this.context.fillText(`${num}`, source, height - 20);
@@ -532,7 +490,7 @@ export class InfiniteCanvas {
         const destination = y;
         this.context.moveTo(0, destination);
         this.context.lineTo(width, destination);
-        if (showNumbers) {
+        if (showNumbers && this.#z >= 0.2) {
           let num = this.toWorldY(destination).toFixed(0);
           if (num == "-0") num = "0";
           this.context.fillText(`${num}`, 0, destination);
