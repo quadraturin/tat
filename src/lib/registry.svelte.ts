@@ -99,6 +99,10 @@ export function setPanLastX(n:number) { panLastX = n; }
 /** Set the last cursor Y position for panning the canvas. @param n The cursor Y position. */
 export function setPanLastY(n:number) { panLastY = n; }
 
+// ===== WIDGETS =====
+let handleSize = 8;
+
+export function getHandleSize() { return handleSize; }
 
 
 /*

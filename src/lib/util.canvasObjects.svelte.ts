@@ -76,18 +76,50 @@ export function canvasMouseDown(e:MouseEvent) {
     } 
     // Get first image under cursor (last in list)
     else {
+        // Cycle thru images from end to beginning of array (top to bottom visually)
         for (let i = R.getImages().length - 1; i >= 0; i--) {
             const img = R.getImages()[i];
-            if (pointRectCollision(c.toWorldX(e.x), 
-                                   c.toWorldY(e.y), 
-                                   img.getX(), 
-                                   img.getY(), 
-                                   img.getWidth(), 
-                                   img.getHeight())) {
+            // Check if the image was clicked
+            if (pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), 
+                                   img.getX(),      img.getY(), 
+                                   img.getWidth(),  img.getHeight())) {
+                // Only proceed if the image is editable
                 if(img.getEditable()) {
                     R.setClickedOnCanvasObject(img);
-                    img.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
-                    R.getImages().push(R.getImages().splice(i, 1)[0]);
+                    // Check if the NW resize handle was clicked.
+                    if (pointRectCollision( c.toWorldX(e.x), c.toWorldY(e.y), 
+                                            img.getX(), 
+                                            img.getY(),
+                                            c.toWorldLength(R.getHandleSize()), 
+                                            c.toWorldLength(R.getHandleSize()) )) {
+                        console.log("grabbed NW handle of image");
+                    }
+                    else if (pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), 
+                                                img.getX() + img.getWidth() - c.toWorldLength(R.getHandleSize()), 
+                                                img.getY(),
+                                                c.toWorldLength(R.getHandleSize()), 
+                                                c.toWorldLength(R.getHandleSize()) )) {
+                        console.log("grabbed NE handle of image");
+                    }
+                    else if (pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), 
+                                                img.getX(), 
+                                                img.getY() + img.getHeight() - c.toWorldLength(R.getHandleSize()),
+                                                c.toWorldLength(R.getHandleSize()), 
+                                                c.toWorldLength(R.getHandleSize()) )) {
+                        console.log("grabbed SW handle of image");
+                    }
+                    else if (pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), 
+                                                img.getX() + img.getWidth() - c.toWorldLength(R.getHandleSize()), 
+                                                img.getY() + img.getHeight() - c.toWorldLength(R.getHandleSize()),
+                                                c.toWorldLength(R.getHandleSize()), 
+                                                c.toWorldLength(R.getHandleSize()) )) {
+                        console.log("grabbed SE handle of image");
+                    }
+                    // If no handle was clicked, grab the image.
+                    else {
+                        img.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
+                        R.getImages().push(R.getImages().splice(i, 1)[0]);
+                    }
                 }
                 break;
             }
@@ -191,7 +223,7 @@ export function canvasMouseUp(e:MouseEvent) {
             l.setSelected();
         }
 
-        // Select image toggle
+        /*// Select image toggle
         else {
             for (let i = R.getImages().length - 1; i >= 0; i--) {
                 const img = R.getImages()[i];
@@ -206,7 +238,7 @@ export function canvasMouseUp(e:MouseEvent) {
                     break;
                 }
             }
-        } 
+        } */
     }
     R.setDragging(false);
 }

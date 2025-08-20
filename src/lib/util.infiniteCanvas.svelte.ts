@@ -601,6 +601,27 @@ export class InfiniteCanvas {
     }
   }
 
+    /**
+   * Draw a draggable handle on the canvas.
+   * @param x X position of the center of the handle.
+   * @param y Y position of the center of the handle.
+   * @param r Radius of the handle.
+   */
+  #drawCornerHandle(x: number, y: number, w: number, h:number): void {
+    if (this.canvas && this.context) {
+      this.context.strokeStyle = this.#widgetColor;
+      this.context.fillStyle = this.#widgetColor;
+      this.context.beginPath();
+      this.context.rect(
+        x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
+        y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
+        w,
+        h);
+      this.context.fill();
+      this.context.stroke();
+    }
+  }
+
   /**
    * Draw an audio listener on the canvas.
    * @param x X position of the center of the listener.
@@ -636,11 +657,12 @@ export class InfiniteCanvas {
         img.getHeight() * this.#scale * this.#z
       );
       if (img.getEditable()) { 
+        const handleSize = R.getHandleSize();
         this.#drawRect(img.getX(), img.getY(), img.getWidth(), img.getHeight(), img.getSelected());
-        this.#drawHandle(img.getX(), img.getY(), 4);
-        this.#drawHandle(img.getX(), img.getY() + img.getHeight(), 4);
-        this.#drawHandle(img.getX() + img.getWidth(), img.getY(), 4);
-        this.#drawHandle(img.getX() + img.getWidth(), img.getY() + img.getHeight(), 4);
+        this.#drawCornerHandle(img.getX(), img.getY(), handleSize, handleSize);
+        this.#drawCornerHandle(img.getX(), img.getY() + img.getHeight() - this.toWorldLength(handleSize), handleSize, handleSize);
+        this.#drawCornerHandle(img.getX() + img.getWidth() - this.toWorldLength(handleSize), img.getY(), handleSize, handleSize);
+        this.#drawCornerHandle(img.getX() + img.getWidth() - this.toWorldLength(handleSize), img.getY() + img.getHeight() - this.toWorldLength(handleSize), handleSize, handleSize);
       }
     }
   }
