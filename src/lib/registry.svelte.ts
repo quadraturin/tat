@@ -101,9 +101,30 @@ export function setPanLastY(n:number) { panLastY = n; }
 
 // ===== WIDGETS =====
 let handleSize = 8;
-
 export function getHandleSize() { return handleSize; }
 
+export enum Corner { None="NONE", NW="NW", NE="NE", SW="SW", SE="SE" };
+let grabbedCorner = Corner.None;
+export function getGrabbedCorner() { return grabbedCorner; }
+export function setGrabbedCorner(corner:Corner) {
+    grabbedCorner = corner;
+}
+
+let mouseDownX = 0;
+export function getMouseDownX() { return mouseDownX; }
+export function setMouseDownX(x:number) { mouseDownX = x; }
+
+let mouseDownY = 0;
+export function getMouseDownY() { return mouseDownY; }
+export function setMouseDownY(y:number) { mouseDownY = y; }
+
+let originalH = 0;
+export function getOriginalH() { return originalH; }
+export function setOriginalH(h:number) { originalH = h; }
+
+let originalW = 0;
+export function getOriginalW() { return originalW; }
+export function setOriginalW(w:number) { originalW = w; }
 
 /*
  * +-----------------------------+

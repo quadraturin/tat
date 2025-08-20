@@ -60,6 +60,8 @@ export function canvasMouseDown(e:MouseEvent) {
     const c = R.getCanvas();
 
     R.setMouseDown(true);
+    R.setMouseDownX(c.toWorldX(e.x));
+    R.setMouseDownY(c.toWorldY(e.y));
 
     // Reset clicked on draggable state
     R.setClickedOnCanvasObject(false);
@@ -92,7 +94,7 @@ export function canvasMouseDown(e:MouseEvent) {
                                             img.getY(),
                                             c.toWorldLength(R.getHandleSize()), 
                                             c.toWorldLength(R.getHandleSize()) )) {
-                        console.log("grabbed NW handle of image");
+                        R.setGrabbedCorner(R.Corner.NW);
                     }
                     else if (pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), 
                                                 img.getX() + img.getWidth() - c.toWorldLength(R.getHandleSize()), 
@@ -100,6 +102,7 @@ export function canvasMouseDown(e:MouseEvent) {
                                                 c.toWorldLength(R.getHandleSize()), 
                                                 c.toWorldLength(R.getHandleSize()) )) {
                         console.log("grabbed NE handle of image");
+                        R.setGrabbedCorner(R.Corner.NE);
                     }
                     else if (pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), 
                                                 img.getX(), 
@@ -107,6 +110,7 @@ export function canvasMouseDown(e:MouseEvent) {
                                                 c.toWorldLength(R.getHandleSize()), 
                                                 c.toWorldLength(R.getHandleSize()) )) {
                         console.log("grabbed SW handle of image");
+                        R.setGrabbedCorner(R.Corner.SW);
                     }
                     else if (pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), 
                                                 img.getX() + img.getWidth() - c.toWorldLength(R.getHandleSize()), 
@@ -114,11 +118,17 @@ export function canvasMouseDown(e:MouseEvent) {
                                                 c.toWorldLength(R.getHandleSize()), 
                                                 c.toWorldLength(R.getHandleSize()) )) {
                         console.log("grabbed SE handle of image");
+                        R.setGrabbedCorner(R.Corner.SE);
                     }
                     // If no handle was clicked, grab the image.
                     else {
                         img.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
                         R.getImages().push(R.getImages().splice(i, 1)[0]);
+                    }
+
+                    if (R.getGrabbedCorner() != R.Corner.None) {
+                        R.setOriginalH(img.getHeight());
+                        R.setOriginalW(img.getWidth());
                     }
                 }
                 break;
@@ -153,19 +163,97 @@ export function canvasMouseMove(e:MouseEvent) {
         const obj = R.getClickedOnCanvasObject();
         // Clicked on a valid object.
         if (obj instanceof CanvasObject) {
-            // Drag listener
-            if (l.getGrabbed()){
-                l.setX(c.toWorldX(e.clientX) + l.getGrabOffsetX());
-                l.setY(c.toWorldY(e.clientY) + l.getGrabOffsetY());
-                R.setDragging(true);
+            // If an image corner was grabbed, resize the image.
+            if (R.getGrabbedCorner() != R.Corner.None && obj instanceof CanvasImage) {
+
+
+
+                // Swap corners if going past image origin point or image width
+                if (c.toWorldX(e.x) < obj.getX() && R.getGrabbedCorner() == R.Corner.SE) {
+                    R.setGrabbedCorner(R.Corner.SW);
+                    R.setMouseDownX(c.toWorldX(e.x));
+                    R.setMouseDownY(c.toWorldY(e.y));
+                    R.setOriginalH(obj.getHeight());
+                    R.setOriginalW(obj.getWidth());
+                }
+                else if (c.toWorldY(e.y) < obj.getY() && R.getGrabbedCorner() == R.Corner.SE) {
+                    R.setGrabbedCorner(R.Corner.NE);
+                    R.setMouseDownX(c.toWorldX(e.x));
+                    R.setMouseDownY(c.toWorldY(e.y));
+                    R.setOriginalH(obj.getHeight());
+                    R.setOriginalW(obj.getWidth());
+                }
+                else if (c.toWorldX(e.x) < obj.getX() && R.getGrabbedCorner() == R.Corner.NE  || 
+                         c.toWorldY(e.y) < obj.getY() && R.getGrabbedCorner() == R.Corner.SW) {
+                    R.setGrabbedCorner(R.Corner.NW);
+                    R.setMouseDownX(c.toWorldX(e.x));
+                    R.setMouseDownY(c.toWorldY(e.y));
+                    R.setOriginalH(obj.getHeight());
+                    R.setOriginalW(obj.getWidth());
+                }
+                else if (c.toWorldX(e.x) > obj.getX() + obj.getWidth() && R.getGrabbedCorner() == R.Corner.NW) {
+                    R.setGrabbedCorner(R.Corner.NE);
+                    R.setMouseDownX(c.toWorldX(e.x));
+                    R.setMouseDownY(c.toWorldY(e.y));
+                    R.setOriginalH(obj.getHeight());
+                    R.setOriginalW(obj.getWidth());
+                }
+                else if (c.toWorldY(e.y) > obj.getY() + obj.getHeight() && R.getGrabbedCorner() == R.Corner.NW) {
+                    R.setGrabbedCorner(R.Corner.SW);
+                    R.setMouseDownX(c.toWorldX(e.x));
+                    R.setMouseDownY(c.toWorldY(e.y));
+                    R.setOriginalH(obj.getHeight());
+                    R.setOriginalW(obj.getWidth());
+                }
+                else if (c.toWorldX(e.x) > obj.getX() + obj.getWidth() && R.getGrabbedCorner() == R.Corner.SW  || 
+                         c.toWorldY(e.y) > obj.getY() + obj.getHeight() && R.getGrabbedCorner() == R.Corner.NE) {
+                    R.setGrabbedCorner(R.Corner.SE);
+                    R.setMouseDownX(c.toWorldX(e.x));
+                    R.setMouseDownY(c.toWorldY(e.y));
+                    R.setOriginalH(obj.getHeight());
+                    R.setOriginalW(obj.getWidth());
+                }
+
+                // Resize image with SE corner
+                if (R.getGrabbedCorner() == R.Corner.SE) {
+                    obj.setWidth(c.toWorldX(e.clientX) - obj.getX());
+                    obj.setHeight(c.toWorldY(e.clientY) - obj.getY());
+                }
+                // Resize image with NE corner
+                else if (R.getGrabbedCorner() == R.Corner.NE) {
+                    obj.setWidth(c.toWorldX(e.clientX) - obj.getX());
+                    obj.setY(c.toWorldY(e.clientY));
+                    obj.setHeight(R.getOriginalH() - (c.toWorldY(e.clientY) - R.getMouseDownY()));
+                }
+                // Resize image with SW corner
+                else if (R.getGrabbedCorner() == R.Corner.SW) {
+                    obj.setHeight(c.toWorldY(e.clientY) - obj.getY());
+                    obj.setX(c.toWorldX(e.clientX));
+                    obj.setWidth(R.getOriginalW() - (c.toWorldX(e.clientX) - R.getMouseDownX()));
+                }
+                // Resize image with NW corner
+                else if (R.getGrabbedCorner() == R.Corner.NW) {
+                    obj.setX(c.toWorldX(e.clientX));
+                    obj.setWidth(R.getOriginalW() - (c.toWorldX(e.clientX) - R.getMouseDownX()));
+                    obj.setY(c.toWorldY(e.clientY));
+                    obj.setHeight(R.getOriginalH() - (c.toWorldY(e.clientY) - R.getMouseDownY()));
+                }
             }
-            // Drag image(s)
-            for (let i = 0; i < R.getImages().length; i++) {
-                const img = R.getImages()[i];
-                if (img.getGrabbed()) {
-                    img.setX(c.toWorldX(e.clientX) + img.getGrabOffsetX());
-                    img.setY(c.toWorldY(e.clientY) + img.getGrabOffsetY());
+            else {
+                // Drag listener
+                if (l.getGrabbed()){
+                    l.setX(c.toWorldX(e.clientX) + l.getGrabOffsetX());
+                    l.setY(c.toWorldY(e.clientY) + l.getGrabOffsetY());
                     R.setDragging(true);
+                }
+                // Drag image(s)
+                for (let i = 0; i < R.getImages().length; i++) {
+                    const img = R.getImages()[i];
+                    if (img.getGrabbed()) {
+                        img.setX(c.toWorldX(e.clientX) + img.getGrabOffsetX());
+                        img.setY(c.toWorldY(e.clientY) + img.getGrabOffsetY());
+                        R.setDragging(true);
+                    }
                 }
             }
         }
@@ -193,6 +281,7 @@ export function canvasMouseUp(e:MouseEvent) {
     const c = R.getCanvas();
 
     R.setMouseDown(false);
+    R.setGrabbedCorner(R.Corner.None);
 
     // Release the listener
     if (l.getGrabbed()) {
