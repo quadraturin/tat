@@ -64,6 +64,8 @@ export class InfiniteCanvas {
     return (xReal + this.#offsetX) * this.#scale * this.#z;
   }
 
+  getZoom() { return this.#z; }
+
   /**
    * Convert a "real" (window) pixel y coordinate to a "virtual" (canvas) one.
    * @param yReal The "real" y pixel coordinate to convert.

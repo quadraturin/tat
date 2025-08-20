@@ -1,6 +1,7 @@
 import * as R from "$lib/registry.svelte";
-import type { CanvasImage } from "./classes/CanvasImage.svelte";
-import type { CanvasListener } from "./classes/CanvasListener.svelte";
+import { CanvasImage } from "./classes/CanvasImage.svelte";
+import { CanvasListener } from "./classes/CanvasListener.svelte";
+import { CanvasObject } from "./classes/CanvasObject.svelte";
 
 /**
  * Handle a double click on the canvas.
@@ -86,8 +87,22 @@ export function canvasMouseDown(e:MouseEvent) {
                 if(img.getEditable()) {
                     R.setClickedOnCanvasObject(img);
                     img.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
+                    R.getImages().push(R.getImages().splice(i, 1)[0]);
                 }
                 break;
+            }
+        }
+    }
+    // If object clicked was selected, grab all selected objects
+    const clicked = R.getClickedOnCanvasObject();
+    if (clicked instanceof CanvasObject && clicked.getSelected()) {
+        if (l.getSelected() && l.getEditable()) {
+            l.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
+        }
+        for (let i = R.getImages().length - 1; i >= 0; i--) {
+            const img = R.getImages()[i];
+            if (img.getSelected() && img.getEditable()){ 
+                img.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
             }
         }
     }
@@ -103,33 +118,28 @@ export function canvasMouseMove(e:MouseEvent) {
     const c = R.getCanvas();
 
     if(R.getMouseDown()) {
-        console.log("mouse down");
-
-        // Clicked on a valid object. Drag it.
-        if (R.getClickedOnCanvasObject() != false) {
-            console.log("grabbed object");
+        const obj = R.getClickedOnCanvasObject();
+        // Clicked on a valid object.
+        if (obj instanceof CanvasObject) {
             // Drag listener
-            if (R.getClickedOnCanvasObject() == l){
-                R.getListener().setX(R.getCanvas().toWorldX(e.clientX + l.getGrabOffsetX()));
-                R.getListener().setY(R.getCanvas().toWorldY(e.clientY + l.getGrabOffsetY()));
+            if (l.getGrabbed()){
+                l.setX(c.toWorldX(e.clientX) + l.getGrabOffsetX());
+                l.setY(c.toWorldY(e.clientY) + l.getGrabOffsetY());
                 R.setDragging(true);
             }
             // Drag image(s)
-            else {
-                for (let i = 0; i < R.getImages().length; i++) {
-                    const img = R.getImages()[i];
-                    if (img.getGrabbed()) {
-                        img.setX(R.getCanvas().toWorldX(e.clientX) + img.getGrabOffsetX());
-                        img.setY(R.getCanvas().toWorldY(e.clientY) + img.getGrabOffsetY());
-                        R.setDragging(true);
-                    }
+            for (let i = 0; i < R.getImages().length; i++) {
+                const img = R.getImages()[i];
+                if (img.getGrabbed()) {
+                    img.setX(c.toWorldX(e.clientX) + img.getGrabOffsetX());
+                    img.setY(c.toWorldY(e.clientY) + img.getGrabOffsetY());
+                    R.setDragging(true);
                 }
             }
         }
         // If not valid object clicked and not already panning, start panning.
         else if (!R.getPanning()){ 
             R.startPanning(e.clientX, e.clientY);
-            console.log("no grabbed object. panning:", R.getPanning());
         }
 
         // Pan
@@ -139,10 +149,6 @@ export function canvasMouseMove(e:MouseEvent) {
             R.setPanLastY(e.clientY);
         } 
     }
-
-    /*
-
-    */
 }
 
 /**
@@ -174,7 +180,6 @@ export function canvasMouseUp(e:MouseEvent) {
     if (R.getPanning()) R.stopPanning();
 
     // If there was a clicked object but it was not dragged, toggle selection 
-    console.log("dragging:",R.getDragging())
     if(!R.getDragging()) {
         // Select listener toggle
         if (l.getEditable() &&
@@ -188,7 +193,7 @@ export function canvasMouseUp(e:MouseEvent) {
 
         // Select image toggle
         else {
-            for (let i = 0; i < R.getImages().length; i++) {
+            for (let i = R.getImages().length - 1; i >= 0; i--) {
                 const img = R.getImages()[i];
                 if (!img.getLocked() &&
                     pointRectCollision(c.toWorldX(e.x), 
@@ -198,6 +203,7 @@ export function canvasMouseUp(e:MouseEvent) {
                                     img.getWidth(), 
                                     img.getHeight())) {
                     img.setSelected();
+                    break;
                 }
             }
         } 
@@ -211,7 +217,6 @@ function pointCircleCollision(pX:number, pY:number, cX:number, cY:number, cR:num
 }
 
 function pointRectCollision(pX:number, pY:number, rX:number, rY:number, rW:number, rH:number):boolean {
-    console.log("px", pX, "py", pY, "rx", rX, "ry", rY, "rw", rW, "rh", rH);
     if (pX >= rX && 
         pY >= rY && 
         pX <= rX + rW && 
