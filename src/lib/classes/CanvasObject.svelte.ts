@@ -58,14 +58,12 @@ export class CanvasObject {
         if (typeof g == "undefined") this.#grabbed = !this.#grabbed;
         else this.#grabbed = g;
 
-        if (this.#grabbed) {
-            if (typeof x == "undefined" || typeof y == "undefined") {
-                this.#grabOffsetX = 0;
-                this.#grabOffsetY = 0;
-            } else {
-                this.#grabOffsetX = this.#x - x;
-                this.#grabOffsetY = this.#y - y;
-            }
+        if (typeof x == "undefined" || typeof y == "undefined") {
+            this.#grabOffsetX = 0;
+            this.#grabOffsetY = 0;
+        } else {
+            this.#grabOffsetX = this.#x - x;
+            this.#grabOffsetY = this.#y - y;
         }
     }
 

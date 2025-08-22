@@ -60,4 +60,7 @@ export class CanvasImage extends CanvasObject {
 
     getWidth() { return this.#width; }
     setWidth(w:number) { this.#width = w; }
+
+    getOriginalWidth() { return this.#originalWidth; }
+    getOriginalHeight() { return this.#originalHeight; }
 }

@@ -126,6 +126,14 @@ let originalW = 0;
 export function getOriginalW() { return originalW; }
 export function setOriginalW(w:number) { originalW = w; }
 
+let originalX = 0;
+export function getOriginalX() { return originalX; }
+export function setOriginalX(x:number) { originalX = x; }
+
+let originalY = 0;
+export function getOriginalY() { return originalY; }
+export function setOriginalY(y:number) { originalY = y; }
+
 /*
  * +-----------------------------+
  * | PROJECT CONTENTS MANAGEMENT |

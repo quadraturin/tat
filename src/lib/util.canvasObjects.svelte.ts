@@ -88,6 +88,10 @@ export function canvasMouseDown(e:MouseEvent) {
                 // Only proceed if the image is editable
                 if(img.getEditable()) {
                     R.setClickedOnCanvasObject(img);
+                    R.setOriginalH(img.getHeight());
+                    R.setOriginalW(img.getWidth());
+                    R.setOriginalX(img.getX());
+                    R.setOriginalY(img.getY());
                     // Check if the NW resize handle was clicked.
                     if (pointRectCollision( c.toWorldX(e.x), c.toWorldY(e.y), 
                                             img.getX(), 
@@ -95,6 +99,7 @@ export function canvasMouseDown(e:MouseEvent) {
                                             c.toWorldLength(R.getHandleSize()), 
                                             c.toWorldLength(R.getHandleSize()) )) {
                         R.setGrabbedCorner(R.Corner.NW);
+                        img.setGrabbed(false, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
                     }
                     else if (pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), 
                                                 img.getX() + img.getWidth() - c.toWorldLength(R.getHandleSize()), 
@@ -103,6 +108,7 @@ export function canvasMouseDown(e:MouseEvent) {
                                                 c.toWorldLength(R.getHandleSize()) )) {
                         console.log("grabbed NE handle of image");
                         R.setGrabbedCorner(R.Corner.NE);
+                        img.setGrabbed(false, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
                     }
                     else if (pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), 
                                                 img.getX(), 
@@ -111,6 +117,7 @@ export function canvasMouseDown(e:MouseEvent) {
                                                 c.toWorldLength(R.getHandleSize()) )) {
                         console.log("grabbed SW handle of image");
                         R.setGrabbedCorner(R.Corner.SW);
+                        img.setGrabbed(false, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
                     }
                     else if (pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), 
                                                 img.getX() + img.getWidth() - c.toWorldLength(R.getHandleSize()), 
@@ -119,16 +126,12 @@ export function canvasMouseDown(e:MouseEvent) {
                                                 c.toWorldLength(R.getHandleSize()) )) {
                         console.log("grabbed SE handle of image");
                         R.setGrabbedCorner(R.Corner.SE);
+                        img.setGrabbed(false, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
                     }
                     // If no handle was clicked, grab the image.
                     else {
                         img.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
                         R.getImages().push(R.getImages().splice(i, 1)[0]);
-                    }
-
-                    if (R.getGrabbedCorner() != R.Corner.None) {
-                        R.setOriginalH(img.getHeight());
-                        R.setOriginalW(img.getWidth());
                     }
                 }
                 break;
@@ -165,10 +168,9 @@ export function canvasMouseMove(e:MouseEvent) {
         if (obj instanceof CanvasObject) {
             // If an image corner was grabbed, resize the image.
             if (R.getGrabbedCorner() != R.Corner.None && obj instanceof CanvasImage) {
-
-
-
+/*
                 // Swap corners if going past image origin point or image width
+                // SE corner crossing X -> SW corner
                 if (c.toWorldX(e.x) < obj.getX() && R.getGrabbedCorner() == R.Corner.SE) {
                     R.setGrabbedCorner(R.Corner.SW);
                     R.setMouseDownX(c.toWorldX(e.x));
@@ -176,6 +178,7 @@ export function canvasMouseMove(e:MouseEvent) {
                     R.setOriginalH(obj.getHeight());
                     R.setOriginalW(obj.getWidth());
                 }
+                // SE corner crossing Y -> NE corner
                 else if (c.toWorldY(e.y) < obj.getY() && R.getGrabbedCorner() == R.Corner.SE) {
                     R.setGrabbedCorner(R.Corner.NE);
                     R.setMouseDownX(c.toWorldX(e.x));
@@ -183,7 +186,8 @@ export function canvasMouseMove(e:MouseEvent) {
                     R.setOriginalH(obj.getHeight());
                     R.setOriginalW(obj.getWidth());
                 }
-                else if (c.toWorldX(e.x) < obj.getX() && R.getGrabbedCorner() == R.Corner.NE  || 
+                // NE or SW corner crossing X or Y -> NW corner
+                else if (c.toWorldX(e.x) < obj.getX() && R.getGrabbedCorner() == R.Corner.NE || 
                          c.toWorldY(e.y) < obj.getY() && R.getGrabbedCorner() == R.Corner.SW) {
                     R.setGrabbedCorner(R.Corner.NW);
                     R.setMouseDownX(c.toWorldX(e.x));
@@ -191,6 +195,7 @@ export function canvasMouseMove(e:MouseEvent) {
                     R.setOriginalH(obj.getHeight());
                     R.setOriginalW(obj.getWidth());
                 }
+                // NW corner crossing X+W -> NE corner
                 else if (c.toWorldX(e.x) > obj.getX() + obj.getWidth() && R.getGrabbedCorner() == R.Corner.NW) {
                     R.setGrabbedCorner(R.Corner.NE);
                     R.setMouseDownX(c.toWorldX(e.x));
@@ -198,6 +203,7 @@ export function canvasMouseMove(e:MouseEvent) {
                     R.setOriginalH(obj.getHeight());
                     R.setOriginalW(obj.getWidth());
                 }
+                // NW corner crossing Y+H -> SW corner
                 else if (c.toWorldY(e.y) > obj.getY() + obj.getHeight() && R.getGrabbedCorner() == R.Corner.NW) {
                     R.setGrabbedCorner(R.Corner.SW);
                     R.setMouseDownX(c.toWorldX(e.x));
@@ -205,7 +211,8 @@ export function canvasMouseMove(e:MouseEvent) {
                     R.setOriginalH(obj.getHeight());
                     R.setOriginalW(obj.getWidth());
                 }
-                else if (c.toWorldX(e.x) > obj.getX() + obj.getWidth() && R.getGrabbedCorner() == R.Corner.SW  || 
+                // SW or NE corner crossing X+W or Y+H -> SE corner
+                else if (c.toWorldX(e.x) > obj.getX() + obj.getWidth() && R.getGrabbedCorner() == R.Corner.SW || 
                          c.toWorldY(e.y) > obj.getY() + obj.getHeight() && R.getGrabbedCorner() == R.Corner.NE) {
                     R.setGrabbedCorner(R.Corner.SE);
                     R.setMouseDownX(c.toWorldX(e.x));
@@ -213,30 +220,91 @@ export function canvasMouseMove(e:MouseEvent) {
                     R.setOriginalH(obj.getHeight());
                     R.setOriginalW(obj.getWidth());
                 }
-
+*/
                 // Resize image with SE corner
                 if (R.getGrabbedCorner() == R.Corner.SE) {
-                    obj.setWidth(c.toWorldX(e.clientX) - obj.getX());
-                    obj.setHeight(c.toWorldY(e.clientY) - obj.getY());
+                    // Free scaling: Set size and position relative to mouse
+                    obj.setWidth(c.toWorldX(e.clientX) - obj.getX() + R.getOriginalW() + obj.getGrabOffsetX());
+                    obj.setHeight(c.toWorldY(e.clientY) - obj.getY() + R.getOriginalH() + obj.getGrabOffsetY());
+                    console.log(obj.getGrabOffsetX());
+
+                    // Proportional scaling: if on, correct image size with original aspect ratio
+                    if(R.getIsProportionalScaleOn()) {
+                        // Too wide
+                         if(obj.getWidth()/obj.getHeight() > obj.getOriginalWidth()/obj.getOriginalHeight()){
+                            obj.setWidth(obj.getHeight() * (obj.getOriginalWidth()/obj.getOriginalHeight()));
+                         }
+                         // Too tall
+                         else if(obj.getWidth()/obj.getHeight() < obj.getOriginalWidth()/obj.getOriginalHeight()){
+                            obj.setHeight(obj.getWidth() * (obj.getOriginalHeight()/obj.getOriginalWidth()));
+                         }
+                    }
                 }
                 // Resize image with NE corner
                 else if (R.getGrabbedCorner() == R.Corner.NE) {
-                    obj.setWidth(c.toWorldX(e.clientX) - obj.getX());
+                    // Free scaling: Set size and position relative to mouse
                     obj.setY(c.toWorldY(e.clientY));
+                    obj.setWidth(c.toWorldX(e.clientX) - obj.getX());
                     obj.setHeight(R.getOriginalH() - (c.toWorldY(e.clientY) - R.getMouseDownY()));
+
+                    // Proportional scaling: if on, correct image size and position with original aspect ratio
+                    if(R.getIsProportionalScaleOn()) {
+                        // Too wide
+                        if(obj.getWidth()/obj.getHeight() > obj.getOriginalWidth()/obj.getOriginalHeight()){
+                            obj.setWidth(obj.getHeight() * (obj.getOriginalWidth()/obj.getOriginalHeight()));
+                            obj.setY(R.getOriginalY() + R.getOriginalH() - obj.getHeight());
+                        }
+                        // Too tall
+                        else if(obj.getWidth()/obj.getHeight() < obj.getOriginalWidth()/obj.getOriginalHeight()){
+                            obj.setHeight(obj.getWidth() * (obj.getOriginalHeight()/obj.getOriginalWidth()));
+                            obj.setY(R.getOriginalY() + R.getOriginalH() - obj.getHeight());
+                        }
+                    }
                 }
                 // Resize image with SW corner
                 else if (R.getGrabbedCorner() == R.Corner.SW) {
+                    // Free scaling: Set size and position relative to mouse
+                    obj.setX(c.toWorldX(e.clientX) - obj.getGrabOffsetX());
                     obj.setHeight(c.toWorldY(e.clientY) - obj.getY());
-                    obj.setX(c.toWorldX(e.clientX));
-                    obj.setWidth(R.getOriginalW() - (c.toWorldX(e.clientX) - R.getMouseDownX()));
+                    obj.setWidth(R.getOriginalW() - c.toWorldX(e.clientX) + R.getMouseDownX());
+
+                    // Proportional scaling: if on, correct image size and position with original aspect ratio
+                    if(R.getIsProportionalScaleOn()) {
+                        // Too wide
+                        if(obj.getWidth()/obj.getHeight() > obj.getOriginalWidth()/obj.getOriginalHeight()){
+                            obj.setWidth(obj.getHeight() * (obj.getOriginalWidth()/obj.getOriginalHeight()));
+                            obj.setX(R.getOriginalX() + R.getOriginalW() - obj.getWidth());
+                        }
+                        // Too tall
+                        else if(obj.getWidth()/obj.getHeight() < obj.getOriginalWidth()/obj.getOriginalHeight()){
+                            obj.setHeight(obj.getWidth() * (obj.getOriginalHeight()/obj.getOriginalWidth()));
+                            obj.setX(R.getOriginalX() + R.getOriginalW() - obj.getWidth());
+                        }
+                    }
                 }
                 // Resize image with NW corner
                 else if (R.getGrabbedCorner() == R.Corner.NW) {
+                    // Free scaling: Set size and position relative to mouse
                     obj.setX(c.toWorldX(e.clientX));
                     obj.setWidth(R.getOriginalW() - (c.toWorldX(e.clientX) - R.getMouseDownX()));
                     obj.setY(c.toWorldY(e.clientY));
                     obj.setHeight(R.getOriginalH() - (c.toWorldY(e.clientY) - R.getMouseDownY()));
+
+                    // Proportional scaling: if on, correct image size and position with original aspect ratio
+                    if(R.getIsProportionalScaleOn()) {
+                        // Too wide
+                        if(obj.getWidth()/obj.getHeight() > obj.getOriginalWidth()/obj.getOriginalHeight()){
+                            obj.setWidth(obj.getHeight() * (obj.getOriginalWidth()/obj.getOriginalHeight()));
+                            obj.setX(R.getOriginalX() + R.getOriginalW() - obj.getWidth());
+                            obj.setY(R.getOriginalY() + R.getOriginalH() - obj.getHeight());
+                        }
+                        // Too tall
+                        else if(obj.getWidth()/obj.getHeight() < obj.getOriginalWidth()/obj.getOriginalHeight()){
+                            obj.setHeight(obj.getWidth() * (obj.getOriginalHeight()/obj.getOriginalWidth()));
+                            obj.setX(R.getOriginalX() + R.getOriginalW() - obj.getWidth());
+                            obj.setY(R.getOriginalY() + R.getOriginalH() - obj.getHeight());
+                        }
+                    }
                 }
             }
             else {
