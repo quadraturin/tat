@@ -226,7 +226,6 @@ export function canvasMouseMove(e:MouseEvent) {
                     // Free scaling: Set size and position relative to mouse
                     obj.setWidth(c.toWorldX(e.clientX) - obj.getX() + R.getOriginalW() + obj.getGrabOffsetX());
                     obj.setHeight(c.toWorldY(e.clientY) - obj.getY() + R.getOriginalH() + obj.getGrabOffsetY());
-                    console.log(obj.getGrabOffsetX());
 
                     // Proportional scaling: if on, correct image size with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
@@ -243,9 +242,9 @@ export function canvasMouseMove(e:MouseEvent) {
                 // Resize image with NE corner
                 else if (R.getGrabbedCorner() == R.Corner.NE) {
                     // Free scaling: Set size and position relative to mouse
-                    obj.setY(c.toWorldY(e.clientY));
-                    obj.setWidth(c.toWorldX(e.clientX) - obj.getX());
-                    obj.setHeight(R.getOriginalH() - (c.toWorldY(e.clientY) - R.getMouseDownY()));
+                    obj.setY(c.toWorldY(e.clientY) + obj.getGrabOffsetY());
+                    obj.setWidth(c.toWorldX(e.clientX) - obj.getX() + R.getOriginalW() + obj.getGrabOffsetX());
+                    obj.setHeight(R.getOriginalH() - c.toWorldY(e.clientY) + R.getMouseDownY());
 
                     // Proportional scaling: if on, correct image size and position with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
@@ -264,8 +263,8 @@ export function canvasMouseMove(e:MouseEvent) {
                 // Resize image with SW corner
                 else if (R.getGrabbedCorner() == R.Corner.SW) {
                     // Free scaling: Set size and position relative to mouse
-                    obj.setX(c.toWorldX(e.clientX) - obj.getGrabOffsetX());
-                    obj.setHeight(c.toWorldY(e.clientY) - obj.getY());
+                    obj.setX(c.toWorldX(e.clientX) + obj.getGrabOffsetX());
+                    obj.setHeight(c.toWorldY(e.clientY) - obj.getY() + R.getOriginalH() + obj.getGrabOffsetY());
                     obj.setWidth(R.getOriginalW() - c.toWorldX(e.clientX) + R.getMouseDownX());
 
                     // Proportional scaling: if on, correct image size and position with original aspect ratio
@@ -285,9 +284,9 @@ export function canvasMouseMove(e:MouseEvent) {
                 // Resize image with NW corner
                 else if (R.getGrabbedCorner() == R.Corner.NW) {
                     // Free scaling: Set size and position relative to mouse
-                    obj.setX(c.toWorldX(e.clientX));
+                    obj.setX(c.toWorldX(e.clientX) + obj.getGrabOffsetX());
                     obj.setWidth(R.getOriginalW() - (c.toWorldX(e.clientX) - R.getMouseDownX()));
-                    obj.setY(c.toWorldY(e.clientY));
+                    obj.setY(c.toWorldY(e.clientY) + obj.getGrabOffsetY());
                     obj.setHeight(R.getOriginalH() - (c.toWorldY(e.clientY) - R.getMouseDownY()));
 
                     // Proportional scaling: if on, correct image size and position with original aspect ratio
