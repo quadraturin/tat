@@ -1,4 +1,4 @@
-import L from "leaflet";
+import L, { Canvas } from "leaflet";
 import { MapImage } from "./classes/MapImage.svelte";
 import { MapSound } from "./classes/MapSound.svelte";
 import type { MapInfo } from "./classes/MapInfo";
@@ -10,6 +10,7 @@ import { CanvasImage } from "./classes/CanvasImage.svelte";
 import type { canvasImageOptions } from "./classes/CanvasImage.svelte";
 import { CanvasSound, type canvasSoundOptions } from "./classes/CanvasSound.svelte";
 import { CanvasListener } from "./classes/CanvasListener.svelte";
+import type { CanvasObject } from "./classes/CanvasObject.svelte";
 
 
 
@@ -31,13 +32,14 @@ export function getCanvas() { return canvas; }
 export function setCanvas(gridSize?:number) { canvas = new InfiniteCanvas(gridSize); }
 
 // ===== CANVAS OBJECT HANDLING =====
-let clickedOnCanvasObject:CanvasListener|CanvasImage|boolean = false;
-export function getClickedOnCanvasObject() { 
-    return clickedOnCanvasObject; 
-}
-export function setClickedOnCanvasObject(obj:CanvasListener|CanvasImage|boolean) {
-    clickedOnCanvasObject = obj;
-}
+
+let hoveredCanvasObject:CanvasObject|null = null;
+export function getHoveredCanvasObject() { return hoveredCanvasObject; }
+export function setHoveredCanvasObject(obj:CanvasObject|null) { hoveredCanvasObject = obj; }
+
+let clickedCanvasObject:CanvasObject|null;
+export function getClickedCanvasObject() { return clickedCanvasObject; }
+export function setClickedCanvasObject(obj:CanvasObject|null) { clickedCanvasObject = obj; }
 
 // ===== DRAGGING ON THE CANVAS =====
 
@@ -100,15 +102,10 @@ export function setPanLastX(n:number) { panLastX = n; }
 export function setPanLastY(n:number) { panLastY = n; }
 
 // ===== WIDGETS =====
-let handleSize = 8;
+let handleSize = 4;
 export function getHandleSize() { return handleSize; }
 
-export enum Corner { None="NONE", NW="NW", NE="NE", SW="SW", SE="SE" };
-let grabbedCorner = Corner.None;
-export function getGrabbedCorner() { return grabbedCorner; }
-export function setGrabbedCorner(corner:Corner) {
-    grabbedCorner = corner;
-}
+export enum Handle { None="NONE", NW="NW", NE="NE", SW="SW", SE="SE", R="R" };
 
 let mouseDownX = 0;
 export function getMouseDownX() { return mouseDownX; }
@@ -336,6 +333,7 @@ export function setListener() {
         selected: false,
         grabbed: false,
         locked: false,
+        handle: Handle.None
     }); 
 }
 export function getListenerRadius() { return listenerRadius; }

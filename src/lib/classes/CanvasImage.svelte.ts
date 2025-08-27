@@ -1,4 +1,5 @@
 import { CanvasObject } from "./CanvasObject.svelte";
+import { Handle } from "$lib/registry.svelte";
 
 /**
  * map image options.
@@ -19,7 +20,8 @@ export type canvasImageOptions = {
     editable:boolean,
     selected:boolean,
     grabbed:boolean,
-    locked:boolean
+    locked:boolean,
+    handle:Handle
 }
 
 /**
@@ -43,7 +45,7 @@ export class CanvasImage extends CanvasObject {
                 editable:options.editable,
                 selected:options.selected,
                 grabbed:options.grabbed,
-                locked:options.locked });
+                locked:options.locked});
         this.#image = options.image;
         this.#src = options.src;
         this.#height = options.height;

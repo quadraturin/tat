@@ -1,3 +1,5 @@
+import { Handle } from "$lib/registry.svelte";
+
 /**
  * map image options.
  */
@@ -28,6 +30,8 @@ export class CanvasObject {
     #grabOffsetX:number = 0;
     #grabOffsetY:number = 0;
     #locked:boolean = $state(false);
+    #handle:Handle = Handle.None;
+    #hoverHandle:Handle = Handle.None;
 
     constructor(options:canvasObjectOptions) {
         this.#x = options.x;
@@ -39,6 +43,8 @@ export class CanvasObject {
         this.#selected = options.selected;
         this.#grabbed = options.grabbed;
         this.#locked = options.locked;
+        this.#handle = Handle.None;
+        this.#hoverHandle = Handle.None;
     }
 
     getX() { return this.#x; }
@@ -80,5 +86,13 @@ export class CanvasObject {
     setEditable(enable?:boolean) {
         if (typeof enable == "undefined") this.#editable = !this.#editable;
         else this.#editable = enable;
+    }
+
+    getHoverHandle() { return this.#hoverHandle; }
+    setHoverHandle(h:Handle) { this.#hoverHandle = h; }
+    getHandle() { return this.#handle; }
+    setHandle(h?:Handle) {
+        if (typeof h == "undefined") this.#handle = this.#hoverHandle;
+        else this.#handle = h;
     }
 }

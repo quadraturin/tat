@@ -1,4 +1,5 @@
 import { CanvasObject } from "./CanvasObject.svelte";
+import { Handle } from "$lib/registry.svelte";
 
 /**
  * map image options.
@@ -13,6 +14,7 @@ export type canvasListenerOptions = {
     selected:boolean,
     grabbed:boolean,
     locked:boolean,
+    handle:Handle
 }
 
 /**

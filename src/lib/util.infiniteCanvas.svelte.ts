@@ -649,20 +649,28 @@ export class InfiniteCanvas {
    */
   #drawImage(img: CanvasImage): void {
     if (this.canvas && this.context) {
-      this.context.drawImage(
-        img.getImage(),
-        this.toWindowX(img.getX()),
-        this.toWindowY(img.getY()),
-        img.getWidth() * this.#scale * this.#z,
-        img.getHeight() * this.#scale * this.#z
-      );
+      let imgX = this.toWindowX(img.getX());
+      let imgY = this.toWindowY(img.getY());
+      let imgW = img.getWidth() * this.#scale * this.#z;
+      let imgH = img.getHeight() * this.#scale * this.#z;
+      this.context.save()
+      if (img.getWidth() < 0) {
+        this.context.scale(-1,1);
+        imgX = -this.toWindowX(img.getX()+img.getWidth());
+      }
+      if (img.getHeight() < 0) {
+        this.context.scale(1,-1);
+        imgY = -this.toWindowY(img.getY()+img.getHeight());
+      }
+      this.context.drawImage(img.getImage(), imgX, imgY, imgW, imgH);
+      this.context.restore();
       if (img.getEditable()) { 
         const handleSize = R.getHandleSize();
         this.#drawRect(img.getX(), img.getY(), img.getWidth(), img.getHeight(), img.getSelected());
-        this.#drawCornerHandle(img.getX(), img.getY(), handleSize, handleSize);
-        this.#drawCornerHandle(img.getX(), img.getY() + img.getHeight() - this.toWorldLength(handleSize), handleSize, handleSize);
-        this.#drawCornerHandle(img.getX() + img.getWidth() - this.toWorldLength(handleSize), img.getY(), handleSize, handleSize);
-        this.#drawCornerHandle(img.getX() + img.getWidth() - this.toWorldLength(handleSize), img.getY() + img.getHeight() - this.toWorldLength(handleSize), handleSize, handleSize);
+        this.#drawHandle(img.getX(), img.getY(), handleSize);
+        this.#drawHandle(img.getX() + img.getWidth(), img.getY(), handleSize);
+        this.#drawHandle(img.getX(), img.getY() + img.getHeight(), handleSize);
+        this.#drawHandle(img.getX() + img.getWidth(), img.getY() + img.getHeight(), handleSize);
       }
     }
   }

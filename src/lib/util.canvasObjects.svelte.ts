@@ -64,80 +64,26 @@ export function canvasMouseDown(e:MouseEvent) {
     R.setMouseDownY(c.toWorldY(e.y));
 
     // Reset clicked on draggable state
-    R.setClickedOnCanvasObject(false);
+    R.setClickedCanvasObject(null);
 
-    // Get listener if under cursor
-    if (l.getEditable() &&
-        pointCircleCollision(c.toWorldX(e.x), 
-                             c.toWorldY(e.y), 
-                             l.getX(), 
-                             l.getY(), 
-                             c.toWorldLength(R.getListenerRadius()))){
-        R.setClickedOnCanvasObject(l);
-        l.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
-    } 
-    // Get first image under cursor (last in list)
-    else {
-        // Cycle thru images from end to beginning of array (top to bottom visually)
-        for (let i = R.getImages().length - 1; i >= 0; i--) {
-            const img = R.getImages()[i];
-            // Check if the image was clicked
-            if (pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), 
-                                   img.getX(),      img.getY(), 
-                                   img.getWidth(),  img.getHeight())) {
-                // Only proceed if the image is editable
-                if(img.getEditable()) {
-                    R.setClickedOnCanvasObject(img);
-                    R.setOriginalH(img.getHeight());
-                    R.setOriginalW(img.getWidth());
-                    R.setOriginalX(img.getX());
-                    R.setOriginalY(img.getY());
-                    // Check if the NW resize handle was clicked.
-                    if (pointRectCollision( c.toWorldX(e.x), c.toWorldY(e.y), 
-                                            img.getX(), 
-                                            img.getY(),
-                                            c.toWorldLength(R.getHandleSize()), 
-                                            c.toWorldLength(R.getHandleSize()) )) {
-                        R.setGrabbedCorner(R.Corner.NW);
-                        img.setGrabbed(false, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
-                    }
-                    else if (pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), 
-                                                img.getX() + img.getWidth() - c.toWorldLength(R.getHandleSize()), 
-                                                img.getY(),
-                                                c.toWorldLength(R.getHandleSize()), 
-                                                c.toWorldLength(R.getHandleSize()) )) {
-                        console.log("grabbed NE handle of image");
-                        R.setGrabbedCorner(R.Corner.NE);
-                        img.setGrabbed(false, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
-                    }
-                    else if (pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), 
-                                                img.getX(), 
-                                                img.getY() + img.getHeight() - c.toWorldLength(R.getHandleSize()),
-                                                c.toWorldLength(R.getHandleSize()), 
-                                                c.toWorldLength(R.getHandleSize()) )) {
-                        console.log("grabbed SW handle of image");
-                        R.setGrabbedCorner(R.Corner.SW);
-                        img.setGrabbed(false, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
-                    }
-                    else if (pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), 
-                                                img.getX() + img.getWidth() - c.toWorldLength(R.getHandleSize()), 
-                                                img.getY() + img.getHeight() - c.toWorldLength(R.getHandleSize()),
-                                                c.toWorldLength(R.getHandleSize()), 
-                                                c.toWorldLength(R.getHandleSize()) )) {
-                        console.log("grabbed SE handle of image");
-                        R.setGrabbedCorner(R.Corner.SE);
-                        img.setGrabbed(false, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
-                    }
-                    // If no handle was clicked, grab the image.
-                    else {
-                        img.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
-                        R.getImages().push(R.getImages().splice(i, 1)[0]);
-                    }
+    // Grab the hovered object if any (if it's editable)
+    if (R.getHoveredCanvasObject() != null && R.getHoveredCanvasObject()?.getEditable()) {
+        let obj = R.getHoveredCanvasObject();
+        R.setClickedCanvasObject(obj);
+        if (obj != null) {
+            if (obj.getHoverHandle() == R.Handle.None) {
+                obj.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
+                obj.setHandle();
+            } else {
+                if (obj instanceof CanvasImage) {
+                    R.setOriginalH(obj.getHeight());
+                    R.setOriginalW(obj.getWidth());
+                    obj.setHandle();
                 }
-                break;
             }
         }
     }
+    /*
     // If object clicked was selected, grab all selected objects
     const clicked = R.getClickedOnCanvasObject();
     if (clicked instanceof CanvasObject && clicked.getSelected()) {
@@ -150,7 +96,7 @@ export function canvasMouseDown(e:MouseEvent) {
                 img.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
             }
         }
-    }
+    }*/
 }
 
 /**
@@ -162,70 +108,84 @@ export function canvasMouseMove(e:MouseEvent) {
     const l = R.getListener();
     const c = R.getCanvas();
 
+    // Update hover states
+    if (c.canvas) {
+        R.setHoveredCanvasObject(null);
+        // Get listener if under cursor
+        if (l.getEditable() &&
+            pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), l.getX(), l.getY(), c.toWorldLength(R.getListenerRadius()))){
+            R.setHoveredCanvasObject(l);
+        }
+        // Get first image under cursor (last in list)
+        else {
+            // Cycle thru images from end to beginning of array (top to bottom visually)
+            for (let i = R.getImages().length - 1; i >= 0; i--) {
+                const img = R.getImages()[i];
+                // If the image is editable, check for an image handle
+                if (img.getEditable()) {
+                    // NW handle
+                    if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.getX(), img.getY(), c.toWorldLength(R.getHandleSize()))) {
+                        R.setHoveredCanvasObject(img);
+                        img.setHoverHandle(R.Handle.NW);
+                        break;
+                    }
+                    // NE handle
+                    else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.getX()+img.getWidth(), img.getY(), c.toWorldLength(R.getHandleSize()))) {
+                        R.setHoveredCanvasObject(img);
+                        img.setHoverHandle(R.Handle.NE);
+                        break;
+                    }
+                    // SW handle
+                    else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.getX(), img.getY()+img.getHeight(), c.toWorldLength(R.getHandleSize()))) {
+                        R.setHoveredCanvasObject(img);
+                        img.setHoverHandle(R.Handle.SW);
+                        break;
+                    }
+                    // SE handle
+                    else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.getX()+img.getWidth(), img.getY()+img.getHeight(), c.toWorldLength(R.getHandleSize()))) {
+                        R.setHoveredCanvasObject(img);
+                        img.setHoverHandle(R.Handle.SE);
+                        break;
+                    }
+                    // No handle hovered, check if the image is under the cursor
+                    else if (pointRectCollision( c.toWorldX(e.x), c.toWorldY(e.y), img.getX(), img.getY(), img.getWidth(), img.getHeight())) {
+                        R.setHoveredCanvasObject(img);
+                        img.setHoverHandle(R.Handle.None);
+                        break;
+                    }
+                }
+                
+            }
+        }
+
+        // Set mouse cursor
+        const hov = R.getHoveredCanvasObject();
+        console.log(hov?.getHoverHandle(), hov?.getHandle())
+        if (hov == null) { 
+            if (R.getMouseDown())                            c.canvas.style.cursor = "grabbing";
+            else                                             c.canvas.style.cursor = "grab";
+        } else if (hov?.getEditable()){
+            if (hov?.getHoverHandle() == R.Handle.NW)        c.canvas.style.cursor = "nwse-resize";
+            else if (hov?.getHoverHandle() == R.Handle.SE)   c.canvas.style.cursor = "nwse-resize";
+            else if (hov?.getHoverHandle() == R.Handle.NE)   c.canvas.style.cursor = "nesw-resize";
+            else if (hov?.getHoverHandle() == R.Handle.SW)   c.canvas.style.cursor = "nesw-resize";
+            else                                             c.canvas.style.cursor = "move";
+        }
+    }
+
+    // Check if the mouse is already down when it is moved (dragging)
     if(R.getMouseDown()) {
-        const obj = R.getClickedOnCanvasObject();
+        const obj = R.getClickedCanvasObject();
         // Clicked on a valid object.
-        if (obj instanceof CanvasObject) {
-            // If an image corner was grabbed, resize the image.
-            if (R.getGrabbedCorner() != R.Corner.None && obj instanceof CanvasImage) {
-/*
-                // Swap corners if going past image origin point or image width
-                // SE corner crossing X -> SW corner
-                if (c.toWorldX(e.x) < obj.getX() && R.getGrabbedCorner() == R.Corner.SE) {
-                    R.setGrabbedCorner(R.Corner.SW);
-                    R.setMouseDownX(c.toWorldX(e.x));
-                    R.setMouseDownY(c.toWorldY(e.y));
-                    R.setOriginalH(obj.getHeight());
-                    R.setOriginalW(obj.getWidth());
-                }
-                // SE corner crossing Y -> NE corner
-                else if (c.toWorldY(e.y) < obj.getY() && R.getGrabbedCorner() == R.Corner.SE) {
-                    R.setGrabbedCorner(R.Corner.NE);
-                    R.setMouseDownX(c.toWorldX(e.x));
-                    R.setMouseDownY(c.toWorldY(e.y));
-                    R.setOriginalH(obj.getHeight());
-                    R.setOriginalW(obj.getWidth());
-                }
-                // NE or SW corner crossing X or Y -> NW corner
-                else if (c.toWorldX(e.x) < obj.getX() && R.getGrabbedCorner() == R.Corner.NE || 
-                         c.toWorldY(e.y) < obj.getY() && R.getGrabbedCorner() == R.Corner.SW) {
-                    R.setGrabbedCorner(R.Corner.NW);
-                    R.setMouseDownX(c.toWorldX(e.x));
-                    R.setMouseDownY(c.toWorldY(e.y));
-                    R.setOriginalH(obj.getHeight());
-                    R.setOriginalW(obj.getWidth());
-                }
-                // NW corner crossing X+W -> NE corner
-                else if (c.toWorldX(e.x) > obj.getX() + obj.getWidth() && R.getGrabbedCorner() == R.Corner.NW) {
-                    R.setGrabbedCorner(R.Corner.NE);
-                    R.setMouseDownX(c.toWorldX(e.x));
-                    R.setMouseDownY(c.toWorldY(e.y));
-                    R.setOriginalH(obj.getHeight());
-                    R.setOriginalW(obj.getWidth());
-                }
-                // NW corner crossing Y+H -> SW corner
-                else if (c.toWorldY(e.y) > obj.getY() + obj.getHeight() && R.getGrabbedCorner() == R.Corner.NW) {
-                    R.setGrabbedCorner(R.Corner.SW);
-                    R.setMouseDownX(c.toWorldX(e.x));
-                    R.setMouseDownY(c.toWorldY(e.y));
-                    R.setOriginalH(obj.getHeight());
-                    R.setOriginalW(obj.getWidth());
-                }
-                // SW or NE corner crossing X+W or Y+H -> SE corner
-                else if (c.toWorldX(e.x) > obj.getX() + obj.getWidth() && R.getGrabbedCorner() == R.Corner.SW || 
-                         c.toWorldY(e.y) > obj.getY() + obj.getHeight() && R.getGrabbedCorner() == R.Corner.NE) {
-                    R.setGrabbedCorner(R.Corner.SE);
-                    R.setMouseDownX(c.toWorldX(e.x));
-                    R.setMouseDownY(c.toWorldY(e.y));
-                    R.setOriginalH(obj.getHeight());
-                    R.setOriginalW(obj.getWidth());
-                }
-*/
+        if (obj != null) {
+            // If an image handle was grabbed, resize the image.
+            if (obj.getHandle() != R.Handle.None && obj instanceof CanvasImage) {
                 // Resize image with SE corner
-                if (R.getGrabbedCorner() == R.Corner.SE) {
+                if (obj.getHandle() == R.Handle.SE) {
+                    console.log("SE")
                     // Free scaling: Set size and position relative to mouse
-                    obj.setWidth(c.toWorldX(e.clientX) - obj.getX() + R.getOriginalW() + obj.getGrabOffsetX());
-                    obj.setHeight(c.toWorldY(e.clientY) - obj.getY() + R.getOriginalH() + obj.getGrabOffsetY());
+                    obj.setWidth(c.toWorldX(e.clientX) - obj.getX());
+                    obj.setHeight(c.toWorldY(e.clientY) - obj.getY());
 
                     // Proportional scaling: if on, correct image size with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
@@ -240,10 +200,10 @@ export function canvasMouseMove(e:MouseEvent) {
                     }
                 }
                 // Resize image with NE corner
-                else if (R.getGrabbedCorner() == R.Corner.NE) {
+                else if (obj.getHandle() == R.Handle.NE) {
                     // Free scaling: Set size and position relative to mouse
-                    obj.setY(c.toWorldY(e.clientY) + obj.getGrabOffsetY());
-                    obj.setWidth(c.toWorldX(e.clientX) - obj.getX() + R.getOriginalW() + obj.getGrabOffsetX());
+                    obj.setY(c.toWorldY(e.clientY));
+                    obj.setWidth(c.toWorldX(e.clientX) - obj.getX());
                     obj.setHeight(R.getOriginalH() - c.toWorldY(e.clientY) + R.getMouseDownY());
 
                     // Proportional scaling: if on, correct image size and position with original aspect ratio
@@ -261,10 +221,10 @@ export function canvasMouseMove(e:MouseEvent) {
                     }
                 }
                 // Resize image with SW corner
-                else if (R.getGrabbedCorner() == R.Corner.SW) {
+                else if (obj.getHandle() == R.Handle.SW) {
                     // Free scaling: Set size and position relative to mouse
                     obj.setX(c.toWorldX(e.clientX) + obj.getGrabOffsetX());
-                    obj.setHeight(c.toWorldY(e.clientY) - obj.getY() + R.getOriginalH() + obj.getGrabOffsetY());
+                    obj.setHeight(c.toWorldY(e.clientY) - obj.getY());
                     obj.setWidth(R.getOriginalW() - c.toWorldX(e.clientX) + R.getMouseDownX());
 
                     // Proportional scaling: if on, correct image size and position with original aspect ratio
@@ -282,7 +242,7 @@ export function canvasMouseMove(e:MouseEvent) {
                     }
                 }
                 // Resize image with NW corner
-                else if (R.getGrabbedCorner() == R.Corner.NW) {
+                else if (obj.getHandle() == R.Handle.NW) {
                     // Free scaling: Set size and position relative to mouse
                     obj.setX(c.toWorldX(e.clientX) + obj.getGrabOffsetX());
                     obj.setWidth(R.getOriginalW() - (c.toWorldX(e.clientX) - R.getMouseDownX()));
@@ -348,7 +308,7 @@ export function canvasMouseUp(e:MouseEvent) {
     const c = R.getCanvas();
 
     R.setMouseDown(false);
-    R.setGrabbedCorner(R.Corner.None);
+    R.getClickedCanvasObject()?.setHandle(R.Handle.None);
 
     // Release the listener
     if (l.getGrabbed()) {
@@ -362,7 +322,7 @@ export function canvasMouseUp(e:MouseEvent) {
     }
 
     // Unset clicked on canvas object
-    R.setClickedOnCanvasObject(false);
+    R.setClickedCanvasObject(null);
 
     // Stop panning
     if (R.getPanning()) R.stopPanning();
