@@ -586,10 +586,15 @@ export class InfiniteCanvas {
    * @param y Y position of the center of the handle.
    * @param r Radius of the handle.
    */
-  #drawHandle(x: number, y: number, r: number): void {
+  #drawHandle(x:number, y:number, r:number, selected?:boolean): void {
     if (this.canvas && this.context) {
-      this.context.strokeStyle = this.#widgetColor;
-      this.context.fillStyle = this.#widgetColor;
+      if (selected) { 
+        this.context.strokeStyle = this.#widgetSelectedColor;
+        this.context.fillStyle = this.#widgetSelectedColor;
+      } else { 
+        this.context.strokeStyle = this.#widgetColor;
+        this.context.fillStyle = this.#widgetColor;
+      }
       this.context.beginPath();
       this.context.arc(
         x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
@@ -667,11 +672,12 @@ export class InfiniteCanvas {
       if (img.getEditable()) { 
         const handleSize = R.getHandleSize();
         this.#drawRect(img.getX(), img.getY(), img.getWidth(), img.getHeight(), img.getSelected());
-        this.#drawHandle(img.getX(), img.getY(), handleSize);
-        this.#drawHandle(img.getX() + img.getWidth(), img.getY(), handleSize);
-        this.#drawHandle(img.getX(), img.getY() + img.getHeight(), handleSize);
-        this.#drawHandle(img.getX() + img.getWidth(), img.getY() + img.getHeight(), handleSize);
+        this.#drawHandle(img.getX(), img.getY(), handleSize, img.getSelected());
+        this.#drawHandle(img.getX() + img.getWidth(), img.getY(), handleSize, img.getSelected());
+        this.#drawHandle(img.getX(), img.getY() + img.getHeight(), handleSize, img.getSelected());
+        this.#drawHandle(img.getX() + img.getWidth(), img.getY() + img.getHeight(), handleSize, img.getSelected());
       }
     }
   }
 }
+

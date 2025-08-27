@@ -85,9 +85,8 @@ export function canvasMouseDown(e:MouseEvent) {
             }
         }
     }
-    /*
     // If object clicked was selected, grab all selected objects
-    const clicked = R.getClickedOnCanvasObject();
+    const clicked = R.getClickedCanvasObject();
     if (clicked instanceof CanvasObject && clicked.getSelected()) {
         if (l.getSelected() && l.getEditable()) {
             l.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
@@ -98,7 +97,7 @@ export function canvasMouseDown(e:MouseEvent) {
                 img.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
             }
         }
-    }*/
+    }
 }
 
 /**
@@ -155,15 +154,19 @@ export function canvasMouseMove(e:MouseEvent) {
                         img.setHoverHandle(R.Handle.None);
                         break;
                     }
+                } 
+                // Image is not editable
+                else if ((pointRectCollision( c.toWorldX(e.x), c.toWorldY(e.y), img.getX(), img.getY(), img.getWidth(), img.getHeight()))) {
+                    R.setHoveredCanvasObject(img);
+                    img.setHoverHandle(R.Handle.None);
+                    break;  
                 }
-                
             }
         }
 
         // Set mouse cursor
         const hov = R.getHoveredCanvasObject();
-        console.log(hov?.getHoverHandle(), hov?.getHandle())
-        if (hov == null) { 
+        if (hov == null || !hov?.getEditable()) { 
             if (R.getMouseDown())                            c.canvas.style.cursor = "grabbing";
             else                                             c.canvas.style.cursor = "grab";
         } else if (hov?.getEditable()){
@@ -340,7 +343,7 @@ export function canvasMouseUp(e:MouseEvent) {
             l.setSelected();
         }
 
-        /*// Select image toggle
+        // Select image toggle
         else {
             for (let i = R.getImages().length - 1; i >= 0; i--) {
                 const img = R.getImages()[i];
@@ -355,7 +358,7 @@ export function canvasMouseUp(e:MouseEvent) {
                     break;
                 }
             }
-        } */
+        }
     }
     R.setDragging(false);
 }
