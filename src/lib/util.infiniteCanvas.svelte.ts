@@ -534,7 +534,7 @@ export class InfiniteCanvas {
    * @param width Width of the rectangle.
    * @param height Height of the rectangle.
    */
-  #drawRect(x: number, y: number, width: number, height: number, selected?:boolean) {
+  #drawRect(x: number, y: number, width: number, height: number, selected:boolean|null) {
     if (this.canvas && this.context) {
       this.context.beginPath();
       if (selected) this.context.strokeStyle = this.#widgetSelectedColor;
@@ -557,8 +557,8 @@ export class InfiniteCanvas {
   #drawEmitter(emit:CanvasSound): void {
     if (this.canvas && this.context) {
       this.#drawCircle(emit.x, emit.y, emit.radius);
-      this.#drawHandle(emit.x, emit.y, 4);
-      this.#drawHandle(emit.x + emit.radius, emit.y, 4 );
+      this.#drawHandle(emit.x, emit.y, 4, null);
+      this.#drawHandle(emit.x + emit.radius, emit.y, 4, null);
     }
   }
 
@@ -586,7 +586,7 @@ export class InfiniteCanvas {
    * @param y Y position of the center of the handle.
    * @param r Radius of the handle.
    */
-  #drawHandle(x:number, y:number, r:number, selected?:boolean): void {
+  #drawHandle(x:number, y:number, r:number, selected:boolean|null): void {
     if (this.canvas && this.context) {
       if (selected) { 
         this.context.strokeStyle = this.#widgetSelectedColor;
@@ -635,15 +635,15 @@ export class InfiniteCanvas {
    */
   #drawListener(l:CanvasListener, r: number): void {
     if (this.canvas && this.context) {
-      this.context.strokeStyle = l.getSelected() ? this.#widgetSelectedColor : this.#widgetColor;
+      this.context.strokeStyle = l.selected ? this.#widgetSelectedColor : this.#widgetColor;
       this.context.fillStyle = this.#widgetColor;
       this.context.beginPath();
       this.context.arc(
-        l.getX() * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
-        l.getY() * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
+        l.x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
+        l.y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
         r,
         0, 360);
-      if(l.getEditable()) this.context.fill();
+      if(l.editable) this.context.fill();
       this.context.stroke();
     }
   }
@@ -654,28 +654,28 @@ export class InfiniteCanvas {
    */
   #drawImage(img: CanvasImage): void {
     if (this.canvas && this.context) {
-      let imgX = this.toWindowX(img.getX());
-      let imgY = this.toWindowY(img.getY());
-      let imgW = img.getWidth() * this.#scale * this.#z;
-      let imgH = img.getHeight() * this.#scale * this.#z;
+      let imgX = this.toWindowX(img.x);
+      let imgY = this.toWindowY(img.y);
+      let imgW = img.width * this.#scale * this.#z;
+      let imgH = img.height * this.#scale * this.#z;
       this.context.save()
-      if (img.getWidth() < 0) {
+      if (img.width < 0) {
         this.context.scale(-1,1);
-        imgX = -this.toWindowX(img.getX()+img.getWidth());
+        imgX = -this.toWindowX(img.x + img.width);
       }
-      if (img.getHeight() < 0) {
+      if (img.height < 0) {
         this.context.scale(1,-1);
-        imgY = -this.toWindowY(img.getY()+img.getHeight());
+        imgY = -this.toWindowY(img.y + img.height);
       }
-      this.context.drawImage(img.getImage(), imgX, imgY, imgW, imgH);
+      this.context.drawImage(img.image, imgX, imgY, imgW, imgH);
       this.context.restore();
-      if (img.getEditable()) { 
+      if (img.editable) { 
         const handleSize = R.getHandleSize();
-        this.#drawRect(img.getX(), img.getY(), img.getWidth(), img.getHeight(), img.getSelected());
-        this.#drawHandle(img.getX(), img.getY(), handleSize, img.getSelected());
-        this.#drawHandle(img.getX() + img.getWidth(), img.getY(), handleSize, img.getSelected());
-        this.#drawHandle(img.getX(), img.getY() + img.getHeight(), handleSize, img.getSelected());
-        this.#drawHandle(img.getX() + img.getWidth(), img.getY() + img.getHeight(), handleSize, img.getSelected());
+        this.#drawRect(img.x, img.y, img.width, img.height, img.selected);
+        this.#drawHandle(img.x, img.y, handleSize, img.selected);
+        this.#drawHandle(img.x + img.width, img.y, handleSize, img.selected);
+        this.#drawHandle(img.x, img.y + img.height, handleSize, img.selected);
+        this.#drawHandle(img.x + img.width, img.y + img.height, handleSize, img.selected);
       }
     }
   }

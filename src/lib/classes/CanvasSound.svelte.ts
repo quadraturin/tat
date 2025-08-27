@@ -1,67 +1,80 @@
-/**
- * map image options.
- */
+import { CanvasObject } from "./CanvasObject.svelte";
+
+/** Canvas Sound options. */
 export type canvasSoundOptions = {
-    src:string, 
-    name:string,
+    src:string,
     x:number,
     y:number,
     radius:number,
-    //sound:H.Howl, 
-    //emitter:L.Circle|L.Polygon|undefined, 
-    soundType:string, 
-    volume:number, 
-    muted:boolean, 
-    solo:boolean, 
+    opacity:number,
     order:number,
-    niceName:string
-    editEnabled:boolean,
+    name:string,
+    niceName:string,
+    editable:boolean,
     selected:boolean,
-    locked:boolean,
-    lat?:number, // deprecated
-    lng?:number  // deprecated
+    grabbed:boolean,
+    locked:boolean
+    soundType:string,
+    volume:number,
+    muted:boolean,
+    solo:boolean
 }
 
 /**
- * canvas image class.
+ * The Canvas Sound class.
+ * @extends CanvasObject
  */
-export class CanvasSound {
-    src:string;
-    name:string;
-    x:number = $state(0);
-    y:number = $state(0);
-    radius:number = $state(0);
-    //sound:H.Howl|undefined = $state();
-    //emitter:L.Circle|L.Polygon|undefined = $state();
-    soundType:string = $state("");
-    volume:number = $state(0);
-    muted:boolean = $state(false);
-    solo:boolean = $state(false);
-    order:number = $state(1); 
-    niceName:string = $state("");
-    editEnabled:boolean = $state(true);
-    selected:boolean = $state(false);
-    locked:boolean = $state(false);
+export class CanvasSound extends CanvasObject{
+    #src:string;
+    #radius:number = $state(0);
+    #soundType:string = $state("");
+    #volume:number = $state(0);
+    #muted:boolean = $state(false);
+    #solo:boolean = $state(false);
 
     constructor(options:canvasSoundOptions) {
-        this.src = options.src;
-        this.x = options.x;
-        this.y = options.y;
-        this.radius = options.radius;
-        //this.sound = options.sound;
-        //this.emitter = options.emitter;
-        this.name = options.name;
-        this.niceName = options.niceName;
-        this.soundType = options.soundType;
-        this.volume = options.volume;
-        this.muted = options.muted;
-        this.solo = options.solo;
-        this.order = options.order;
-        this.name = options.name;
-        this.niceName = options.niceName;
-        this.order = options.order;
-        this.editEnabled = options.editEnabled;
-        this.selected = options.selected;
-        this.locked = options.locked;
+        super({ 
+            x:options.x, 
+            y:options.y, 
+            order:options.order,
+            name:options.name,
+            niceName:options.niceName,
+            editable:options.editable,
+            selected:options.selected,
+            grabbed:options.grabbed,
+            locked:options.locked
+        });
+        this.#src = options.src;
+        this.#radius = options.radius;
+        this.#soundType = options.soundType;
+        this.#volume = options.volume;
+        this.#muted = options.muted;
+        this.#solo = options.solo;
+    }
+
+    /** Get the sound emitter radius. @returns The radius. */
+    public get radius() { return this.#radius; }
+    /** Set the sound emitter radius. @param r The radius. */
+    public set radius(r:number) { this.#radius = r; }
+
+    /** Get the sound emitter volume. @returns The volume. */
+    public get volume() { return this.#volume; }
+    /** Set the sound emitter volume. @param v The volume. */
+    public set volume(v:number) { this.#volume = v; }
+
+    /** Get whether or not the sound emitter is muted. @returns True: muted. False: not muted. */
+    public get muted() { return this.#muted; }
+    /** Set whether or not the sound emitter is muted. @param m True: muted. False: not muted. Null: toggle the muted state. */
+    public set muted(m:boolean|null) {   
+        if (m == null) this.#muted = !this.#muted;
+        else this.#muted = m; 
+    }
+
+    /** Get whether or not the sound emitter is soloed. @returns True: soloed. False: not soloed. */
+    public get solo() { return this.#muted; }
+    /** Set whether or not the sound emitter is soloed. @param s True: soloed. False: not soloed. Null: toggle the soloed state. */
+    public set solo(s:boolean|null) {
+        if (s == null) this.#solo = !this.#solo;
+        else this.#solo = s; 
     }
 }

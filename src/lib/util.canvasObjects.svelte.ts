@@ -12,25 +12,16 @@ export function canvasDblClick(e:MouseEvent) {
     const l = R.getListener();
     const c = R.getCanvas();
 
-    if (pointCircleCollision(c.toWorldX(e.x), 
-                             c.toWorldY(e.y), 
-                             l.getX(), 
-                             l.getY(), 
-                             c.toWorldLength(R.getListenerRadius()))){
-        l.setEditable();
+    if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), l.x, l.y, c.toWorldLength(R.getListenerRadius()))){
+        l.editable = null;
     } 
     // Select image
     else {
         for (let i = R.getImages().length - 1; i >= 0; i--) {
             const img = R.getImages()[i];
-            if (!img.getLocked() &&
-                pointRectCollision(c.toWorldX(e.x), 
-                                   c.toWorldY(e.y), 
-                                   img.getX(), 
-                                   img.getY(), 
-                                   img.getWidth(), 
-                                   img.getHeight())) {
-                img.setEditable();
+            if (!img.locked &&
+                pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x, img.y, img.width, img.height)) {
+                img.editable = null;
                 break;
             }
         }
@@ -67,34 +58,34 @@ export function canvasMouseDown(e:MouseEvent) {
     R.setClickedCanvasObject(null);
 
     // Grab the hovered object if any (if it's editable)
-    if (R.getHoveredCanvasObject() != null && R.getHoveredCanvasObject()?.getEditable()) {
+    if (R.getHoveredCanvasObject() != null && R.getHoveredCanvasObject()?.editable) {
         let obj = R.getHoveredCanvasObject();
         R.setClickedCanvasObject(obj);
         if (obj != null) {
-            if (obj.getHoverHandle() == R.Handle.None) {
-                obj.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
-                obj.setHandle();
+            if (obj.hoverHandle == R.Handle.None) {
+                obj.grab(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
+                obj.handle = null;
             } else {
                 if (obj instanceof CanvasImage) {
-                    R.setOriginalH(obj.getHeight());
-                    R.setOriginalW(obj.getWidth());
+                    R.setOriginalH(obj.height);
+                    R.setOriginalW(obj.width);
                     R.setOriginalX(c.toWorldX(e.x));
                     R.setOriginalY(c.toWorldY(e.y));
-                    obj.setHandle();
+                    obj.handle = null;
                 }
             }
         }
     }
     // If object clicked was selected, grab all selected objects
     const clicked = R.getClickedCanvasObject();
-    if (clicked instanceof CanvasObject && clicked.getSelected()) {
-        if (l.getSelected() && l.getEditable()) {
-            l.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
+    if (clicked instanceof CanvasObject && clicked.selected) {
+        if (l.selected && l.editable) {
+            l.grab(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
         }
         for (let i = R.getImages().length - 1; i >= 0; i--) {
             const img = R.getImages()[i];
-            if (img.getSelected() && img.getEditable()){ 
-                img.setGrabbed(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
+            if (img.selected && img.editable){ 
+                img.grab(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
             }
         }
     }
@@ -113,8 +104,8 @@ export function canvasMouseMove(e:MouseEvent) {
     if (c.canvas) {
         R.setHoveredCanvasObject(null);
         // Get listener if under cursor
-        if (l.getEditable() &&
-            pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), l.getX(), l.getY(), c.toWorldLength(R.getListenerRadius()))){
+        if (l.editable &&
+            pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), l.x, l.y, c.toWorldLength(R.getListenerRadius()))){
             R.setHoveredCanvasObject(l);
         }
         // Get first image under cursor (last in list)
@@ -123,58 +114,59 @@ export function canvasMouseMove(e:MouseEvent) {
             for (let i = R.getImages().length - 1; i >= 0; i--) {
                 const img = R.getImages()[i];
                 // If the image is editable, check for an image handle
-                if (img.getEditable()) {
+                if (img.editable) {
                     // NW handle
-                    if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.getX(), img.getY(), c.toWorldLength(R.getHandleSize()))) {
+                    if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x, img.y, c.toWorldLength(R.getHandleSize()))) {
                         R.setHoveredCanvasObject(img);
-                        img.setHoverHandle(R.Handle.NW);
+                        img.hoverHandle = R.Handle.NW;
                         break;
                     }
                     // NE handle
-                    else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.getX()+img.getWidth(), img.getY(), c.toWorldLength(R.getHandleSize()))) {
+                    else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x + img.width, img.y, c.toWorldLength(R.getHandleSize()))) {
                         R.setHoveredCanvasObject(img);
-                        img.setHoverHandle(R.Handle.NE);
+                        img.hoverHandle = R.Handle.NE;
                         break;
                     }
                     // SW handle
-                    else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.getX(), img.getY()+img.getHeight(), c.toWorldLength(R.getHandleSize()))) {
+                    else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x, img.y+img.height, c.toWorldLength(R.getHandleSize()))) {
                         R.setHoveredCanvasObject(img);
-                        img.setHoverHandle(R.Handle.SW);
+                        img.hoverHandle = R.Handle.SW;
                         break;
                     }
                     // SE handle
-                    else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.getX()+img.getWidth(), img.getY()+img.getHeight(), c.toWorldLength(R.getHandleSize()))) {
+                    else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x+img.width, img.y+img.height, c.toWorldLength(R.getHandleSize()))) {
                         R.setHoveredCanvasObject(img);
-                        img.setHoverHandle(R.Handle.SE);
+                        img.hoverHandle = R.Handle.SE;
                         break;
                     }
                     // No handle hovered, check if the image is under the cursor
-                    else if (pointRectCollision( c.toWorldX(e.x), c.toWorldY(e.y), img.getX(), img.getY(), img.getWidth(), img.getHeight())) {
+                    else if (pointRectCollision( c.toWorldX(e.x), c.toWorldY(e.y), img.x, img.y, img.width, img.height)) {
                         R.setHoveredCanvasObject(img);
-                        img.setHoverHandle(R.Handle.None);
+                        img.hoverHandle = R.Handle.None;
                         break;
                     }
                 } 
                 // Image is not editable
-                else if ((pointRectCollision( c.toWorldX(e.x), c.toWorldY(e.y), img.getX(), img.getY(), img.getWidth(), img.getHeight()))) {
+                else if ((pointRectCollision( c.toWorldX(e.x), c.toWorldY(e.y), img.x, img.y, img.width, img.height))) {
                     R.setHoveredCanvasObject(img);
-                    img.setHoverHandle(R.Handle.None);
+                    img.hoverHandle = R.Handle.None;
                     break;  
                 }
             }
+
         }
 
         // Set mouse cursor
         const hov = R.getHoveredCanvasObject();
-        if (hov == null || !hov?.getEditable()) { 
-            if (R.getMouseDown())                            c.canvas.style.cursor = "grabbing";
-            else                                             c.canvas.style.cursor = "grab";
-        } else if (hov?.getEditable()){
-            if (hov?.getHoverHandle() == R.Handle.NW)        c.canvas.style.cursor = "nwse-resize";
-            else if (hov?.getHoverHandle() == R.Handle.SE)   c.canvas.style.cursor = "nwse-resize";
-            else if (hov?.getHoverHandle() == R.Handle.NE)   c.canvas.style.cursor = "nesw-resize";
-            else if (hov?.getHoverHandle() == R.Handle.SW)   c.canvas.style.cursor = "nesw-resize";
-            else                                             c.canvas.style.cursor = "move";
+        if (hov == null || !hov?.editable) { 
+            if (R.getMouseDown())                       c.canvas.style.cursor = "grabbing";
+            else                                        c.canvas.style.cursor = "grab";
+        } else if (hov?.editable){
+            if (hov?.hoverHandle == R.Handle.NW)        c.canvas.style.cursor = "nwse-resize";
+            else if (hov?.hoverHandle == R.Handle.SE)   c.canvas.style.cursor = "nwse-resize";
+            else if (hov?.hoverHandle == R.Handle.NE)   c.canvas.style.cursor = "nesw-resize";
+            else if (hov?.hoverHandle == R.Handle.SW)   c.canvas.style.cursor = "nesw-resize";
+            else                                        c.canvas.style.cursor = "move";
         }
     }
 
@@ -184,105 +176,105 @@ export function canvasMouseMove(e:MouseEvent) {
         // Clicked on a valid object.
         if (obj != null) {
             // If an image handle was grabbed, resize the image.
-            if (obj.getHandle() != R.Handle.None && obj instanceof CanvasImage) {
+            if (obj.handle != R.Handle.None && obj instanceof CanvasImage) {
                 // Resize image with SE corner
-                if (obj.getHandle() == R.Handle.SE) {
+                if (obj.handle == R.Handle.SE) {
                     // Free scaling: Set size and position relative to mouse
-                    obj.setWidth(c.toWorldX(e.clientX) - obj.getX());
-                    obj.setHeight(c.toWorldY(e.clientY) - obj.getY());
+                    obj.width = c.toWorldX(e.clientX) - obj.x;
+                    obj.height = c.toWorldY(e.clientY) - obj.y;
 
                     // Proportional scaling: if on, correct image size with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
                         // Too wide
-                         if(obj.getWidth()/obj.getHeight() > obj.getOriginalWidth()/obj.getOriginalHeight()){
-                            obj.setWidth(obj.getHeight() * (obj.getOriginalWidth()/obj.getOriginalHeight()));
+                         if(obj.width/obj.height > obj.originalWidth/obj.originalHeight){
+                            obj.width = obj.height * (obj.originalWidth/obj.originalHeight);
                          }
                          // Too tall
-                         else if(obj.getWidth()/obj.getHeight() < obj.getOriginalWidth()/obj.getOriginalHeight()){
-                            obj.setHeight(obj.getWidth() * (obj.getOriginalHeight()/obj.getOriginalWidth()));
+                         else if(obj.width/obj.height < obj.originalWidth/obj.originalHeight){
+                            obj.height = obj.width * (obj.originalHeight/obj.originalWidth);
                          }
                     }
                 }
                 // Resize image with NE corner
-                else if (obj.getHandle() == R.Handle.NE) {
+                else if (obj.handle == R.Handle.NE) {
                     // Free scaling: Set size and position relative to mouse
-                    obj.setY(c.toWorldY(e.clientY));
-                    obj.setWidth(c.toWorldX(e.clientX) - obj.getX());
-                    obj.setHeight(R.getOriginalH() - c.toWorldY(e.clientY) + R.getMouseDownY());
+                    obj.y = c.toWorldY(e.clientY);
+                    obj.width = c.toWorldX(e.clientX) - obj.x;
+                    obj.height = R.getOriginalH() - c.toWorldY(e.clientY) + R.getMouseDownY();
 
                     // Proportional scaling: if on, correct image size and position with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
                         // Too wide
-                        if(obj.getWidth()/obj.getHeight() > obj.getOriginalWidth()/obj.getOriginalHeight()){
-                            obj.setWidth(obj.getHeight() * (obj.getOriginalWidth()/obj.getOriginalHeight()));
-                            obj.setY(R.getOriginalY() + R.getOriginalH() - obj.getHeight());
+                        if(obj.width/obj.height > obj.originalWidth/obj.originalHeight) {
+                            obj.width = obj.height * (obj.originalWidth/obj.originalHeight);
+                            obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
                         }
                         // Too tall
-                        else if(obj.getWidth()/obj.getHeight() < obj.getOriginalWidth()/obj.getOriginalHeight()){
-                            obj.setHeight(obj.getWidth() * (obj.getOriginalHeight()/obj.getOriginalWidth()));
-                            obj.setY(R.getOriginalY() + R.getOriginalH() - obj.getHeight());
+                        else if(obj.width/obj.height < obj.originalWidth/obj.originalHeight) {
+                            obj.height = obj.width * (obj.originalHeight/obj.originalWidth);
+                            obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
                         }
                     }
                 }
                 // Resize image with SW corner
-                else if (obj.getHandle() == R.Handle.SW) {
+                else if (obj.handle == R.Handle.SW) {
                     // Free scaling: Set size and position relative to mouse
-                    obj.setX(c.toWorldX(e.clientX) + obj.getGrabOffsetX());
-                    obj.setHeight(c.toWorldY(e.clientY) - obj.getY());
-                    obj.setWidth(R.getOriginalW() - c.toWorldX(e.clientX) + R.getMouseDownX());
+                    obj.x = c.toWorldX(e.clientX) + obj.grabOffsetX;
+                    obj.height = c.toWorldY(e.clientY) - obj.y;
+                    obj.width = R.getOriginalW() - c.toWorldX(e.clientX) + R.getMouseDownX();
 
                     // Proportional scaling: if on, correct image size and position with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
                         // Too wide
-                        if(obj.getWidth()/obj.getHeight() > obj.getOriginalWidth()/obj.getOriginalHeight()){
-                            obj.setWidth(obj.getHeight() * (obj.getOriginalWidth()/obj.getOriginalHeight()));
-                            obj.setX(R.getOriginalX() + R.getOriginalW() - obj.getWidth());
+                        if(obj.width/obj.height > obj.originalWidth/obj.originalHeight) {
+                            obj.width = obj.height * (obj.originalWidth/obj.originalHeight);
+                            obj.x = R.getOriginalX() + R.getOriginalW() - obj.width;
                         }
                         // Too tall
-                        else if(obj.getWidth()/obj.getHeight() < obj.getOriginalWidth()/obj.getOriginalHeight()){
-                            obj.setHeight(obj.getWidth() * (obj.getOriginalHeight()/obj.getOriginalWidth()));
-                            obj.setX(R.getOriginalX() + R.getOriginalW() - obj.getWidth());
+                        else if(obj.width/obj.height < obj.originalWidth/obj.originalHeight) {
+                            obj.height = obj.width * (obj.originalHeight/obj.originalWidth);
+                            obj.x = R.getOriginalX() + R.getOriginalW() - obj.width;
                         }
                     }
                 }
                 // Resize image with NW corner
-                else if (obj.getHandle() == R.Handle.NW) {
+                else if (obj.handle == R.Handle.NW) {
                     // Free scaling: Set size and position relative to mouse
-                    obj.setX(c.toWorldX(e.clientX) + obj.getGrabOffsetX());
-                    obj.setWidth(R.getOriginalW() - (c.toWorldX(e.clientX) - R.getMouseDownX()));
-                    obj.setY(c.toWorldY(e.clientY) + obj.getGrabOffsetY());
-                    obj.setHeight(R.getOriginalH() - (c.toWorldY(e.clientY) - R.getMouseDownY()));
+                    obj.x = c.toWorldX(e.clientX) + obj.grabOffsetX;
+                    obj.width = R.getOriginalW() - (c.toWorldX(e.clientX) - R.getMouseDownX());
+                    obj.y = c.toWorldY(e.clientY) + obj.grabOffsetY;
+                    obj.height = R.getOriginalH() - (c.toWorldY(e.clientY) - R.getMouseDownY());
 
                     // Proportional scaling: if on, correct image size and position with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
                         // Too wide
-                        if(obj.getWidth()/obj.getHeight() > obj.getOriginalWidth()/obj.getOriginalHeight()){
-                            obj.setWidth(obj.getHeight() * (obj.getOriginalWidth()/obj.getOriginalHeight()));
-                            obj.setX(R.getOriginalX() + R.getOriginalW() - obj.getWidth());
-                            obj.setY(R.getOriginalY() + R.getOriginalH() - obj.getHeight());
+                        if(obj.width/obj.height > obj.originalWidth/obj.originalHeight){
+                            obj.width = obj.height * (obj.originalWidth/obj.originalHeight);
+                            obj.x = R.getOriginalX() + R.getOriginalW() - obj.width;
+                            obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
                         }
                         // Too tall
-                        else if(obj.getWidth()/obj.getHeight() < obj.getOriginalWidth()/obj.getOriginalHeight()){
-                            obj.setHeight(obj.getWidth() * (obj.getOriginalHeight()/obj.getOriginalWidth()));
-                            obj.setX(R.getOriginalX() + R.getOriginalW() - obj.getWidth());
-                            obj.setY(R.getOriginalY() + R.getOriginalH() - obj.getHeight());
+                        else if(obj.width/obj.height < obj.originalWidth/obj.originalHeight){
+                            obj.height = obj.width * (obj.originalHeight/obj.originalWidth);
+                            obj.x = R.getOriginalX() + R.getOriginalW() - obj.width;
+                            obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
                         }
                     }
                 }
             }
             else {
                 // Drag listener
-                if (l.getGrabbed()){
-                    l.setX(c.toWorldX(e.clientX) + l.getGrabOffsetX());
-                    l.setY(c.toWorldY(e.clientY) + l.getGrabOffsetY());
+                if (l.grabbed){
+                    l.x = c.toWorldX(e.clientX) + l.grabOffsetX;
+                    l.y = c.toWorldY(e.clientY) + l.grabOffsetY;
                     R.setDragging(true);
                 }
                 // Drag image(s)
                 for (let i = 0; i < R.getImages().length; i++) {
                     const img = R.getImages()[i];
-                    if (img.getGrabbed()) {
-                        img.setX(c.toWorldX(e.clientX) + img.getGrabOffsetX());
-                        img.setY(c.toWorldY(e.clientY) + img.getGrabOffsetY());
+                    if (img.grabbed) {
+                        img.x = c.toWorldX(e.clientX) + img.grabOffsetX;
+                        img.y = c.toWorldY(e.clientY) + img.grabOffsetY;
                         R.setDragging(true);
                     }
                 }
@@ -310,19 +302,20 @@ export function canvasMouseMove(e:MouseEvent) {
 export function canvasMouseUp(e:MouseEvent) {
     const l = R.getListener();
     const c = R.getCanvas();
+    const o = R.getClickedCanvasObject();
 
     R.setMouseDown(false);
-    R.getClickedCanvasObject()?.setHandle(R.Handle.None);
+    if (o != null) o.handle = R.Handle.None;
 
     // Release the listener
-    if (l.getGrabbed()) {
-        l.setGrabbed(false);
+    if (l.grabbed) {
+        l.grab(false);
     }
 
     // Release any images
     for (let i = 0; i < R.getImages().length; i++) {
         const img = R.getImages()[i];
-        if (img.getGrabbed()) img.setGrabbed(false);
+        if (img.grabbed) img.grab(false);
     }
 
     // Unset clicked on canvas object
@@ -334,27 +327,18 @@ export function canvasMouseUp(e:MouseEvent) {
     // If there was a clicked object but it was not dragged, toggle selection 
     if(!R.getDragging()) {
         // Select listener toggle
-        if (l.getEditable() &&
-            pointCircleCollision(c.toWorldX(e.x), 
-                                c.toWorldY(e.y), 
-                                l.getX(), 
-                                l.getY(), 
-                                c.toWorldLength(R.getListenerRadius()))){
-            l.setSelected();
+        if (l.editable &&
+            pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), l.x, l.y, c.toWorldLength(R.getListenerRadius()))){
+            l.selected = null;
         }
 
         // Select image toggle
         else {
             for (let i = R.getImages().length - 1; i >= 0; i--) {
                 const img = R.getImages()[i];
-                if (!img.getLocked() &&
-                    pointRectCollision(c.toWorldX(e.x), 
-                                    c.toWorldY(e.y), 
-                                    img.getX(), 
-                                    img.getY(), 
-                                    img.getWidth(), 
-                                    img.getHeight())) {
-                    img.setSelected();
+                if (!img.locked &&
+                    pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x, img.y, img.width, img.height)) {
+                    img.selected = null;
                     break;
                 }
             }
@@ -363,11 +347,28 @@ export function canvasMouseUp(e:MouseEvent) {
     R.setDragging(false);
 }
 
+/** Determine if a point is colliding with a circle.
+ * @param pX Point X position.
+ * @param pY Point Y position.
+ * @param cX Circle X position.
+ * @param cY Circle Y position.
+ * @param cR Circle radius.
+ * @returns True: collision. False: no collision.
+ */
 function pointCircleCollision(pX:number, pY:number, cX:number, cY:number, cR:number):boolean {
     if (Math.sqrt((pX-cX)**2 + (pY-cY)**2) <= cR) return true; 
     else return false;
 }
 
+/** Determine if a point is colliding with a rectangle.
+ * @param pX Point X position.
+ * @param pY Point Y position.
+ * @param rX Rectangle X position.
+ * @param rY Rectangle Y position.
+ * @param rW Rectangle width.
+ * @param rH Rectangle height.
+ * @returns True: collision. False: no collision.
+ */
 function pointRectCollision(pX:number, pY:number, rX:number, rY:number, rW:number, rH:number):boolean {
     if (pX >= rX && 
         pY >= rY && 
@@ -376,3 +377,4 @@ function pointRectCollision(pX:number, pY:number, rX:number, rY:number, rW:numbe
         return true; 
     } else return false;
 }
+

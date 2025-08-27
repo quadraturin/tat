@@ -5,12 +5,12 @@
      * Imports
      */
 
-    // styles
+    // Styles
     import 'leaflet/dist/leaflet.css'
     import 'leaflet-contextmenu/dist/leaflet.contextmenu.css'
     import '../app.css'
 
-    // modules
+    // Modules
     import * as R from '$lib/registry.svelte';
     import * as S from '$lib/settings.appSettings';
     import L from "leaflet";
@@ -20,39 +20,39 @@
     import { getCurrentWindow } from '@tauri-apps/api/window';
 	import { tryQuit } from '$lib/quit';
 
-    // init
+    // Init
 	import { setupMap } from '$lib/init.setupMap';
 	import { setupListener } from '$lib/init.setupListener';
 
-    // project
+    // Project
 	import { saveProject } from '$lib/project.saveProject';
 	import { loadProject } from '$lib/project.loadProject';
 	import { clearProject } from '$lib/project.clearProject';
 
-    // media
+    // Media
 	import { readFiles } from '$lib/media.readFiles';
     import { removeSelected } from '$lib/media.removeSelected';
 	import { changeMasterVolume } from '$lib/media.controlSound';
 	import { setMapSoundVolumes } from '$lib/media.setMapSoundVolumes';
 
-    // ui
+    // UI
 	import { closeAllMenus, toggleAboutMenu, toggleSettingsMenu } from '$lib/ui.menus';
 
-    // util
+    // Util
     import { t } from '$lib/util.localization';
 	import { help } from '$lib/util.help';
     import { dragDrop } from '$lib/util.dragDrop';
 
-    // settings
+    // Settings
     import { getUserSettings } from '$lib/settings.userSettings.svelte'
 	import { loadUserSettings } from '$lib/settings.loadUserSettings';
 
-    // menus
+    // Menus
 	import Loading from '$lib/menus/loading.svelte';
 	import About from '$lib/menus/about.svelte';
 	import Settings from '$lib/menus/settings.svelte';
 
-    // icons
+    // Icons
     import IconLoading from '$lib/icons/iconLoading.svelte';
 	import IconSettings from '$lib/icons/iconSettings.svelte';
 	import IconSave from '$lib/icons/iconSave.svelte';
@@ -121,26 +121,26 @@
         else if (e.key == "2" && (e.metaKey || e.ctrlKey)) toggleAboutMenu();
         else if (e.key == 'Escape') closeAllMenus();
         else if (e.key == "h") toggleSidebar();
-        else if (e.key == "c") R.getCanvas().flyToPoint(R.getListener().getX(), R.getListener().getY());
-        // move the listener
+        else if (e.key == "c") R.getCanvas().flyToPoint(R.getListener().x, R.getListener().y);
+        // Move the listener
         else if (e.key == "w") {
-            if(R.getListener().getEditable()) {
-                R.getListener().setY(R.getListener().getY() - speed);
+            if(R.getListener().editable) {
+                R.getListener().y = R.getListener().y - speed;
             }
         } else if (e.key == "a") {
-            if(R.getListener().getEditable()) { 
-                R.getListener().setX(R.getListener().getX() - speed);
+            if(R.getListener().editable) { 
+                R.getListener().x = R.getListener().x - speed;
             }
         } else if (e.key == "s") {
-            if(R.getListener().getEditable()) { 
-                R.getListener().setY(R.getListener().getY() + speed);
+            if(R.getListener().editable) { 
+                R.getListener().y = R.getListener().y + speed;
             }
         } else if (e.key == "d") {
-            if(R.getListener().getEditable()) { 
-                R.getListener().setX(R.getListener().getX() + speed);
+            if(R.getListener().editable) { 
+                R.getListener().x = R.getListener().x + speed;
             }
         }
-        // canvas controls
+        // Canvas controls
         else if (e.key == "ArrowUp") R.getCanvas().offsetDown(10);
         else if (e.key == "ArrowDown") R.getCanvas().offsetUp(10);
         else if (e.key == "ArrowLeft") R.getCanvas().offsetRight(10);
@@ -172,7 +172,6 @@
     /**
      * Initialize
      */
-    
     onMount( () => 
     {
         // Set minimum window size
@@ -225,7 +224,7 @@
         document.getElementById("zoom-in")!.addEventListener("click",  () => R.getCanvas().zoom(1.05));
         document.getElementById("zoom-out")!.addEventListener("click", () => R.getCanvas().zoom(0.95));
         document.getElementById("center-on-listener")!.addEventListener("click", () => {
-            R.getCanvas().flyToPoint(R.getListener().getX(), R.getListener().getY())});
+            R.getCanvas().flyToPoint(R.getListener().x, R.getListener().y)});
 
     })
 

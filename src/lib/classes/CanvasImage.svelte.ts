@@ -1,9 +1,7 @@
 import { CanvasObject } from "./CanvasObject.svelte";
 import { Handle } from "$lib/registry.svelte";
 
-/**
- * map image options.
- */
+/** Canvas Image options. */
 export type canvasImageOptions = {
     src:string,
     image:HTMLImageElement,
@@ -20,12 +18,12 @@ export type canvasImageOptions = {
     editable:boolean,
     selected:boolean,
     grabbed:boolean,
-    locked:boolean,
-    handle:Handle
+    locked:boolean
 }
 
 /**
- * canvas image class.
+ * The Canvas Image class. 
+ * @extends CanvasObject
  */
 export class CanvasImage extends CanvasObject {
     #image:HTMLImageElement;
@@ -37,15 +35,17 @@ export class CanvasImage extends CanvasObject {
     #opacity:number = $state(1);
 
     constructor(options:canvasImageOptions) {
-        super({ x:options.x, 
-                y:options.y, 
-                order:options.order,
-                name:options.name,
-                niceName:options.niceName,
-                editable:options.editable,
-                selected:options.selected,
-                grabbed:options.grabbed,
-                locked:options.locked});
+        super({ 
+            x:options.x, 
+            y:options.y, 
+            order:options.order,
+            name:options.name,
+            niceName:options.niceName,
+            editable:options.editable,
+            selected:options.selected,
+            grabbed:options.grabbed,
+            locked:options.locked
+        });
         this.#image = options.image;
         this.#src = options.src;
         this.#height = options.height;
@@ -55,14 +55,21 @@ export class CanvasImage extends CanvasObject {
         this.#opacity = options.opacity;
     }
 
-    getImage() { return this.#image; }
+    /** Get the image element. @returns The image element. */
+    public get image() { return this.#image; }
 
-    getHeight() { return this.#height; }
-    setHeight(h:number) { this.#height = h; }
+    /** Get the image height. @returns The height. */
+    public get height() { return this.#height; }
+    /** Set the image height. @param h The height. */
+    public set height(h:number) { this.#height = h; }
 
-    getWidth() { return this.#width; }
-    setWidth(w:number) { this.#width = w; }
+    /** Get the image width. @returns The width. */
+    public get width() { return this.#width; }
+    /** Set the image width. @param w The width. */
+    public set width(w:number) { this.#width = w; }
 
-    getOriginalWidth() { return this.#originalWidth; }
-    getOriginalHeight() { return this.#originalHeight; }
+    /** Get the image file's original width. @returns The original width. */
+    public get originalWidth() { return this.#originalWidth; }
+    /** Get the image file's original height. @returns The original height. */
+    public get originalHeight() { return this.#originalHeight; }
 }

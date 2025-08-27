@@ -1,8 +1,6 @@
 import { Handle } from "$lib/registry.svelte";
 
-/**
- * map image options.
- */
+/** Canvas Object options. */
 export type canvasObjectOptions = {
     x:number,
     y:number,
@@ -15,9 +13,7 @@ export type canvasObjectOptions = {
     locked:boolean,
 }
 
-/**
- * canvas image class.
- */
+/** The Canvas Object class. */
 export class CanvasObject {
     #x:number = $state(0);
     #y:number = $state(0);
@@ -47,23 +43,34 @@ export class CanvasObject {
         this.#hoverHandle = Handle.None;
     }
 
-    getX() { return this.#x; }
-    setX(newX:number) { this.#x = newX; }
+    /** Get the X position of the object. @returns The X position. */
+    public get x() { return this.#x; }
+    /** Set the X position of the object. @param newX The new X position. */
+    public set x(newX:number) { this.#x = newX; }
 
-    getY() { return this.#y; }
-    setY(newY:number) { this.#y = newY; }
+    /** Get the Y position of the object. @returns The Y position. */
+    public get y() { return this.#y; }
+    /** Set the Y position of the object. @param newY The new Y position.*/
+    public set y(newY:number) { this.#y = newY; }
 
-    getSelected() { return this.#selected; }
-    setSelected(s?:boolean) {
-        if(typeof s == "undefined") this.#selected = !this.#selected;
+    /** Get whether or not the image is selected. @returns True: selected. False: not selected. */
+    public get selected() { return this.#selected; }
+    /** Set whether or not the image is selected. @param s True: selected. False: not selected. Null: toggle selected state. */
+    public set selected(s:boolean|null) {
+        if(s == null) this.#selected = !this.#selected;
         else this.#selected = s;
     }
 
-    getGrabbed() { return this.#grabbed; }
-    setGrabbed(g?:boolean, x?:number, y?:number) {
+    /** Get whether the object is currently grabbed. */
+    public get grabbed() { return this.#grabbed; }
+
+    /** Grab or release the object. 
+     * @param g True to grab, False to release. 
+     * @param x Mouse X position.
+     * @param y Mouse Y position. */
+    public grab(g?:boolean, x?:number, y?:number) {
         if (typeof g == "undefined") this.#grabbed = !this.#grabbed;
         else this.#grabbed = g;
-
         if (typeof x == "undefined" || typeof y == "undefined") {
             this.#grabOffsetX = 0;
             this.#grabOffsetY = 0;
@@ -73,26 +80,37 @@ export class CanvasObject {
         }
     }
 
-    getGrabOffsetX() { return this.#grabOffsetX; }
-    getGrabOffsetY() { return this.#grabOffsetY; }
+    /** Get the difference on the X axis from the object's origin to the mouse. */
+    public get grabOffsetX() { return this.#grabOffsetX; }
+    /** Get the difference on the Y axis from the object's origin to the mouse. */
+    public get grabOffsetY() { return this.#grabOffsetY; }
 
-    getLocked() { return this.#locked; }
-    setLocked(l?:boolean) {
-        if(typeof l == "undefined") this.#locked = !this.#locked;
+    /** Get if the object is locked. */
+    public get locked() { return this.#locked; }
+    /** Set if the object is locked. @param l True: lock the object. False: unlock the object. Null: toggle the locked state. */
+    public set locked(l:boolean|null) {
+        if(l == null) this.#locked = !this.#locked;
         else this.#locked = l;
     }
 
-    getEditable() { return this.#editable; }
-    setEditable(enable?:boolean) {
-        if (typeof enable == "undefined") this.#editable = !this.#editable;
+    /** Get if the object is editable. */
+    public get editable() { return this.#editable; }
+    /** Set if the object is editable. @param l True: make the object editable. False: make the object not editable. Null: toggle the editable state. */
+    public set editable(enable:boolean|null) {
+        if (enable == null) this.#editable = !this.#editable;
         else this.#editable = enable;
     }
 
-    getHoverHandle() { return this.#hoverHandle; }
-    setHoverHandle(h:Handle) { this.#hoverHandle = h; }
-    getHandle() { return this.#handle; }
-    setHandle(h?:Handle) {
-        if (typeof h == "undefined") this.#handle = this.#hoverHandle;
+    /** Get the edit handle (if any) under the mouse. */
+    public get hoverHandle() { return this.#hoverHandle; }
+    /** Set the edit handle (if any) under the mouse. @param h The handle to set. */
+    public set hoverHandle(h:Handle) { this.#hoverHandle = h; }
+
+    /** Get the active edit handle. */
+    public get handle() { return this.#handle; }
+    /** Set the active edit handle. @param h The handle to set. If null, sets the current hoverHandle as the active handle. */
+    public set handle(h:Handle|null) {
+        if (h == null) this.#handle = this.#hoverHandle;
         else this.#handle = h;
     }
 }
