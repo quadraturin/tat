@@ -78,6 +78,8 @@ export function canvasMouseDown(e:MouseEvent) {
                 if (obj instanceof CanvasImage) {
                     R.setOriginalH(obj.getHeight());
                     R.setOriginalW(obj.getWidth());
+                    R.setOriginalX(c.toWorldX(e.x));
+                    R.setOriginalY(c.toWorldY(e.y));
                     obj.setHandle();
                 }
             }
@@ -182,7 +184,6 @@ export function canvasMouseMove(e:MouseEvent) {
             if (obj.getHandle() != R.Handle.None && obj instanceof CanvasImage) {
                 // Resize image with SE corner
                 if (obj.getHandle() == R.Handle.SE) {
-                    console.log("SE")
                     // Free scaling: Set size and position relative to mouse
                     obj.setWidth(c.toWorldX(e.clientX) - obj.getX());
                     obj.setHeight(c.toWorldY(e.clientY) - obj.getY());
