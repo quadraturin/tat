@@ -1,7 +1,9 @@
 import * as R from "$lib/registry.svelte";
-import { CanvasImage } from "./classes/CanvasImage.svelte";
-import { CanvasListener } from "./classes/CanvasListener.svelte";
 import { CanvasObject } from "./classes/CanvasObject.svelte";
+import { CanvasImage } from "./classes/CanvasImage.svelte";
+import { CanvasSound } from "./classes/CanvasSound.svelte";
+import { Vector2D } from "./util.vectors";
+
 
 /**
  * Handle a double click on the canvas.
@@ -28,24 +30,15 @@ export function canvasDblClick(e:MouseEvent) {
     } 
 }
 
-/**
- * Handle mouse wheel scrolling on the canvas.
- * Zoom in and out.
- * @param e Mouse wheel event.
- */
+
+/** Handle mouse wheel scrolling on the canvas. Zoom in and out. @param e Mouse wheel event. */
 export function canvasWheel(e:WheelEvent) {
-    if (e.deltaY < 0){
-        R.getCanvas().zoom(1.01, e.clientX, e.clientY);
-    } else if (e.deltaY > 0) {
-        R.getCanvas().zoom(0.99, e.clientX, e.clientY);
-    }
+    if (e.deltaY < 0) R.getCanvas().zoom(1.01, e.clientX, e.clientY);
+    else if (e.deltaY > 0) R.getCanvas().zoom(0.99, e.clientX, e.clientY);
 }
 
-/**
- * Handle a mouse down event on the canvas. 
- * If an editable draggable object under the mouse, set clicked on canvas object, & start panning if not.
- * @param e Mouse down event.
- */
+
+/** Handle mouse down events on the canvas. @param e Mouse down event. */
 export function canvasMouseDown(e:MouseEvent) {
     const l = R.getListener();
     const c = R.getCanvas();
@@ -66,7 +59,9 @@ export function canvasMouseDown(e:MouseEvent) {
                 obj.grab(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
                 obj.handle = null;
             } else {
-                if (obj instanceof CanvasImage) {
+                if (obj instanceof CanvasSound) {
+                    obj.handle = null;
+                } else if (obj instanceof CanvasImage) {
                     R.setOriginalH(obj.height);
                     R.setOriginalW(obj.width);
                     R.setOriginalX(c.toWorldX(e.x));
@@ -91,82 +86,111 @@ export function canvasMouseDown(e:MouseEvent) {
     }
 }
 
-/**
- * Handle a mouse move event on the canvas.
- * Pan or drag or do nothing.
- * @param e Mouse move event.
- */
+/** Handle a mouse move event on the canvas. @param e Mouse move event. */
 export function canvasMouseMove(e:MouseEvent) {
     const l = R.getListener();
     const c = R.getCanvas();
 
     // Update hover states
     if (c.canvas) {
+        // Reset the hovered object
         R.setHoveredCanvasObject(null);
+
         // Get listener if under cursor
-        if (l.editable &&
-            pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), l.x, l.y, c.toWorldLength(R.getListenerRadius()))){
+        if (l.editable && pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), l.x, l.y, c.toWorldLength(R.getListenerRadius()))){
             R.setHoveredCanvasObject(l);
         }
-        // Get first image under cursor (last in list)
-        else {
-            // Cycle thru images from end to beginning of array (top to bottom visually)
-            for (let i = R.getImages().length - 1; i >= 0; i--) {
-                const img = R.getImages()[i];
-                // If the image is editable, check for an image handle
-                if (img.editable) {
-                    // NW handle
-                    if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x, img.y, c.toWorldLength(R.getHandleSize()))) {
-                        R.setHoveredCanvasObject(img);
-                        img.hoverHandle = R.Handle.NW;
+
+        // If no selection, cycle thru sounds
+        if (R.getHoveredCanvasObject() == null) {
+            for (let i = R.getSounds().length - 1; i >= 0; i--) {
+                const snd = R.getSounds()[i];
+                const wX = c.toWorldX(e.x);
+                const wY = c.toWorldY(e.y);
+
+                // Area sound: polygon with handles at verts and mid-segment.
+                if (snd.soundType == R.SoundType.Area) {
+                    if (    wX >= snd.areaBounds[0].x && wY >= snd.areaBounds[0].y &&
+                            wX <= snd.areaBounds[1].x && wY <= snd.areaBounds[1].y ) {
+                        if (pointPolyCollision(wX, wY, snd.areaCoords)) {
+                            console.log("in poly")
+                            break;
+                        }
+                    }
+                }
+
+                // Local sound: circular area with handle.
+                else if (snd.soundType == R.SoundType.Local) {
+                    // Radius handle
+                    if (pointCircleCollision(
+                            c.toWorldX(e.x), 
+                            c.toWorldY(e.y), 
+                            snd.x + Math.cos(snd.localHandleAngle) * snd.radius, 
+                            snd.y + Math.sin(snd.localHandleAngle) * snd.radius,
+                            c.toWorldLength(R.getHandleSize()))) {
+                        R.setHoveredCanvasObject(snd);
+                        snd.hoverHandle = R.Handle.Radius;
+                        break;
+                    } 
+                    // Emitter circle
+                    else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), snd.x, snd.y, snd.radius)) {
+                        R.setHoveredCanvasObject(snd);
+                        snd.hoverHandle = R.Handle.None;
                         break;
                     }
-                    // NE handle
-                    else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x + img.width, img.y, c.toWorldLength(R.getHandleSize()))) {
-                        R.setHoveredCanvasObject(img);
-                        img.hoverHandle = R.Handle.NE;
-                        break;
-                    }
-                    // SW handle
-                    else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x, img.y+img.height, c.toWorldLength(R.getHandleSize()))) {
-                        R.setHoveredCanvasObject(img);
-                        img.hoverHandle = R.Handle.SW;
-                        break;
-                    }
-                    // SE handle
-                    else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x+img.width, img.y+img.height, c.toWorldLength(R.getHandleSize()))) {
-                        R.setHoveredCanvasObject(img);
-                        img.hoverHandle = R.Handle.SE;
-                        break;
-                    }
-                    // No handle hovered, check if the image is under the cursor
-                    else if (pointRectCollision( c.toWorldX(e.x), c.toWorldY(e.y), img.x, img.y, img.width, img.height)) {
-                        R.setHoveredCanvasObject(img);
-                        img.hoverHandle = R.Handle.None;
-                        break;
-                    }
-                } 
-                // Image is not editable
-                else if ((pointRectCollision( c.toWorldX(e.x), c.toWorldY(e.y), img.x, img.y, img.width, img.height))) {
-                    R.setHoveredCanvasObject(img);
-                    img.hoverHandle = R.Handle.None;
-                    break;  
                 }
             }
+        }
 
+        // If no selection, cycle thru images
+        if (R.getHoveredCanvasObject() == null) {
+            for (let i = R.getImages().length - 1; i >= 0; i--) {
+                const img = R.getImages()[i];
+                // NW handle
+                if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x, img.y, c.toWorldLength(R.getHandleSize()))) {
+                    R.setHoveredCanvasObject(img);
+                    img.hoverHandle = R.Handle.NW;
+                    break;
+                }
+                // NE handle
+                else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x + img.width, img.y, c.toWorldLength(R.getHandleSize()))) {
+                    R.setHoveredCanvasObject(img);
+                    img.hoverHandle = R.Handle.NE;
+                    break;
+                }
+                // SW handle
+                else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x, img.y+img.height, c.toWorldLength(R.getHandleSize()))) {
+                    R.setHoveredCanvasObject(img);
+                    img.hoverHandle = R.Handle.SW;
+                    break;
+                }
+                // SE handle
+                else if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x+img.width, img.y+img.height, c.toWorldLength(R.getHandleSize()))) {
+                    R.setHoveredCanvasObject(img);
+                    img.hoverHandle = R.Handle.SE;
+                    break;
+                }
+                // No handle hovered, check if the image is under the cursor
+                else if (pointRectCollision( c.toWorldX(e.x), c.toWorldY(e.y), img.x, img.y, img.width, img.height)) {
+                    R.setHoveredCanvasObject(img);
+                    img.hoverHandle = R.Handle.None;
+                    break;
+                }
+            }
         }
 
         // Set mouse cursor
         const hov = R.getHoveredCanvasObject();
         if (hov == null || !hov?.editable) { 
-            if (R.getMouseDown())                       c.canvas.style.cursor = "grabbing";
-            else                                        c.canvas.style.cursor = "grab";
+            if (R.getMouseDown())                           c.canvas.style.cursor = "grabbing";
+            else                                            c.canvas.style.cursor = "grab";
         } else if (hov?.editable){
-            if (hov?.hoverHandle == R.Handle.NW)        c.canvas.style.cursor = "nwse-resize";
-            else if (hov?.hoverHandle == R.Handle.SE)   c.canvas.style.cursor = "nwse-resize";
-            else if (hov?.hoverHandle == R.Handle.NE)   c.canvas.style.cursor = "nesw-resize";
-            else if (hov?.hoverHandle == R.Handle.SW)   c.canvas.style.cursor = "nesw-resize";
-            else                                        c.canvas.style.cursor = "move";
+            if (hov?.hoverHandle == R.Handle.NW)            c.canvas.style.cursor = "nwse-resize";
+            else if (hov?.hoverHandle == R.Handle.SE)       c.canvas.style.cursor = "nwse-resize";
+            else if (hov?.hoverHandle == R.Handle.NE)       c.canvas.style.cursor = "nesw-resize";
+            else if (hov?.hoverHandle == R.Handle.SW)       c.canvas.style.cursor = "nesw-resize";
+            else if (hov?.hoverHandle == R.Handle.Radius)   c.canvas.style.cursor = "context-menu";
+            else                                            c.canvas.style.cursor = "move";
         }
     }
 
@@ -175,8 +199,16 @@ export function canvasMouseMove(e:MouseEvent) {
         const obj = R.getClickedCanvasObject();
         // Clicked on a valid object.
         if (obj != null) {
+            // If a sound handle was grabbed, resize the sound emitter.
+            if (obj.handle == R.Handle.Radius && obj instanceof CanvasSound) {
+                const vertical = obj.y - c.toWorldY(e.clientY);
+                const horizontal = obj.x - c.toWorldX(e.clientX)
+                obj.radius = Math.sqrt(horizontal**2 + vertical**2);
+                obj.localHandleAngle = Math.atan2(-vertical, -horizontal);
+                console.log(obj.localHandleAngle);
+            }
             // If an image handle was grabbed, resize the image.
-            if (obj.handle != R.Handle.None && obj instanceof CanvasImage) {
+            else if (obj.handle != R.Handle.None && obj instanceof CanvasImage) {
                 // Resize image with SE corner
                 if (obj.handle == R.Handle.SE) {
                     // Free scaling: Set size and position relative to mouse
@@ -294,11 +326,7 @@ export function canvasMouseMove(e:MouseEvent) {
     }
 }
 
-/**
- * Handle a mouse up event on the canvas.
- * Unset clicked on canvas object, toggle selection.
- * @param e Mouse up event.
- */
+/** Handle a mouse up event on the canvas. @param e Mouse up event. */
 export function canvasMouseUp(e:MouseEvent) {
     const l = R.getListener();
     const c = R.getCanvas();
@@ -347,7 +375,8 @@ export function canvasMouseUp(e:MouseEvent) {
     R.setDragging(false);
 }
 
-/** Determine if a point is colliding with a circle.
+/** 
+ * Determine if a point is colliding with a circle.
  * @param pX Point X position.
  * @param pY Point Y position.
  * @param cX Circle X position.
@@ -360,7 +389,8 @@ function pointCircleCollision(pX:number, pY:number, cX:number, cY:number, cR:num
     else return false;
 }
 
-/** Determine if a point is colliding with a rectangle.
+/** 
+ * Determine if a point is colliding with a rectangle.
  * @param pX Point X position.
  * @param pY Point Y position.
  * @param rX Rectangle X position.
@@ -370,11 +400,25 @@ function pointCircleCollision(pX:number, pY:number, cX:number, cY:number, cR:num
  * @returns True: collision. False: no collision.
  */
 function pointRectCollision(pX:number, pY:number, rX:number, rY:number, rW:number, rH:number):boolean {
-    if (pX >= rX && 
-        pY >= rY && 
-        pX <= rX + rW && 
-        pY <= rY + rH) { 
-        return true; 
-    } else return false;
+    if (pX >= rX && pY >= rY && pX <= rX + rW && pY <= rY + rH) return true; 
+    else return false;
 }
 
+
+function pointPolyCollision(pX:number, pY:number, c:Vector2D[]):boolean {
+    let collision = false;
+    for (let i = 0; i < c.length; i++) {
+        let next = i + 1;
+        if (next == c.length) next = 0;
+        
+        const vC = c[i];
+        const vN = c[next];
+
+        if (((vC.y > pY) != (vN.y > pY)) // (point is below the vertex) != (point is above the next vertex) -> only true if between
+            && 
+            (pX < (vN.x - vC.x) * (pY - vC.y) / (vN.y - vC.y) + vC.x) ) { // Jordan curve theorem: horizontal ray
+            collision = !collision;
+        }
+    }
+    return collision;
+}

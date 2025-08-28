@@ -13,12 +13,10 @@ import { CanvasListener } from "./classes/CanvasListener.svelte";
 import type { CanvasObject } from "./classes/CanvasObject.svelte";
 
 
+// ###########################
+// ##### INFINITE CANVAS #####
+// ###########################
 
-/*
- * +-----------------+
- * | INFINITE CANVAS |
- * +-----------------+
- */
 
 // ===== THE CANVAS =====
 
@@ -31,6 +29,7 @@ export function getCanvas() { return canvas; }
 /** Set a new infinite canvas. @param gridSize The size of the grid to display on the canvas. */
 export function setCanvas(gridSize?:number) { canvas = new InfiniteCanvas(gridSize); }
 
+
 // ===== CANVAS OBJECT HANDLING =====
 
 let hoveredCanvasObject:CanvasObject|null = null;
@@ -41,6 +40,7 @@ let clickedCanvasObject:CanvasObject|null;
 export function getClickedCanvasObject() { return clickedCanvasObject; }
 export function setClickedCanvasObject(obj:CanvasObject|null) { clickedCanvasObject = obj; }
 
+
 // ===== DRAGGING ON THE CANVAS =====
 
 /** Whether or not the user is currently dragging something(s). */
@@ -50,6 +50,7 @@ export function setDragging(d?:boolean) {
     if (typeof d == "undefined") dragging = !dragging;
     else dragging = d;
 }
+
 
 // ===== PANNING THE CANVAS =====
 
@@ -101,11 +102,13 @@ export function setPanLastX(n:number) { panLastX = n; }
 /** Set the last cursor Y position for panning the canvas. @param n The cursor Y position. */
 export function setPanLastY(n:number) { panLastY = n; }
 
-// ===== WIDGETS =====
+
+// ===== HANDLES =====
+
 let handleSize = 4;
 export function getHandleSize() { return handleSize; }
 
-export enum Handle { None="NONE", NW="NW", NE="NE", SW="SW", SE="SE", R="R" };
+export enum Handle { None="NONE", NW="NW", NE="NE", SW="SW", SE="SE", Radius="RADIUS" };
 
 let mouseDownX = 0;
 export function getMouseDownX() { return mouseDownX; }
@@ -131,11 +134,10 @@ let originalY = 0;
 export function getOriginalY() { return originalY; }
 export function setOriginalY(y:number) { originalY = y; }
 
-/*
- * +-----------------------------+
- * | PROJECT CONTENTS MANAGEMENT |
- * +-----------------------------+
- */
+
+// #######################################
+// ##### PROJECT CONTENTS MANAGEMENT #####
+// #######################################
 
 
 // ===== MAPS =====
@@ -148,7 +150,6 @@ export function getMapList():Array<MapInfo> { return mapList; };
 
 /** Set the map list to a new list. @param newMapList The new map list. */
 export function setMapList(newMapList:Array<MapInfo>) { mapList = newMapList; };
-
 
 
 // ===== IMAGES =====
@@ -169,7 +170,6 @@ export function addToImages(options:canvasImageOptions) {
 }
 
 
-
 // ===== SOUNDS =====
 
 /** The sound list. */
@@ -187,13 +187,12 @@ export function addToSounds(options:canvasSoundOptions) {
     console.log(sounds);
 }
 
+export enum SoundType {Local="LOCAL", Global="GLOBAL", Area="AREA"};
 
 
-/*
- * +----------------------+
- * | APP STATE MANAGEMENT |
- * +----------------------+ 
- */
+// ########################################
+// ##### APPLICATION STATE MANAGEMENT #####
+// ########################################
 
 
 // ===== LOADING =====
@@ -208,7 +207,6 @@ export function getIsLoading():boolean { return isLoading; };
 export function setIsLoading(value:boolean) { isLoading = value; };
 
 
-
 // ===== SAVING =====
 
 /** The saving state. */
@@ -221,7 +219,6 @@ export function getIsSaving():boolean { return isSaving; };
 export function setIsSaving(value:boolean) {isSaving = value; };
 
 
-
 // ===== HAS MEDIA =====
 
 /** Whether or not the project has any media. */
@@ -232,7 +229,6 @@ export function getHasMedia():boolean { return hasMedia; };
 
 /** Set if the project has media. @param b If the project has media. */
 export function setHasMedia(b:boolean) { hasMedia = b; };
-
 
 
 // ===== UNSAVED CHANGES =====
@@ -250,12 +246,9 @@ export function setProjectDirty() { isProjectDirty = true; };
 export function setProjectClean() { isProjectDirty = false; };
 
 
-
-/* 
- * +---------------------+
- * | PROJECT INFORMATION |
- * +---------------------+
- */
+// #################################
+// ###### PROJECT INFORMATION ######
+// #################################
 
 
 // ===== PROJECT PATH =====

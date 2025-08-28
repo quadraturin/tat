@@ -1,7 +1,7 @@
 import { extname } from '@tauri-apps/api/path';
 import { imageFileTypes, soundFileTypes } from '$lib/settings.appSettings';
-import { newSound, newSoundFromPath } from "./media.loadSound";
-import { newImage, newImageFromPath } from "./media.loadImage";
+import { newSoundFromPath } from "./media.loadSound";
+import { newImageFromPath } from "./media.loadImage";
 
 /**
  * Load a file from a file path.

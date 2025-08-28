@@ -2,6 +2,8 @@ import * as R from "$lib/registry.svelte";
 import type { CanvasImage } from "./classes/CanvasImage.svelte";
 import type { CanvasListener } from "./classes/CanvasListener.svelte";
 import type { CanvasSound } from "./classes/CanvasSound.svelte";
+import { debugWidgets } from "./settings.appSettings";
+import { Vector2D } from "./util.vectors";
 
 /**
  * Infinite canvas.
@@ -27,6 +29,7 @@ export class InfiniteCanvas {
   #gridColor = "rgba(0, 0, 0, 0.1)"
   #widgetColor = "rgba(246, 102, 186, 1)";
   #widgetSelectedColor = "rgba(102, 246, 121, 1)";
+
 
   /**
    * Constructor for the Infinite Canvas.
@@ -55,90 +58,85 @@ export class InfiniteCanvas {
     }
   }
 
-  /**
-   * Convert a "real" (window) pixel x coordinate to a "virtual" (canvas) one.
-   * @param xReal The "real" x pixel coordinate to convert.
-   * @returns The "virtual" x coordinate.
-   */
-  toWindowX(xReal: number): number {
-    return (xReal + this.#offsetX) * this.#scale * this.#z;
+
+  // ===== CANVAS -> WINDOW SPACE CONVERSIONS =====
+
+  /** Convert a canvas x coordinate to a window one. 
+   * @param cX The canvas x coord to convert. @returns The window x coord. */
+  toWindowX(cX: number): number { return (cX + this.#offsetX) * this.#scale * this.#z; }
+
+  /** Convert a canvas y coordinate to a canvas one. 
+   * @param cY The canvas y coord to convert. @returns The window y coord. */
+  toWindowY(cY: number): number { return (cY + this.#offsetY) * this.#scale * this.#z; }
+
+  /** Convert a canvas pixel length to a window one. 
+   * @param len The canvas length to convert. @returns The window length. */
+  toWindowLength(len: number): number { return len / (this.#scale * this.#z); }
+
+
+  // ===== WINDOW -> CANVAS SPACE CONVERSIONS =====
+  
+  /** Convert a window x coordinate to a canvas one.  
+   * @param wX The window x  coord to convert. @returns The window x coord. */
+  toWorldX(wX: number): number { return wX / (this.#scale * this.#z) - this.#offsetX; }
+
+  /** Convert a window y coordinate to a canvas one. 
+   * @param cY The canvas y coord to convert. @returns The window y coord. */
+  toWorldY(cY: number): number { return cY / (this.#scale * this.#z) - this.#offsetY; }
+
+  /** Convert a window pixel length to a canvas one. 
+   * @param len The "virtual" length to convert. @returns The "real" length. */
+  toWorldLength(len: number): number { return len / (this.#scale * this.#z); }
+
+
+  // ===== CANVAS VIEWPORT =====
+
+  /** Offset the canvas view from the left edge. @param amount Distance to offset by. */
+  offsetLeft(amount: number): void {
+    this.#offsetX -= amount;
+    this.#draw();
   }
 
-  getZoom() { return this.#z; }
-
-  /**
-   * Convert a "real" (window) pixel y coordinate to a "virtual" (canvas) one.
-   * @param yReal The "real" y pixel coordinate to convert.
-   * @returns The "virtual" y coordinate.
-   */
-  toWindowY(yReal: number): number {
-    return (yReal + this.#offsetY) * this.#scale * this.#z;
+  /** Offset the canvas view from the right edge. @param amount Distance to offset by. */
+  offsetRight(amount: number): void {
+    this.#offsetX += amount;
+    this.#draw();
   }
 
-  /**
-   * Convert a world pixel length to a window one.
-   * @param len The "virtual" length to convert.
-   * @returns The "real" length.
-   */
-  toWindowLength(len: number): number {
-    return len / (this.#scale * this.#z);
+  /** Offset the canvas view from the top edge. @param amount Distance to offset by. */
+  offsetUp(amount: number): void {
+    this.#offsetY -= amount;
+    this.#draw();
   }
 
-  /**
-   * Convert a "virtual" (canvas) pixel x coordinate to a "real" (window) one.
-   * @param xVirtual The "virtual" x pixel coordinate to convert.
-   * @returns The "real" x coordinate.
-   */
-  toWorldX(xVirtual: number): number {
-    return xVirtual / (this.#scale * this.#z) - this.#offsetX;
+  /** Offset the canvas view from the bottom edge. @param amount Distance to offset by. */
+  offsetDown(amount: number): void {
+    this.#offsetY += amount;
+    this.#draw();
   }
 
-  /**
-   * Convert a "virtual" (canvas) pixel y coordinate to a "real" (window) one.
-   * @param xVirtual The "virtual" y pixel coordinate to convert.
-   * @returns The "real" y coordinate.
-   */
-  toWorldY(yVirtual: number): number {
-    return yVirtual / (this.#scale * this.#z) - this.#offsetY;
-  }
+  /** Get the virtual height of the canvas. @returns The height of the canvas. */
+  virtualHeight():number { return (this.canvas?.clientHeight ?? 0) / this.#scale; }
 
-  /**
-   * Convert a "virtual" (canvas) pixel length to a "real" (window) one.
-   * @param len The "virtual" length to convert.
-   * @returns The "real" length.
-   */
-  toWorldLength(len: number): number {
-    return len / (this.#scale * this.#z);
-  }
+  /** Get the virtual width of the canvas. @returns The width of the canvas. */
+  virtualWidth(): number { return (this.canvas?.clientWidth ?? 0) / this.#scale; }
 
-  /**
-   * Get the virtual height of the canvas.
-   * @returns The height of the canvas.
-   */
-  virtualHeight(): number {
-    return (this.canvas?.clientHeight ?? 0) / this.#scale;
-  }
-
-  /**
-   * Get the virtual width of the canvas.
-   * @returns The width of the canvas.
-   */
-  virtualWidth(): number {
-    return (this.canvas?.clientWidth ?? 0) / this.#scale;
-  }
-
+  /** Move the viewport to a point on the canvas.
+   * @param x X coord of the destination. @param y Y coord of the destination. */
   flyToPoint(x:number, y:number) {
     this.#offsetX = (this.virtualWidth()/2) / this.#z - x;
     this.#offsetY = (this.virtualHeight()/2) / this.#z - y;
     this.#draw();
   }
 
-  here(){
-    return({
-      x:this.#offsetX, 
-      y:this.#offsetY
-    });
-  }
+  /** Get the current canvas location as X and Y offsets. @returns The X and Y offsets. */
+  here(){ return({x:this.#offsetX, y:this.#offsetY}); }
+
+
+  // ===== CANVAS ZOOMING =====
+
+  /** Get the current zoom level. @returns The zoom level. */
+  getZoom() { return this.#z; }
 
   /**
    * Zoom in or out, optionally centered on a point, or reset zoom.
@@ -177,6 +175,9 @@ export class InfiniteCanvas {
     this.#draw();
   }
 
+
+  // ===== CANVAS PANNING =====
+
   /**
    * Pan from one x,y coordinate to another.
    * @param x1 X coordinate to pan from.
@@ -192,7 +193,7 @@ export class InfiniteCanvas {
   }
 
   /**
-   * Pan inertia
+   * Give panning inertia so that when you release, the canvas doesn't immediately stop.
    */
   panInertia() {
     if (Math.abs(this.#velocityX) > 0.1 && Math.abs(this.#velocityY) > 0.1 && !R.getPanning()) {
@@ -204,52 +205,15 @@ export class InfiniteCanvas {
     }
   }
 
-  /**
-   * Offset the canvas view from the left edge.
-   * @param amount Distance to offset by.
-   */
-  offsetLeft(amount: number): void {
-    this.#offsetX -= amount;
-    this.#draw();
-  }
 
-  /**
-   * Offset the canvas view from the right edge.
-   * @param amount Distance to offset by.
-   */
-  offsetRight(amount: number): void {
-    this.#offsetX += amount;
-    this.#draw();
-  }
+  // ===== CANVAS DRAWING =====
 
-  /**
-   * Offset the canvas view from the top edge.
-   * @param amount Distance to offset by.
-   */
-  offsetUp(amount: number): void {
-    this.#offsetY -= amount;
-    this.#draw();
-  }
-
-  /**
-   * Offset the canvas view from the bottom edge.
-   * @param amount Distance to offset by.
-   */
-  offsetDown(amount: number): void {
-    this.#offsetY += amount;
-    this.#draw();
-  }
-
-  /**
-   * Redraw the canvas.
-   */
+  /** Redraw the canvas. */
   update(): void {
     this.#draw();
   }
 
-  /**
-   * Draw the canvas.
-   */
+  /** Draw the canvas. */
   #draw(): void {
     if (this.canvas && this.context) {
       // Set canvas dimensions, accounting for screen pixel density.
@@ -277,7 +241,8 @@ export class InfiniteCanvas {
 
       // Next, cycle through all audio emitters and draw them.
       for (let i = 0; i < R.getSounds().length; i++) {
-        this.#drawEmitter(R.getSounds()[i]);
+        //this.#drawLocalSound(R.getSounds()[i]);
+        this.#drawAreaSound(R.getSounds()[i]);
       }
 
       // Next, draw the audio listener.
@@ -285,157 +250,6 @@ export class InfiniteCanvas {
     }
   }
 
-  /**
-   * Set up events.
-   * @param canvas The canvas element to set up events for.
-   */
-  #setupEvents(canvas: HTMLCanvasElement): void {
-    canvas.addEventListener("touchstart", (event) =>
-      this.#onTouchStart(event.touches)
-    );
-    canvas.addEventListener("touchmove", (event) =>
-      this.#onTouchMove(event.touches)
-    );
-    window.addEventListener("resize", () => this.#draw());
-  }
-
-  /**
-   * Store touch information when a touch event occurs.
-   * @param touches List of points being touched.
-   */
-  #onTouchStart(touches: TouchList): void {
-    if (touches.length == 1) {
-      this.#touchMode = "single";
-    } else if (touches.length >= 2) {
-      this.#touchMode = "double";
-    }
-
-    // Store the last touches
-    this.#prevTouch[0] = touches[0];
-    this.#prevTouch[1] = touches[1];
-
-    this.#onTouchMove(touches);
-  }
-
-  /**
-   * Pan and zoom based on touch events.
-   * @param touches List of points being touched.
-   */
-  #onTouchMove(touches: TouchList): void {
-    // Get first touch coordinates
-    const touch0X = touches[0].pageX;
-    const touch0Y = touches[0].pageY;
-
-    const prevTouch0X = this.#prevTouch[0]!.pageX;
-    const prevTouch0Y = this.#prevTouch[0]!.pageY;
-
-    if (this.#touchMode === "single") {
-      // Single touch (setup click event)
-    } else if (this.#touchMode === "double") {
-      // get second touch coordinates
-      const touch1X = touches[1].pageX;
-      const touch1Y = touches[1].pageY;
-
-      const prevTouch1X = this.#prevTouch[1]!.pageX;
-      const prevTouch1Y = this.#prevTouch[1]!.pageY;
-
-      const scaleAmount = this.#zoom(
-        [touch0X, touch0Y],
-        [prevTouch0X, prevTouch0Y],
-        [touch1X, touch1Y],
-        [prevTouch1X, prevTouch1Y]
-      );
-
-      this.#pan(
-        scaleAmount,
-        [touch0X, touch0Y],
-        [prevTouch0X, prevTouch0Y],
-        [touch1X, touch1Y],
-        [prevTouch1X, prevTouch1Y]
-      );
-
-      this.#draw();
-    }
-
-    this.#prevTouch[0] = touches[0];
-    this.#prevTouch[1] = touches[1];
-  }
-
-  /**
-   * Pan the canvas based on touch events.
-   * @param scaleAmount Amount to scale the canvas.
-   * @param param1 First start touch coordinates.
-   * @param param2 First previous touch coordinates.
-   * @param param3 Second start touch coordinates.
-   * @param param4 Second previous touch coordinates.
-   */
-  #pan(
-    scaleAmount: number,
-    [touch0X, touch0Y]: [number, number],
-    [prevTouch0X, prevTouch0Y]: [number, number],
-    [touch1X, touch1Y]: [number, number],
-    [prevTouch1X, prevTouch1Y]: [number, number]
-  ): void {
-    // get midpoints
-    const midX = (touch0X + touch1X) / 2;
-    const midY = (touch0Y + touch1Y) / 2;
-    const prevMidX = (prevTouch0X + prevTouch1X) / 2;
-    const prevMidY = (prevTouch0Y + prevTouch1Y) / 2;
-
-    // Calculate how many pixels the midpoints have moved in the x and y direction
-    const panX = midX - prevMidX;
-    const panY = midY - prevMidY;
-
-    // Scale this movement based on the zoom level
-    this.#offsetX += panX / this.#scale;
-    this.#offsetY += panY / this.#scale;
-
-    // Get the relative position of the middle of the zoom.
-    // 0, 0 would be top left.
-    // 0, 1 would be top right etc.
-    const zoomRatioX = midX / (this.canvas?.clientWidth ?? 1);
-    const zoomRatioY = midY / (this.canvas?.clientHeight ?? 1);
-
-    // calculate the amounts zoomed from each edge of the screen
-    const unitsZoomedX = this.virtualWidth() * scaleAmount;
-    const unitsZoomedY = this.virtualHeight() * scaleAmount;
-
-    const unitsAddLeft = unitsZoomedX * zoomRatioX;
-    const unitsAddTop = unitsZoomedY * zoomRatioY;
-
-    this.#offsetX += unitsAddLeft;
-    this.#offsetY += unitsAddTop;
-  }
-
-  /**
-   * Zoom the canvas based on touch events.
-   * @param param1 First start touch coordinates.
-   * @param param2 First previous touch coordinates.
-   * @param param3 Second start touch coordinates.
-   * @param param4 Second previous touch coordinates.
-   * @returns 
-   */
-  #zoom(
-    [touch0X, touch0Y]: [number, number],
-    [prevTouch0X, prevTouch0Y]: [number, number],
-    [touch1X, touch1Y]: [number, number],
-    [prevTouch1X, prevTouch1Y]: [number, number]
-  ): number {
-    const hypot = Math.sqrt(
-      Math.pow(touch0X - touch1X, 2) + Math.pow(touch0Y - touch1Y, 2)
-    );
-
-    const prevHypot = Math.sqrt(
-      Math.pow(prevTouch0X - prevTouch1X, 2) +
-      Math.pow(prevTouch0Y - prevTouch1Y, 2)
-    );
-
-    const zoomAmount = hypot / prevHypot;
-    this.zoom(zoomAmount);
-
-    const scaleAmount = 1 - zoomAmount;
-    return scaleAmount;
-  }
 
   /**
    * Draw the grid on the canvas.
@@ -503,29 +317,20 @@ export class InfiniteCanvas {
     }
   }
 
+
   /**
    * Draw test shapes on the canvas.
    */
   #drawTests(): void {
     if (this.canvas && this.context) {
-      this.context.beginPath();
-      this.context.strokeStyle = this.#widgetColor;
-      this.context.rect(
-        25 * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
-        75 * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
-        100 * this.#scale * this.#z,
-        150 * this.#scale * this.#z);
-      this.context.stroke();
+      this.#drawRect(-100,50,200,500,false);
 
-      this.context.beginPath();
-      this.context.arc(
-        150 * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
-        250 * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
-        25 * this.#scale * this.#z,
-        0, 360);
-      this.context.stroke();
+      this.#drawCircle(45,80,100);
+
+      this.#drawPoly([new Vector2D(-30,-50), new Vector2D(-45,90), new Vector2D(20,40), new Vector2D(12,-40), new Vector2D(5,-30)], false);
     }
   }
+
 
   /**
    * Draw a rectangle on the canvas.
@@ -548,19 +353,73 @@ export class InfiniteCanvas {
     }
   }
 
+
   /**
-   * Draw an audio emitter on the canvas.
+   * Draw a polygon on the canvas.
+   * @param coords List of coordinates forming the points of the polygon.
+   * @param selected Whether or not the polygon is selected.
+   */
+  #drawPoly(coords:Vector2D[], selected:boolean|null) {
+    if (this.canvas && this.context) {
+      this.context.beginPath();
+      if (selected) this.context.strokeStyle = this.#widgetSelectedColor;
+      else this.context.strokeStyle = this.#widgetColor;
+      this.context.moveTo(
+        coords[0].x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z, 
+        coords[0].y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z);
+      for (let i = 1; i < coords.length; i++){
+        this.context.lineTo(
+          coords[i].x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z, 
+          coords[i].y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z);
+      }
+      this.context.closePath()
+      this.context.stroke();
+      //this.context.fill();
+    }
+  }
+
+
+  /**
+   * Draw a local audio emitter on the canvas.
    * @param x X position of the center of the emitter.
    * @param y Y position of the center of the emitter.
    * @param r Radius of the emitter.
    */
-  #drawEmitter(emit:CanvasSound): void {
+  #drawLocalSound(snd:CanvasSound): void {
     if (this.canvas && this.context) {
-      this.#drawCircle(emit.x, emit.y, emit.radius);
-      this.#drawHandle(emit.x, emit.y, 4, null);
-      this.#drawHandle(emit.x + emit.radius, emit.y, 4, null);
+      this.#drawCircle(snd.x, snd.y, snd.radius);
+      this.#drawHandle(snd.x, snd.y, 0.5, null);
+      this.#drawHandle(
+        snd.x + Math.cos(snd.localHandleAngle)*snd.radius, 
+        snd.y + Math.sin(snd.localHandleAngle)*snd.radius, 
+        R.getHandleSize(), 
+        null);
     }
   }
+
+
+  #drawAreaSound(snd:CanvasSound) {
+    if (this.canvas && this.context) {
+      // If the shape hasn't been defined or has too few points, make a diamond using the x, y, and radius.
+      //if (snd.areaCoords.length < 3){
+        //snd.areaCoords = [[snd.x, snd.y-snd.radius],[snd.x+snd.radius,snd.y],[snd.x,snd.y+snd.radius],[snd.x-snd.radius, snd.y]];
+      //}
+      //console.log(snd.areaCoords.length)
+      this.#drawPoly(snd.areaCoords, snd.selected);
+      for (let i=0; i<snd.areaCoords.length; i++) {
+        this.#drawHandle(snd.areaCoords[i].x, snd.areaCoords[i].y, R.getHandleSize(), snd.selected);
+      }
+      if (debugWidgets) {
+        if (snd.areaBounds) {
+          this.#drawCircle(snd.areaBounds[0].x,snd.areaBounds[0].y,1);
+          this.#drawCircle(snd.areaBounds[1].x,snd.areaBounds[1].y,1);
+          this.#drawCircle(snd.areaBounds[0].x,snd.areaBounds[1].y,1);
+          this.#drawCircle(snd.areaBounds[1].x,snd.areaBounds[0].y,1);
+        }
+      }
+    }
+  }
+
 
   /**
    * Draw a circle on the canvas.
@@ -579,6 +438,7 @@ export class InfiniteCanvas {
       this.context.stroke();
     }
   }
+
 
   /**
    * Draw a draggable handle on the canvas.
@@ -606,26 +466,6 @@ export class InfiniteCanvas {
     }
   }
 
-    /**
-   * Draw a draggable handle on the canvas.
-   * @param x X position of the center of the handle.
-   * @param y Y position of the center of the handle.
-   * @param r Radius of the handle.
-   */
-  #drawCornerHandle(x: number, y: number, w: number, h:number): void {
-    if (this.canvas && this.context) {
-      this.context.strokeStyle = this.#widgetColor;
-      this.context.fillStyle = this.#widgetColor;
-      this.context.beginPath();
-      this.context.rect(
-        x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
-        y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
-        w,
-        h);
-      this.context.fill();
-      this.context.stroke();
-    }
-  }
 
   /**
    * Draw an audio listener on the canvas.
@@ -647,6 +487,7 @@ export class InfiniteCanvas {
       this.context.stroke();
     }
   }
+
 
   /**
    * Draw an image on the canvas.
@@ -679,5 +520,162 @@ export class InfiniteCanvas {
       }
     }
   }
-}
 
+
+  // ===== CANVAS TOUCH CONTROLS =====
+
+  /**
+   * Set up events.
+   * @param canvas The canvas element to set up events for.
+   */
+  #setupEvents(canvas: HTMLCanvasElement): void {
+    canvas.addEventListener("touchstart", (event) =>
+      this.#onTouchStart(event.touches)
+    );
+    canvas.addEventListener("touchmove", (event) =>
+      this.#onTouchMove(event.touches)
+    );
+    window.addEventListener("resize", () => this.#draw());
+  }
+
+  /**
+   * Store touch information when a touch event occurs.
+   * @param touches List of points being touched.
+   */
+  #onTouchStart(touches: TouchList): void {
+    if (touches.length == 1) {
+      this.#touchMode = "single";
+    } else if (touches.length >= 2) {
+      this.#touchMode = "double";
+    }
+
+    // Store the last touches
+    this.#prevTouch[0] = touches[0];
+    this.#prevTouch[1] = touches[1];
+
+    this.#onTouchMove(touches);
+  }
+
+
+  /**
+   * Pan and zoom based on touch events.
+   * @param touches List of points being touched.
+   */
+  #onTouchMove(touches: TouchList): void {
+    // Get first touch coordinates
+    const touch0X = touches[0].pageX;
+    const touch0Y = touches[0].pageY;
+
+    const prevTouch0X = this.#prevTouch[0]!.pageX;
+    const prevTouch0Y = this.#prevTouch[0]!.pageY;
+
+    if (this.#touchMode === "single") {
+      // Single touch (setup click event)
+    } else if (this.#touchMode === "double") {
+      // get second touch coordinates
+      const touch1X = touches[1].pageX;
+      const touch1Y = touches[1].pageY;
+
+      const prevTouch1X = this.#prevTouch[1]!.pageX;
+      const prevTouch1Y = this.#prevTouch[1]!.pageY;
+
+      const scaleAmount = this.#zoom(
+        [touch0X, touch0Y],
+        [prevTouch0X, prevTouch0Y],
+        [touch1X, touch1Y],
+        [prevTouch1X, prevTouch1Y]
+      );
+
+      this.#pan(
+        scaleAmount,
+        [touch0X, touch0Y],
+        [prevTouch0X, prevTouch0Y],
+        [touch1X, touch1Y],
+        [prevTouch1X, prevTouch1Y]
+      );
+
+      this.#draw();
+    }
+
+    this.#prevTouch[0] = touches[0];
+    this.#prevTouch[1] = touches[1];
+  }
+
+
+  /**
+   * Pan the canvas based on touch events.
+   * @param scaleAmount Amount to scale the canvas.
+   * @param param1 First start touch coordinates.
+   * @param param2 First previous touch coordinates.
+   * @param param3 Second start touch coordinates.
+   * @param param4 Second previous touch coordinates.
+   */
+  #pan(
+    scaleAmount: number,
+    [touch0X, touch0Y]: [number, number],
+    [prevTouch0X, prevTouch0Y]: [number, number],
+    [touch1X, touch1Y]: [number, number],
+    [prevTouch1X, prevTouch1Y]: [number, number]
+  ): void {
+    // get midpoints
+    const midX = (touch0X + touch1X) / 2;
+    const midY = (touch0Y + touch1Y) / 2;
+    const prevMidX = (prevTouch0X + prevTouch1X) / 2;
+    const prevMidY = (prevTouch0Y + prevTouch1Y) / 2;
+
+    // Calculate how many pixels the midpoints have moved in the x and y direction
+    const panX = midX - prevMidX;
+    const panY = midY - prevMidY;
+
+    // Scale this movement based on the zoom level
+    this.#offsetX += panX / this.#scale;
+    this.#offsetY += panY / this.#scale;
+
+    // Get the relative position of the middle of the zoom.
+    // 0, 0 would be top left.
+    // 0, 1 would be top right etc.
+    const zoomRatioX = midX / (this.canvas?.clientWidth ?? 1);
+    const zoomRatioY = midY / (this.canvas?.clientHeight ?? 1);
+
+    // calculate the amounts zoomed from each edge of the screen
+    const unitsZoomedX = this.virtualWidth() * scaleAmount;
+    const unitsZoomedY = this.virtualHeight() * scaleAmount;
+
+    const unitsAddLeft = unitsZoomedX * zoomRatioX;
+    const unitsAddTop = unitsZoomedY * zoomRatioY;
+
+    this.#offsetX += unitsAddLeft;
+    this.#offsetY += unitsAddTop;
+  }
+
+
+  /**
+   * Zoom the canvas based on touch events.
+   * @param param1 First start touch coordinates.
+   * @param param2 First previous touch coordinates.
+   * @param param3 Second start touch coordinates.
+   * @param param4 Second previous touch coordinates.
+   * @returns 
+   */
+  #zoom(
+    [touch0X, touch0Y]: [number, number],
+    [prevTouch0X, prevTouch0Y]: [number, number],
+    [touch1X, touch1Y]: [number, number],
+    [prevTouch1X, prevTouch1Y]: [number, number]
+  ): number {
+    const hypot = Math.sqrt(
+      Math.pow(touch0X - touch1X, 2) + Math.pow(touch0Y - touch1Y, 2)
+    );
+
+    const prevHypot = Math.sqrt(
+      Math.pow(prevTouch0X - prevTouch1X, 2) +
+      Math.pow(prevTouch0Y - prevTouch1Y, 2)
+    );
+
+    const zoomAmount = hypot / prevHypot;
+    this.zoom(zoomAmount);
+
+    const scaleAmount = 1 - zoomAmount;
+    return scaleAmount;
+  }
+}

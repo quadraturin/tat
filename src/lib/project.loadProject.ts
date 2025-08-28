@@ -2,8 +2,6 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { projectExt } from './settings.appSettings';
 import { exists, readTextFile } from '@tauri-apps/plugin-fs';
 import { basename, join, sep } from '@tauri-apps/api/path';
-import { newImage } from './media.loadImage';
-import { newSound } from './media.loadSound';
 import * as R from '$lib/registry.svelte'
 import { clearProject } from './project.clearProject';
 import { closeModal, openLoadingModal } from './ui.modals';
@@ -58,6 +56,7 @@ export async function loadProject()
                 const obj = project.maps[i].images[j];
                 let src = R.getProjectPath() as string + sep() + "images" + sep() + obj.src
                 console.log(src);
+                /* TODO: replace with new function
                 newImage({
                     src: src, 
                     height: obj.height, 
@@ -67,7 +66,7 @@ export async function loadProject()
                     opacity: obj.opacity, 
                     order: obj.order, 
                     locked: obj.locked
-                });
+                });*/
             }
 
             // find unique sounds
@@ -75,6 +74,7 @@ export async function loadProject()
                 const obj = project.maps[i].sounds[j];
                 let src = R.getProjectPath() as string + sep() + "sounds" + sep() + obj.src
                 console.log(src);
+                /* TODO: replace with new function
                 newSound({
                     src: src,
                     soundType: obj.soundType,
@@ -88,7 +88,7 @@ export async function loadProject()
                     order: obj.order,
                     seek: obj.seek,
                     locked: obj.locked
-                });
+                });*/
             }
 
             // sort the images and sounds
