@@ -3,6 +3,7 @@ import { CanvasObject } from "./classes/CanvasObject.svelte";
 import { CanvasImage } from "./classes/CanvasImage.svelte";
 import { CanvasSound } from "./classes/CanvasSound.svelte";
 import { Vector2D } from "./util.vectors";
+import { CanvasListener } from "./classes/CanvasListener.svelte";
 
 
 /**
@@ -71,6 +72,7 @@ export function canvasMouseDown(e:MouseEvent) {
                         obj.hoverHandle = R.Handle.PolyVertex;
                         obj.handle = obj.hoverHandle;
                         obj.areaHandleIndex = next;
+                        R.setDragging(true);   
                     }
                 // Canvas image: grab corner handle.
                 } else if (obj instanceof CanvasImage) {
@@ -233,6 +235,7 @@ export function canvasMouseMove(e:MouseEvent) {
 
     // Check if the mouse is already down when it is moved (dragging)
     if(R.getMouseDown()) {
+        R.setDragging(true);
         const obj = R.getClickedCanvasObject();
         // Clicked on a valid object.
         if (obj != null) {
@@ -347,7 +350,6 @@ export function canvasMouseMove(e:MouseEvent) {
                 if (l.grabbed){
                     l.x = c.toWorldX(e.clientX) + l.grabOffsetX;
                     l.y = c.toWorldY(e.clientY) + l.grabOffsetY;
-                    R.setDragging(true);
                 }
                 // Drag image(s)
                 for (let i = 0; i < R.getImages().length; i++) {
@@ -355,7 +357,6 @@ export function canvasMouseMove(e:MouseEvent) {
                     if (img.grabbed) {
                         img.x = c.toWorldX(e.clientX) + img.grabOffsetX;
                         img.y = c.toWorldY(e.clientY) + img.grabOffsetY;
-                        R.setDragging(true);
                     }
                 }
             }
@@ -381,6 +382,18 @@ export function canvasMouseUp(e:MouseEvent) {
     const o = R.getClickedCanvasObject();
 
     R.setMouseDown(false);
+
+    // If there was a clicked object but it was not dragged
+    if(!R.getDragging()) {
+        // Click on canvasSound
+        console.log(o)
+        if (o instanceof CanvasSound && o.soundType == R.SoundType.Area && o.handle == R.Handle.PolyVertex) {
+            console.log("delete vert", o.areaHandleIndex)
+            o.removeAreaVertex(o.areaHandleIndex);
+        }
+        // Selection toggle
+        else if (o instanceof CanvasObject && !o.locked) o.selected = null; 
+    }
     if (o != null) o.handle = R.Handle.None;
 
     // Release the listener
@@ -398,28 +411,9 @@ export function canvasMouseUp(e:MouseEvent) {
     R.setClickedCanvasObject(null);
 
     // Stop panning
-    if (R.getPanning()) R.stopPanning();
+    R.stopPanning();
 
-    // If there was a clicked object but it was not dragged, toggle selection 
-    if(!R.getDragging()) {
-        // Select listener toggle
-        if (l.editable &&
-            pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), l.x, l.y, c.toWorldLength(R.getListenerRadius()))){
-            l.selected = null;
-        }
-
-        // Select image toggle
-        else {
-            for (let i = R.getImages().length - 1; i >= 0; i--) {
-                const img = R.getImages()[i];
-                if (!img.locked &&
-                    pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x, img.y, img.width, img.height)) {
-                    img.selected = null;
-                    break;
-                }
-            }
-        }
-    }
+    // Stop dragging
     R.setDragging(false);
 }
 
