@@ -108,7 +108,7 @@ export function setPanLastY(n:number) { panLastY = n; }
 let handleSize = 4;
 export function getHandleSize() { return handleSize; }
 
-export enum Handle { None="NONE", NW="NW", NE="NE", SW="SW", SE="SE", Radius="RADIUS" };
+export enum Handle { None="NONE", NW="NW", NE="NE", SW="SW", SE="SE", Radius="RADIUS", PolyVertex="POLYVERTEX", PolyEdge="POLYEDGE"};
 
 let mouseDownX = 0;
 export function getMouseDownX() { return mouseDownX; }

@@ -110,10 +110,32 @@ export function canvasMouseMove(e:MouseEvent) {
 
                 // Area sound: polygon with handles at verts and mid-segment.
                 if (snd.soundType == R.SoundType.Area) {
-                    if (    wX >= snd.areaBounds[0].x && wY >= snd.areaBounds[0].y &&
-                            wX <= snd.areaBounds[1].x && wY <= snd.areaBounds[1].y ) {
+                    // Check bounding box before proceeding.
+                    if (wX >= snd.areaBounds[0].x && wY >= snd.areaBounds[0].y &&
+                        wX <= snd.areaBounds[1].x && wY <= snd.areaBounds[1].y ) {
+                        const coords = snd.areaCoords;
+                        // Check handles.
+                        for (let i = 0; i < coords.length; i++) {
+                            const next = i + 1 == coords.length ? 0 : i + 1;
+                            const midX = (coords[i].x + coords[next].x)/2;
+                            const midY = (coords[i].y + coords[next].y)/2;
+                            
+                            if (pointCircleCollision(wX, wY, coords[i].x, coords[i].y, c.toWorldLength(R.getHandleSize()))) {
+                                R.setHoveredCanvasObject(snd);
+                                snd.hoverHandle = R.Handle.PolyVertex;
+                                snd.areaHandleIndex = i;
+                                break;
+                            } else if (pointCircleCollision(wX, wY, midX, midY, c.toWorldLength(R.getHandleSize()))) {
+                                R.setHoveredCanvasObject(snd);
+                                snd.hoverHandle = R.Handle.PolyEdge;
+                                snd.areaHandleIndex = i;
+                                break;
+                            }
+                        }
+                        // Check collision with the polygon.
                         if (pointPolyCollision(wX, wY, snd.areaCoords)) {
-                            console.log("in poly")
+                            R.setHoveredCanvasObject(snd);
+                            snd.hoverHandle = R.Handle.None;
                             break;
                         }
                     }
@@ -182,15 +204,17 @@ export function canvasMouseMove(e:MouseEvent) {
         // Set mouse cursor
         const hov = R.getHoveredCanvasObject();
         if (hov == null || !hov?.editable) { 
-            if (R.getMouseDown())                           c.canvas.style.cursor = "grabbing";
-            else                                            c.canvas.style.cursor = "grab";
+            if (R.getMouseDown())                               c.canvas.style.cursor = "grabbing";
+            else                                                c.canvas.style.cursor = "grab";
         } else if (hov?.editable){
-            if (hov?.hoverHandle == R.Handle.NW)            c.canvas.style.cursor = "nwse-resize";
-            else if (hov?.hoverHandle == R.Handle.SE)       c.canvas.style.cursor = "nwse-resize";
-            else if (hov?.hoverHandle == R.Handle.NE)       c.canvas.style.cursor = "nesw-resize";
-            else if (hov?.hoverHandle == R.Handle.SW)       c.canvas.style.cursor = "nesw-resize";
-            else if (hov?.hoverHandle == R.Handle.Radius)   c.canvas.style.cursor = "context-menu";
-            else                                            c.canvas.style.cursor = "move";
+            if (hov?.hoverHandle == R.Handle.NW)                c.canvas.style.cursor = "nwse-resize";
+            else if (hov?.hoverHandle == R.Handle.SE)           c.canvas.style.cursor = "nwse-resize";
+            else if (hov?.hoverHandle == R.Handle.NE)           c.canvas.style.cursor = "nesw-resize";
+            else if (hov?.hoverHandle == R.Handle.SW)           c.canvas.style.cursor = "nesw-resize";
+            else if (hov?.hoverHandle == R.Handle.Radius)       c.canvas.style.cursor = "context-menu";
+            else if (hov?.hoverHandle == R.Handle.PolyEdge)     c.canvas.style.cursor = "cell";
+            else if (hov?.hoverHandle == R.Handle.PolyVertex)   c.canvas.style.cursor = "context-menu";
+            else                                                c.canvas.style.cursor = "move";
         }
     }
 

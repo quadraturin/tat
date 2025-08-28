@@ -400,16 +400,18 @@ export class InfiniteCanvas {
 
   #drawAreaSound(snd:CanvasSound) {
     if (this.canvas && this.context) {
-      // If the shape hasn't been defined or has too few points, make a diamond using the x, y, and radius.
-      //if (snd.areaCoords.length < 3){
-        //snd.areaCoords = [[snd.x, snd.y-snd.radius],[snd.x+snd.radius,snd.y],[snd.x,snd.y+snd.radius],[snd.x-snd.radius, snd.y]];
-      //}
-      //console.log(snd.areaCoords.length)
+      // Draw the polygon.
       this.#drawPoly(snd.areaCoords, snd.selected);
+      // Draw the handles.
       for (let i=0; i<snd.areaCoords.length; i++) {
+        const next = i + 1 == snd.areaCoords.length ? 0 : i + 1;
         this.#drawHandle(snd.areaCoords[i].x, snd.areaCoords[i].y, R.getHandleSize(), snd.selected);
+        const midX = (snd.areaCoords[next].x + snd.areaCoords[i].x)/2;
+        const midY = (snd.areaCoords[next].y + snd.areaCoords[i].y)/2;
+        this.#drawCircle(midX, midY, R.getHandleSize()/2);
       }
       if (debugWidgets) {
+        // Draw the bounds.
         if (snd.areaBounds) {
           this.#drawCircle(snd.areaBounds[0].x,snd.areaBounds[0].y,1);
           this.#drawCircle(snd.areaBounds[1].x,snd.areaBounds[1].y,1);

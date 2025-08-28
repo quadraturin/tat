@@ -36,7 +36,8 @@ export class CanvasSound extends CanvasObject{
     #solo:boolean = $state(false);
     #localHandleAngle = 0;
     #areaCoords:Vector2D[];
-    #areaBounds:[Vector2D,Vector2D]
+    #areaBounds:[Vector2D,Vector2D];
+    #areaHandleIndex:number;
 
     constructor(options:canvasSoundOptions) {
         super({ 
@@ -59,6 +60,7 @@ export class CanvasSound extends CanvasObject{
         this.#localHandleAngle = options.localHandleAngle;
         this.#areaCoords = options.areaCoords;
         this.#areaBounds = this.setBounds();
+        this.#areaHandleIndex = 0;
     }
 
     /** Get the sound emitter radius. @returns The radius. */
@@ -118,4 +120,7 @@ export class CanvasSound extends CanvasObject{
         max.y += getHandleSize()/2;
         return this.#areaBounds = [min, max];
     }
+
+    public get areaHandleIndex() { return this.#areaHandleIndex; }
+    public set areaHandleIndex(i:number) { this.#areaHandleIndex = i; }
 }
