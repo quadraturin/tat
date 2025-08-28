@@ -123,4 +123,10 @@ export class CanvasSound extends CanvasObject{
 
     public get areaHandleIndex() { return this.#areaHandleIndex; }
     public set areaHandleIndex(i:number) { this.#areaHandleIndex = i; }
+
+    public addAreaVertex(x:number, y:number, i:number){
+        if (this.#areaCoords.length > i) {
+            this.#areaCoords.splice(i, 0, new Vector2D(x,y));
+        }
+    }
 }

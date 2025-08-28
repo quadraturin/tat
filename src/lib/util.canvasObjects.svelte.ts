@@ -55,22 +55,35 @@ export function canvasMouseDown(e:MouseEvent) {
         let obj = R.getHoveredCanvasObject();
         R.setClickedCanvasObject(obj);
         if (obj != null) {
+            // No handle: grab the object
             if (obj.hoverHandle == R.Handle.None) {
                 obj.grab(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
-                obj.handle = null;
-            } else {
+                obj.handle = obj.hoverHandle;
+            } 
+            // If handle
+            else {
+                // Canvas sound: if vert, grab it, if edge, create vert & grab it.
                 if (obj instanceof CanvasSound) {
-                    obj.handle = null;
+                    if (obj.hoverHandle == R.Handle.PolyVertex) obj.handle = obj.hoverHandle;
+                    else if (obj.hoverHandle == R.Handle.PolyEdge) {
+                        const next = obj.areaHandleIndex == obj.areaCoords.length - 1 ? 0 : obj.areaHandleIndex + 1;
+                        obj.addAreaVertex(c.toWorldX(e.x), c.toWorldY(e.y), next);
+                        obj.hoverHandle = R.Handle.PolyVertex;
+                        obj.handle = obj.hoverHandle;
+                        obj.areaHandleIndex = next;
+                    }
+                // Canvas image: grab corner handle.
                 } else if (obj instanceof CanvasImage) {
                     R.setOriginalH(obj.height);
                     R.setOriginalW(obj.width);
                     R.setOriginalX(c.toWorldX(e.x));
                     R.setOriginalY(c.toWorldY(e.y));
-                    obj.handle = null;
+                    obj.handle = obj.hoverHandle;
                 }
             }
         }
     }
+    
     // If object clicked was selected, grab all selected objects
     const clicked = R.getClickedCanvasObject();
     if (clicked instanceof CanvasObject && clicked.selected) {
@@ -223,14 +236,25 @@ export function canvasMouseMove(e:MouseEvent) {
         const obj = R.getClickedCanvasObject();
         // Clicked on a valid object.
         if (obj != null) {
-            // If a sound handle was grabbed, resize the sound emitter.
-            if (obj.handle == R.Handle.Radius && obj instanceof CanvasSound) {
-                const vertical = obj.y - c.toWorldY(e.clientY);
-                const horizontal = obj.x - c.toWorldX(e.clientX)
-                obj.radius = Math.sqrt(horizontal**2 + vertical**2);
-                obj.localHandleAngle = Math.atan2(-vertical, -horizontal);
-                console.log(obj.localHandleAngle);
+            if (obj instanceof CanvasSound) {
+                // If a local sound handle was grabbed, resize the local sound.
+                if (obj.soundType == R.SoundType.Local &&obj.handle == R.Handle.Radius) {
+                    const vertical = obj.y - c.toWorldY(e.clientY);
+                    const horizontal = obj.x - c.toWorldX(e.clientX)
+                    obj.radius = Math.sqrt(horizontal**2 + vertical**2);
+                    obj.localHandleAngle = Math.atan2(-vertical, -horizontal);
+                    console.log(obj.localHandleAngle);
+                } 
+                // If an area sound handle was grabbed, move the handle & recalculate bounds.
+                else if (obj.soundType == R.SoundType.Area && obj.handle == R.Handle.PolyVertex) {
+                    if (obj.areaCoords.length > obj.areaHandleIndex) {
+                        obj.areaCoords[obj.areaHandleIndex].x = c.toWorldX(e.x);
+                        obj.areaCoords[obj.areaHandleIndex].y = c.toWorldY(e.y);
+                        obj.setBounds();
+                    }
+                }
             }
+
             // If an image handle was grabbed, resize the image.
             else if (obj.handle != R.Handle.None && obj instanceof CanvasImage) {
                 // Resize image with SE corner
