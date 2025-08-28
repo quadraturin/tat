@@ -13,7 +13,7 @@ export type canvasObjectOptions = {
     locked:boolean,
 }
 
-/** The Canvas Object class. */
+/** The base Canvas Object class. */
 export class CanvasObject {
     #x:number = $state(0);
     #y:number = $state(0);
