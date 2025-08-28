@@ -41,3 +41,5 @@ export const SOUNDTYPE_AREA = "area";
  * The default user settings.
  */
 export const defaultUserSettings = new UserSettings;
+
+export const debugWidgets = true;
