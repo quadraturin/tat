@@ -127,7 +127,7 @@ export function canvasMouseMove(e:MouseEvent) {
     const wY = c.toWorldY(e.y);
 
     // Update hover states
-    if (c.canvas) {
+    if (c.canvas && !R.getDragging()) {
         // Reset the hovered object
         R.setHoveredCanvasObject(null);
 
@@ -413,8 +413,10 @@ export function canvasMouseUp(e:MouseEvent) {
     if(!R.getDragging()) {
         // Click on canvasSound
         console.log(o)
-        if (o instanceof CanvasSound && o.soundType == R.SoundType.Area && o.handle == R.Handle.PolyVertex) {
-            console.log("delete vert", o.areaHandleIndex)
+        if (o instanceof CanvasSound && 
+            o.soundType == R.SoundType.Area && 
+            o.areaCoords.length > 3 &&
+            o.handle == R.Handle.PolyVertex) {
             o.removeAreaVertex(o.areaHandleIndex);
         }
         // Selection toggle
