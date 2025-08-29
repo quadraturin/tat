@@ -16,25 +16,26 @@ import { Vector2D } from './util.vectors';
  */
 export async function newSoundFromPath(src:string, x?:number, y?:number) {
     try {
-        // Construct sound options.
+        // Construct canvas sound options.
+        const snd = new Audio(convertFileSrc(src));
         const name = await basename(src);
         let options:canvasSoundOptions = {
-            src: src,
-            x: x? x : Math.random()*100,
-            y: y? y : Math.random()*100,
-            radius: 23,
-            name: name,
-            niceName: name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim(),
-            selected: false,
-            locked: false,
-            soundType: R.SoundType.Area,
-            volume: 1,
-            muted: false,
-            solo: false,
+            areaCoords:[new Vector2D(20,0), new Vector2D(10,20), new Vector2D(80,90), new Vector2D(120,45)],
             editable: true,
             grabbed: false,
             localHandleAngle: 0,
-            areaCoords:[new Vector2D(20,0), new Vector2D(10,20), new Vector2D(80,90), new Vector2D(120,45)]
+            muted: false,
+            name: name,
+            niceName: name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim(),
+            radius: 23,
+            selected: false,
+            solo: false,
+            sound: snd,
+            soundType: R.SoundType.Area,
+            src: src,
+            volume: 1,
+            x: x? x : Math.random()*100,
+            y: y? y : Math.random()*100,
         }
         R.addToSounds(options);
         R.getCanvas().update();

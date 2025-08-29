@@ -4,22 +4,22 @@ import { Vector2D } from "$lib/util.vectors";
 
 /** Canvas Sound options. */
 export type canvasSoundOptions = {
-    src:string,
-    x:number,
-    y:number,
-    radius:number,
+    areaCoords:Vector2D[],
+    editable:boolean,
+    grabbed:boolean,
+    localHandleAngle:number,
+    muted:boolean,
     name:string,
     niceName:string,
-    editable:boolean,
+    radius:number,
     selected:boolean,
-    grabbed:boolean,
-    locked:boolean
+    solo:boolean,
+    sound:HTMLAudioElement,
+    src:string,
     soundType:SoundType,
     volume:number,
-    muted:boolean,
-    solo:boolean,
-    localHandleAngle:number,
-    areaCoords:Vector2D[]
+    x:number,
+    y:number,
 }
 
 /**
@@ -27,17 +27,18 @@ export type canvasSoundOptions = {
  * @extends CanvasObject
  */
 export class CanvasSound extends CanvasObject{
-    #src:string;
+    #areaBounds:[Vector2D,Vector2D];
+    #areaCoords:Vector2D[];
+    #areaHandleIndex:number;
+    #localHandleAngle = 0;
+    #muted:boolean = $state(false);
+    #originalAreaCoords:Vector2D[];
     #radius:number = $state(0);
+    #solo:boolean = $state(false);
+    #src:string;
+    #sound:HTMLAudioElement;
     #soundType:SoundType;
     #volume:number = $state(0);
-    #muted:boolean = $state(false);
-    #solo:boolean = $state(false);
-    #localHandleAngle = 0;
-    #areaCoords:Vector2D[];
-    #areaBounds:[Vector2D,Vector2D];
-    #areaHandleIndex:number;
-    #originalAreaCoords:Vector2D[];
 
     constructor(options:canvasSoundOptions) {
         super({ 
@@ -48,9 +49,9 @@ export class CanvasSound extends CanvasObject{
             editable:options.editable,
             selected:options.selected,
             grabbed:options.grabbed,
-            locked:options.locked
         });
         this.#src = options.src;
+        this.#sound = options.sound;
         this.#radius = options.radius;
         this.#soundType = options.soundType;
         this.#volume = options.volume;
@@ -81,18 +82,15 @@ export class CanvasSound extends CanvasObject{
         else this.#muted = m; 
     }
 
-    /** Get the sound src. @returns The src. */
+    /** Get the sound location. @returns The location. */
     public get src() { return this.#src; }
-    /** Set the sound src. @param src The src. */
+    /** Set the sound location. @param src The location. */
     public set src(src:string) { this.#src = src; }
 
     /** Get whether or not the sound emitter is soloed. @returns True: soloed. False: not soloed. */
     public get solo() { return this.#muted; }
-    /** Set whether or not the sound emitter is soloed. @param s True: soloed. False: not soloed. Null: toggle the soloed state. */
-    public set solo(s:boolean|null) {
-        if (s == null) this.#solo = !this.#solo;
-        else this.#solo = s; 
-    }
+    /** Set whether or not the sound emitter is soloed. @param s True: soloed. False: not soloed. */
+    public set solo(s:boolean) { this.#solo = s; }
 
     /** Get the angle of the local sound handle. @returns The angle. */
     public get localHandleAngle() { return this.#localHandleAngle; }
@@ -143,4 +141,8 @@ export class CanvasSound extends CanvasObject{
 
     public get originalAreaCoords() { return this.#originalAreaCoords; }
     public set originalAreaCoords(coords:Vector2D[]) { this.#originalAreaCoords = coords; }
+
+
+    public get sound() { return this.#sound; }
+    public set sound(snd:HTMLAudioElement) { this.#sound = snd; }
 }

@@ -298,6 +298,35 @@ export function toggleHelpActive() { helpActive = !helpActive; }
 export function getIsHelpActive():boolean { return helpActive; }
 
 
+// ===== PROPORTIONAL IMAGE SCALING =====
+
+/** Whether or not proportional image scaling is currently on. */
+let isProportionalScaleOn = false;
+
+/**
+ * Get if proportional image scaling is active.
+ * @returns Whether or not proportional image scaling is currently on.
+ */
+export function getIsProportionalScaleOn():boolean { return isProportionalScaleOn; };
+
+/**
+ * Set proportional image scaling to on or off.
+ * @param b whether or not proportional image scaling is on.
+ */
+export function setIsProportionalScaleOn(b:boolean) { isProportionalScaleOn = b; };
+
+/** Toggle proportional image scaling. */
+export function toggleProportionalScale(){ isProportionalScaleOn = !isProportionalScaleOn };
+
+
+// ===== DELETE MODE =====
+
+/** Whether or not delete mode is active. */
+let isInDeleteMode = false;
+export function getIsInDeleteMode():boolean { return isInDeleteMode; };
+export function setIsInDeleteMode(b:boolean) {isInDeleteMode = b; };
+
+
 // ===== THEME =====
 
 /** The theme. */
@@ -312,6 +341,10 @@ export function setTheme(themeName:string) {
         }
     }
 }
+
+let imagesHidden = $state(false);
+export function getImagesHidden() { return imagesHidden; }
+export function toggleImagesHidden() { imagesHidden = !imagesHidden; }
 
 
 
@@ -342,32 +375,3 @@ export function setProjectName(p:string) { projectName = p; };
 
 /**  Get the name of the project. @returns the name of the project */
 export function getProjectName():string { return projectName; };
-
-
-// ===== PROPORTIONAL IMAGE SCALING =====
-
-/** Whether or not proportional image scaling is currently on. */
-let isProportionalScaleOn = false;
-
-/**
- * Get if proportional image scaling is active.
- * @returns Whether or not proportional image scaling is currently on.
- */
-export function getIsProportionalScaleOn():boolean { return isProportionalScaleOn; };
-
-/**
- * Set proportional image scaling to on or off.
- * @param b whether or not proportional image scaling is on.
- */
-export function setIsProportionalScaleOn(b:boolean) { isProportionalScaleOn = b; };
-
-/** Toggle proportional image scaling. */
-export function toggleProportionalScale(){ isProportionalScaleOn = !isProportionalScaleOn };
-
-
-// ===== DELETE MODE =====
-
-/** Whether or not delete mode is active. */
-let isInDeleteMode = false;
-export function getIsInDeleteMode():boolean { return isInDeleteMode; };
-export function setIsInDeleteMode(b:boolean) {isInDeleteMode = b; };

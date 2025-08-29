@@ -1,3 +1,4 @@
+/** 2-dimensional vector with X, Y, and magnitude. */
 export class Vector2D {
     x:number;
     y:number;
@@ -5,7 +6,6 @@ export class Vector2D {
         this.x = x;
         this.y = y;
     }
-    magnitude(){
-        return Math.sqrt(this.x**2 + this.y**2);
-    }
+    /** Get the magnitude of the vector. @returns The magnitude of the vector. */
+    magnitude(){ return Math.sqrt(this.x**2 + this.y**2); }
 }

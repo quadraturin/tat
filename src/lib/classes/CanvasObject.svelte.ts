@@ -2,14 +2,13 @@ import { Handle } from "$lib/registry.svelte";
 
 /** Canvas Object options. */
 export type canvasObjectOptions = {
-    x:number,
-    y:number,
+    editable:boolean,
+    grabbed:boolean,
     name:string,
     niceName:string,
-    editable:boolean,
     selected:boolean,
-    grabbed:boolean,
-    locked:boolean,
+    x:number,
+    y:number,
 }
 
 /** The base Canvas Object class. */
@@ -23,7 +22,6 @@ export class CanvasObject {
     #grabbed:boolean = $state(false);
     #grabOffsetX:number = 0;
     #grabOffsetY:number = 0;
-    #locked:boolean = $state(false);
     #handle:Handle = Handle.None;
     #hoverHandle:Handle = Handle.None;
 
@@ -35,7 +33,6 @@ export class CanvasObject {
         this.#editable = options.editable;
         this.#selected = options.selected;
         this.#grabbed = options.grabbed;
-        this.#locked = options.locked;
         this.#handle = Handle.None;
         this.#hoverHandle = Handle.None;
     }
@@ -78,11 +75,6 @@ export class CanvasObject {
     public get grabOffsetX() { return this.#grabOffsetX; }
     /** Get the difference on the Y axis from the object's origin to the mouse. */
     public get grabOffsetY() { return this.#grabOffsetY; }
-
-    /** Get if the object is locked. */
-    public get locked() { return this.#locked; }
-    /** Set if the object is locked. @param l True: lock the object. False: unlock the object. Null: toggle the locked state. */
-    public set locked(l:boolean) { this.#locked = l; }
 
     /** Get if the object is editable. */
     public get editable() { return this.#editable; }

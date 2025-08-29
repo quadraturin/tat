@@ -4,6 +4,7 @@ import { CanvasImage } from "./classes/CanvasImage.svelte";
 import { CanvasSound } from "./classes/CanvasSound.svelte";
 import { Vector2D } from "./util.vectors";
 import { CanvasListener } from "./classes/CanvasListener.svelte";
+import { pointCircleCollision, pointRectCollision, pointPolyCollision } from "./util.collision";
 
 
 /**
@@ -189,7 +190,7 @@ export function canvasMouseMove(e:MouseEvent) {
         }
 
         // If no listener or sounds under cursor, cycle thru images
-        if (R.getHoveredCanvasObject() == null) {
+        if (R.getHoveredCanvasObject() == null && !R.getImagesHidden()) {
             for (let i = R.getImages().length - 1; i >= 0; i--) {
                 const img = R.getImages()[i];
                 // NW handle
@@ -408,7 +409,7 @@ export function canvasMouseUp(e:MouseEvent) {
             o.removeAreaVertex(o.areaHandleIndex);
         }
         // Selection toggle
-        else if (o instanceof CanvasObject && !o.locked) o.selected = !o.selected; 
+        else if (o instanceof CanvasObject && o.editable) o.selected = !o.selected; 
     }
     if (o != null) o.handle = R.Handle.None;
 
@@ -431,52 +432,4 @@ export function canvasMouseUp(e:MouseEvent) {
 
     // Stop dragging
     R.setDragging(false);
-}
-
-/** 
- * Determine if a point is colliding with a circle.
- * @param pX Point X position.
- * @param pY Point Y position.
- * @param cX Circle X position.
- * @param cY Circle Y position.
- * @param cR Circle radius.
- * @returns True: collision. False: no collision.
- */
-function pointCircleCollision(pX:number, pY:number, cX:number, cY:number, cR:number):boolean {
-    if (Math.sqrt((pX-cX)**2 + (pY-cY)**2) <= cR) return true; 
-    else return false;
-}
-
-/** 
- * Determine if a point is colliding with a rectangle.
- * @param pX Point X position.
- * @param pY Point Y position.
- * @param rX Rectangle X position.
- * @param rY Rectangle Y position.
- * @param rW Rectangle width.
- * @param rH Rectangle height.
- * @returns True: collision. False: no collision.
- */
-function pointRectCollision(pX:number, pY:number, rX:number, rY:number, rW:number, rH:number):boolean {
-    if (pX >= rX && pY >= rY && pX <= rX + rW && pY <= rY + rH) return true; 
-    else return false;
-}
-
-
-function pointPolyCollision(pX:number, pY:number, c:Vector2D[]):boolean {
-    let collision = false;
-    for (let i = 0; i < c.length; i++) {
-        let next = i + 1;
-        if (next == c.length) next = 0;
-        
-        const vC = c[i];
-        const vN = c[next];
-
-        if (((vC.y > pY) != (vN.y > pY)) // (point is below the vertex) != (point is above the next vertex) -> only true if between
-            && 
-            (pX < (vN.x - vC.x) * (pY - vC.y) / (vN.y - vC.y) + vC.x) ) { // Jordan curve theorem: horizontal ray
-            collision = !collision;
-        }
-    }
-    return collision;
 }

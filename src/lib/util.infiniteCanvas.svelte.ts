@@ -353,7 +353,7 @@ export class InfiniteCanvas {
     if (this.canvas && this.context) {
       this.context.beginPath();
       if (selected && this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
-      else if (this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cB");
+      else if (this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
       this.context.rect(
         x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
         y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
@@ -512,7 +512,7 @@ export class InfiniteCanvas {
    * @param img The CanvasImage to draw.
    */
   #drawImage(img: CanvasImage): void {
-    if (this.canvas && this.context) {
+    if (this.canvas && this.context && !R.getImagesHidden()) {
       let imgX = this.toWindowX(img.x);
       let imgY = this.toWindowY(img.y);
       let imgW = img.width * this.#scale * this.#z;

@@ -21,21 +21,21 @@ export async function newImageFromPath(src:string, x?:number, y?:number) {
         const name = await basename(src);
 
         let options:canvasImageOptions = {
-            src: src,
-            image: img,
-            x: x? x : Math.random()*100,
-            y: y? y : Math.random()*100,
-            width: img.width,
+            editable: true,
+            grabbed: false,
             height: img.height,
-            originalWidth: img.width,
-            originalHeight: img.height,
-            opacity: 1,
+            image: img,
             name: name,
             niceName: name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim(),
-            editable: true,
+            opacity: 1,
+            originalHeight: img.height,
+            originalWidth: img.width,
             selected: false,
-            grabbed: false,
-            locked: false
+            src: src,
+            width: img.width,
+            x: x? x : Math.random()*100,
+            y: y? y : Math.random()*100,
+            
         }
         R.addToImages(options);
         R.getCanvas().update();
@@ -101,20 +101,19 @@ export async function newImage(options?:canvasImageOptions) {
  */
 export async function duplicateImage(image:CanvasImage) {
     newImage({
-        image:image.image,
-        x:image.x * 1.1,
-        y:image.y * 1.1,
-        width:image.width,
+        editable:image.editable,
+        grabbed:image.grabbed,
         height:image.height,
-        originalWidth:image.originalWidth,
-        originalHeight:image.originalHeight,
+        image:image.image,
         name:image.name,
         niceName:image.niceName,
-        editable:image.editable,
-        src:image.src, 
         opacity:image.opacity,
+        originalHeight:image.originalHeight,
+        originalWidth:image.originalWidth,
         selected:image.selected,
-        grabbed:image.grabbed,
-        locked:image.locked
+        src:image.src, 
+        width:image.width,
+        x:image.x + 20,
+        y:image.y + 20,
     });
 }

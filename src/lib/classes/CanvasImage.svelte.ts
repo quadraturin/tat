@@ -3,21 +3,20 @@ import { CanvasObject } from "./CanvasObject.svelte";
 
 /** Canvas Image options. */
 export type canvasImageOptions = {
-    src:string,
-    image:HTMLImageElement,
-    x:number,
-    y:number,
-    width:number,
+    editable:boolean,
+    grabbed:boolean,
     height:number,
-    originalWidth:number,
-    originalHeight:number,
-    opacity:number,
+    image:HTMLImageElement,
     name:string,
     niceName:string,
-    editable:boolean,
+    opacity:number,
+    originalHeight:number,
+    originalWidth:number,
     selected:boolean,
-    grabbed:boolean,
-    locked:boolean
+    src:string,
+    width:number,
+    x:number,
+    y:number,
 }
 
 /**
@@ -26,31 +25,30 @@ export type canvasImageOptions = {
  */
 export class CanvasImage extends CanvasObject {
     #image:HTMLImageElement;
+    #height:number = $state(0);
+    #originalHeight:number;
+    #originalWidth:number;
+    #opacity:number = $state(1);
     #src:string;
     #width:number = $state(0);
-    #height:number = $state(0);
-    #originalWidth:number;
-    #originalHeight:number;
-    #opacity:number = $state(1);
 
     constructor(options:canvasImageOptions) {
         super({ 
-            x:options.x, 
-            y:options.y, 
+            editable:options.editable,
+            grabbed:options.grabbed,
             name:options.name,
             niceName:options.niceName,
-            editable:options.editable,
             selected:options.selected,
-            grabbed:options.grabbed,
-            locked:options.locked
+            x:options.x, 
+            y:options.y, 
         });
-        this.#image = options.image;
-        this.#src = options.src;
         this.#height = options.height;
-        this.#width = options.width;
-        this.#originalWidth = options.originalWidth;
-        this.#originalHeight = options.originalHeight;
+        this.#image = options.image;
         this.#opacity = options.opacity;
+        this.#originalHeight = options.originalHeight;
+        this.#originalWidth = options.originalWidth;
+        this.#src = options.src;
+        this.#width = options.width;
     }
 
     /** Get the image element. @returns The image element. */

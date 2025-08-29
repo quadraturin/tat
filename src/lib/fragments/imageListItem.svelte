@@ -21,7 +21,7 @@ class={["item image-item", item.selected && "selected", !item.editable && "locke
 
     <!-- Image Name -->
 
-    <button class="item-name" 
+    <button class="item-name" title="{item.niceName}"
     onclick     = {()=>{
         item.selected = !item.selected; }}
     ondblclick  = {()=>{
