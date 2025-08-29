@@ -1,6 +1,5 @@
 import * as R from '$lib/registry.svelte'
 import { ask } from "@tauri-apps/plugin-dialog";
-import type L from 'leaflet'
 import { t } from './util.localization';
 
 /**
@@ -8,15 +7,15 @@ import { t } from './util.localization';
  * @param imageRect the image rectangle to remove.
  * @param removeFromList whether or not to remove the image from the image list.
  */
-export function removeImageByRect(imageRect:L.Rectangle, removeFromList:boolean = true, force:boolean = false) {
-    let imageList = R.getImageList();
+/*export function removeImageByRect(imageRect:L.Rectangle, removeFromList:boolean = true, force:boolean = false) {
+    let imageList = R.getImages();
     for(let i = 0; i < imageList.length; i++) {
         if (imageList[i].rect === imageRect) {
             removeImage(i, removeFromList, force);
             break;
         }
     }
-}
+}*/
 
 /**
  * remove an image from the map, using its position in the image list as an identifier.
@@ -25,7 +24,7 @@ export function removeImageByRect(imageRect:L.Rectangle, removeFromList:boolean 
  * @returns 
  */
 export async function removeImage(id:number, removeFromList:boolean = true, force:boolean = false) {
-    let imageList = R.getImageList();
+    let imageList = R.getImages();
     if (id < imageList.length) {
         if (!force) {
             let unique = true;
@@ -40,8 +39,8 @@ export async function removeImage(id:number, removeFromList:boolean = true, forc
                 if (!approveDelete) return;
             }
         }
-        imageList[id].rect.remove();
-        imageList[id].overlay.remove();
+        //imageList[id].rect.remove();
+        //imageList[id].overlay.remove();
         if(removeFromList) imageList.splice(id, 1);
         R.setProjectDirty();
     }
