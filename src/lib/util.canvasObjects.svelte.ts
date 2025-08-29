@@ -12,23 +12,11 @@ import { CanvasListener } from "./classes/CanvasListener.svelte";
  * @param e Mouse double click event.
  */
 export function canvasDblClick(e:MouseEvent) {
-    const l = R.getListener();
-    const c = R.getCanvas();
-
-    if (pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), l.x, l.y, c.toWorldLength(R.getListenerRadius()))){
-        l.editable = null;
-    } 
-    // Select image
-    else {
-        for (let i = R.getImages().length - 1; i >= 0; i--) {
-            const img = R.getImages()[i];
-            if (!img.locked &&
-                pointRectCollision(c.toWorldX(e.x), c.toWorldY(e.y), img.x, img.y, img.width, img.height)) {
-                img.editable = null;
-                break;
-            }
-        }
-    } 
+    const hov = R.getHoveredCanvasObject()
+    if (hov) { 
+        hov.editable = !R.getHoveredCanvasObject()?.editable;
+        if (!hov.editable) hov.selected = false;
+    }
 }
 
 
