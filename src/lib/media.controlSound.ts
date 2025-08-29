@@ -1,6 +1,6 @@
 import type { CanvasSound } from "./classes/CanvasSound.svelte";
+import { getMasterVolume, setMasterVolume } from "./registry.svelte";
 import { getUserSettings } from "./settings.userSettings.svelte";
-import * as H from 'howler';
 
 /**
  * pause a playing sound or play a paused sound.
@@ -58,7 +58,5 @@ export async function changeMasterVolume(event:WheelEvent) {
     if (getUserSettings().invertVolumeScroll) delta *= -1;
 
     // adjust and clamp volume.
-    H.Howler.volume(H.Howler.volume() + delta * 0.01 * getUserSettings().uiScrollSensitivity);
-    
-    //console.log('changing master volume', H.Howler.volume())
+    setMasterVolume(getMasterVolume() + delta * 0.01 * getUserSettings().uiScrollSensitivity);
 }

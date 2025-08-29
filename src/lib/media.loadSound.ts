@@ -18,6 +18,9 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
     try {
         // Construct canvas sound options.
         const snd = new Audio(convertFileSrc(src));
+        snd.addEventListener("canplaythrough", (e) => {
+            snd.play();
+        })
         const name = await basename(src);
         let options:canvasSoundOptions = {
             areaCoords:[new Vector2D(20,0), new Vector2D(10,20), new Vector2D(80,90), new Vector2D(120,45)],

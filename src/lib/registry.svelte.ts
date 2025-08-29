@@ -209,6 +209,20 @@ export function addToSounds(options:canvasSoundOptions) {
 export enum SoundType {Local="LOCAL", Global="GLOBAL", Area="AREA"};
 
 
+// ##########################
+// ##### SOUND CONTROLS #####
+// ##########################
+
+/** The master volume. */
+let masterVolume = 1;
+export function getMasterVolume() { return masterVolume; }
+export function setMasterVolume(vol:number) {
+    if (vol < 0) vol = 0;
+    else if (vol > 1) vol = 1;
+    masterVolume = vol;
+}
+
+
 // ########################################
 // ##### APPLICATION STATE MANAGEMENT #####
 // ########################################
@@ -341,6 +355,9 @@ export function setTheme(themeName:string) {
         }
     }
 }
+
+
+// ===== IMAGES HIDDEN =====
 
 let imagesHidden = $state(false);
 export function getImagesHidden() { return imagesHidden; }

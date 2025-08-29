@@ -11,7 +11,6 @@
     // Modules
     import * as R from '$lib/registry.svelte';
     import * as S from '$lib/settings.appSettings';
-    import * as H from 'howler';
     import { onMount } from 'svelte'
     import { LogicalSize } from '@tauri-apps/api/window'
     import { getCurrentWindow } from '@tauri-apps/api/window';
@@ -26,7 +25,6 @@
 	import { readFiles } from '$lib/media.readFiles';
     import { removeSelected } from '$lib/media.removeSelected';
 	import { changeMasterVolume } from '$lib/media.controlSound';
-	import { setMapSoundVolumes } from '$lib/media.setMapSoundVolumes';
 
     // UI
 	import { closeAllMenus, toggleAboutMenu, toggleSettingsMenu } from '$lib/ui.menus';
@@ -70,6 +68,7 @@
 
     import { InfiniteCanvas } from '$lib/util.infiniteCanvas.svelte';
 	import { canvasMouseUp, canvasDblClick, canvasMouseDown, canvasMouseMove, canvasWheel } from '$lib/util.canvasObjects.svelte';
+	import { setCanvasSoundVolumes } from '$lib/media.setCanvasSoundVolumes';
 
     /**
      * Variables
@@ -84,7 +83,6 @@
     let projectName = $state("");
     let imageList = $state(R.getImages());
     let soundList = $state(R.getSounds());
-    let masterVolume = $state(H.Howler.volume());
     let sidebarHidden = $state(false);
     let soundsHidden = $state(false);
 
@@ -227,7 +225,6 @@
      */
 
     setInterval(() => {
-        masterVolume = H.Howler.volume();
         isDirty = R.getisProjectDirty();
         projectName = R.getProjectName();
         isAboutMenuOpen = R.getIsAboutMenuOpen();
@@ -235,7 +232,7 @@
         imageList = R.getImages();
         soundList = R.getSounds();
         isHelpActive = R.getIsHelpActive();
-        setMapSoundVolumes();
+        setCanvasSoundVolumes();
         R.getCanvas().panInertia();
         R.getCanvas().update();
     }, 15);
@@ -486,7 +483,7 @@
 
                 <!-- Master Volume -->
                 <div id="master-volume">
-                    <div id="master-volume-bar" style={"height:"+(masterVolume*100)+"%"}></div>
+                    <div id="master-volume-bar" style={"height:"+(R.getMasterVolume()*100)+"%"}></div>
                 </div>
 
                 <!-- Sound List Title -->
