@@ -1,12 +1,9 @@
 <script lang="ts">
-
-    import * as R from '$lib/registry.svelte';
-    import * as S from '$lib/settings.appSettings';
     import { t } from '$lib/util.localization';
 	import { toggleMute, toggleSolo } from '$lib/media.mixSound';
 	import { removeSound } from '$lib/media.removeSound';
 	import { cycleSoundType, duplicateSound, toggleSoundEdit } from '$lib/media.loadSound';
-	import { changeBaseVolume, seekToByClick, togglePause } from '$lib/media.controlSound';
+	import { changeBaseVolume, seekToByClick, togglePause } from '$lib/media.controlMedia';
 	import { help } from '$lib/util.help';
 
 	import IconSoundGlobal from '$lib/icons/iconSoundGlobal.svelte';
@@ -19,23 +16,18 @@
     let {item, i} : {item:CanvasSound, i:number} = $props();
     let soundTrack:any = $state();
     let mousePos = $state({ x: 0, y: 0 });
-    let playing = $state(true);
-    let seek = $state(0)
+    let currentTime = $state(0);
+    let duration = $state(1)
+    let seek = $derived((currentTime/duration * 100));
 
     setInterval(() => {
-        /*if (item.sound) {
-            playing = item.sound.playing() ? true : false;
-            seek = ((item.sound.seek()/item.sound.duration())*100)
-        }*/
+        currentTime = item.sound.currentTime;
+        duration = item.sound.duration == 0 ? 1 : item.sound.duration;
     }, 15);
 </script>
 
 <!-- A Sound Item -->
-<div class="item sound-item" id="sound-item-{i}">
-<!--
-class:selected={R.getIsSelected(item.emitter)}  
-class:locked={R.getIsLocked(item.emitter)}>
--->
+<div class="item sound-item" id="sound-item-{i}" class:selected={item.selected} class:locked={!item.editable}>
 
     <!-- Volume Display -->
     <div class="item-volume" onwheel={(event) =>{ event.preventDefault(); changeBaseVolume(item, event)}}>
@@ -43,47 +35,46 @@ class:locked={R.getIsLocked(item.emitter)}>
     </div>
 
     <!-- Sound Name -->
-<!--
-    <button class="item-name" 
-    onclick     = {()=>{R.toggleSelected(item.emitter)}}
-    ondblclick  = {()=>{if(item.soundType != S.SOUNDTYPE_GLOBAL) toggleSoundEdit(item.emitter);}}
+    <button class="item-name" title="{item.niceName}"
+    onclick     = {()=>{item.selected = !item.selected;}}
+    ondblclick  = {()=>{if(item.soundType != SoundType.Global) item.editable = !item.editable;}}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
     onmouseover = {()=>{
-        if (item.soundType == S.SOUNDTYPE_GLOBAL) {
+        if (item.soundType == SoundType.Global) {
             help(   $t('help.map.soundTypeGlobal'), 
                     $t('help.map.soundItemActions') );
-        } else if (R.getIsSelected(item.emitter)) {
-            if (item.soundType == S.SOUNDTYPE_AREA) 
+        } else if (item.selected) {
+            if (item.soundType == SoundType.Area) 
                 help(   $t('help.map.selected'), 
                         $t('help.map.soundTypeArea'), 
                         $t('help.map.soundItemActions'), 
                         $t('help.map.itemSelectedActions') );
-            else 
+            else if (item.soundType == SoundType.Local)
                 help(   $t('help.map.selected'), 
                         $t('help.map.soundTypeLocal'), 
                         $t('help.map.soundItemActions'), 
                         $t('help.map.itemSelectedActions') );
-        } else if (R.getIsLocked(item.emitter)){
-            if (item.soundType == S.SOUNDTYPE_AREA) 
+        } else if (!item.editable) {
+            if (item.soundType == SoundType.Area) 
                 help(   $t('help.map.locked'), 
                         $t('help.map.soundTypeArea'), 
                         $t('help.map.itemLocked'), 
                         $t('help.map.soundItemActions'), 
                         $t('help.map.itemLockedActions') );
-            else 
+            else if (item.soundType == SoundType.Local)
                 help(   $t('help.map.locked'), 
                         $t('help.map.soundTypeLocal'), 
                         $t('help.map.itemLocked'), 
                         $t('help.map.soundItemActions'), 
                         $t('help.map.itemLockedActions') );
         } else {
-            if (item.soundType == S.SOUNDTYPE_AREA) 
+            if (item.soundType == SoundType.Area) 
                 help(   $t('help.map.soundTypeArea'), 
                         $t('help.map.soundItemActions'), 
                         $t('help.map.itemUnselectedActions') );
-            else 
+            else if (item.soundType == SoundType.Local)
                 help(   $t('help.map.soundTypeLocal'), 
                         $t('help.map.soundItemActions'), 
                         $t('help.map.itemUnselectedActions') );
@@ -91,7 +82,6 @@ class:locked={R.getIsLocked(item.emitter)}>
     }}>
         {item.niceName}
     </button>
--->
 
     <!-- Sound Type Button -->
     <button class="item-button item-type" 
@@ -116,7 +106,7 @@ class:locked={R.getIsLocked(item.emitter)}>
     </button>
 
     <!-- Sound Pause Button -->
-    <button class={["item-button item-pause button-l", !playing && "activated"]}  
+    <button class={["item-button item-pause button-l", !item.sound.paused && "activated"]}  
     onclick     = {()=>togglePause(item)}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
@@ -184,11 +174,10 @@ class:locked={R.getIsLocked(item.emitter)}>
     onmouseover = {()=>{help($t('help.map.soundSeek'))}}>
 
         <!-- Sound Progress Bar -->
-        <!-- 
+        
         {#if item.sound}
             <div class="sound-item-progress-bar" 
-            style={"width: "+seek.toString()+"%"}></div>
+            style={"width: " + seek.toString()+"%"}></div>
         {/if}
-        -->
     </button>
 </div>

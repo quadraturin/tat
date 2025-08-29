@@ -24,7 +24,7 @@
     // Media
 	import { readFiles } from '$lib/media.readFiles';
     import { removeSelected } from '$lib/media.removeSelected';
-	import { changeMasterVolume } from '$lib/media.controlSound';
+	import { changeMasterOpacity, changeMasterVolume } from '$lib/media.controlMedia';
 
     // UI
 	import { closeAllMenus, toggleAboutMenu, toggleSettingsMenu } from '$lib/ui.menus';
@@ -85,6 +85,8 @@
     let soundList = $state(R.getSounds());
     let sidebarHidden = $state(false);
     let soundsHidden = $state(false);
+    let masterVolume = $state(1);
+    let masterOpacity = $state(1);
 
     /**
      * Triggers when keys are pressed. Handles keyboard shortcuts and controls.
@@ -235,6 +237,8 @@
         setCanvasSoundVolumes();
         R.getCanvas().panInertia();
         R.getCanvas().update();
+        masterOpacity = R.getMasterOpacity();
+        masterVolume = R.getMasterVolume();
     }, 15);
 
 </script>
@@ -471,7 +475,7 @@
         <!-- The Sounds Browser -->
         <div id="browser-sounds">
             {#each soundList as item, i }
-                <!-- <SoundListItem item={item} i={i} /> -->
+                <SoundListItem item={item} i={i} />
             {/each}
 
             <!-- Sound List Header -->
@@ -483,7 +487,7 @@
 
                 <!-- Master Volume -->
                 <div id="master-volume">
-                    <div id="master-volume-bar" style={"height:"+(R.getMasterVolume()*100)+"%"}></div>
+                    <div id="master-volume-bar" style={"height:" + (masterVolume * 100) + "%"}></div>
                 </div>
 
                 <!-- Sound List Title -->
@@ -519,10 +523,17 @@
                 <ImageListItem item={item} i={i} />
             {/each}
 
-            <!-- Image List Heading -->
-            <div role="heading" class="browser-heading" aria-level="2"onwheel={(event) => {
-                event.preventDefault();
+
+            <!-- Sound List Header -->
+            <div role="heading" class="browser-heading" aria-level="2" onwheel={(event) => {
+                event.preventDefault(); 
+                changeMasterOpacity(event);
             }}>
+
+                <!-- Master Volume -->
+                <div id="master-opacity">
+                    <div id="master-opacity-bar" style={"height:" + (masterOpacity * 100) + "%"}></div>
+                </div>
 
                 <!-- Image List Title -->
                 <span role="heading" aria-level="3"

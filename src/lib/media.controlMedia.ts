@@ -1,5 +1,5 @@
 import type { CanvasSound } from "./classes/CanvasSound.svelte";
-import { getMasterVolume, setMasterVolume } from "./registry.svelte";
+import { getMasterOpacity, getMasterVolume, setMasterOpacity, setMasterVolume } from "./registry.svelte";
 import { getUserSettings } from "./settings.userSettings.svelte";
 
 /**
@@ -59,4 +59,18 @@ export async function changeMasterVolume(event:WheelEvent) {
 
     // adjust and clamp volume.
     setMasterVolume(getMasterVolume() + delta * 0.01 * getUserSettings().uiScrollSensitivity);
+}
+
+/**
+ * change the master volume of the app based on a mouse wheel scroll.
+ * @param event a mouse wheel event.
+ */
+export async function changeMasterOpacity(event:WheelEvent) {
+    let delta = event.deltaY;
+
+    // invert based on user settings.
+    if (getUserSettings().invertVolumeScroll) delta *= -1;
+
+    // adjust and clamp volume.
+    setMasterOpacity(getMasterOpacity() + delta * 0.01 * getUserSettings().uiScrollSensitivity);
 }

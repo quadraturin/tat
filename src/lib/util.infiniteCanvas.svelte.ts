@@ -526,7 +526,7 @@ export class InfiniteCanvas {
         this.context.scale(1,-1);
         imgY = -this.toWindowY(img.y + img.height);
       }
-      this.context.globalAlpha = img.opacity;
+      this.context.globalAlpha = img.opacity * R.getMasterOpacity();
       this.context.drawImage(img.image, imgX, imgY, imgW, imgH);
       this.context.globalAlpha = 1;
       this.context.restore();

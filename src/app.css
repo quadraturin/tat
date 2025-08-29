@@ -118,7 +118,7 @@ body {
 }
 
 /* c4: List item backgrounds */
-#master-volume, .item-volume { 
+#master-volume, #master-opacity, .item-volume { 
     background-color: var(--c4); 
 }
 
@@ -130,7 +130,7 @@ body {
 #browser-images { 
     color: var(--c5); 
 }
-#master-volume, .item-volume, .item { 
+#master-volume, #master-opacity, .item-volume, .item { 
     border: 1px solid var(--c5); 
 }
 .item-name {
@@ -141,7 +141,7 @@ body {
 .toolbar-button,
 #controls button, 
 #browser .item-button, 
-#master-volume-bar, .volume { 
+#master-volume-bar, #master-opacity-bar, .volume { 
     background-color: var(--c6); 
 }
 .browser-heading-button,
@@ -313,10 +313,6 @@ button:focus {
 }
 #browser::-webkit-scrollbar:horizontal {
     height: 0px;
-}
-#browser-images .browser-heading {
-    margin-left: 12px;
-    margin-bottom: 2px;
 }
 
 .toolbar-button,
@@ -759,7 +755,7 @@ body {
     padding: 0;
     text-align: left;
 }
-#master-volume {
+#master-volume, #master-opacity {
     width: 9px;
     height: 14px;
     display: inline-block;
@@ -768,7 +764,7 @@ body {
     border-radius: 1px;
     margin-bottom: 4px;
 }
-#master-volume-bar {
+#master-volume-bar, #master-opacity-bar {
     width: 100%;
     position: absolute;
     bottom: 0;

@@ -210,7 +210,7 @@ export enum SoundType {Local="LOCAL", Global="GLOBAL", Area="AREA"};
 
 
 // ##########################
-// ##### SOUND CONTROLS #####
+// ##### MEDIA CONTROLS #####
 // ##########################
 
 /** The master volume. */
@@ -220,6 +220,15 @@ export function setMasterVolume(vol:number) {
     if (vol < 0) vol = 0;
     else if (vol > 1) vol = 1;
     masterVolume = vol;
+}
+
+/** The master opacity. */
+let masterOpacity = 1;
+export function getMasterOpacity() { return masterOpacity; }
+export function setMasterOpacity(opacity:number) {
+    if (opacity < 0) opacity = 0;
+    else if (opacity > 1) opacity = 1;
+    masterOpacity = opacity;
 }
 
 
