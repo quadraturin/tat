@@ -402,13 +402,15 @@ export class InfiniteCanvas {
     if (this.canvas && this.context) {
       // Draw the polygon.
       this.#drawPoly(snd.areaCoords, snd.selected);
-      // Draw the handles.
-      for (let i=0; i<snd.areaCoords.length; i++) {
-        const next = i + 1 == snd.areaCoords.length ? 0 : i + 1;
-        this.#drawHandle(snd.areaCoords[i].x, snd.areaCoords[i].y, R.getHandleSize(), snd.selected);
-        const midX = (snd.areaCoords[next].x + snd.areaCoords[i].x)/2;
-        const midY = (snd.areaCoords[next].y + snd.areaCoords[i].y)/2;
-        this.#drawHandle(midX, midY, R.getHandleSize(), snd.selected, false);
+      if (snd.editable) {
+        // Draw the handles.
+        for (let i=0; i<snd.areaCoords.length; i++) {
+          const next = i + 1 == snd.areaCoords.length ? 0 : i + 1;
+          this.#drawHandle(snd.areaCoords[i].x, snd.areaCoords[i].y, R.getHandleSize(), snd.selected);
+          const midX = (snd.areaCoords[next].x + snd.areaCoords[i].x)/2;
+          const midY = (snd.areaCoords[next].y + snd.areaCoords[i].y)/2;
+          this.#drawHandle(midX, midY, R.getHandleSize(), snd.selected, false);
+        }
       }
       if (debugWidgets) {
         // Draw the bounds.
