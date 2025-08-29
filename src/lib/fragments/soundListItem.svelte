@@ -1,4 +1,5 @@
 <script lang="ts">
+
     import * as R from '$lib/registry.svelte';
     import * as S from '$lib/settings.appSettings';
     import { t } from '$lib/util.localization';
@@ -12,26 +13,29 @@
 	import IconSoundLocal from '$lib/icons/iconSoundLocal.svelte';
 	import IconSoundArea from '$lib/icons/iconSoundArea.svelte';
 	import IconSoundPause from '$lib/icons/iconSoundPause.svelte';
-	import type { MapSound } from '$lib/classes/MapSound.svelte';
+	import type { CanvasSound } from '$lib/classes/CanvasSound.svelte';
+	import { SoundType } from '$lib/registry.svelte';
 
-    let {item, i} : {item:MapSound, i:number} = $props();
+    let {item, i} : {item:CanvasSound, i:number} = $props();
     let soundTrack:any = $state();
     let mousePos = $state({ x: 0, y: 0 });
     let playing = $state(true);
     let seek = $state(0)
 
     setInterval(() => {
-        if (item.sound) {
+        /*if (item.sound) {
             playing = item.sound.playing() ? true : false;
             seek = ((item.sound.seek()/item.sound.duration())*100)
-        }
+        }*/
     }, 15);
 </script>
 
 <!-- A Sound Item -->
-<div class="item sound-item" id="sound-item-{i}"
+<div class="item sound-item" id="sound-item-{i}">
+<!--
 class:selected={R.getIsSelected(item.emitter)}  
 class:locked={R.getIsLocked(item.emitter)}>
+-->
 
     <!-- Volume Display -->
     <div class="item-volume" onwheel={(event) =>{ event.preventDefault(); changeBaseVolume(item, event)}}>
@@ -39,6 +43,7 @@ class:locked={R.getIsLocked(item.emitter)}>
     </div>
 
     <!-- Sound Name -->
+<!--
     <button class="item-name" 
     onclick     = {()=>{R.toggleSelected(item.emitter)}}
     ondblclick  = {()=>{if(item.soundType != S.SOUNDTYPE_GLOBAL) toggleSoundEdit(item.emitter);}}
@@ -86,6 +91,7 @@ class:locked={R.getIsLocked(item.emitter)}>
     }}>
         {item.niceName}
     </button>
+-->
 
     <!-- Sound Type Button -->
     <button class="item-button item-type" 
@@ -94,18 +100,18 @@ class:locked={R.getIsLocked(item.emitter)}>
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
     onmouseover = {()=>{
-        if (item.soundType == S.SOUNDTYPE_AREA) 
+        if (item.soundType == SoundType.Area) 
             help(   $t('help.map.soundTypeArea'), 
                     $t('help.map.soundTypeAreaActions') );
-        else if (item.soundType == S.SOUNDTYPE_GLOBAL) 
+        else if (item.soundType == SoundType.Global) 
             help(   $t('help.map.soundTypeGlobal'), 
                     $t('help.map.soundTypeGlobalActions') );
         else 
             help(   $t('help.map.soundTypeLocal'), 
                     $t('help.map.soundTypeLocalActions') );
     }}>
-        {#if item.soundType == S.SOUNDTYPE_AREA}<IconSoundArea/>
-        {:else if item.soundType == S.SOUNDTYPE_GLOBAL}<IconSoundGlobal/>
+        {#if item.soundType == SoundType.Area}<IconSoundArea/>
+        {:else if item.soundType == SoundType.Global}<IconSoundGlobal/>
         {:else}<IconSoundLocal/>{/if}
     </button>
 
@@ -116,7 +122,7 @@ class:locked={R.getIsLocked(item.emitter)}>
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
     onmouseover = {()=>{
-        if(item.sound) item.sound.playing() ? help($t('help.map.soundPause')) : help($t('help.map.soundUnPause'))
+        //if(item.sound) item.sound.playing() ? help($t('help.map.soundPause')) : help($t('help.map.soundUnPause'))
     }}>
         <IconSoundPause/>
     </button>
@@ -178,9 +184,11 @@ class:locked={R.getIsLocked(item.emitter)}>
     onmouseover = {()=>{help($t('help.map.soundSeek'))}}>
 
         <!-- Sound Progress Bar -->
+        <!-- 
         {#if item.sound}
             <div class="sound-item-progress-bar" 
             style={"width: "+seek.toString()+"%"}></div>
         {/if}
+        -->
     </button>
 </div>

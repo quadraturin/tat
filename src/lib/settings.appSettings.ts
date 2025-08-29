@@ -12,15 +12,6 @@ export const projectExt = "tabletopaudio";
 /** The default project name. TODO: move to localization. */
 export const defaultProjectName = "new project";
 
-/** The local sound type. */
-export const SOUNDTYPE_LOCAL = "local";
-
-/** The global sound type. */
-export const SOUNDTYPE_GLOBAL = "global";
-
-/** The area sound type. */
-export const SOUNDTYPE_AREA = "area";
-
 /** The default user settings. */
 export const defaultUserSettings = new UserSettings;
 

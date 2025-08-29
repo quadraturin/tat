@@ -1,12 +1,12 @@
 import * as R from '$lib/registry.svelte';
-import { MapSound } from './classes/MapSound.svelte';
+import type { CanvasSound } from './classes/CanvasSound.svelte';
 
 /**
  * toggle a sound muted/unmuted by index.
  * @param id the id of the sound.
  */
 export async function toggleMute(id:number) {
-    let soundList = R.getSoundList();
+    let soundList = R.getSounds();
     mute(soundList[id], !soundList[id].muted);
 }
 
@@ -15,9 +15,9 @@ export async function toggleMute(id:number) {
  * @param sound the sound to mute.
  * @param toMute whether to mute (true) or unmute (false) the sound.
  */
-async function mute(sound:MapSound, toMute:boolean) {
-    if (sound.sound) sound.sound.mute(toMute)
-    sound.muted = toMute;
+async function mute(sound:CanvasSound, toMute:boolean) {
+    /*if (sound.sound) sound.sound.mute(toMute)
+    sound.muted = toMute;*/
 }
 
 /**
@@ -25,7 +25,7 @@ async function mute(sound:MapSound, toMute:boolean) {
  * @param id the id of the sound.
  */
 export async function toggleSolo(id:number) {
-    let soundList = R.getSoundList();
+    let soundList = R.getSounds();
     solo(soundList[id], !soundList[id].solo);
 }
 
@@ -34,8 +34,8 @@ export async function toggleSolo(id:number) {
  * @param sound the sound to solo or unsolo.
  * @param toSolo whether to solo (true) or unsolo (false).
  */
-async function solo(sound:MapSound, toSolo:boolean) {
-    let soundList = R.getSoundList();
+async function solo(sound:CanvasSound, toSolo:boolean) {
+    /*let soundList = R.getSoundList();
     for (let i=0; i<soundList.length; i++) {
         if (R.getSoundList()[i].sound instanceof Howl) {
             const s:Howl = R.getSoundList()[i].sound as Howl;
@@ -61,5 +61,5 @@ async function solo(sound:MapSound, toSolo:boolean) {
                 R.getSoundList()[i].solo = false;
             }
         }
-    }
+    }*/
 }

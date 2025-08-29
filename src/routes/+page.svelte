@@ -6,23 +6,16 @@
      */
 
     // Styles
-    import 'leaflet/dist/leaflet.css'
-    import 'leaflet-contextmenu/dist/leaflet.contextmenu.css'
     import '../app.css'
 
     // Modules
     import * as R from '$lib/registry.svelte';
     import * as S from '$lib/settings.appSettings';
-    import L from "leaflet";
     import * as H from 'howler';
     import { onMount } from 'svelte'
     import { LogicalSize } from '@tauri-apps/api/window'
     import { getCurrentWindow } from '@tauri-apps/api/window';
 	import { tryQuit } from '$lib/quit';
-
-    // Init
-	import { setupMap } from '$lib/init.setupMap';
-	import { setupListener } from '$lib/init.setupListener';
 
     // Project
 	import { saveProject } from '$lib/project.saveProject';
@@ -89,8 +82,8 @@
     let isSettingsMenuOpen = $state(R.getIsSettingsMenuOpen());
     let isHelpActive = $state(R.getIsHelpActive());
     let projectName = $state("");
-    let imageList = $state(R.getImageList());
-    let soundList = $state(R.getSoundList());
+    let imageList = $state(R.getImages());
+    let soundList = $state(R.getSounds());
     let masterVolume = $state(H.Howler.volume());
     let sidebarHidden = $state(false);
     let imagesHidden = $state(false);
@@ -187,20 +180,9 @@
         titlebarMaximize.addEventListener('click', () => appWindow.toggleMaximize());
         const titlebarClose = document.getElementById('titlebar-close') as HTMLElement;
         titlebarClose.addEventListener('click', () => tryQuit());
-        
-        // Override so circle scaling doesn't break when using L.CRS.Simple map coordinates
-        L.LatLng.prototype.distanceTo = function (currentPostion:L.LatLng) 
-        {
-            var dx = currentPostion.lng - this.lng;
-            var dy = currentPostion.lat - this.lat;
-            return Math.sqrt(dx*dx + dy*dy);
-        }
 
         // Set the default project name
         R.setProjectName(S.defaultProjectName);
-
-        // Set up the map
-        R.setMap(setupMap());
 
         // Set up the listener
         R.setListener();
@@ -251,8 +233,8 @@
         projectName = R.getProjectName();
         isAboutMenuOpen = R.getIsAboutMenuOpen();
         isSettingsMenuOpen = R.getIsSettingsMenuOpen();
-        imageList = R.getImageList();
-        soundList = R.getSoundList();
+        imageList = R.getImages();
+        soundList = R.getSounds();
         isHelpActive = R.getIsHelpActive();
         setMapSoundVolumes();
         R.getCanvas().panInertia();
@@ -493,7 +475,7 @@
         <!-- The Sounds Browser -->
         <div id="browser-sounds">
             {#each soundList as item, i }
-                <SoundListItem item={item} i={i} />
+                <!-- <SoundListItem item={item} i={i} /> -->
             {/each}
 
             <!-- Sound List Header -->
@@ -538,7 +520,7 @@
     {#if imageList.length > 0}
         <div id="browser-images">
             {#each imageList as item, i}
-                <ImageListItem item={item} i={i} />
+                <!-- <ImageListItem item={item} i={i} /> -->
             {/each}
 
             <!-- Image List Heading -->

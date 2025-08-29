@@ -1,19 +1,19 @@
 <script lang="ts">
     import * as R from '$lib/registry.svelte';
 	import { removeImage } from '$lib/media.removeImage';
-	import { duplicateImage, toggleImageEdit } from '$lib/media.loadImage';
+	import { duplicateImage } from '$lib/media.loadImage';
 	import { changeOpacity } from '$lib/media.controlOpacity';
     import { t } from '$lib/util.localization';
 	import { help } from '$lib/util.help';
-	import type { MapImage } from '$lib/classes/MapImage.svelte';
+	import type { CanvasImage } from '$lib/classes/CanvasImage.svelte';
 
-    let {item, i} : {item:MapImage, i:number} = $props();
+    let {item, i} : {item:CanvasImage, i:number} = $props();
 
 </script>
 
 <!-- An Image Item -->
 <div  id="image-item-{i}" role="listitem"
-class={["item image-item", item.selected && "selected", !item.editEnabled && "locked"]}>
+class={["item image-item", item.selected && "selected", !item.editable && "locked"]}>
 
     <!-- Opacity Display -->
     <div class="item-volume" onwheel = {(event) => { event.preventDefault(); changeOpacity(item, event)}}>
@@ -21,6 +21,7 @@ class={["item image-item", item.selected && "selected", !item.editEnabled && "lo
     </div>
 
     <!-- Image Name -->
+<!--
     <button class="item-name" 
     onclick     = {()=>{
         R.toggleSelected(item.rect); 
@@ -49,6 +50,7 @@ class={["item image-item", item.selected && "selected", !item.editEnabled && "lo
     }}>
         {item.niceName}
     </button>
+-->
 
     <!-- Image Add Button -->
     <button class="item-button item-add button-l" title="duplicate image" 

@@ -67,6 +67,16 @@ export class CanvasImage extends CanvasObject {
     /** Set the image width. @param w The width. */
     public set width(w:number) { this.#width = w; }
 
+    /** Get the image opacity. @returns The opacity. */
+    public get opacity() { return this.#opacity; }
+    /** Set the image height. @param h The height. */
+    public set opacity(o:number) { this.#opacity = o; }
+
+    /** Get the image src. @returns The src. */
+    public get src() { return this.#src; }
+    /** Set the image src. @param src The src. */
+    public set src(src:string) { this.#src = src; }
+
     /** Get the image file's original width. @returns The original width. */
     public get originalWidth() { return this.#originalWidth; }
     /** Get the image file's original height. @returns The original height. */

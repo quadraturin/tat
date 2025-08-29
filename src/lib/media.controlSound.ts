@@ -1,4 +1,4 @@
-import type { MapSound } from "./classes/MapSound.svelte";
+import type { CanvasSound } from "./classes/CanvasSound.svelte";
 import { getUserSettings } from "./settings.userSettings.svelte";
 import * as H from 'howler';
 
@@ -6,15 +6,15 @@ import * as H from 'howler';
  * pause a playing sound or play a paused sound.
  * @param sound the sound to pause or play.
  */
-export async function togglePause(sound:MapSound) {
-    if (sound.sound){
+export async function togglePause(sound:CanvasSound) {
+    /*if (sound.sound){
         if (sound.sound.playing()) {
             sound.sound.pause();
         }
         else {
             sound.sound.play();
         }
-    }
+    }*/
 }
 
 /**
@@ -22,12 +22,12 @@ export async function togglePause(sound:MapSound) {
  * @param sound the sound to seek.
  * @param mouseX the mouse's x position.
  */
-export async function seekToByClick(sound:MapSound, mouseX:number) {
-    if (sound.sound) {
+export async function seekToByClick(sound:CanvasSound, mouseX:number) {
+    /*if (sound.sound) {
         let pct = (mouseX-24)/192; // 18px from left edge of screen, 170px wide
         let pos = sound.sound.duration() * pct;
         sound.sound.seek(pos);
-    }
+    }*/
 }
 
 /**
@@ -35,7 +35,7 @@ export async function seekToByClick(sound:MapSound, mouseX:number) {
  * @param sound the sound to change the base volume of.
  * @param event a mouse wheel event.
  */
-export async function changeBaseVolume(sound:MapSound, event:WheelEvent) {
+export async function changeBaseVolume(sound:CanvasSound, event:WheelEvent) {
     let delta = event.deltaY;
 
     // invert based on user settings.

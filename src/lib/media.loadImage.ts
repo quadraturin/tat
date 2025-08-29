@@ -1,14 +1,11 @@
 import * as R from '$lib/registry.svelte'
 import { readFile } from "@tauri-apps/plugin-fs";
 import { basename, extname } from '@tauri-apps/api/path';
-import { removeImageByRect } from './media.removeImage';
 import { updateLoadingModal } from './ui.modals';
-import type { MapImage } from './classes/MapImage.svelte';
-import { getRandomPointInViewport } from './util.getRandomPointInViewport';
 import { help } from './util.help';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { t } from '$lib/util.localization';
-import type { canvasImageOptions } from './classes/CanvasImage.svelte';
+import type { CanvasImage, canvasImageOptions } from './classes/CanvasImage.svelte';
 
 /**
  * Create a new image in the project.
@@ -106,18 +103,6 @@ export async function newImage(options?:canvasImageOptions) {
  * duplicate an image on the map.
  * @param image the image to duplicate.
  */
-export async function duplicateImage(image:MapImage) {
+export async function duplicateImage(image:CanvasImage) {
     //newImage({src:image.src, opacity:image.opacity});
-}
-
-/**
- * set/unset editability of an image rectangle. called when double-clicking.
- * @param imageRect the edit rectangle to toggle.
- */
-export function toggleImageEdit(imageRect:L.Rectangle|undefined) {
-    if (!imageRect) return;
-    if (imageRect.editEnabled()) imageRect.setStyle({opacity:0});
-    else imageRect.setStyle({opacity:1});
-    imageRect.toggleEdit();
-    if (R.getIsSelected(imageRect)) R.removeFromSelection(imageRect);
 }

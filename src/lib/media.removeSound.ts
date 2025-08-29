@@ -1,6 +1,5 @@
 import * as R from '$lib/registry.svelte'
 import { ask } from "@tauri-apps/plugin-dialog";
-import type L from 'leaflet'
 import { t } from './util.localization';
 
 /**
@@ -10,16 +9,16 @@ import { t } from './util.localization';
  * @param force whether or not to bypass dialogs while removing.
  * @returns 
  */
-export async function removeSoundbyEmitter(emitter:L.Circle|L.Polygon|undefined, removeFromList:boolean = true, force:boolean=false) {
+/*export async function removeSoundbyEmitter(emitter:L.Circle|L.Polygon|undefined, removeFromList:boolean = true, force:boolean=false) {
     if (typeof emitter == "undefined") return;
-    let soundList = R.getSoundList();
+    let soundList = R.getSounds();
     for(let i = 0; i < soundList.length; i++) {
         if (soundList[i].emitter === emitter) {
             await removeSound(i, removeFromList, force);
             break;
         }
     }
-}
+}*/
 
 /**
  * remove a sound from the map, using its sort order as an identifier.
@@ -29,7 +28,7 @@ export async function removeSoundbyEmitter(emitter:L.Circle|L.Polygon|undefined,
  * @returns 
  */
 export async function removeSound(id:number, removeFromList:boolean = true, force:boolean = false) {
-    let soundList = R.getSoundList();
+    let soundList = R.getSounds();
     if (id < soundList.length) {
         if (!force) {
             let unique = true;
@@ -45,8 +44,8 @@ export async function removeSound(id:number, removeFromList:boolean = true, forc
             }
         }
         let soundToRemove = soundList[id];
-        if(soundToRemove.sound) soundToRemove.sound.stop();
-        if (typeof soundToRemove.emitter != "undefined") soundToRemove.emitter.remove();
+        //if(soundToRemove.sound) soundToRemove.sound.stop();
+        //if (typeof soundToRemove.emitter != "undefined") soundToRemove.emitter.remove();
         if(removeFromList) soundList.splice(id, 1);
         R.setProjectDirty();
     }

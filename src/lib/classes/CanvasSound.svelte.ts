@@ -83,6 +83,11 @@ export class CanvasSound extends CanvasObject{
         else this.#muted = m; 
     }
 
+    /** Get the sound src. @returns The src. */
+    public get src() { return this.#src; }
+    /** Set the sound src. @param src The src. */
+    public set src(src:string) { this.#src = src; }
+
     /** Get whether or not the sound emitter is soloed. @returns True: soloed. False: not soloed. */
     public get solo() { return this.#muted; }
     /** Set whether or not the sound emitter is soloed. @param s True: soloed. False: not soloed. Null: toggle the soloed state. */

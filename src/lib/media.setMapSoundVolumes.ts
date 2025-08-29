@@ -1,13 +1,10 @@
 import * as R from "$lib/registry.svelte"
-import L from "leaflet";
-import * as T from '@turf/turf'
-import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from "./settings.appSettings";
 
 /**
  * set all sound volumes on the map. gets called repeatedly while the app is open.
  */
 export function setMapSoundVolumes(){
-
+/*
     // cycle through each sound, checking sound type.
     const listener = R.getListener();
     R.getSoundList().forEach(e => {
@@ -55,5 +52,5 @@ export function setMapSoundVolumes(){
                 });
             }
         }
-    })
+    })*/
 }

@@ -1,13 +1,12 @@
 import * as R from '$lib/registry.svelte';
-import L from 'leaflet';
 import { message, save } from "@tauri-apps/plugin-dialog";
 import { mkdir, writeTextFile, exists, readDir, remove, copyFile } from "@tauri-apps/plugin-fs";
 import { join, basename, sep } from "@tauri-apps/api/path";
-import type { MapImage } from './classes/MapImage.svelte';
-import type { MapSound } from './classes/MapSound.svelte';
 import { closeAllMenus } from './ui.menus';
 import { closeModal, openSavingModal } from './ui.modals';
 import { t } from './util.localization';
+import type { CanvasImage } from './classes/CanvasImage.svelte';
+import type { CanvasSound } from './classes/CanvasSound.svelte';
 
 
 /**
@@ -19,8 +18,8 @@ export async function saveProject(saveAs=false): Promise<boolean>
 {
     await closeAllMenus();
 
-    const imageList = R.getImageList();
-    const soundList = R.getSoundList();
+    const imageList = R.getImages();
+    const soundList = R.getSounds();
     let filePath: string | null = "";
 
     // main project object
@@ -61,8 +60,8 @@ export async function saveProject(saveAs=false): Promise<boolean>
     await mkdir(await join(filePath, 'images'), { recursive: true });
 
     // cycle through loaded images, adding each to the project object
-    let i = 0;
-    imageList.forEach(e => {
+    let i = 0; 
+    /*imageList.forEach(e => {
         project.maps[0].images[i] = {
             src: e.name,
             x: e.overlay.getBounds().getWest(),
@@ -77,11 +76,11 @@ export async function saveProject(saveAs=false): Promise<boolean>
         }
         promises.push(writeImageFile(e, filePath as string));
         i++;
-    });
+    });*/
 
     // cycle through loaded sounds, adding each to the project object
     i = 0;
-    soundList.forEach(e => {
+    /*soundList.forEach(e => {
         if (e.sound) project.maps[0].sounds[i] = {
             src: e.name,
             soundType: e.soundType,
@@ -106,7 +105,7 @@ export async function saveProject(saveAs=false): Promise<boolean>
 
         promises.push(writeSoundFile(e, filePath as string));
         i++;
-    });
+    });*/
 
     // write the project JSON
     promises.push(writeTextFile(await join(filePath, 'project.json'), JSON.stringify(project)));
@@ -135,7 +134,7 @@ export async function saveProject(saveAs=false): Promise<boolean>
  * @param e the map image to write.
  * @param filePath the project folder.
  */
-async function writeImageFile(e:MapImage, filePath:string) {
+async function writeImageFile(e:CanvasImage, filePath:string) {
     const fullPath = await join(filePath, 'images', await basename(e.src));
     if (!await exists(fullPath)) copyFile(e.src, fullPath);
 }
@@ -145,7 +144,7 @@ async function writeImageFile(e:MapImage, filePath:string) {
  * @param e the map sound to write.
  * @param filePath the project folder.
  */
-async function writeSoundFile(e:MapSound, filePath:string) {
+async function writeSoundFile(e:CanvasSound, filePath:string) {
     const fullPath = await join(filePath, 'sounds', await basename(e.src));
     if (!await exists(fullPath)) copyFile(e.src, fullPath);
 }
@@ -156,12 +155,12 @@ async function writeSoundFile(e:MapSound, filePath:string) {
  * @returns 
  */
 async function deleteUnused(fileType:string) {
-    let itemList: MapImage[] | MapSound[] = [];
+    let itemList: CanvasImage[] | CanvasSound[] = [];
     
     if (fileType == "images") {
-        itemList = R.getImageList();
+        itemList = R.getImages();
     } else if (fileType == "sounds") {
-        itemList = R.getSoundList();
+        itemList = R.getSounds();
     }
 
     let path = R.getProjectPath();

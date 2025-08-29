@@ -6,9 +6,7 @@ import * as R from '$lib/registry.svelte'
 import { clearProject } from './project.clearProject';
 import { closeModal, openLoadingModal } from './ui.modals';
 
-/**
- * load a project.
- */
+/** Load a project. */
 export async function loadProject() 
 {
     try 
@@ -92,8 +90,8 @@ export async function loadProject()
             }
 
             // sort the images and sounds
-            R.sortImageList();
-            R.sortSoundList();
+            //R.sortImageList();
+            //R.sortSoundList();
         }
 
         await Promise.allSettled(promises);

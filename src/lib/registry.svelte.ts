@@ -1,16 +1,11 @@
-import L, { Canvas } from "leaflet";
-import { MapImage } from "./classes/MapImage.svelte";
-import { MapSound } from "./classes/MapSound.svelte";
-import type { MapInfo } from "./classes/MapInfo";
 import type * as H from 'howler';
 import { AppTheme } from "./classes/AppTheme.svelte";
 import { getThemesList } from "./settings.theme";
 import { InfiniteCanvas } from "./util.infiniteCanvas.svelte";
-import { CanvasImage } from "./classes/CanvasImage.svelte";
-import type { canvasImageOptions } from "./classes/CanvasImage.svelte";
+import type { CanvasObject } from "./classes/CanvasObject.svelte";
+import { CanvasImage, type canvasImageOptions } from "./classes/CanvasImage.svelte";
 import { CanvasSound, type canvasSoundOptions } from "./classes/CanvasSound.svelte";
 import { CanvasListener } from "./classes/CanvasListener.svelte";
-import type { CanvasObject } from "./classes/CanvasObject.svelte";
 
 
 // ###########################
@@ -142,16 +137,38 @@ export function setOriginalY(y:number) { originalY = y; }
 // #######################################
 
 
-// ===== MAPS =====
+// ===== LISTENER =====
 
-/** The list of maps in the current project. */
-let mapList = new Array<MapInfo>;
+/** The listener. */
+let listener:CanvasListener;
 
-/** Get the map list. @returns The map list. */
-export function getMapList():Array<MapInfo> { return mapList; };
+/** Get the listener. @returns The listener. */
+export function getListener():CanvasListener { return listener; }
 
-/** Set the map list to a new list. @param newMapList The new map list. */
-export function setMapList(newMapList:Array<MapInfo>) { mapList = newMapList; };
+/** Set a new listener. @param newListener The new listener to set. */
+export function setListener() { 
+    listener = new CanvasListener({
+        x: 0,
+        y: 0,
+        order: 0,
+        name: "Listener",
+        niceName: "Listener",
+        editable: true,
+        selected: false,
+        grabbed: false,
+        locked: false,
+        handle: Handle.None
+    }); 
+}
+
+/** The size of the listener's radius. */
+let listenerRadius = 10;
+
+/** Get the listener radius. @returns The radius. */
+export function getListenerRadius() { return listenerRadius; }
+
+/** Set the listener radius. @param newRadius The new radius. */
+export function setListenerRadius(newRadius:number) { listenerRadius = newRadius; }
 
 
 // ===== IMAGES =====
@@ -248,6 +265,58 @@ export function setProjectDirty() { isProjectDirty = true; };
 export function setProjectClean() { isProjectDirty = false; };
 
 
+// ===== MENUS =====
+
+/** Whether or not the about menu is open. */
+let aboutMenuOpen = false;
+
+/** Whether or not the settings menu is open. */
+let settingsMenuOpen = false;
+
+/** Get if the about menu is open. @returns whether or not the about menu is open. */
+export function getIsAboutMenuOpen():boolean { return aboutMenuOpen; }
+
+/** Set whether or not the about menu is open. @param val whether or not the about menu is open. */
+export function setIsAboutMenuOpen(val:boolean) { aboutMenuOpen = val; }
+
+/** Get whether or not the settings menu is open. @returns whether or not the settings menu is open. */
+export function getIsSettingsMenuOpen():boolean { return settingsMenuOpen; }
+
+/** Set whether or not the settings menu is open. @param val whether or not the settings menu is open. */
+export function setIsSettingsMenuOpen(val:boolean) { settingsMenuOpen = val; }
+
+
+// ===== HELP =====
+
+/** Whether or not help is active. */
+let helpActive = true;
+
+/** Toggle whether or not help is active. */
+export function toggleHelpActive() { helpActive = !helpActive; }
+
+/** Get whether or not help is active. @returns whether or not help is active. */
+export function getIsHelpActive():boolean { return helpActive; }
+
+
+// ===== THEME =====
+
+/** The theme. */
+export let activeTheme = $state(new AppTheme());
+
+/** Set the theme. @param themeName The name of the theme to set. */
+export function setTheme(themeName:string) {
+    //console.log('set theme:', themeName);
+    const themesList = getThemesList();
+    for (let i = 0; i < themesList.length; i++) {
+        //console.log(themesList[i].name);
+        if(themeName == themesList[i].name){
+            activeTheme.update(themesList[i]);
+        }
+    }
+}
+
+
+
 // #################################
 // ###### PROJECT INFORMATION ######
 // #################################
@@ -277,446 +346,30 @@ export function setProjectName(p:string) { projectName = p; };
 export function getProjectName():string { return projectName; };
 
 
+// ===== PROPORTIONAL IMAGE SCALING =====
 
-
-
-
-
-// ------------------------------- ^ NEW STUFF ^
-
-/**
- * the map.
- * @todo get rid of this
- */
-let map:L.Map;
-/**
- * get the map.
- * @returns the map.
- */
-export function getMap():L.Map { return map; };
-/**
- * change the map.
- * @param newMap the map to overwrite the old map with.
- */
-export function setMap(newMap:L.Map) { map = newMap; };
-
-
-
-/**
- * the listener.
- * @todo get rid of this
- */
-let listener:CanvasListener;
-let listenerRadius:number = 10;
-/**
- * get the listener.
- * @returns the listener.
- */
-export function getListener():CanvasListener { return listener; }
-/**
- * sets a new listener.
- * @param newListener the new listener to set.
- */
-export function setListener() { 
-    listener = new CanvasListener({
-        x: 0,
-        y: 0,
-        order: 0,
-        name: "Listener",
-        niceName: "Listener",
-        editable: true,
-        selected: false,
-        grabbed: false,
-        locked: false,
-        handle: Handle.None
-    }); 
-}
-export function getListenerRadius() { return listenerRadius; }
-export function setListenerRadius(newRadius:number) { listenerRadius = newRadius; }
-
-
-
-
-/**
- * the list of images.
- * @todo replace this
- */
-let imageList = new Array<MapImage>;
-/**
- * get the image list.
- * @returns the image list.
- * @todo replace this
- */
-export function getImageList():Array<MapImage> { return imageList; };
-/**
- * set the image list.
- * @param newImageList the new image list.
- * @todo replace this
- */
-export function setImageList(newImageList:Array<MapImage>) { imageList = newImageList; };
-/**
- * add an image to the image list.
- * @param data the image file.
- * @param overlay the image overlay.
- * @param rect the image rectangle
- * @param ow the original width of the image.
- * @param oh the origina height of the image.
- * @param opacity the opacity of the image.
- * @param order the stacking order of the image.
- * @todo replace this
- */
-type addToImageListOptions = {
-    src:string,
-    overlay:L.ImageOverlay,
-    rect:L.Rectangle,
-    originalWidth:number,
-    originalHeight:number,
-    opacity:number,
-    order:number,
-    name:string,
-    niceName:string
-}
-export function addToImageList(options:addToImageListOptions) {
-    imageList.push(new MapImage({
-        src:options.src, 
-        overlay:options.overlay, 
-        rect:options.rect, 
-        originalWidth:options.originalWidth, 
-        originalHeight:options.originalHeight, 
-        opacity:options.opacity,
-        order:options.order,
-        name:options.name,
-        niceName:options.niceName
-    }));
-}
-/**
- * move an image to the end of the image list, using its overlay as an identifier.
- * @param overlay the image overlay to move.
- */
-export function moveImageToEndOfList(overlay:L.ImageOverlay) {
-    // moves image to end of list -- required for save/load as order determines stacking
-    for (let i=0; i < imageList.length; i++) {
-        if (imageList[i].overlay == overlay) {
-            imageList.push(imageList.splice(i,1)[0]);
-            break;
-        }
-    }
-}
-/**
- * move an image to the start of the image list, using its index as an identifier.
- * @param i index of the image.
- */
-export function moveImageToStartOfList(i:number) {
-    // moves image to start of list -- required for save/load as order determines stacking
-    imageList.splice(0,0,imageList.splice(i,1)[0]);
-}
-/**
- * sort the image list and stack the images.
- */
-export function sortImageList() {
-    imageList.sort(function(a,b){
-        return a.order-b.order;
-    });
-    for(let image of imageList) {
-        if (image.overlay) image.overlay.bringToFront();
-        if (image.rect) image.rect.bringToFront();
-    }
-}
-
-
-
-
-/**
- * the list of sounds.
- */
-let soundList = new Array<MapSound>;
-/**
- * get the sound list.
- * @returns the sound list.
- */
-export function getSoundList():Array<MapSound> {
-    return soundList;
-};
-/**
- * set the sound list.
- * @param newSoundList the new sound list.
- */
-export function setSoundList(newSoundList:Array<MapSound>) { 
-    soundList = newSoundList; 
-};
-/**
- * the options for adding to the sound list.
- */
-type addToSoundListOptions = {
-    src:string, 
-    sound:H.Howl, 
-    soundType:string, 
-    emitter:L.Circle|L.Polygon|undefined, 
-    volume:number, 
-    muted:boolean, 
-    solo:boolean, 
-    order:number,
-    name:string,
-    niceName:string
-}
-/**
- * add a new map sound to the sound list.
- * @param options the sound list options to set.
- */
-export function addToSoundList(options:addToSoundListOptions) {
-    soundList.push(new MapSound({
-        src: options.src, 
-        sound:options.sound, 
-        soundType:options.soundType, 
-        emitter:options.emitter, 
-        volume:options.volume, 
-        muted:options.muted, 
-        solo: options.solo, 
-        order: options.order,
-        name: options.name,
-        niceName: options.niceName
-    }));
-}
-/**
- * sort the sound list and stack the sounds.
- */
-export function sortSoundList() {
-    soundList.sort(function(a,b){
-        return a.order-b.order;
-    });
-    for(let sound of soundList) {
-        if(typeof sound.emitter != "undefined") {
-            sound.emitter.bringToFront();
-            sound.emitter.bringToFront();
-        }
-    }
-}
-
-
-
-/**
- * whether or not proportional image scaling is currently on.
- */
+/** Whether or not proportional image scaling is currently on. */
 let isProportionalScaleOn = false;
+
 /**
- * get if proportional image scaling is active.
- * @returns whether or not proportional image scaling is currently on.
+ * Get if proportional image scaling is active.
+ * @returns Whether or not proportional image scaling is currently on.
  */
 export function getIsProportionalScaleOn():boolean { return isProportionalScaleOn; };
+
 /**
- * set proportional image scaling to on or off.
+ * Set proportional image scaling to on or off.
  * @param b whether or not proportional image scaling is on.
  */
 export function setIsProportionalScaleOn(b:boolean) { isProportionalScaleOn = b; };
-/**
- * toggle proportional image scaling.
- */
+
+/** Toggle proportional image scaling. */
 export function toggleProportionalScale(){ isProportionalScaleOn = !isProportionalScaleOn };
 
 
+// ===== DELETE MODE =====
 
-/**
- * whether or not delete mode is active.
- */
+/** Whether or not delete mode is active. */
 let isInDeleteMode = false;
 export function getIsInDeleteMode():boolean { return isInDeleteMode; };
 export function setIsInDeleteMode(b:boolean) {isInDeleteMode = b; };
-
-
-
-/**
- * the image drag offset.
- */
-let dragOffset = L.latLng(0,0);
-/**
- * add to the image drag offset.
- * @param x the longitude to add to the image drag offset.
- * @param y the latitude to add to the image drag offset.
- * @returns the offset.
- */
-export function addToDragOffset(x:number, y:number):L.LatLng {
-    dragOffset.lat += y;
-    dragOffset.lng += x;
-    return dragOffset;
-}
-/**
- * reset the image drag offset.
- */
-export function resetDragOffset() {
-    dragOffset.lat = 0;
-    dragOffset.lng = 0;
-}
-
-
-
-/**
- * the image offset from origin.
- */
-let imageOffsetFromOrigin = L.latLng(0,0);
-/**
- * set the image offset from origin.
- * @param imageLatLng the image offset from origin.
- */
-export function setImageOffset(imageLatLng:L.LatLng):void {
-    imageOffsetFromOrigin = imageLatLng;
-    //console.log("offset", imageOffsetFromOrigin);
-}
-/**
- * get the image offset from origin.
- * @returns the image offset from origin.
- */
-export function getImageOffset():L.LatLng {
-    return imageOffsetFromOrigin;
-}
-
-
-
-/**
- * the list of selected map objects.
- */
-let selected = new Array<L.Rectangle|L.Circle|L.Polygon>;
-/**
- * add a map object to the selection.
- * @param item the map object to add to the selection.
- */
-export function addToSelection(item:L.Rectangle|L.Circle|L.Polygon) {
-    selected.push(item);
-    item.getElement()?.classList.toggle("selected");
-}
-/**
- * remove a map object from the selection.
- * @param item the map object to remove from the selection.
- */
-export function removeFromSelection(item:L.Rectangle|L.Circle|L.Polygon) {
-    for (let i=0;i<selected.length;i++) {
-        if (item === selected[i]) {
-            selected.splice(i,1);
-            break;
-        }
-    }
-    item.getElement()?.classList.toggle("selected");
-}
-/**
- * check if a map object is selected.
- * @param item the map object to check.
- * @returns whether or not the map object is selected.
- */
-export function getIsSelected(item:L.Rectangle|L.Circle|L.Polygon|undefined):boolean {
-    if (typeof item == "undefined") return false;
-    for (let i=0;i<selected.length;i++) {
-        if (item === selected[i]) {
-            return true;
-        }
-    }
-    return false;
-}
-/**
- * get the list of selected map objects.
- * @returns the list of selected map objects.
- */
-export function getSelectedList():Array<L.Rectangle|L.Circle|L.Polygon> {
-    return selected;
-}
-/**
- * toggle if a map object is selected.
- * @param item the map object to toggle.
- * @returns 
- */
-export function toggleSelected(item:L.Rectangle|L.Circle|L.Polygon|undefined) {
-    if (typeof item == "undefined") return;
-    if (!item.editEnabled()) return;
-    if (getIsSelected(item)) {
-        removeFromSelection(item);
-    } else {
-        addToSelection(item);
-    }
-}
-
-
-
-/**
- * get whether or not a map object is locked.
- * @param item the map object to check.
- * @returns whether or not the map object is locked.
- */
-export function getIsLocked (item:L.Rectangle|L.Circle|L.Polygon|undefined):boolean {
-    if (typeof item == "undefined") return true;
-    return !item.editEnabled();
-}
-
-
-
-/**
- * whether or not the about menu is open.
- */
-let aboutMenuOpen = false;
-/**
- * whether or not the settings menu is open.
- */
-let settingsMenuOpen = false;
-/**
- * get if the about menu is open.
- * @returns whether or not the about menu is open.
- */
-export function getIsAboutMenuOpen():boolean {
-    return aboutMenuOpen;
-}
-/**
- * set whether or not the about menu is open.
- * @param val whether or not the about menu is open.
- */
-export function setIsAboutMenuOpen(val:boolean) {
-    aboutMenuOpen = val;
-}
-/**
- * get whether or not the settings menu is open.
- * @returns whether or not the settings menu is open.
- */
-export function getIsSettingsMenuOpen():boolean {
-    return settingsMenuOpen;
-}
-/**
- * set whether or not the settings menu is open.
- * @param val whether or not the settings menu is open.
- */
-export function setIsSettingsMenuOpen(val:boolean) {
-    settingsMenuOpen = val;
-}
-
-
-
-/**
- * whether or not help is active.
- */
-let helpActive = true;
-/**
- * toggle whether or not help is active.
- */
-export function toggleHelpActive() {
-    helpActive = !helpActive;
-}
-/**
- * get whether or not help is active.
- * @returns whether or not help is active.
- */
-export function getIsHelpActive():boolean {
-    return helpActive;
-}
-
-
-
-/**
- * The theme.
- */
-export let activeTheme = $state(new AppTheme());
-
-export function setTheme(themeName:string) {
-    //console.log('set theme:', themeName);
-    const themesList = getThemesList();
-    for (let i = 0; i < themesList.length; i++) {
-        //console.log(themesList[i].name);
-        if(themeName == themesList[i].name){
-            activeTheme.update(themesList[i]);
-        }
-    }
-}

@@ -113,4 +113,14 @@ export class CanvasObject {
         if (h == null) this.#handle = this.#hoverHandle;
         else this.#handle = h;
     }
+
+    /** Get the name of the object. @returns The name. */
+    public get name() { return this.#name; }
+    /** Set the name of the object. @param newName The new name. */
+    public set name(newName:string) { this.#name = newName; }
+
+    /** Get the cleaned up name of the object. @returns The name. */
+    public get niceName() { return this.#niceName; }
+    /** Set the cleaned up name of the object. @param newName The new name. */
+    public set niceName(newName:string) { this.#niceName = newName; }
 }

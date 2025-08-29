@@ -1,9 +1,7 @@
 import * as R from "$lib/registry.svelte"
 import * as S from "$lib/settings.appSettings"
-import { removeImageByRect } from "./media.removeImage";
-import { removeSoundbyEmitter } from "./media.removeSound";
-import type { MapSound } from "./classes/MapSound.svelte";
-import type { MapImage } from "./classes/MapImage.svelte";
+import type { CanvasImage } from "./classes/CanvasImage.svelte";
+import type { CanvasSound } from "./classes/CanvasSound.svelte";
 import { shouldSaveProject } from "./project.shouldSaveProject";
 import { closeAllMenus } from "./ui.menus";
 
@@ -19,11 +17,11 @@ export async function clearProject():Promise<boolean> {
         // if they don't want to, back out.
         if (!await shouldSaveProject()) return false;
 
-        R.getImageList().forEach(e => { removeImageByRect(e.rect, false, true); });
-        R.setImageList(new Array<MapImage>);
+        R.getImages().forEach(e => { /*removeImageByRect(e.rect, false, true);*/ });
+        R.setImages(new Array<CanvasImage>);
 
-        R.getSoundList().forEach(e => { removeSoundbyEmitter(e.emitter, false, true); });
-        R.setSoundList(new Array<MapSound>);
+        R.getSounds().forEach(e => { /*removeSoundbyEmitter(e.emitter, false, true);*/ });
+        R.setSounds(new Array<CanvasSound>);
 
         R.setProjectPath('');
         R.setProjectClean();

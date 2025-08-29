@@ -1,14 +1,10 @@
 import * as R from '$lib/registry.svelte';
-import { getRandomPointInViewport } from "./util.getRandomPointInViewport";
-import { removeSoundbyEmitter } from './media.removeSound';
 import { updateLoadingModal } from './ui.modals';
-import type { MapSound } from './classes/MapSound.svelte';
-import { SOUNDTYPE_AREA, SOUNDTYPE_GLOBAL, SOUNDTYPE_LOCAL } from './settings.appSettings';
 import { help } from './util.help';
 import { basename } from '@tauri-apps/api/path';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { t, locales, locale } from '$lib/util.localization';
-import type { canvasSoundOptions } from './classes/CanvasSound.svelte';
+import type { CanvasSound, canvasSoundOptions } from './classes/CanvasSound.svelte';
 import { Vector2D } from './util.vectors';
 
 
@@ -54,7 +50,7 @@ export async function toggleSoundEdit(sound:any){}
  * duplicate a map sound.
  * @param sound the map sound to duplicate.
  */
-export async function duplicateSound(sound:MapSound) {
+export async function duplicateSound(sound:CanvasSound) {
     /*newSound({
         src: sound.src,
         soundType: sound.soundType,
@@ -68,7 +64,7 @@ export async function duplicateSound(sound:MapSound) {
  * cycle a map sound between the 3 types (area, global, local).
  * @param sound map sound to change.
  */
-export async function cycleSoundType(sound:MapSound) {
+export async function cycleSoundType(sound:CanvasSound) {
     /*if (sound.sound) {
         if (sound.soundType == SOUNDTYPE_AREA) {
             sound.soundType = SOUNDTYPE_GLOBAL;
