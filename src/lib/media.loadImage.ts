@@ -52,8 +52,7 @@ export async function newImage(options?:canvasImageOptions) {
     try {
         // Load defaults, overwrite with options.
         let o = Object.assign({
-            opacity: 1,
-            locked: false
+            opacity: 1
         }, options);
 
         // Generate a nice name for the image based on the filename.

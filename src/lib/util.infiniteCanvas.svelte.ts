@@ -242,7 +242,7 @@ export class InfiniteCanvas {
       this.#drawGrid(false, true, true, 1, 0.1);
 
       // Next, draw test shapes. TODO: remove this.
-      this.#drawTests();
+      //this.#drawTests();
 
       if (!R.getImagesHidden()) {
         // Next, cycle through all images and draw them.
@@ -254,8 +254,8 @@ export class InfiniteCanvas {
       if (!R.getSoundsHidden()) {
         // Next, cycle through all audio emitters and draw them.
         for (let i = 0; i < R.getSounds().length; i++) {
-          //this.#drawLocalSound(R.getSounds()[i]);
-          this.#drawAreaSound(R.getSounds()[i]);
+          if (R.getSounds()[i].soundType == R.SoundType.Area) this.#drawAreaSound(R.getSounds()[i]);
+          else if (R.getSounds()[i].soundType == R.SoundType.Local) this.#drawLocalSound(R.getSounds()[i]);
         }
       }
 
@@ -403,11 +403,13 @@ export class InfiniteCanvas {
     if (this.canvas && this.context) {
       this.#drawCircle(snd.x, snd.y, snd.radius);
       this.#drawHandle(snd.x, snd.y, 0.5, null);
-      this.#drawHandle(
-        snd.x + Math.cos(snd.localHandleAngle)*snd.radius, 
-        snd.y + Math.sin(snd.localHandleAngle)*snd.radius, 
-        R.getHandleSize(), 
-        null);
+      if (snd.editable) {
+        this.#drawHandle(
+          snd.x + Math.cos(snd.localHandleAngle)*snd.radius, 
+          snd.y + Math.sin(snd.localHandleAngle)*snd.radius, 
+          R.getHandleSize(), 
+          null);
+      }
     }
   }
 

@@ -60,7 +60,9 @@ export function canvasMouseDown(e:MouseEvent) {
             else {
                 // Canvas sound: if vert, grab it, if edge, create vert & grab it.
                 if (obj instanceof CanvasSound) {
-                    if (obj.hoverHandle == R.Handle.PolyVertex) obj.handle = obj.hoverHandle;
+                    if (obj.hoverHandle == R.Handle.PolyVertex || obj.hoverHandle == R.Handle.Radius){ 
+                        obj.handle = obj.hoverHandle;
+                    }
                     else if (obj.hoverHandle == R.Handle.PolyEdge) {
                         const next = obj.areaHandleIndex == obj.areaCoords.length - 1 ? 0 : obj.areaHandleIndex + 1;
                         obj.addAreaVertex(c.toWorldX(e.x), c.toWorldY(e.y), next);
@@ -253,7 +255,8 @@ export function canvasMouseMove(e:MouseEvent) {
             // If sound handle grabbed.
             if (obj.handle != R.Handle.None && obj instanceof CanvasSound) {
                 // If a local sound handle was grabbed, resize the local sound.
-                if (obj.soundType == R.SoundType.Local &&obj.handle == R.Handle.Radius) {
+                if (obj.soundType == R.SoundType.Local && obj.handle == R.Handle.Radius) {
+                    console.log("resize local")
                     const vertical = obj.y - c.toWorldY(e.clientY);
                     const horizontal = obj.x - c.toWorldX(e.clientX)
                     obj.radius = Math.sqrt(horizontal**2 + vertical**2);

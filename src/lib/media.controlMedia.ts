@@ -2,20 +2,6 @@ import type { CanvasSound } from "./classes/CanvasSound.svelte";
 import { getMasterOpacity, getMasterVolume, setMasterOpacity, setMasterVolume } from "./registry.svelte";
 import { getUserSettings } from "./settings.userSettings.svelte";
 
-/**
- * pause a playing sound or play a paused sound.
- * @param sound the sound to pause or play.
- */
-export async function togglePause(sound:CanvasSound) {
-    /*if (sound.sound){
-        if (sound.sound.playing()) {
-            sound.sound.pause();
-        }
-        else {
-            sound.sound.play();
-        }
-    }*/
-}
 
 /**
  * seek to a location in the sound by clicking on the sound's seek bar.
@@ -23,11 +9,11 @@ export async function togglePause(sound:CanvasSound) {
  * @param mouseX the mouse's x position.
  */
 export async function seekToByClick(sound:CanvasSound, mouseX:number) {
-    /*if (sound.sound) {
+    if (sound.sound) {
         let pct = (mouseX-24)/192; // 18px from left edge of screen, 170px wide
-        let pos = sound.sound.duration() * pct;
-        sound.sound.seek(pos);
-    }*/
+        let pos = sound.sound.duration * pct;
+        sound.sound.currentTime = pos;
+    }
 }
 
 /**

@@ -2,8 +2,8 @@
     import { t } from '$lib/util.localization';
 	import { toggleMute, toggleSolo } from '$lib/media.mixSound';
 	import { removeSound } from '$lib/media.removeSound';
-	import { cycleSoundType, duplicateSound, toggleSoundEdit } from '$lib/media.loadSound';
-	import { changeBaseVolume, seekToByClick, togglePause } from '$lib/media.controlMedia';
+	import { cycleSoundType, duplicateSound } from '$lib/media.loadSound';
+	import { changeBaseVolume, seekToByClick } from '$lib/media.controlMedia';
 	import { help } from '$lib/util.help';
 
 	import IconSoundGlobal from '$lib/icons/iconSoundGlobal.svelte';
@@ -19,10 +19,12 @@
     let currentTime = $state(0);
     let duration = $state(1)
     let seek = $derived((currentTime/duration * 100));
+    let paused = $state(false);
 
     setInterval(() => {
         currentTime = item.sound.currentTime;
         duration = item.sound.duration == 0 ? 1 : item.sound.duration;
+        paused = item.sound.paused;
     }, 15);
 </script>
 
@@ -106,13 +108,13 @@
     </button>
 
     <!-- Sound Pause Button -->
-    <button class={["item-button item-pause button-l", !item.sound.paused && "activated"]}  
-    onclick     = {()=>togglePause(item)}
+    <button class="item-button item-pause button-l" class:activated={paused} 
+    onclick     = {()=>item.sound.paused ? item.sound.play() : item.sound.pause()}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
     onmouseover = {()=>{
-        //if(item.sound) item.sound.playing() ? help($t('help.map.soundPause')) : help($t('help.map.soundUnPause'))
+        !paused ? help($t('help.map.soundPause')) : help($t('help.map.soundUnPause'))
     }}>
         <IconSoundPause/>
     </button>

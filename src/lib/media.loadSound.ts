@@ -20,6 +20,7 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
         const snd = new Audio(convertFileSrc(src));
         snd.addEventListener("canplaythrough", (e) => {
             snd.play();
+            snd.volume = 0;
         })
         const name = await basename(src);
         let options:canvasSoundOptions = {
@@ -34,7 +35,7 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
             selected: false,
             solo: false,
             sound: snd,
-            soundType: R.SoundType.Area,
+            soundType: R.SoundType.Local,
             src: src,
             volume: 1,
             x: x? x : Math.random()*100,
@@ -47,20 +48,67 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
     }
 }
 
-export async function toggleSoundEdit(sound:any){}
+
+/**
+ * create a new image on the canvas.
+ * @param options new image options.
+ */
+export async function newSound(options?:canvasSoundOptions) {
+    try {
+        console.log("dupe sound")
+        // Load defaults, overwrite with options.
+        let o = Object.assign({
+            volume: 1,
+        }, options);
+
+        // Generate a nice name for the image based on the filename.
+        o.name = await basename(o.src);
+        o.niceName = o.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim();
+
+        // Make a sound.
+        const snd = new Audio(convertFileSrc(o.src));
+        snd.addEventListener("canplaythrough", (e) => {
+            snd.play();
+            snd.volume = 0;
+        })
+
+        // Determine the sound origin point coords if they haven't been provided.
+        if (typeof o.x == "undefined") o.x = 0;
+        if (typeof o.y == "undefined") o.y = 0; 
+
+        R.setHasMedia(true);
+        R.setProjectDirty;
+        R.addToSounds(o);
+        R.getCanvas().update();
+    } catch(err) {
+        console.error(err);
+    }
+}
+
 
 /**
  * duplicate a map sound.
  * @param sound the map sound to duplicate.
  */
 export async function duplicateSound(sound:CanvasSound) {
-    /*newSound({
-        src: sound.src,
-        soundType: sound.soundType,
-        volume: sound.volume, 
-        muted: sound.muted, 
-        solo: sound.solo
-    });*/
+    newSound({
+        areaCoords:sound.areaCoords,
+        editable:sound.editable,
+        grabbed:sound.grabbed,
+        localHandleAngle:sound.localHandleAngle,
+        muted:sound.muted,
+        name:sound.name,
+        niceName:sound.niceName,
+        radius:sound.radius,
+        selected:sound.selected,
+        solo:sound.solo,
+        sound:sound.sound,
+        src:sound.src,
+        soundType:sound.soundType,
+        volume:sound.volume,
+        x:sound.x + 20,
+        y:sound.y + 20,
+    });
 }
 
 /**
@@ -68,20 +116,9 @@ export async function duplicateSound(sound:CanvasSound) {
  * @param sound map sound to change.
  */
 export async function cycleSoundType(sound:CanvasSound) {
-    /*if (sound.sound) {
-        if (sound.soundType == SOUNDTYPE_AREA) {
-            sound.soundType = SOUNDTYPE_GLOBAL;
-            await removeSoundbyEmitter(sound.emitter, false, true);
-        } else if (sound.soundType == SOUNDTYPE_GLOBAL) {
-            sound.soundType = SOUNDTYPE_LOCAL;
-            await removeSoundbyEmitter(sound.emitter, false, true);
-            sound.emitter = await createEmitter({soundType:sound.soundType});
-        } else { 
-            // assume local as default
-            sound.soundType = SOUNDTYPE_AREA;
-            await removeSoundbyEmitter(sound.emitter, false, true);
-            sound.emitter = await createEmitter({soundType:sound.soundType});
-        }
-        sound.sound.play();
-    }*/
+    if (sound.sound) {
+        if (sound.soundType == R.SoundType.Area)        sound.soundType = R.SoundType.Global;
+        else if (sound.soundType == R.SoundType.Global) sound.soundType = R.SoundType.Local;
+        else if (sound.soundType == R.SoundType.Local)  sound.soundType = R.SoundType.Area;
+    }
 }

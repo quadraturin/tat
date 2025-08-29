@@ -77,10 +77,7 @@ export class CanvasSound extends CanvasObject{
     /** Get whether or not the sound emitter is muted. @returns True: muted. False: not muted. */
     public get muted() { return this.#muted; }
     /** Set whether or not the sound emitter is muted. @param m True: muted. False: not muted. Null: toggle the muted state. */
-    public set muted(m:boolean|null) {   
-        if (m == null) this.#muted = !this.#muted;
-        else this.#muted = m; 
-    }
+    public set muted(m:boolean) { this.#muted = m; }
 
     /** Get the sound location. @returns The location. */
     public get src() { return this.#src; }
