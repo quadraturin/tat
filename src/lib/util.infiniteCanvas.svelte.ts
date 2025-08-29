@@ -408,7 +408,7 @@ export class InfiniteCanvas {
         this.#drawHandle(snd.areaCoords[i].x, snd.areaCoords[i].y, R.getHandleSize(), snd.selected);
         const midX = (snd.areaCoords[next].x + snd.areaCoords[i].x)/2;
         const midY = (snd.areaCoords[next].y + snd.areaCoords[i].y)/2;
-        this.#drawCircle(midX, midY, R.getHandleSize()/2);
+        this.#drawHandle(midX, midY, R.getHandleSize(), snd.selected, false);
       }
       if (debugWidgets) {
         // Draw the bounds.
@@ -447,8 +447,10 @@ export class InfiniteCanvas {
    * @param x X position of the center of the handle.
    * @param y Y position of the center of the handle.
    * @param r Radius of the handle.
+   * @param selected If the object is selected.
+   * @param fill If the handle should be drawn with a fill. Defaults to fill.
    */
-  #drawHandle(x:number, y:number, r:number, selected:boolean|null): void {
+  #drawHandle(x:number, y:number, r:number, selected:boolean|null, fill?:boolean): void {
     if (this.canvas && this.context) {
       if (selected) { 
         this.context.strokeStyle = this.#widgetSelectedColor;
@@ -463,7 +465,7 @@ export class InfiniteCanvas {
         y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
         r,
         0, 360);
-      this.context.fill();
+      if(typeof fill == "undefined" || fill) this.context.fill();
       this.context.stroke();
     }
   }

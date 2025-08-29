@@ -1,5 +1,5 @@
 import { CanvasObject } from "./CanvasObject.svelte";
-import { getHandleSize, SoundType } from "$lib/registry.svelte";
+import { getCanvas, getHandleSize, getHandleSlop, SoundType } from "$lib/registry.svelte";
 import { Vector2D } from "$lib/util.vectors";
 
 /** Canvas Sound options. */
@@ -38,6 +38,7 @@ export class CanvasSound extends CanvasObject{
     #areaCoords:Vector2D[];
     #areaBounds:[Vector2D,Vector2D];
     #areaHandleIndex:number;
+    #originalAreaCoords:Vector2D[];
 
     constructor(options:canvasSoundOptions) {
         super({ 
@@ -61,6 +62,7 @@ export class CanvasSound extends CanvasObject{
         this.#areaCoords = options.areaCoords;
         this.#areaBounds = this.setBounds();
         this.#areaHandleIndex = 0;
+        this.#originalAreaCoords = options.areaCoords;
     }
 
     /** Get the sound emitter radius. @returns The radius. */
@@ -114,10 +116,10 @@ export class CanvasSound extends CanvasObject{
             if (max.x < c[i].x) max.x = c[i].x;
             if (max.y < c[i].y) max.y = c[i].y;
         }
-        min.x -= getHandleSize()/2;
-        min.y -= getHandleSize()/2;
-        max.x += getHandleSize()/2;
-        max.y += getHandleSize()/2;
+        min.x -= getCanvas().toWorldLength(getHandleSize()*2 + getHandleSlop());
+        min.y -= getCanvas().toWorldLength(getHandleSize()*2 + getHandleSlop());
+        max.x += getCanvas().toWorldLength(getHandleSize()*2 + getHandleSlop());
+        max.y += getCanvas().toWorldLength(getHandleSize()*2 + getHandleSlop());
         return this.#areaBounds = [min, max];
     }
 
@@ -135,4 +137,7 @@ export class CanvasSound extends CanvasObject{
             this.#areaCoords.splice(i, 1);
         }
     }
+
+    public get originalAreaCoords() { return this.#originalAreaCoords; }
+    public set originalAreaCoords(coords:Vector2D[]) { this.#originalAreaCoords = coords; }
 }

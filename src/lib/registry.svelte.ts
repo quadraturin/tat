@@ -106,7 +106,9 @@ export function setPanLastY(n:number) { panLastY = n; }
 // ===== HANDLES =====
 
 let handleSize = 4;
+let handleSlop = 4;
 export function getHandleSize() { return handleSize; }
+export function getHandleSlop() { return handleSlop; }
 
 export enum Handle { None="NONE", NW="NW", NE="NE", SW="SW", SE="SE", Radius="RADIUS", PolyVertex="POLYVERTEX", PolyEdge="POLYEDGE"};
 

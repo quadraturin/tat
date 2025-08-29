@@ -1,5 +1,4 @@
 import { CanvasObject } from "./CanvasObject.svelte";
-import { Handle } from "$lib/registry.svelte";
 
 /** Canvas Image options. */
 export type canvasImageOptions = {
