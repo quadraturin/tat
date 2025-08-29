@@ -2,26 +2,9 @@ import * as R from '$lib/registry.svelte'
 import { ask } from "@tauri-apps/plugin-dialog";
 import { t } from './util.localization';
 
-/**
- * remove a sound from the map, using its emitter as an identifier.
- * @param emitter the emitter to use as an identifier.
- * @param removeFromList whether or not to remove the sound from the sound list.
- * @param force whether or not to bypass dialogs while removing.
- * @returns 
- */
-/*export async function removeSoundbyEmitter(emitter:L.Circle|L.Polygon|undefined, removeFromList:boolean = true, force:boolean=false) {
-    if (typeof emitter == "undefined") return;
-    let soundList = R.getSounds();
-    for(let i = 0; i < soundList.length; i++) {
-        if (soundList[i].emitter === emitter) {
-            await removeSound(i, removeFromList, force);
-            break;
-        }
-    }
-}*/
 
 /**
- * remove a sound from the map, using its sort order as an identifier.
+ * Remove a sound from the map, using its sort order as an identifier.
  * @param id the id of the sound.
  * @param removeFromList whether or not to remvoe the sound from the sound list.
  * @param force whather or not to bypass dialogs while removing.
@@ -44,8 +27,10 @@ export async function removeSound(id:number, removeFromList:boolean = true, forc
             }
         }
         let soundToRemove = soundList[id];
-        //if(soundToRemove.sound) soundToRemove.sound.stop();
-        //if (typeof soundToRemove.emitter != "undefined") soundToRemove.emitter.remove();
+        soundToRemove.sound.pause;
+        soundToRemove.sound.removeAttribute("src");
+        soundToRemove.sound.load();
+
         if(removeFromList) soundList.splice(id, 1);
         R.setProjectDirty();
     }
