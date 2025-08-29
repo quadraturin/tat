@@ -42,4 +42,4 @@ export const SOUNDTYPE_AREA = "area";
  */
 export const defaultUserSettings = new UserSettings;
 
-export const debugWidgets = true;
+export const debugWidgets = false;
