@@ -2,20 +2,6 @@ import * as R from '$lib/registry.svelte'
 import { ask } from "@tauri-apps/plugin-dialog";
 import { t } from './util.localization';
 
-/**
- * remove an image from the map, using its rectangle as an identifier.
- * @param imageRect the image rectangle to remove.
- * @param removeFromList whether or not to remove the image from the image list.
- */
-/*export function removeImageByRect(imageRect:L.Rectangle, removeFromList:boolean = true, force:boolean = false) {
-    let imageList = R.getImages();
-    for(let i = 0; i < imageList.length; i++) {
-        if (imageList[i].rect === imageRect) {
-            removeImage(i, removeFromList, force);
-            break;
-        }
-    }
-}*/
 
 /**
  * remove an image from the map, using its position in the image list as an identifier.
@@ -37,10 +23,10 @@ export async function removeImage(id:number, removeFromList:boolean = true, forc
             if (unique) {
                 let approveDelete = await ask(t.get('dialog.confirmDeleteImage'));
                 if (!approveDelete) return;
+                let imageToRemove = imageList[id];
+                imageToRemove.image.removeAttribute("src");
             }
         }
-        //imageList[id].rect.remove();
-        //imageList[id].overlay.remove();
         if(removeFromList) imageList.splice(id, 1);
         R.setProjectDirty();
     }

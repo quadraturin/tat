@@ -24,13 +24,14 @@ export async function removeSound(id:number, removeFromList:boolean = true, forc
             if (unique) {
                 let approveDelete = await ask(t.get('dialog.confirmDeleteSound'));
                 if (!approveDelete) return;
+                let soundToRemove = soundList[id];
+                soundToRemove.sound.pause;
+                soundToRemove.sound.removeAttribute("src");
+                soundToRemove.sound.load();
             }
         }
-        let soundToRemove = soundList[id];
-        soundToRemove.sound.pause;
-        soundToRemove.sound.removeAttribute("src");
-        soundToRemove.sound.load();
-
+        
+        soundList[id].sound.pause();
         if(removeFromList) soundList.splice(id, 1);
         R.setProjectDirty();
     }
