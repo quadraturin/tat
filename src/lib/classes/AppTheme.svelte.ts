@@ -28,26 +28,26 @@ type appThemeOptions = {
  * App Theme.
  */
 export class AppTheme {
-    name?:string = $state();
-    description?:string = $state();
-    author?:string = $state();
-    c0?:string = $state();
-	c1?:string = $state();
-	c2?:string = $state();
-	c3?:string = $state();
-    c4?:string = $state();
-    c5?:string = $state();
-    c6?:string = $state();
-    c7?:string = $state();
-    c8?:string = $state();
-    c9?:string = $state();
-    cA?:string = $state();
-    cB?:string = $state();
-    cC?:string = $state();
-    cD?:string = $state();
-    cE?:string = $state();
-    cF?:string = $state();
-    f0?:string = $state();
+    name?:string = $state("");
+    description?:string = $state("");
+    author?:string = $state("");
+    c0?:string = $state("");
+	c1?:string = $state("");
+	c2?:string = $state("");
+	c3?:string = $state("");
+    c4?:string = $state("");
+    c5?:string = $state("");
+    c6?:string = $state("");
+    c7?:string = $state("");
+    c8?:string = $state("");
+    c9?:string = $state("");
+    cA?:string = $state("");
+    cB?:string = $state("");
+    cC?:string = $state("");
+    cD?:string = $state("");
+    cE?:string = $state("");
+    cF?:string = $state("");
+    f0?:string = $state("");
     constructor(themeJSON?:appThemeOptions) {
         if (themeJSON){ 
             if (themeJSON.name)        this.name =        themeJSON.name;

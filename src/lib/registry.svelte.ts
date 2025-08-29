@@ -305,10 +305,8 @@ export let activeTheme = $state(new AppTheme());
 
 /** Set the theme. @param themeName The name of the theme to set. */
 export function setTheme(themeName:string) {
-    //console.log('set theme:', themeName);
     const themesList = getThemesList();
     for (let i = 0; i < themesList.length; i++) {
-        //console.log(themesList[i].name);
         if(themeName == themesList[i].name){
             activeTheme.update(themesList[i]);
         }

@@ -25,10 +25,12 @@ export class InfiniteCanvas {
   #prevTouch: [Touch | null, Touch | null] = [null, null];
   #velocityX = 0;
   #velocityY = 0;
-  #backgroundColor = "rgba(255, 255, 255, 1)"
-  #gridColor = "rgba(0, 0, 0, 0.1)"
-  #widgetColor = "rgba(246, 102, 186, 1)";
-  #widgetSelectedColor = "rgba(102, 246, 121, 1)";
+
+  #wrap = document.getElementById('themeWrapper');
+  #backgroundColor = R.activeTheme.c0;
+  #gridColor = R.activeTheme.c1;
+  #widgetColor = $state(R.activeTheme.cA);
+  #widgetSelectedColor = $state(R.activeTheme.cB);
 
 
   /**
@@ -226,6 +228,14 @@ export class InfiniteCanvas {
       // Clear the canvas.
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+      if (this.#wrap) {
+        this.context.beginPath();
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c1");
+        this.context.rect(0, 0, this.canvas.width, this.canvas.height);
+        this.context.fill();
+        this.context.closePath();
+      }
+
       // Bottom layer: draw the canvas grid.
       this.#drawGrid(true, false, true, 0.25, 0.1);
       this.#drawGrid(true, true, false, 0.5, 0.1);
@@ -258,7 +268,7 @@ export class InfiniteCanvas {
   #drawGrid(showNumbers: boolean, adaptive:boolean, fade:boolean, gridSize?:number, maxAlpha?:number): void {
     if (this.canvas && this.context) {
       this.context.globalAlpha = 0.2;
-      this.context.strokeStyle = "rgb(0,0,0)";
+      if (this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
       this.context.lineWidth = 1;
       this.context.font = "10px monospace";
       this.context.beginPath();
@@ -277,7 +287,7 @@ export class InfiniteCanvas {
         }
         if (fade) {
           let a = 2*(1-inc/(this.cellSize*gridSize));
-          let alpha = Math.pow(Math.E,(0 - (((a-0.5)**2)) / 0.04));
+          let alpha = Math.pow(Math.E,(0 - (((a)**2)) / 0.04));
           this.context.globalAlpha = Math.min(maxAlpha, alpha);
         } else {
           this.context.globalAlpha = maxAlpha;
@@ -342,8 +352,8 @@ export class InfiniteCanvas {
   #drawRect(x: number, y: number, width: number, height: number, selected:boolean|null) {
     if (this.canvas && this.context) {
       this.context.beginPath();
-      if (selected) this.context.strokeStyle = this.#widgetSelectedColor;
-      else this.context.strokeStyle = this.#widgetColor;
+      if (selected && this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
+      else if (this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cB");
       this.context.rect(
         x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
         y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
@@ -362,8 +372,8 @@ export class InfiniteCanvas {
   #drawPoly(coords:Vector2D[], selected:boolean|null) {
     if (this.canvas && this.context) {
       this.context.beginPath();
-      if (selected) this.context.strokeStyle = this.#widgetSelectedColor;
-      else this.context.strokeStyle = this.#widgetColor;
+      if (selected && this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
+      else if (this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
       this.context.moveTo(
         coords[0].x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z, 
         coords[0].y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z);
@@ -454,12 +464,12 @@ export class InfiniteCanvas {
    */
   #drawHandle(x:number, y:number, r:number, selected:boolean|null, fill?:boolean): void {
     if (this.canvas && this.context) {
-      if (selected) { 
-        this.context.strokeStyle = this.#widgetSelectedColor;
-        this.context.fillStyle = this.#widgetSelectedColor;
-      } else { 
-        this.context.strokeStyle = this.#widgetColor;
-        this.context.fillStyle = this.#widgetColor;
+      if (selected && this.#wrap) { 
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");;
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c2");;
+      } else if (this.#wrap) { 
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");;
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cC");;
       }
       this.context.beginPath();
       this.context.arc(
@@ -481,8 +491,10 @@ export class InfiniteCanvas {
    */
   #drawListener(l:CanvasListener, r: number): void {
     if (this.canvas && this.context) {
-      this.context.strokeStyle = l.selected ? this.#widgetSelectedColor : this.#widgetColor;
-      this.context.fillStyle = this.#widgetColor;
+      if (this.#wrap) {
+        this.context.strokeStyle = l.selected ? this.#wrap.style.getPropertyValue("--c2") : this.#wrap.style.getPropertyValue("--c4");
+        this.context.fillStyle = l.selected ? this.#wrap.style.getPropertyValue("--c2") : this.#wrap.style.getPropertyValue("--c4");
+      }
       this.context.beginPath();
       this.context.arc(
         l.x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
