@@ -4,7 +4,6 @@ import { Handle } from "$lib/registry.svelte";
 export type canvasObjectOptions = {
     x:number,
     y:number,
-    order:number,
     name:string,
     niceName:string,
     editable:boolean,
@@ -17,7 +16,6 @@ export type canvasObjectOptions = {
 export class CanvasObject {
     #x:number = $state(0);
     #y:number = $state(0);
-    #order:number = $state(0);
     #name:string;
     #niceName:string;
     #editable:boolean = $state(true);
@@ -32,7 +30,6 @@ export class CanvasObject {
     constructor(options:canvasObjectOptions) {
         this.#x = options.x;
         this.#y = options.y;
-        this.#order = options.order;
         this.#name = options.name;
         this.#niceName = options.niceName;
         this.#editable = options.editable;
@@ -56,10 +53,7 @@ export class CanvasObject {
     /** Get whether or not the image is selected. @returns True: selected. False: not selected. */
     public get selected() { return this.#selected; }
     /** Set whether or not the image is selected. @param s True: selected. False: not selected. Null: toggle selected state. */
-    public set selected(s:boolean|null) {
-        if(s == null) this.#selected = !this.#selected;
-        else this.#selected = s;
-    }
+    public set selected(s:boolean) { this.#selected = s; }
 
     /** Get whether the object is currently grabbed. */
     public get grabbed() { return this.#grabbed; }
@@ -88,18 +82,12 @@ export class CanvasObject {
     /** Get if the object is locked. */
     public get locked() { return this.#locked; }
     /** Set if the object is locked. @param l True: lock the object. False: unlock the object. Null: toggle the locked state. */
-    public set locked(l:boolean|null) {
-        if(l == null) this.#locked = !this.#locked;
-        else this.#locked = l;
-    }
+    public set locked(l:boolean) { this.#locked = l; }
 
     /** Get if the object is editable. */
     public get editable() { return this.#editable; }
-    /** Set if the object is editable. @param l True: make the object editable. False: make the object not editable. Null: toggle the editable state. */
-    public set editable(enable:boolean|null) {
-        if (enable == null) this.#editable = !this.#editable;
-        else this.#editable = enable;
-    }
+    /** Set if the object is editable. @param l True: make the object editable. False: make the object not editable. */
+    public set editable(enable:boolean) { this.#editable = enable; }
 
     /** Get the edit handle (if any) under the mouse. */
     public get hoverHandle() { return this.#hoverHandle; }
@@ -109,10 +97,7 @@ export class CanvasObject {
     /** Get the active edit handle. */
     public get handle() { return this.#handle; }
     /** Set the active edit handle. @param h The handle to set. If null, sets the current hoverHandle as the active handle. */
-    public set handle(h:Handle|null) {
-        if (h == null) this.#handle = this.#hoverHandle;
-        else this.#handle = h;
-    }
+    public set handle(h:Handle) { this.#handle = h; }
 
     /** Get the name of the object. @returns The name. */
     public get name() { return this.#name; }

@@ -520,7 +520,7 @@
     {#if imageList.length > 0}
         <div id="browser-images">
             {#each imageList as item, i}
-                <!-- <ImageListItem item={item} i={i} /> -->
+                <ImageListItem item={item} i={i} />
             {/each}
 
             <!-- Image List Heading -->

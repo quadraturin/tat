@@ -408,7 +408,7 @@ export function canvasMouseUp(e:MouseEvent) {
             o.removeAreaVertex(o.areaHandleIndex);
         }
         // Selection toggle
-        else if (o instanceof CanvasObject && !o.locked) o.selected = null; 
+        else if (o instanceof CanvasObject && !o.locked) o.selected = !o.selected; 
     }
     if (o != null) o.handle = R.Handle.None;
 

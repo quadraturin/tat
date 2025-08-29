@@ -2,7 +2,6 @@
     import * as R from '$lib/registry.svelte';
 	import { removeImage } from '$lib/media.removeImage';
 	import { duplicateImage } from '$lib/media.loadImage';
-	import { changeOpacity } from '$lib/media.controlOpacity';
     import { t } from '$lib/util.localization';
 	import { help } from '$lib/util.help';
 	import type { CanvasImage } from '$lib/classes/CanvasImage.svelte';
@@ -16,29 +15,27 @@
 class={["item image-item", item.selected && "selected", !item.editable && "locked"]}>
 
     <!-- Opacity Display -->
-    <div class="item-volume" onwheel = {(event) => { event.preventDefault(); changeOpacity(item, event)}}>
+    <div class="item-volume" onwheel = {(event) => { event.preventDefault(); item.changeOpacity(event)}}>
         <div class="volume" style={"height: "+ item.opacity*100 +"%"}></div>
     </div>
 
     <!-- Image Name -->
-<!--
+
     <button class="item-name" 
     onclick     = {()=>{
-        R.toggleSelected(item.rect); 
-        item.selected = R.getIsSelected(item.rect); }}
+        item.selected = !item.selected; }}
     ondblclick  = {()=>{
-        toggleImageEdit(item.rect); 
-        item.editEnabled = item.rect?.editEnabled() as boolean; }}
+        item.editable = !item.editable; }}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
     onmouseover = {()=>{
-        if (R.getIsSelected(item.rect)) 
+        if (item.selected) 
             help($t('help.map.selected'), 
             $t('help.map.image'), 
             $t('help.map.imageItemActions'), 
             $t('help.map.itemSelectedActions'));
-        else if (item.rect && !item.rect.editEnabled()) 
+        else if (!item.editable) 
             help($t('help.map.locked'), 
             $t('help.map.image'), 
             $t('help.map.imageItemActions'), 
@@ -50,7 +47,7 @@ class={["item image-item", item.selected && "selected", !item.editable && "locke
     }}>
         {item.niceName}
     </button>
--->
+
 
     <!-- Image Add Button -->
     <button class="item-button item-add button-l" title="duplicate image" 

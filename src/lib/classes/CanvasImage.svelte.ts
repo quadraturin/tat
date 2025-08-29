@@ -1,3 +1,4 @@
+import { getUserSettings } from "$lib/settings.userSettings.svelte";
 import { CanvasObject } from "./CanvasObject.svelte";
 
 /** Canvas Image options. */
@@ -11,7 +12,6 @@ export type canvasImageOptions = {
     originalWidth:number,
     originalHeight:number,
     opacity:number,
-    order:number,
     name:string,
     niceName:string,
     editable:boolean,
@@ -37,7 +37,6 @@ export class CanvasImage extends CanvasObject {
         super({ 
             x:options.x, 
             y:options.y, 
-            order:options.order,
             name:options.name,
             niceName:options.niceName,
             editable:options.editable,
@@ -81,4 +80,17 @@ export class CanvasImage extends CanvasObject {
     public get originalWidth() { return this.#originalWidth; }
     /** Get the image file's original height. @returns The original height. */
     public get originalHeight() { return this.#originalHeight; }
+
+    public changeOpacity(e:WheelEvent) {
+        try {
+            let delta = e.deltaY;
+            // invert based on user settings.
+            if (getUserSettings().invertVolumeScroll) delta *= -1;
+            this.#opacity += delta * 0.01 * getUserSettings().uiScrollSensitivity;
+            if (this.#opacity < 0) this.#opacity = 0;
+            else if (this.#opacity > 1) this.#opacity = 1;
+        } catch(err) {
+            console.error(err);
+        }
+    }
 }

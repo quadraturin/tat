@@ -8,7 +8,6 @@ export type canvasSoundOptions = {
     x:number,
     y:number,
     radius:number,
-    order:number,
     name:string,
     niceName:string,
     editable:boolean,
@@ -44,7 +43,6 @@ export class CanvasSound extends CanvasObject{
         super({ 
             x:options.x, 
             y:options.y, 
-            order:options.order,
             name:options.name,
             niceName:options.niceName,
             editable:options.editable,

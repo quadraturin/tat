@@ -23,7 +23,6 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
             x: x? x : Math.random()*100,
             y: y? y : Math.random()*100,
             radius: 23,
-            order: 0,
             name: name,
             niceName: name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim(),
             selected: false,

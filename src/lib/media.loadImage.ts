@@ -30,7 +30,6 @@ export async function newImageFromPath(src:string, x?:number, y?:number) {
             originalWidth: img.width,
             originalHeight: img.height,
             opacity: 1,
-            order: 0,
             name: name,
             niceName: name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim(),
             editable: true,
@@ -76,9 +75,6 @@ export async function newImage(options?:canvasImageOptions) {
             if (typeof o.width == "undefined") o.width = originalW;
             if (typeof o.height == "undefined") o.height = originalH;
 
-            // Create image order based on current image list length.
-            if (typeof o.order == "undefined") o.order = R.getImages().length;
-
             // Determine the image origin point coords if they haven't been provided.
             if (typeof o.x == "undefined"){
                 //if (typeof o.lng != "undefined") o.x = o.lng;
@@ -104,5 +100,21 @@ export async function newImage(options?:canvasImageOptions) {
  * @param image the image to duplicate.
  */
 export async function duplicateImage(image:CanvasImage) {
-    //newImage({src:image.src, opacity:image.opacity});
+    newImage({
+        image:image.image,
+        x:image.x * 1.1,
+        y:image.y * 1.1,
+        width:image.width,
+        height:image.height,
+        originalWidth:image.originalWidth,
+        originalHeight:image.originalHeight,
+        name:image.name,
+        niceName:image.niceName,
+        editable:image.editable,
+        src:image.src, 
+        opacity:image.opacity,
+        selected:image.selected,
+        grabbed:image.grabbed,
+        locked:image.locked
+    });
 }
