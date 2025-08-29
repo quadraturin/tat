@@ -244,15 +244,19 @@ export class InfiniteCanvas {
       // Next, draw test shapes. TODO: remove this.
       this.#drawTests();
 
-      // Next, cycle through all images and draw them.
-      for (let i = 0; i < R.getImages().length; i++) {
-        this.#drawImage(R.getImages()[i]);
+      if (!R.getImagesHidden()) {
+        // Next, cycle through all images and draw them.
+        for (let i = 0; i < R.getImages().length; i++) {
+          this.#drawImage(R.getImages()[i]);
+        }
       }
 
-      // Next, cycle through all audio emitters and draw them.
-      for (let i = 0; i < R.getSounds().length; i++) {
-        //this.#drawLocalSound(R.getSounds()[i]);
-        this.#drawAreaSound(R.getSounds()[i]);
+      if (!R.getSoundsHidden()) {
+        // Next, cycle through all audio emitters and draw them.
+        for (let i = 0; i < R.getSounds().length; i++) {
+          //this.#drawLocalSound(R.getSounds()[i]);
+          this.#drawAreaSound(R.getSounds()[i]);
+        }
       }
 
       // Next, draw the audio listener.
@@ -512,7 +516,7 @@ export class InfiniteCanvas {
    * @param img The CanvasImage to draw.
    */
   #drawImage(img: CanvasImage): void {
-    if (this.canvas && this.context && !R.getImagesHidden()) {
+    if (this.canvas && this.context) {
       let imgX = this.toWindowX(img.x);
       let imgY = this.toWindowY(img.y);
       let imgW = img.width * this.#scale * this.#z;

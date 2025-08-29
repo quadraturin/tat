@@ -373,6 +373,13 @@ export function getImagesHidden() { return imagesHidden; }
 export function toggleImagesHidden() { imagesHidden = !imagesHidden; }
 
 
+// ===== SOUNDS HIDDEN =====
+
+let soundsHidden = $state(false);
+export function getSoundsHidden() { return soundsHidden; }
+export function toggleSoundsHidden() { soundsHidden = !soundsHidden; }
+
+
 
 // #################################
 // ###### PROJECT INFORMATION ######

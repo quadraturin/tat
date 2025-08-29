@@ -84,7 +84,6 @@
     let imageList = $state(R.getImages());
     let soundList = $state(R.getSounds());
     let sidebarHidden = $state(false);
-    let soundsHidden = $state(false);
     let masterVolume = $state(1);
     let masterOpacity = $state(1);
 
@@ -400,7 +399,7 @@
 
 <!-- The Map -->
 
-<div id="map-wrapper" class:R.getImagesHidden() class:soundsHidden style="display:none;">
+<div id="map-wrapper" class:R.getImagesHidden() class:R.getSoundsHidden() style="display:none;">
     <div id="map"></div>
 </div>
 
@@ -500,17 +499,17 @@
                 </span>
 
                 <!-- Sound List Show / Hide Toggle -->
-                <button class="browser-heading-button" id="hide-sounds-toggle" class:soundsHidden
+                <button class="browser-heading-button" id="hide-sounds-toggle" class:R.getSoundsHidden()
                 onclick     = {()=>{
-                    soundsHidden = !soundsHidden;
-                    soundsHidden ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))}}
+                    R.toggleSoundsHidden();
+                    R.getSoundsHidden() ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))}}
                 onfocus     = {()=>{}} 
                 onblur      = {()=>{}}
                 onmouseout  = {()=>{help()}}
                 onmouseover = {()=>{
-                    soundsHidden ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))
+                    R.getSoundsHidden() ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))
                 }}>
-                    {#if soundsHidden}<IconEye/>{:else}<IconEyeOff/>{/if}
+                    {#if R.getSoundsHidden()}<IconEye/>{:else}<IconEyeOff/>{/if}
                 </button>
             </div>
         </div>
