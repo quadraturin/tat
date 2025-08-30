@@ -1,49 +1,52 @@
 <script lang="ts">
+    // ###################
+    // ##### IMPORTS #####
+    // ###################
 
-
-    /**
-     * Imports
-     */
-
-    // Styles
+    // ===== Styles =====
     import '../app.css'
 
-    // Modules
+    // ===== Registry =====
     import * as R from '$lib/registry.svelte';
+
+    // ===== Settings =====
     import * as S from '$lib/settings.appSettings';
+    import { getUserSettings } from '$lib/settings.userSettings.svelte'
+	import { loadUserSettings } from '$lib/settings.loadUserSettings';
+
+    // ===== Modules =====
     import { onMount } from 'svelte'
+    import { image } from '@tauri-apps/api';
     import { LogicalSize } from '@tauri-apps/api/window'
     import { getCurrentWindow } from '@tauri-apps/api/window';
 	import { tryQuit } from '$lib/quit';
 
-    // Project
+    // ===== Project =====
 	import { saveProject } from '$lib/project.saveProject';
 	import { loadProject } from '$lib/project.loadProject';
 	import { clearProject } from '$lib/project.clearProject';
 
-    // Media
+    // ===== Media =====
 	import { readFiles } from '$lib/media.readFiles';
     import { removeSelected } from '$lib/media.removeSelected';
 	import { changeMasterOpacity, changeMasterVolume } from '$lib/media.controlMedia';
+	import { setCanvasSoundVolumes } from '$lib/media.setCanvasSoundVolumes';
 
-    // UI
+    // ===== UI =====
 	import { closeAllMenus, toggleAboutMenu, toggleSettingsMenu } from '$lib/ui.menus';
 
-    // Util
+    // ===== Utilities =====
     import { t } from '$lib/util.localization';
 	import { help } from '$lib/util.help';
     import { dragDrop } from '$lib/util.dragDrop';
+	import { canvasMouseUp, canvasDblClick, canvasMouseDown, canvasMouseMove, canvasWheel } from '$lib/util.canvasObjects.svelte';
 
-    // Settings
-    import { getUserSettings } from '$lib/settings.userSettings.svelte'
-	import { loadUserSettings } from '$lib/settings.loadUserSettings';
-
-    // Menus
+    // ===== Menus =====
 	import Loading from '$lib/menus/loading.svelte';
 	import About from '$lib/menus/about.svelte';
 	import Settings from '$lib/menus/settings.svelte';
 
-    // Icons
+    // ===== Icons =====
     import IconLoading from '$lib/icons/iconLoading.svelte';
 	import IconSettings from '$lib/icons/iconSettings.svelte';
 	import IconSave from '$lib/icons/iconSave.svelte';
@@ -64,32 +67,37 @@
 	import IconQuit from '$lib/icons/iconQuit.svelte';
 	import SoundListItem from '$lib/fragments/soundListItem.svelte';
 	import ImageListItem from '$lib/fragments/imageListItem.svelte';
-	import { image } from '@tauri-apps/api';
+	
 
-    import { InfiniteCanvas } from '$lib/util.infiniteCanvas.svelte';
-	import { canvasMouseUp, canvasDblClick, canvasMouseDown, canvasMouseMove, canvasWheel } from '$lib/util.canvasObjects.svelte';
-	import { setCanvasSoundVolumes } from '$lib/media.setCanvasSoundVolumes';
+    // #####################
+    // ##### VARIABLES #####
+    // #####################
 
-    /**
-     * Variables
-     */
-
+    // ===== App Window =====
     const appWindow = getCurrentWindow();
 
+    // ===== App States =====
     let isDirty = $state(R.getisProjectDirty());
     let isAboutMenuOpen = $state(R.getIsAboutMenuOpen());
     let isSettingsMenuOpen = $state(R.getIsSettingsMenuOpen());
     let isHelpActive = $state(R.getIsHelpActive());
+    let sidebarHidden = $state(false);
+
+    // ===== Project States =====
     let projectName = $state("");
     let imageList = $state(R.getImages());
     let soundList = $state(R.getSounds());
-    let sidebarHidden = $state(false);
     let masterVolume = $state(1);
     let masterOpacity = $state(1);
 
+
+    // ##########################
+    // ##### INPUT HANDLING #####
+    // ##########################
+
     /**
      * Triggers when keys are pressed. Handles keyboard shortcuts and controls.
-     * @param e
+     * @param e The keyDown keyboard event.
      */
     function onKeyDown(e:KeyboardEvent) { 
         let speed:number = getUserSettings().listenerMoveSpeed;
@@ -142,8 +150,8 @@
     }
 
     /**
-     * Triggers when keys are released. Used for controlling proportional scale and delete mode.
-     * @param e
+     * Triggers when keys are released. Used for proportional scale and delete mode.
+     * @param e The keyUp keyboard event.
      */
     function onKeyUp(e:KeyboardEvent) {
         if (e.key=="Shift") {
@@ -153,16 +161,32 @@
         else if (e.key == "Alt") R.setIsInDeleteMode(false);
     }
 
-    /**
-     * Show/hide the sidebar.
-     */
+
+    // #####################
+    // ##### INTERFACE #####
+    // #####################
+
+    /** Toggle the sidebar show/hide state. */
     function toggleSidebar() {
         sidebarHidden = !sidebarHidden;
     }
 
     /**
-     * Initialize
+     * Update menu tab visuals
      */
+    $effect(()=>{
+        isAboutMenuOpen ? 
+            document.getElementById("about-button")?.setAttribute('class', 'toolbar-button selected') : 
+            document.getElementById("about-button")?.setAttribute('class', 'toolbar-button');
+        isSettingsMenuOpen ? 
+            document.getElementById("settings-button")?.setAttribute('class', 'toolbar-button selected') : 
+            document.getElementById("settings-button")?.setAttribute('class', 'toolbar-button');
+    });
+
+    // ######################
+    // ##### INITIALIZE #####
+    // ######################
+
     onMount( () => 
     {
         // Set minimum window size
@@ -198,32 +222,13 @@
         document.getElementById("canvas")!.addEventListener("wheel",     (e) => { canvasWheel(e);     });
         document.getElementById("canvas")!.addEventListener("mousedown", (e) => { canvasMouseDown(e); });
         document.getElementById("canvas")!.addEventListener("mousemove", (e) => { canvasMouseMove(e); });
-        document.getElementById("canvas")!.addEventListener("mouseup",   (e) => { canvasMouseUp(e);   });
-
-        // Navigation buttons
-        document.getElementById("zoom-in")!.addEventListener("click",  () => R.getCanvas().zoom(1.05));
-        document.getElementById("zoom-out")!.addEventListener("click", () => R.getCanvas().zoom(0.95));
-        document.getElementById("center-on-listener")!.addEventListener("click", () => {
-            R.getCanvas().flyToPoint(R.getListener().x, R.getListener().y)});
-
-    })
-
-    /**
-     * Update menu tab visuals
-     */
-
-    $effect(()=>{
-        isAboutMenuOpen ? 
-            document.getElementById("about-button")?.setAttribute('class', 'toolbar-button selected') : 
-            document.getElementById("about-button")?.setAttribute('class', 'toolbar-button');
-        isSettingsMenuOpen ? 
-            document.getElementById("settings-button")?.setAttribute('class', 'toolbar-button selected') : 
-            document.getElementById("settings-button")?.setAttribute('class', 'toolbar-button');
+        document.getElementById("canvas")!.addEventListener("mouseup",   (e) => { canvasMouseUp(e);   })
     });
+
     
-    /**
-     * Main update loop
-     */
+    // ############################
+    // ##### MAIN UPDATE LOOP #####
+    // ############################
 
     setInterval(() => {
         isDirty = R.getisProjectDirty();
@@ -233,11 +238,11 @@
         imageList = R.getImages();
         soundList = R.getSounds();
         isHelpActive = R.getIsHelpActive();
+        masterOpacity = R.getMasterOpacity();
+        masterVolume = R.getMasterVolume();
         setCanvasSoundVolumes();
         R.getCanvas().panInertia();
         R.getCanvas().update();
-        masterOpacity = R.getMasterOpacity();
-        masterVolume = R.getMasterVolume();
     }, 15);
 
 </script>
@@ -248,10 +253,7 @@
     ondrag={ondrag}
 />
 
-
-
 <!-- The Window Titlebar -->
-
 <div data-tauri-drag-region class="titlebar" onwheel={(event) => { event.preventDefault() }}>
 
     <!-- Project Name -->
@@ -395,32 +397,18 @@
 </div>
 
 
-
-
-<!-- The Map -->
-
-<div id="map-wrapper" class:R.getImagesHidden() class:R.getSoundsHidden() style="display:none;">
-    <div id="map"></div>
-</div>
-
+<!-- The Infinite Canvas -->
 <div class="container">
     <canvas id="canvas"></canvas>
-
-    <div id="controls">
-        <button type="button" id="zoom-in">+</button>
-        <button type="button" id="zoom-out">-</button>
-        <button type="button" id="center-on-listener">X</button>
-    </div>
 </div>
 
-<!-- The Sidebar Controls -->
-<!--
-<div id="controls" class:sidebarHidden onwheel={(event) => {
-    event.preventDefault(); 
-}}>
 
+<!-- The Sidebar Controls -->
+<div id="controls" class:sidebarHidden onwheel={(event) => {event.preventDefault(); }}>
+
+    <!-- Zoom In -->
     <button id="zoom-in" class="button-l"
-    onclick     = {()=>{R.getMap().zoomIn()}}
+    onclick     = {()=>{R.getCanvas().zoom(1.05)}}
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.map.zoomIn'), $t('help.map.zoomInShortcut'))}}
     onmouseout  = {()=>{help()}}
@@ -428,8 +416,9 @@
         <IconZoomIn/>
     </button>
 
+    <!-- Zoom Out -->
     <button id="zoom-out" class="button-r"
-    onclick     = {()=>{R.getMap().zoomOut()}}
+    onclick     = {()=>{R.getCanvas().zoom(0.95)}}
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.map.zoomOut'), $t('help.map.zoomOutShortcut'))}}
     onmouseout  = {()=>{help()}}
@@ -437,10 +426,12 @@
         <IconZoomOut/>
     </button>
 
+    <!-- Spacer -->
     <div class="control-spacer"></div>
 
+    <!-- Recenter On Listener -->
     <button id="recenter"
-    onclick     = {()=>{R.getMap().flyTo(R.getListener().getLatLng())}}
+    onclick     = {()=>{R.getCanvas().flyToPoint(R.getListener().x, R.getListener().y)}}
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.map.recenter'), $t('help.map.recenterShortcut'))}}
     onmouseout  = {()=>{help()}}
@@ -448,8 +439,10 @@
         <IconRecenter/>
     </button>
     
+    <!-- Spacer -->
     <div class="control-spacer"></div>
     
+    <!-- Sidebar Hide/Show Toggle -->
     <button id="hide-show"
     onclick     = {toggleSidebar}
     onfocus     = {()=>{}} 
@@ -462,142 +455,130 @@
         {#if sidebarHidden}<IconExpand/>{:else}<IconCollapse/>{/if}
     </button>
 </div>
--->
 
 
 <!-- The Sidebar Media Browser -->
-
 {#if (soundList.length>0 || imageList.length>0)}
-<div id="browser" class:sidebarHidden>
-    {#if soundList.length>0}
+    <div id="browser" class:sidebarHidden>
+        {#if soundList.length>0}
 
-        <!-- The Sounds Browser -->
-        <div id="browser-sounds">
-            {#each soundList as item, i }
-                <SoundListItem item={item} i={i} />
-            {/each}
+            <!-- The Sounds Browser -->
+            <div id="browser-sounds">
 
-            <!-- Sound List Header -->
-            <div role="heading" class="browser-heading" aria-level="2" 
-            onwheel={(event) => {
-                event.preventDefault(); 
-                changeMasterVolume(event);
-            }}>
+                <!-- List Of Sounds -->
+                {#each soundList as item, i }
+                    <SoundListItem item={item} i={i} />
+                {/each}
 
-                <!-- Master Volume -->
-                <div id="master-volume">
-                    <div id="master-volume-bar" style={"height:" + (masterVolume * 100) + "%"}></div>
-                </div>
-
-                <!-- Sound List Title -->
-                <span role="heading" aria-level="3"
-                onfocus     = {()=>{}} 
-                onblur      = {()=>{}}
-                onmouseout  = {()=>{help()}}
-                onmouseover = {()=>{help($t('help.map.soundsTitle'))}}>
-                {$t('ui.sounds')}
-                </span>
-
-                <!-- Sound List Show / Hide Toggle -->
-                <button class="browser-heading-button" id="hide-sounds-toggle" class:R.getSoundsHidden()
-                onclick     = {()=>{
-                    R.toggleSoundsHidden();
-                    R.getSoundsHidden() ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))}}
-                onfocus     = {()=>{}} 
-                onblur      = {()=>{}}
-                onmouseout  = {()=>{help()}}
-                onmouseover = {()=>{
-                    R.getSoundsHidden() ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))
+                <!-- Sound List Header -->
+                <div role="heading" class="browser-heading" aria-level="2" 
+                onwheel={(event) => {
+                    event.preventDefault(); 
+                    changeMasterVolume(event);
                 }}>
-                    {#if R.getSoundsHidden()}<IconEye/>{:else}<IconEyeOff/>{/if}
-                </button>
-            </div>
-        </div>
-    {/if}
 
-    <!-- The Images Browser -->
-    {#if imageList.length > 0}
-        <div id="browser-images">
-            {#each imageList as item, i}
-                <ImageListItem item={item} i={i} />
-            {/each}
+                    <!-- Master Volume -->
+                    <div id="master-volume">
+                        <div id="master-volume-bar" style={"height:" + (masterVolume * 100) + "%"}></div>
+                    </div>
 
+                    <!-- Sound List Title -->
+                    <span role="heading" aria-level="3"
+                    onfocus     = {()=>{}} 
+                    onblur      = {()=>{}}
+                    onmouseout  = {()=>{help()}}
+                    onmouseover = {()=>{help($t('help.map.soundsTitle'))}}>
+                    {$t('ui.sounds')}
+                    </span>
 
-            <!-- Sound List Header -->
-            <div role="heading" class="browser-heading" aria-level="2" onwheel={(event) => {
-                event.preventDefault(); 
-                changeMasterOpacity(event);
-            }}>
-
-                <!-- Master Volume -->
-                <div id="master-opacity">
-                    <div id="master-opacity-bar" style={"height:" + (masterOpacity * 100) + "%"}></div>
+                    <!-- Sound List Show/Hide Toggle -->
+                    <button class="browser-heading-button" id="hide-sounds-toggle" class:R.getSoundsHidden()
+                    onclick     = {()=>{
+                        R.toggleSoundsHidden();
+                        R.getSoundsHidden() ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))}}
+                    onfocus     = {()=>{}} 
+                    onblur      = {()=>{}}
+                    onmouseout  = {()=>{help()}}
+                    onmouseover = {()=>{
+                        R.getSoundsHidden() ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))
+                    }}>
+                        {#if R.getSoundsHidden()}<IconEye/>{:else}<IconEyeOff/>{/if}
+                    </button>
                 </div>
-
-                <!-- Image List Title -->
-                <span role="heading" aria-level="3"
-                onfocus     = {()=>{}} 
-                onmouseover = {()=>{help($t('help.map.imagesTitle'))}}
-                onmouseout  = {()=>{help()}}
-                onblur      = {()=>{}}>
-                    {$t('ui.images')}
-                </span>
-
-                <!-- Image List Show / Hide Toggle -->
-                <button class="browser-heading-button" id="hide-images-toggle"  class:R.getImagesHidden()
-                onclick={()=>{
-                    R.toggleImagesHidden()
-                    R.getImagesHidden() ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))}}
-                onfocus={()=>{}} 
-                onblur={()=>{}}
-                onmouseout={()=>{help()}}
-                onmouseover = {()=>{
-                    R.getImagesHidden() ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))
-                }}>
-                    {#if R.getImagesHidden()}<IconEye/>{:else}<IconEyeOff/>{/if}
-                </button>
             </div>
-        </div>
-    {/if}
-</div>
+        {/if}
+
+        <!-- The Images Browser -->
+        {#if imageList.length > 0}
+            <div id="browser-images">
+
+                <!-- The Images List -->
+                {#each imageList as item, i}
+                    <ImageListItem item={item} i={i} />
+                {/each}
+
+                <!-- Images List Header -->
+                <div role="heading" class="browser-heading" aria-level="2" onwheel={(event) => {
+                    event.preventDefault(); 
+                    changeMasterOpacity(event);
+                }}>
+
+                    <!-- Master Opacity -->
+                    <div id="master-opacity">
+                        <div id="master-opacity-bar" style={"height:" + (masterOpacity * 100) + "%"}></div>
+                    </div>
+
+                    <!-- Image List Title -->
+                    <span role="heading" aria-level="3"
+                    onfocus     = {()=>{}} 
+                    onmouseover = {()=>{help($t('help.map.imagesTitle'))}}
+                    onmouseout  = {()=>{help()}}
+                    onblur      = {()=>{}}>
+                        {$t('ui.images')}
+                    </span>
+
+                    <!-- Image List Show/Hide Toggle -->
+                    <button class="browser-heading-button" id="hide-images-toggle"  class:R.getImagesHidden()
+                    onclick={()=>{
+                        R.toggleImagesHidden()
+                        R.getImagesHidden() ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))}}
+                    onfocus={()=>{}} 
+                    onblur={()=>{}}
+                    onmouseout={()=>{help()}}
+                    onmouseover = {()=>{
+                        R.getImagesHidden() ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))
+                    }}>
+                        {#if R.getImagesHidden()}<IconEye/>{:else}<IconEyeOff/>{/if}
+                    </button>
+                </div>
+            </div>
+        {/if}
+    </div>
 {/if}
 
 
 <!-- Help Text Display Area -->
-
 <div id="help" class:activated={isHelpActive}>
 
     <!-- Help Text Show / Hide Toggle -->
-    <button id="help-toggle" 
-    onclick={()=>{R.toggleHelpActive()}}>
-        ?
-    </button>
+    <button id="help-toggle" onclick={()=>{R.toggleHelpActive()}}> ? </button>
 
     <!-- Help Text -->
     <span id="help-text"></span>
 </div>
 
 
-
 <!-- Settings Menu -->
-
 <Settings />
 
 
-
 <!-- About Menu -->
-
 <About />
 
 
-
 <!-- Loading Menu -->
-
 <Loading />
 
 
-
 <!-- Window Toolbar -->
-
-<div id="toolbar">
-</div>
+<div id="toolbar"></div>
