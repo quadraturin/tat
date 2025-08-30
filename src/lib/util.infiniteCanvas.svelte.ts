@@ -5,9 +5,7 @@ import type { CanvasSound } from "./classes/CanvasSound.svelte";
 import { debugWidgets } from "./settings.appSettings";
 import { Vector2D } from "./util.vectors";
 
-/**
- * Infinite canvas.
- */
+/** The infinite canvas. */
 export class InfiniteCanvas {
   // Setup canvas properties.
   canvas: HTMLCanvasElement | null = null;
@@ -61,6 +59,11 @@ export class InfiniteCanvas {
   }
 
 
+  // ########################################
+  // ##### COORDINATE SPACE CONVERSIONS #####
+  // ########################################
+
+
   // ===== CANVAS -> WINDOW SPACE CONVERSIONS =====
 
   /** Convert a canvas x coordinate to a window one. 
@@ -91,7 +94,35 @@ export class InfiniteCanvas {
   toWorldLength(len: number): number { return len / (this.#scale * this.#z); }
 
 
-  // ===== CANVAS VIEWPORT =====
+  // ===== CANVAS VIRTUAL SIZE =====
+
+  /** Get the virtual height of the canvas. @returns The height of the canvas. */
+  virtualHeight():number { return (this.canvas?.clientHeight ?? 0) / this.#scale; }
+
+  /** Get the virtual width of the canvas. @returns The width of the canvas. */
+  virtualWidth(): number { return (this.canvas?.clientWidth ?? 0) / this.#scale; }
+
+
+  // ===== CANVAS LOCATIONS =====
+
+  /** Move the viewport to a point on the canvas.
+   * @param x X coord of the destination. @param y Y coord of the destination. */
+  flyToPoint(x:number, y:number) {
+    this.#offsetX = (this.virtualWidth()/2) / this.#z - x;
+    this.#offsetY = (this.virtualHeight()/2) / this.#z - y;
+    this.#draw();
+  }
+
+  /** Get the current canvas location as X and Y offsets. @returns The X and Y offsets. */
+  here(){ return({x:this.#offsetX, y:this.#offsetY}); }
+
+
+  // ####################################
+  // ##### CANVAS VIEWPORT CONTROLS #####
+  // ####################################
+
+
+  // ===== CANVAS OFFSETS =====
 
   /** Offset the canvas view from the left edge. @param amount Distance to offset by. */
   offsetLeft(amount: number): void {
@@ -116,23 +147,6 @@ export class InfiniteCanvas {
     this.#offsetY += amount;
     this.#draw();
   }
-
-  /** Get the virtual height of the canvas. @returns The height of the canvas. */
-  virtualHeight():number { return (this.canvas?.clientHeight ?? 0) / this.#scale; }
-
-  /** Get the virtual width of the canvas. @returns The width of the canvas. */
-  virtualWidth(): number { return (this.canvas?.clientWidth ?? 0) / this.#scale; }
-
-  /** Move the viewport to a point on the canvas.
-   * @param x X coord of the destination. @param y Y coord of the destination. */
-  flyToPoint(x:number, y:number) {
-    this.#offsetX = (this.virtualWidth()/2) / this.#z - x;
-    this.#offsetY = (this.virtualHeight()/2) / this.#z - y;
-    this.#draw();
-  }
-
-  /** Get the current canvas location as X and Y offsets. @returns The X and Y offsets. */
-  here(){ return({x:this.#offsetX, y:this.#offsetY}); }
 
 
   // ===== CANVAS ZOOMING =====
@@ -208,7 +222,12 @@ export class InfiniteCanvas {
   }
 
 
-  // ===== CANVAS DRAWING =====
+  // ###########################
+  // ##### CANVAS DRAWING ######
+  // ###########################
+
+
+  // ===== MAIN DRAW FUNCTIONS =====
 
   /** Redraw the canvas. */
   update(): void {
@@ -264,6 +283,8 @@ export class InfiniteCanvas {
     }
   }
 
+
+  // ===== GRID DRAWING =====
 
   /**
    * Draw the grid on the canvas.
@@ -332,16 +353,28 @@ export class InfiniteCanvas {
   }
 
 
+  // ###############################
+  // ##### BASIC SHAPE DRAWING #####
+  // ###############################
+
+
   /**
-   * Draw test shapes on the canvas.
+   * Draw a circle on the canvas.
+   * @param x X position of the center of the circle.
+   * @param y Y position of the center of the circle.
+   * @param r Radius of the circle.
    */
-  #drawTests(): void {
+  #drawCircle(x: number, y: number, r: number, selected:boolean=false): void {
     if (this.canvas && this.context) {
-      this.#drawRect(-100,50,200,500,false);
-
-      this.#drawCircle(45,80,100);
-
-      this.#drawPoly([new Vector2D(-30,-50), new Vector2D(-45,90), new Vector2D(20,40), new Vector2D(12,-40), new Vector2D(5,-30)], false);
+      if (selected && this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
+      else if (this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
+      this.context.beginPath();
+      this.context.arc(
+        x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
+        y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
+        r * this.#scale * this.#z,
+        0, 360);
+      this.context.stroke();
     }
   }
 
@@ -373,7 +406,7 @@ export class InfiniteCanvas {
    * @param coords List of coordinates forming the points of the polygon.
    * @param selected Whether or not the polygon is selected.
    */
-  #drawPoly(coords:Vector2D[], selected:boolean|null) {
+  #drawPoly(coords:Vector2D[], selected:boolean=false) {
     if (this.canvas && this.context) {
       this.context.beginPath();
       if (selected && this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
@@ -393,27 +426,84 @@ export class InfiniteCanvas {
   }
 
 
+  // ===== CANVAS OBJECT DRAWING =====
+
   /**
-   * Draw a local audio emitter on the canvas.
+   * Draw a draggable handle on the canvas.
+   * @param x X position of the center of the handle.
+   * @param y Y position of the center of the handle.
+   * @param r Radius of the handle.
+   * @param selected If the object is selected.
+   * @param fill If the handle should be drawn with a fill. Defaults to true.
+   */
+  #drawHandle(x:number, y:number, r:number, selected:boolean, fill:boolean=true): void {
+    if (this.canvas && this.context) {
+      if (selected && this.#wrap) { 
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");;
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c2");;
+      } else if (this.#wrap) { 
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");;
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cC");;
+      }
+      this.context.beginPath();
+      this.context.arc(
+        x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
+        y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
+        r,
+        0, 360);
+      if(typeof fill == "undefined" || fill) this.context.fill();
+      this.context.stroke();
+    }
+  }
+
+  /**
+   * Draw the audio listener on the canvas.
+   * @param x X position of the center of the listener.
+   * @param y Y position of the center of the listener.
+   * @param r Radius of the listener.
+   */
+  #drawListener(l:CanvasListener, r: number): void {
+    if (this.canvas && this.context) {
+      if (this.#wrap) {
+        this.context.strokeStyle = l.selected ? this.#wrap.style.getPropertyValue("--c2") : this.#wrap.style.getPropertyValue("--c4");
+        this.context.fillStyle = l.selected ? this.#wrap.style.getPropertyValue("--c2") : this.#wrap.style.getPropertyValue("--c4");
+      }
+      this.context.beginPath();
+      this.context.arc(
+        l.x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
+        l.y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
+        r,
+        0, 360);
+      if(l.editable) this.context.fill();
+      this.context.stroke();
+    }
+  }
+
+  /**
+   * Draw a circular local audio emitter on the canvas.
    * @param x X position of the center of the emitter.
    * @param y Y position of the center of the emitter.
    * @param r Radius of the emitter.
    */
   #drawLocalSound(snd:CanvasSound): void {
     if (this.canvas && this.context) {
-      this.#drawCircle(snd.x, snd.y, snd.radius);
-      this.#drawHandle(snd.x, snd.y, 0.5, null);
+      this.#drawCircle(snd.x, snd.y, snd.radius, snd.selected);
+      this.#drawHandle(snd.x, snd.y, 0.5, snd.selected);
       if (snd.editable) {
         this.#drawHandle(
           snd.x + Math.cos(snd.localHandleAngle)*snd.radius, 
           snd.y + Math.sin(snd.localHandleAngle)*snd.radius, 
           R.getHandleSize(), 
-          null);
+          snd.selected);
       }
     }
   }
 
 
+  /**
+   * Draw a polygonal area sound emitter.
+   * @param snd The sound.
+   */
   #drawAreaSound(snd:CanvasSound) {
     if (this.canvas && this.context) {
       // Draw the polygon.
@@ -439,79 +529,6 @@ export class InfiniteCanvas {
       }
     }
   }
-
-
-  /**
-   * Draw a circle on the canvas.
-   * @param x X position of the center of the circle.
-   * @param y Y position of the center of the circle.
-   * @param r Radius of the circle.
-   */
-  #drawCircle(x: number, y: number, r: number): void {
-    if (this.canvas && this.context) {
-      this.context.beginPath();
-      this.context.arc(
-        x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
-        y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
-        r * this.#scale * this.#z,
-        0, 360);
-      this.context.stroke();
-    }
-  }
-
-
-  /**
-   * Draw a draggable handle on the canvas.
-   * @param x X position of the center of the handle.
-   * @param y Y position of the center of the handle.
-   * @param r Radius of the handle.
-   * @param selected If the object is selected.
-   * @param fill If the handle should be drawn with a fill. Defaults to fill.
-   */
-  #drawHandle(x:number, y:number, r:number, selected:boolean|null, fill?:boolean): void {
-    if (this.canvas && this.context) {
-      if (selected && this.#wrap) { 
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");;
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c2");;
-      } else if (this.#wrap) { 
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");;
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cC");;
-      }
-      this.context.beginPath();
-      this.context.arc(
-        x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
-        y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
-        r,
-        0, 360);
-      if(typeof fill == "undefined" || fill) this.context.fill();
-      this.context.stroke();
-    }
-  }
-
-
-  /**
-   * Draw an audio listener on the canvas.
-   * @param x X position of the center of the listener.
-   * @param y Y position of the center of the listener.
-   * @param r Radius of the listener.
-   */
-  #drawListener(l:CanvasListener, r: number): void {
-    if (this.canvas && this.context) {
-      if (this.#wrap) {
-        this.context.strokeStyle = l.selected ? this.#wrap.style.getPropertyValue("--c2") : this.#wrap.style.getPropertyValue("--c4");
-        this.context.fillStyle = l.selected ? this.#wrap.style.getPropertyValue("--c2") : this.#wrap.style.getPropertyValue("--c4");
-      }
-      this.context.beginPath();
-      this.context.arc(
-        l.x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
-        l.y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
-        r,
-        0, 360);
-      if(l.editable) this.context.fill();
-      this.context.stroke();
-    }
-  }
-
 
   /**
    * Draw an image on the canvas.
@@ -548,7 +565,10 @@ export class InfiniteCanvas {
   }
 
 
-  // ===== CANVAS TOUCH CONTROLS =====
+  // #################################
+  // ##### CANVAS TOUCH CONTROLS #####
+  // #################################
+
 
   /**
    * Set up events.
