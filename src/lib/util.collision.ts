@@ -25,7 +25,10 @@ export function pointCircleCollision(pX:number, pY:number, cX:number, cY:number,
  * @returns True: collision. False: no collision.
  */
 export function pointRectCollision(pX:number, pY:number, rX:number, rY:number, rW:number, rH:number):boolean {
-    if (pX >= rX && pY >= rY && pX <= rX + rW && pY <= rY + rH) return true; 
+    if (     rW > 0 && rH > 0 &&   pX >= rX    && pY >= rY    && pX <= rX + rW && pY <= rY + rH) return true; 
+    else if (rW < 0 && rH > 0 &&   pX >= rX+rW && pY >= rY    && pX <= rX      && pY <= rY + rH) return true; // flipped horiz.
+    else if (rW > 0 && rH < 0 &&   pX >= rX    && pY >= rY+rH && pX <= rX + rW && pY <= rY)      return true; // flipped horiz.
+    else if (rW < 0 && rH < 0 &&   pX >= rX+rW && pY >= rY+rH && pX <= rX      && pY <= rY)      return true; // flipped both.
     else return false;
 }
 
