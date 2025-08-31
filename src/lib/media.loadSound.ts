@@ -57,7 +57,6 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
  */
 export async function newSound(options?:canvasSoundOptions) {
     try {
-        console.log("dupe sound")
         // Load defaults, overwrite with options.
         let o = Object.assign({
             volume: 1,
@@ -68,11 +67,11 @@ export async function newSound(options?:canvasSoundOptions) {
         o.niceName = o.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim();
 
         // Make a sound.
-        const snd = new Audio(convertFileSrc(o.src));
-        snd.addEventListener("canplaythrough", (e) => {
-            snd.volume = 0;
-            snd.loop = true;
-            snd.play();
+        o.sound = new Audio(convertFileSrc(o.src));
+        o.sound.addEventListener("canplaythrough", () => {
+            o.sound.volume = 0;
+            o.sound.loop = true;
+            o.sound.play();
         })
 
         // Determine the sound origin point coords if they haven't been provided.
@@ -106,7 +105,7 @@ export async function duplicateSound(sound:CanvasSound) {
         radius:sound.radius,
         selected:sound.selected,
         solo:sound.solo,
-        sound:sound.sound,
+        sound:new Audio(),
         src:sound.src,
         soundType:sound.soundType,
         volume:sound.volume,
