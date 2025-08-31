@@ -2,7 +2,7 @@
     import { t } from '$lib/util.localization';
 	import { solo } from '$lib/media.controlMedia';
 	import { removeSound } from '$lib/media.removeSound';
-	import { cycleSoundType, duplicateSound } from '$lib/media.loadSound';
+	import { cycleSoundType, cycleTriggerType, duplicateSound } from '$lib/media.loadSound';
 	import { changeBaseVolume, seekToByClick } from '$lib/media.controlMedia'; 
 	import { help } from '$lib/util.help';
 
@@ -11,7 +11,16 @@
 	import IconSoundArea from '$lib/icons/iconSoundArea.svelte';
 	import IconSoundPause from '$lib/icons/iconSoundPause.svelte';
 	import type { CanvasSound } from '$lib/classes/CanvasSound.svelte';
-	import { SoundType } from '$lib/registry.svelte';
+	import { SoundType, TriggerType } from '$lib/registry.svelte';
+	import IconOnLoad from '$lib/icons/iconPlayOnLoad.svelte';
+	import IconLoop from '$lib/icons/iconLoop.svelte';
+	import IconTimer from '$lib/icons/iconPlayOnTimer.svelte';
+	import IconPlayOnLoad from '$lib/icons/iconPlayOnLoad.svelte';
+	import IconPlayOnEnter from '$lib/icons/iconPlayOnEnter.svelte';
+	import IconPlayInside from '$lib/icons/iconPlayInside.svelte';
+	import IconPlayOnTimer from '$lib/icons/iconPlayOnTimer.svelte';
+	import IconReplayOnEnter from '$lib/icons/iconReplayOnEnter.svelte';
+	import IconReplayInside from '$lib/icons/iconReplayInside.svelte';
 
     let {item, i} : {item:CanvasSound, i:number} = $props();
     let soundTrack:any = $state();
@@ -23,6 +32,8 @@
     let looped = $state(true);
     let soloed = $state(false);
     let muted = $state(false);
+    let soundType = $state(SoundType.Local);
+    let triggerType = $state(TriggerType.PlayOnLoad);
 
     setInterval(() => {
         currentTime = item.sound.currentTime;
@@ -30,6 +41,9 @@
         paused = item.sound.paused;
         soloed = item.solo;
         muted = item.muted;
+        looped = item.loop;
+        soundType = item.soundType;
+        triggerType = item.triggerType;
     }, 15);
 </script>
 
@@ -126,25 +140,42 @@
             help(   $t('help.map.soundTypeLocal'), 
                     $t('help.map.soundTypeLocalActions') );
     }}>
-        {#if item.soundType == SoundType.Area}<IconSoundArea/>
-        {:else if item.soundType == SoundType.Global}<IconSoundGlobal/>
-        {:else}<IconSoundLocal/>{/if}
+        {#if soundType == SoundType.Area}<IconSoundArea/>
+        {:else if soundType == SoundType.Global}<IconSoundGlobal/>
+        {:else if soundType == SoundType.Local}<IconSoundLocal/>{/if}
+    </button>
+
+    <!-- Sound Trigger Button -->
+    <button class="item-button item-trigger button-l"
+    onclick     = {()=>{cycleTriggerType(item);}}
+    onfocus     = {()=>{}} 
+    onblur      = {()=>{}}
+    onmouseout  = {()=>{help()}}
+    onmouseover = {()=>{
+        item.muted? help($t('help.map.soundMute')) : help($t('help.map.soundUnMute'))
+    }}>
+        {#if triggerType == TriggerType.PlayOnLoad}<IconPlayOnLoad/>
+        {:else if triggerType == TriggerType.PlayOnEnter}<IconPlayOnEnter/>
+        {:else if triggerType == TriggerType.ReplayOnEnter}<IconReplayOnEnter/>
+        {:else if triggerType == TriggerType.PlayInside}<IconPlayInside/>
+        {:else if triggerType == TriggerType.ReplayInside}<IconReplayInside/>
+        {:else if triggerType == TriggerType.PlayOnTimer}<IconPlayOnTimer/>{/if}
     </button>
 
     <!-- Sound Loop Button -->
-    <button class="item-button item-loop" class:activated={looped} 
-    onclick     = {()=>{item.loop = !item.loop; looped = item.loop;}}
+    <button class="item-button item-loop button-m" class:activated={looped} 
+    onclick     = {()=>{item.loop = !item.loop;}}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
     onmouseover = {()=>{
         item.loop? help($t('help.map.soundMute')) : help($t('help.map.soundUnMute'))
     }}>
-        L
+        <IconLoop/>
     </button>
 
     <!-- Sound Pause Button -->
-    <button class="item-button item-pause button-l" class:activated={paused} 
+    <button class="item-button item-pause button-r" class:activated={paused} 
     onclick     = {()=>item.sound.paused ? item.sound.play() : item.sound.pause()}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
@@ -156,8 +187,8 @@
     </button>
 
     <!-- Sound Mute Button -->
-    <button class="item-button item-mute button-m" class:activated={muted} 
-    onclick     = {()=>{item.muted = !item.muted; muted = item.muted;}}
+    <button class="item-button item-mute button-l" class:activated={muted} 
+    onclick     = {()=>{item.muted = !item.muted;}}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
@@ -169,7 +200,7 @@
 
     <!-- Sound Solo Button -->
     <button class="item-button item-solo button-r" class:activated={soloed} 
-    onclick     = {()=>{solo(item); soloed = item.solo;}}
+    onclick     = {()=>{solo(item);}}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}

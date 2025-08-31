@@ -712,6 +712,9 @@ body {
 #browser .image-item .item-button {
     padding: 0;
 }
+#browser .item-button.item-type {
+    margin-left:0;
+}
 #browser .item-button svg {
     margin: 0 auto;
 }

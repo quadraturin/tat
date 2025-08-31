@@ -30,7 +30,7 @@
 	import { readFiles } from '$lib/media.readFiles';
     import { removeSelected } from '$lib/media.removeSelected';
 	import { changeMasterOpacity, changeMasterVolume } from '$lib/media.controlMedia';
-	import { setCanvasSoundVolumes } from '$lib/media.setCanvasSoundVolumes';
+	import { manageCanvasSounds } from '$lib/media.manageSounds';
 
     // ===== UI =====
 	import { closeAllMenus, toggleAboutMenu, toggleSettingsMenu } from '$lib/ui.menus';
@@ -240,7 +240,7 @@
         isHelpActive = R.getIsHelpActive();
         masterOpacity = R.getMasterOpacity();
         masterVolume = R.getMasterVolume();
-        setCanvasSoundVolumes();
+        manageCanvasSounds();
         R.getCanvas().panInertia();
         R.getCanvas().update();
     }, 15);

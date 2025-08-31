@@ -205,9 +205,22 @@ export function addToSounds(options:canvasSoundOptions) {
     sounds.push(new CanvasSound(options)); 
     console.log(sounds);
 }
+/** Canvas sound types. Local (circle falloff), Area (polygon), Global. */
+export enum SoundType {
+    Local  = "LOCAL", 
+    Global = "GLOBAL", 
+    Area   = "AREA"
+};
 
-export enum SoundType {Local="LOCAL", Global="GLOBAL", Area="AREA"};
-
+/** Canvas sound types. Local (circle falloff), Area (polygon), Global. */
+export enum TriggerType {
+    PlayOnLoad    = "PLAYONLOAD", 
+    PlayOnEnter   = "PLAYONENTER",
+    ReplayOnEnter = "REPLAYONENTER",
+    PlayInside    = "PLAYINSIDE", 
+    ReplayInside  = "REPLAYINSIDE", 
+    PlayOnTimer   = "PLAYONTIMER"
+};
 
 // ##########################
 // ##### MEDIA CONTROLS #####

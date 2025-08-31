@@ -6,6 +6,7 @@ import { convertFileSrc } from '@tauri-apps/api/core';
 import { t, locales, locale } from '$lib/util.localization';
 import type { CanvasSound, canvasSoundOptions } from './classes/CanvasSound.svelte';
 import { Vector2D } from './util.vectors';
+import { pointCircleCollision } from './util.collision';
 
 
 /**
@@ -38,6 +39,7 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
             solo: false,
             sound: snd,
             soundType: R.SoundType.Local,
+            triggerType: R.TriggerType.PlayOnLoad,
             src: src,
             volume: 1,
             x: x? x : Math.random()*100,
@@ -52,8 +54,8 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
 
 
 /**
- * create a new image on the canvas.
- * @param options new image options.
+ * Create a new image on the canvas.
+ * @param options New image options.
  */
 export async function newSound(options?:canvasSoundOptions) {
     try {
@@ -89,8 +91,8 @@ export async function newSound(options?:canvasSoundOptions) {
 
 
 /**
- * duplicate a map sound.
- * @param sound the map sound to duplicate.
+ * Duplicate a canvas sound.
+ * @param sound The canvas sound to duplicate.
  */
 export async function duplicateSound(sound:CanvasSound) {
     newSound({
@@ -108,6 +110,7 @@ export async function duplicateSound(sound:CanvasSound) {
         sound:new Audio(),
         src:sound.src,
         soundType:sound.soundType,
+        triggerType:sound.triggerType,
         volume:sound.volume,
         x:sound.x + 20,
         y:sound.y + 20,
@@ -115,13 +118,49 @@ export async function duplicateSound(sound:CanvasSound) {
 }
 
 /**
- * cycle a map sound between the 3 types (area, global, local).
- * @param sound map sound to change.
+ * Cycle a canvas sound between the 3 types (area, global, local).
+ * @param sound canvas sound to change.
  */
 export async function cycleSoundType(sound:CanvasSound) {
-    if (sound.sound) {
-        if (sound.soundType == R.SoundType.Area)        sound.soundType = R.SoundType.Global;
-        else if (sound.soundType == R.SoundType.Global) sound.soundType = R.SoundType.Local;
-        else if (sound.soundType == R.SoundType.Local)  sound.soundType = R.SoundType.Area;
+    if      (sound.soundType == R.SoundType.Area)   sound.soundType = R.SoundType.Global;
+    else if (sound.soundType == R.SoundType.Global) sound.soundType = R.SoundType.Local;
+    else if (sound.soundType == R.SoundType.Local)  sound.soundType = R.SoundType.Area;
+}
+
+/**
+ * Cycle a canvas sound trigger between the types (onload, onenter, onexit, ontimer).
+ * @param sound canvas sound to change.
+ */
+export async function cycleTriggerType(sound:CanvasSound) {
+    // PlayOnLoad -> PlayOnEnter (if not on object)
+    if      (sound.triggerType == R.TriggerType.PlayOnLoad && 
+            sound.soundType == R.SoundType.Local &&
+            !pointCircleCollision(R.getListener().x, R.getListener().y, sound.x, sound.y, sound.radius)) {  
+        sound.triggerType = R.TriggerType.PlayOnEnter; 
+        sound.sound.pause(); 
+    }
+    // PlayOnEnter -> ReplayOnEnter (if not on object)
+    else if (sound.triggerType == R.TriggerType.PlayOnEnter && 
+            sound.soundType == R.SoundType.Local &&
+            !pointCircleCollision(R.getListener().x, R.getListener().y, sound.x, sound.y, sound.radius)) {
+        sound.triggerType = R.TriggerType.ReplayOnEnter;
+    }
+    // PlayOnLoad/PlayOnEnter/ReplayOnEnter -> PlayInside
+    else if (sound.triggerType == R.TriggerType.PlayOnLoad || 
+            sound.triggerType == R.TriggerType.PlayOnEnter || 
+            sound.triggerType == R.TriggerType.ReplayOnEnter) {
+        sound.triggerType = R.TriggerType.PlayInside;
+    }
+    // PlayInside -> ReplayInside
+    else if (sound.triggerType == R.TriggerType.PlayInside) {
+        sound.triggerType = R.TriggerType.ReplayInside;
+    }
+    // ReplayInside -> PlayOnTimer
+    else if (sound.triggerType == R.TriggerType.ReplayInside) {
+        sound.triggerType = R.TriggerType.PlayOnTimer;
+    }
+    // PlayOnTimer -> PlayOnLoad
+    else if (sound.triggerType == R.TriggerType.PlayOnTimer) {
+        sound.triggerType = R.TriggerType.PlayOnLoad;
     }
 }

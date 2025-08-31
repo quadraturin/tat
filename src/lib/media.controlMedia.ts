@@ -82,4 +82,3 @@ export async function solo(sound:CanvasSound) {
         }
     }
 }
-

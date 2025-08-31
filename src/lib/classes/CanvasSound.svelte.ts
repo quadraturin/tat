@@ -1,5 +1,5 @@
 import { CanvasObject } from "./CanvasObject.svelte";
-import { getCanvas, getHandleSize, getHandleSlop, SoundType } from "$lib/registry.svelte";
+import { getCanvas, getHandleSize, getHandleSlop, SoundType, TriggerType } from "$lib/registry.svelte";
 import { Vector2D } from "$lib/util.vectors";
 
 /** Canvas Sound options. */
@@ -18,6 +18,7 @@ export type canvasSoundOptions = {
     sound:HTMLAudioElement,
     src:string,
     soundType:SoundType,
+    triggerType:TriggerType,
     volume:number,
     x:number,
     y:number,
@@ -40,6 +41,7 @@ export class CanvasSound extends CanvasObject{
     #src:string;
     #sound:HTMLAudioElement;
     #soundType:SoundType;
+    #triggerType:TriggerType;
     #volume:number = $state(0);
 
     constructor(options:canvasSoundOptions) {
@@ -66,6 +68,7 @@ export class CanvasSound extends CanvasObject{
         this.#loop = options.loop;
         this.#muted = options.muted;
         this.#solo = options.solo;
+        this.#triggerType = options.triggerType;
         this.#volume = options.volume;
     }
 
@@ -76,6 +79,11 @@ export class CanvasSound extends CanvasObject{
         this.#loop = loop; 
         this.#sound.loop = loop;
     }
+
+    /** Get the sound emitter radius. @returns The radius. */
+    public get triggerType() { return this.#triggerType; }
+    /** Set the sound emitter radius. @param r The radius. */
+    public set triggerType(t:TriggerType) { this.#triggerType = t; }
 
     /** Get the sound emitter radius. @returns The radius. */
     public get radius() { return this.#radius; }
