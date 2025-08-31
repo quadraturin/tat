@@ -6,7 +6,7 @@ import { convertFileSrc } from '@tauri-apps/api/core';
 import { t, locales, locale } from '$lib/util.localization';
 import type { CanvasSound, canvasSoundOptions } from './classes/CanvasSound.svelte';
 import { Vector2D } from './util.vectors';
-import { pointCircleCollision } from './util.collision';
+import { pointCircleCollision, pointPolyCollision } from './util.collision';
 
 
 /**
@@ -122,9 +122,21 @@ export async function duplicateSound(sound:CanvasSound) {
  * @param sound canvas sound to change.
  */
 export async function cycleSoundType(sound:CanvasSound) {
-    if      (sound.soundType == R.SoundType.Area)   sound.soundType = R.SoundType.Global;
-    else if (sound.soundType == R.SoundType.Global) sound.soundType = R.SoundType.Local;
-    else if (sound.soundType == R.SoundType.Local)  sound.soundType = R.SoundType.Area;
+    // Local -> Area
+    if (sound.soundType == R.SoundType.Local) { 
+        sound.soundType = R.SoundType.Area; 
+    }
+    // Area -> Global: Unset invalid trigger types.
+    else if (sound.soundType == R.SoundType.Area){ 
+        sound.soundType = R.SoundType.Global;
+        if (sound.triggerType != R.TriggerType.PlayOnLoad && sound.triggerType != R.TriggerType.PlayOnTimer) {
+            sound.triggerType = R.TriggerType.PlayOnLoad;
+        }
+    }
+    // Global -> Local
+    else if (sound.soundType == R.SoundType.Global) { 
+        sound.soundType = R.SoundType.Local; 
+    }
 }
 
 /**
@@ -132,35 +144,34 @@ export async function cycleSoundType(sound:CanvasSound) {
  * @param sound canvas sound to change.
  */
 export async function cycleTriggerType(sound:CanvasSound) {
-    // PlayOnLoad -> PlayOnEnter (if not on object)
-    if      (sound.triggerType == R.TriggerType.PlayOnLoad && 
-            sound.soundType == R.SoundType.Local &&
-            !pointCircleCollision(R.getListener().x, R.getListener().y, sound.x, sound.y, sound.radius)) {  
-        sound.triggerType = R.TriggerType.PlayOnEnter; 
-        sound.sound.pause(); 
+
+    // Global sound:
+    // PlayOnLoad -> PlayOnTimer -> back
+    if (sound.soundType == R.SoundType.Global) {
+        if      (sound.triggerType == R.TriggerType.PlayOnLoad)  sound.triggerType = R.TriggerType.PlayOnTimer;
+        else if (sound.triggerType == R.TriggerType.PlayOnTimer) sound.triggerType = R.TriggerType.PlayOnLoad;
     }
-    // PlayOnEnter -> ReplayOnEnter (if not on object)
-    else if (sound.triggerType == R.TriggerType.PlayOnEnter && 
-            sound.soundType == R.SoundType.Local &&
-            !pointCircleCollision(R.getListener().x, R.getListener().y, sound.x, sound.y, sound.radius)) {
-        sound.triggerType = R.TriggerType.ReplayOnEnter;
-    }
-    // PlayOnLoad/PlayOnEnter/ReplayOnEnter -> PlayInside
-    else if (sound.triggerType == R.TriggerType.PlayOnLoad || 
-            sound.triggerType == R.TriggerType.PlayOnEnter || 
-            sound.triggerType == R.TriggerType.ReplayOnEnter) {
-        sound.triggerType = R.TriggerType.PlayInside;
-    }
-    // PlayInside -> ReplayInside
-    else if (sound.triggerType == R.TriggerType.PlayInside) {
-        sound.triggerType = R.TriggerType.ReplayInside;
-    }
-    // ReplayInside -> PlayOnTimer
-    else if (sound.triggerType == R.TriggerType.ReplayInside) {
-        sound.triggerType = R.TriggerType.PlayOnTimer;
-    }
-    // PlayOnTimer -> PlayOnLoad
-    else if (sound.triggerType == R.TriggerType.PlayOnTimer) {
-        sound.triggerType = R.TriggerType.PlayOnLoad;
+
+    // Local or Area sound, listener colliding: 
+    // PlayOnLoad -> PlayInside -> ReplayInside -> PlayOnTimer -> back
+    if ((sound.soundType == R.SoundType.Local &&
+            pointCircleCollision(R.getListener().x, R.getListener().y, sound.x, sound.y, sound.radius)) ||
+        (sound.soundType == R.SoundType.Area &&
+            pointPolyCollision(R.getListener().x, R.getListener().y, sound.areaCoords))) {
+        if      (sound.triggerType == R.TriggerType.PlayOnLoad) { sound.triggerType = R.TriggerType.PlayInside; }
+        else if (sound.triggerType == R.TriggerType.PlayInside)  sound.triggerType = R.TriggerType.ReplayInside;
+        else if (sound.triggerType == R.TriggerType.ReplayInside)  sound.triggerType = R.TriggerType.PlayOnTimer;
+        else if (sound.triggerType == R.TriggerType.PlayOnTimer)  sound.triggerType = R.TriggerType.PlayOnLoad;
+    } 
+
+    // Local or Area sound, listener not colliding:
+    // PlayOnLoad -> PlayOnEnter -> ReplayOnEnter -> PlayInside -> ReplayInside -> PlayOnTimer -> back
+    else {
+        if      (sound.triggerType == R.TriggerType.PlayOnLoad)  { sound.triggerType = R.TriggerType.PlayOnEnter;   sound.sound.pause(); }
+        else if (sound.triggerType == R.TriggerType.PlayOnEnter) { sound.triggerType = R.TriggerType.ReplayOnEnter; sound.sound.pause(); }
+        else if (sound.triggerType == R.TriggerType.ReplayOnEnter) sound.triggerType = R.TriggerType.PlayInside;
+        else if (sound.triggerType == R.TriggerType.PlayInside)    sound.triggerType = R.TriggerType.ReplayInside;
+        else if (sound.triggerType == R.TriggerType.ReplayInside)  sound.triggerType = R.TriggerType.PlayOnTimer;
+        else if (sound.triggerType == R.TriggerType.PlayOnTimer)   sound.triggerType = R.TriggerType.PlayOnLoad;    
     }
 }

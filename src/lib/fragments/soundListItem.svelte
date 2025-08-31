@@ -162,18 +162,6 @@
         {:else if triggerType == TriggerType.PlayOnTimer}<IconPlayOnTimer/>{/if}
     </button>
 
-    <!-- Sound Loop Button -->
-    <button class="item-button item-loop button-m" class:activated={looped} 
-    onclick     = {()=>{item.loop = !item.loop;}}
-    onfocus     = {()=>{}} 
-    onblur      = {()=>{}}
-    onmouseout  = {()=>{help()}}
-    onmouseover = {()=>{
-        item.loop? help($t('help.map.soundMute')) : help($t('help.map.soundUnMute'))
-    }}>
-        <IconLoop/>
-    </button>
-
     <!-- Sound Pause Button -->
     <button class="item-button item-pause button-r" class:activated={paused} 
     onclick     = {()=>item.sound.paused ? item.sound.play() : item.sound.pause()}
@@ -185,6 +173,19 @@
     }}>
         <IconSoundPause/>
     </button>
+
+    <!-- Sound Loop Button -->
+    <button class="item-button item-loop" class:activated={looped} 
+    onclick     = {()=>{item.loop = !item.loop;}}
+    onfocus     = {()=>{}} 
+    onblur      = {()=>{}}
+    onmouseout  = {()=>{help()}}
+    onmouseover = {()=>{
+        item.loop? help($t('help.map.soundMute')) : help($t('help.map.soundUnMute'))
+    }}>
+        <IconLoop/>
+    </button>
+
 
     <!-- Sound Mute Button -->
     <button class="item-button item-mute button-l" class:activated={muted} 

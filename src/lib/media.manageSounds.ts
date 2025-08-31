@@ -16,39 +16,36 @@ export function manageCanvasSounds(){
     const l = R.getListener();
     R.getSounds().forEach(snd => {
 
-        // Manage play state
-
-        // Inside PlayOnEnter: play & set trigger type to play on load.
-        if (    snd.triggerType == R.TriggerType.PlayOnEnter && snd.sound.paused && 
-                (snd.soundType == R.SoundType.Local && pointCircleCollision(l.x, l.y, snd.x, snd.y, snd.radius))) {
-            snd.sound.play();
-            snd.triggerType = R.TriggerType.PlayOnLoad;
-        }
-        // Inside PlayInside: play.
-        else if (snd.triggerType == R.TriggerType.PlayInside && snd.sound.paused && 
-                (snd.soundType == R.SoundType.Local && pointCircleCollision(l.x, l.y, snd.x, snd.y, snd.radius))) {
-            snd.sound.play();
-        }
-        // Inside ReplayOnEnter: restart, play, & set trigger type to play on load.
-        else if (snd.triggerType == R.TriggerType.ReplayOnEnter && snd.sound.paused &&
-                (snd.soundType == R.SoundType.Local && pointCircleCollision(l.x, l.y, snd.x, snd.y, snd.radius))) {
-            snd.sound.currentTime = 0;
-            snd.sound.play();
-            snd.triggerType = R.TriggerType.PlayOnLoad;
-        }
-        // Inside ReplayInside: restart & play.
-        else if (snd.triggerType == R.TriggerType.ReplayInside && snd.sound.paused &&
-                (snd.soundType == R.SoundType.Local && pointCircleCollision(l.x, l.y, snd.x, snd.y, snd.radius))) {
-            snd.sound.currentTime = 0;
-            snd.sound.play();
+        // Manage play state: check collision
+        if ((snd.soundType == R.SoundType.Local && pointCircleCollision(l.x, l.y, snd.x, snd.y, snd.radius)) ||
+            (snd.soundType == R.SoundType.Area  && pointPolyCollision(l.x, l.y, snd.areaCoords))) {
+            // Inside PlayOnEnter: play & set trigger type to play on load.
+            if (snd.triggerType == R.TriggerType.PlayOnEnter && snd.sound.paused) {
+                snd.sound.play();
+                snd.triggerType = R.TriggerType.PlayOnLoad;
+            }
+            // Inside PlayInside: play.
+            else if (snd.triggerType == R.TriggerType.PlayInside && snd.sound.paused) {
+                snd.sound.play();
+            }
+            // Inside ReplayOnEnter: restart, play, & set trigger type to play on load.
+            else if (snd.triggerType == R.TriggerType.ReplayOnEnter && snd.sound.paused) {
+                snd.sound.currentTime = 0;
+                snd.sound.play();
+                snd.triggerType = R.TriggerType.PlayOnLoad;
+            }
+            // Inside ReplayInside: restart & play.
+            else if (snd.triggerType == R.TriggerType.ReplayInside && snd.sound.paused) {
+                snd.sound.currentTime = 0;
+                snd.sound.play();
+            }
         }
         // Outside PlayInside/ReplayInside/PlayOnEnter/ReplayOnEnter: pause.
         else if ((  snd.triggerType == R.TriggerType.PlayInside || 
                     snd.triggerType == R.TriggerType.ReplayInside || 
                     snd.triggerType == R.TriggerType.PlayOnEnter || 
                     snd.triggerType == R.TriggerType.ReplayOnEnter) && 
-                !snd.sound.paused && 
-                (snd.soundType == R.SoundType.Local && !pointCircleCollision(l.x, l.y, snd.x, snd.y, snd.radius))) {
+                !snd.sound.paused) {
             snd.sound.pause();
         }
 
