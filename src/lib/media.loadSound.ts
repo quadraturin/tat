@@ -19,8 +19,9 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
         // Construct canvas sound options.
         const snd = new Audio(convertFileSrc(src));
         snd.addEventListener("canplaythrough", (e) => {
-            snd.play();
             snd.volume = 0;
+            snd.loop = true;
+            snd.play();
         })
         const name = await basename(src);
         let options:canvasSoundOptions = {
@@ -28,6 +29,7 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
             editable: true,
             grabbed: false,
             localHandleAngle: 0,
+            loop: true,
             muted: false,
             name: name,
             niceName: name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim(),
@@ -68,8 +70,9 @@ export async function newSound(options?:canvasSoundOptions) {
         // Make a sound.
         const snd = new Audio(convertFileSrc(o.src));
         snd.addEventListener("canplaythrough", (e) => {
-            snd.play();
             snd.volume = 0;
+            snd.loop = true;
+            snd.play();
         })
 
         // Determine the sound origin point coords if they haven't been provided.
@@ -95,6 +98,7 @@ export async function duplicateSound(sound:CanvasSound) {
         areaCoords:sound.areaCoords,
         editable:sound.editable,
         grabbed:sound.grabbed,
+        loop:sound.loop,
         localHandleAngle:sound.localHandleAngle,
         muted:sound.muted,
         name:sound.name,

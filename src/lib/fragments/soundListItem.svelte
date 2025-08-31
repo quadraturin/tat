@@ -1,9 +1,9 @@
 <script lang="ts">
     import { t } from '$lib/util.localization';
-	import { toggleMute, toggleSolo } from '$lib/media.mixSound';
+	import { solo } from '$lib/media.controlMedia';
 	import { removeSound } from '$lib/media.removeSound';
 	import { cycleSoundType, duplicateSound } from '$lib/media.loadSound';
-	import { changeBaseVolume, seekToByClick } from '$lib/media.controlMedia';
+	import { changeBaseVolume, seekToByClick } from '$lib/media.controlMedia'; 
 	import { help } from '$lib/util.help';
 
 	import IconSoundGlobal from '$lib/icons/iconSoundGlobal.svelte';
@@ -20,11 +20,16 @@
     let duration = $state(1)
     let seek = $derived((currentTime/duration * 100));
     let paused = $state(false);
+    let looped = $state(true);
+    let soloed = $state(false);
+    let muted = $state(false);
 
     setInterval(() => {
         currentTime = item.sound.currentTime;
         duration = item.sound.duration == 0 ? 1 : item.sound.duration;
         paused = item.sound.paused;
+        soloed = item.solo;
+        muted = item.muted;
     }, 15);
 </script>
 
@@ -85,6 +90,25 @@
         {item.niceName}
     </button>
 
+    <!-- Sound Progress Track / Seek Button -->
+    <button class="sound-item-progress-track" aria-label="seek"
+    bind:this   = {soundTrack} 
+    onmousemove = {(event:MouseEvent)=> {
+		mousePos.x = event.clientX;
+		mousePos.y = event.clientY; }} 
+    onclick     = {()=>seekToByClick(item, mousePos.x)}
+    onfocus     = {()=>{}} 
+    onblur      = {()=>{}}
+    onmouseout  = {()=>{help()}}
+    onmouseover = {()=>{help($t('help.map.soundSeek'))}}>
+
+        <!-- Sound Progress Bar -->
+        {#if item.sound}
+            <div class="sound-item-progress-bar" 
+            style={"width: " + seek.toString()+"%"}></div>
+        {/if}
+    </button>
+
     <!-- Sound Type Button -->
     <button class="item-button item-type" 
     onclick     = {()=>{cycleSoundType(item)}} 
@@ -107,6 +131,18 @@
         {:else}<IconSoundLocal/>{/if}
     </button>
 
+    <!-- Sound Loop Button -->
+    <button class="item-button item-loop" class:activated={looped} 
+    onclick     = {()=>{item.loop = !item.loop; looped = item.loop;}}
+    onfocus     = {()=>{}} 
+    onblur      = {()=>{}}
+    onmouseout  = {()=>{help()}}
+    onmouseover = {()=>{
+        item.loop? help($t('help.map.soundMute')) : help($t('help.map.soundUnMute'))
+    }}>
+        L
+    </button>
+
     <!-- Sound Pause Button -->
     <button class="item-button item-pause button-l" class:activated={paused} 
     onclick     = {()=>item.sound.paused ? item.sound.play() : item.sound.pause()}
@@ -120,8 +156,8 @@
     </button>
 
     <!-- Sound Mute Button -->
-    <button class="item-button item-mute button-m" class:activated={item.muted} 
-    onclick     = {()=>toggleMute(i)}
+    <button class="item-button item-mute button-m" class:activated={muted} 
+    onclick     = {()=>{item.muted = !item.muted; muted = item.muted;}}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
@@ -132,8 +168,8 @@
     </button>
 
     <!-- Sound Solo Button -->
-    <button class="item-button item-solo button-r" class:activated={item.solo} 
-    onclick     = {()=>toggleSolo(i)}
+    <button class="item-button item-solo button-r" class:activated={soloed} 
+    onclick     = {()=>{solo(item); soloed = item.solo;}}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
@@ -161,25 +197,5 @@
     onmouseout  = {()=>{help()}}
     onmouseover = {()=>{help($t('help.map.soundDelete'))}}>
         ×
-    </button>
-
-    <!-- Sound Progress Track / Seek Button -->
-    <button class="sound-item-progress-track" aria-label="seek"
-    bind:this   = {soundTrack} 
-    onmousemove = {(event:MouseEvent)=> {
-		mousePos.x = event.clientX;
-		mousePos.y = event.clientY; }} 
-    onclick     = {()=>seekToByClick(item, mousePos.x)}
-    onfocus     = {()=>{}} 
-    onblur      = {()=>{}}
-    onmouseout  = {()=>{help()}}
-    onmouseover = {()=>{help($t('help.map.soundSeek'))}}>
-
-        <!-- Sound Progress Bar -->
-        
-        {#if item.sound}
-            <div class="sound-item-progress-bar" 
-            style={"width: " + seek.toString()+"%"}></div>
-        {/if}
     </button>
 </div>

@@ -8,6 +8,7 @@ export type canvasSoundOptions = {
     editable:boolean,
     grabbed:boolean,
     localHandleAngle:number,
+    loop:boolean,
     muted:boolean,
     name:string,
     niceName:string,
@@ -31,6 +32,7 @@ export class CanvasSound extends CanvasObject{
     #areaCoords:Vector2D[];
     #areaHandleIndex:number;
     #localHandleAngle = 0;
+    #loop = true;
     #muted:boolean = $state(false);
     #originalAreaCoords:Vector2D[];
     #radius:number = $state(0);
@@ -52,16 +54,27 @@ export class CanvasSound extends CanvasObject{
         });
         this.#src = options.src;
         this.#sound = options.sound;
-        this.#radius = options.radius;
         this.#soundType = options.soundType;
-        this.#volume = options.volume;
-        this.#muted = options.muted;
-        this.#solo = options.solo;
-        this.#localHandleAngle = options.localHandleAngle;
+
         this.#areaCoords = options.areaCoords;
         this.#areaBounds = this.setBounds();
         this.#areaHandleIndex = 0;
         this.#originalAreaCoords = options.areaCoords;
+        this.#localHandleAngle = options.localHandleAngle;
+        this.#radius = options.radius;
+
+        this.#loop = options.loop;
+        this.#muted = options.muted;
+        this.#solo = options.solo;
+        this.#volume = options.volume;
+    }
+
+    /** Get if the sound is looped. @returns True: looped. False: not looped. */
+    public get loop() { return this.#loop; }
+    /** Set if the sound is looped. @param loop True: looped. False: not looped. */
+    public set loop(loop:boolean) { 
+        this.#loop = loop; 
+        this.#sound.loop = loop;
     }
 
     /** Get the sound emitter radius. @returns The radius. */
@@ -85,7 +98,7 @@ export class CanvasSound extends CanvasObject{
     public set src(src:string) { this.#src = src; }
 
     /** Get whether or not the sound emitter is soloed. @returns True: soloed. False: not soloed. */
-    public get solo() { return this.#muted; }
+    public get solo() { return this.#solo; }
     /** Set whether or not the sound emitter is soloed. @param s True: soloed. False: not soloed. */
     public set solo(s:boolean) { this.#solo = s; }
 
