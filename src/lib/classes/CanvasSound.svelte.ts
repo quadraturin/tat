@@ -190,4 +190,5 @@ export class CanvasSound extends CanvasObject{
         else if (g>1) g=1;
         this.#gain.gain.value = g; 
     }
+    public get gainNode() {return this.#gain; }
 }

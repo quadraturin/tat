@@ -40,13 +40,12 @@ export async function changeBaseVolume(sound:CanvasSound, event:WheelEvent) {
 export async function changeMasterVolume(event:WheelEvent) {
     let delta = event.deltaY;
 
-    // invert based on user settings.
+    // Invert based on user settings.
     if (getUserSettings().invertVolumeScroll) delta *= -1;
 
-    getMasterGain().gain.value = Math.max(0, Math.min(1, getMasterGain().gain.value + delta * 0.01 * getUserSettings().uiScrollSensitivity));
-    console.log(getMasterGain().gain.value);
-    // adjust and clamp volume.
-    //setMasterVolume(getMasterVolume() + delta * 0.01 * getUserSettings().uiScrollSensitivity);
+    // Set master volume, clamped between 0 and 1.
+    getMasterGain().gain.value = Math.max(0, Math.min(1, 
+        getMasterGain().gain.value + delta * 0.01 * getUserSettings().uiScrollSensitivity));
 }
 
 /**

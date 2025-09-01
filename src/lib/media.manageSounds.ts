@@ -60,8 +60,10 @@ export function manageCanvasSounds(){
             else if (snd.soundType == R.SoundType.Area) {
                 if (pointPolyCollision(l.x, l.y, snd.areaCoords)){
                     snd.gain = snd.volume;
+                    //snd.gainNode.gain.linearRampToValueAtTime(snd.volume, R.getAudioContext().currentTime + 1);
                 } else {
                     snd.gain = 0;
+                    //snd.gainNode.gain.linearRampToValueAtTime(0, R.getAudioContext().currentTime + 1);
                 }
             }
             // Local sound: louder as listener approaches center, modify with master volume.
