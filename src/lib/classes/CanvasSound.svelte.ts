@@ -84,11 +84,10 @@ export class CanvasSound extends CanvasObject{
         this.#gain = getAudioContext().createGain();
 
         // Hook up audio context nodes
-        // Track -> Track gain -> Master gain -> Output
+        // Track -> Track gain -> Master gain (-> Destination)
         this.#track
             .connect(this.#gain)
-            .connect(getMasterGain())
-            .connect(getAudioContext().destination);
+            .connect(getMasterGain());
     }
 
     /** Get if the sound is looped. @returns True: looped. False: not looped. */

@@ -196,6 +196,7 @@ if (audioContext.state === "suspended") audioContext.resume();
 export function getAudioContext() { return audioContext; }
 
 const masterGain = audioContext.createGain();
+masterGain.connect(audioContext.destination);
 export function getMasterGain() { return masterGain; }
 
 /** The sound list. */
