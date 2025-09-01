@@ -50,18 +50,18 @@ export function manageCanvasSounds(){
         }
 
         // Manage volume
-        if ((solo && !snd.solo) || snd.muted) snd.sound.volume = 0;
+        if ((solo && !snd.solo) || snd.muted) snd.gain = 0;
         else {
             // Global sound: only modify with master volume.
             if (snd.soundType == R.SoundType.Global) { 
-                snd.sound.volume = snd.volume * R.getMasterVolume(); 
+                snd.gain = snd.volume; 
             }
             // Area sound: only audible if listener in area, modify with master volume.
             else if (snd.soundType == R.SoundType.Area) {
                 if (pointPolyCollision(l.x, l.y, snd.areaCoords)){
-                    snd.sound.volume = snd.volume * R.getMasterVolume();
+                    snd.gain = snd.volume;
                 } else {
-                    snd.sound.volume = 0;
+                    snd.gain = 0;
                 }
             }
             // Local sound: louder as listener approaches center, modify with master volume.
@@ -74,9 +74,9 @@ export function manageCanvasSounds(){
 
                     // set volume based on base volume and distance from center. beyond the radius is muted.
                     const distVolume = Math.max(0,(snd.radius - dist) / snd.radius);
-                    snd.sound.volume = snd.volume * distVolume * R.getMasterVolume(); 
+                    snd.gain = snd.volume * distVolume; 
                 } else {
-                    snd.sound.volume = 0;
+                    snd.gain = 0;
                 }
             }
         }

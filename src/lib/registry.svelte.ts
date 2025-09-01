@@ -191,6 +191,13 @@ export function addToImages(options:canvasImageOptions) {
 
 // ===== SOUNDS =====
 
+const audioContext = new AudioContext();
+if (audioContext.state === "suspended") audioContext.resume();
+export function getAudioContext() { return audioContext; }
+
+const masterGain = audioContext.createGain();
+export function getMasterGain() { return masterGain; }
+
 /** The sound list. */
 let sounds = new Array<CanvasSound>;
 
@@ -201,10 +208,8 @@ export function getSounds():Array<CanvasSound> { return sounds; }
 export function setSounds(newSounds:Array<CanvasSound>) { sounds = newSounds; }
 
 /** Add a sound to the sound list. @param options The new sound information. */
-export function addToSounds(options:canvasSoundOptions) { 
-    sounds.push(new CanvasSound(options)); 
-    console.log(sounds);
-}
+export function addToSounds(options:canvasSoundOptions) { sounds.push(new CanvasSound(options)); }
+
 /** Canvas sound types. Local (circle falloff), Area (polygon), Global. */
 export enum SoundType {
     Local  = "LOCAL", 

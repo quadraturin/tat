@@ -1,5 +1,5 @@
 import type { CanvasSound, canvasSoundOptions } from "./classes/CanvasSound.svelte";
-import { getMasterOpacity, getMasterVolume, getSounds, setMasterOpacity, setMasterVolume } from "./registry.svelte";
+import { getAudioContext, getMasterGain, getMasterOpacity, getMasterVolume, getSounds, setMasterOpacity, setMasterVolume } from "./registry.svelte";
 import { getUserSettings } from "./settings.userSettings.svelte";
 
 
@@ -43,8 +43,10 @@ export async function changeMasterVolume(event:WheelEvent) {
     // invert based on user settings.
     if (getUserSettings().invertVolumeScroll) delta *= -1;
 
+    getMasterGain().gain.value = Math.max(0, Math.min(1, getMasterGain().gain.value + delta * 0.01 * getUserSettings().uiScrollSensitivity));
+    console.log(getMasterGain().gain.value);
     // adjust and clamp volume.
-    setMasterVolume(getMasterVolume() + delta * 0.01 * getUserSettings().uiScrollSensitivity);
+    //setMasterVolume(getMasterVolume() + delta * 0.01 * getUserSettings().uiScrollSensitivity);
 }
 
 /**

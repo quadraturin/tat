@@ -10,6 +10,31 @@ import { pointCircleCollision, pointPolyCollision } from './util.collision';
 
 
 /**
+ * Create a new sound on the canvas.
+ * @param options New sound options.
+ */
+export async function newSound(options?:canvasSoundOptions) {
+    try {
+        // Load defaults, overwrite with options.
+        let o = Object.assign({
+            volume: 1,
+        }, options);
+
+        // Generate a nice name for the sound based on the filename.
+        o.name = await basename(o.src);
+        o.niceName = o.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim();
+
+        R.setHasMedia(true);
+        R.setProjectDirty;
+        R.addToSounds(o);
+        R.getCanvas().update();
+    } catch(err) {
+        console.error(err);
+    }
+}
+
+
+/**
  * Create a new sound in the project from a file path, optionally with X,Y coordinates.
  * @param src File path to the image.
  * @param x X position of the image.
@@ -19,11 +44,6 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
     try {
         // Construct canvas sound options.
         const snd = new Audio(convertFileSrc(src));
-        snd.addEventListener("canplaythrough", (e) => {
-            snd.volume = 0;
-            snd.loop = true;
-            snd.play();
-        })
         const name = await basename(src);
         const newR = 30;
         const newX = x ? x : 50;
@@ -33,7 +53,7 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
                                 new Vector2D(newX, newY - newR), 
                                 new Vector2D(newX - newR ,newY)];
         let options:canvasSoundOptions = {
-            areaCoords:newAreaCoords,
+            areaCoords: newAreaCoords,
             editable: true,
             grabbed: false,
             localHandleAngle: 0,
@@ -52,51 +72,8 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
             x: newX,
             y: newY,
         }
-        R.addToSounds(options);
-        R.getCanvas().update();
+        newSound(options);
     } catch (err) {
-        console.error(err);
-    }
-}
-
-
-/**
- * Create a new image on the canvas.
- * @param options New image options.
- */
-export async function newSound(options?:canvasSoundOptions) {
-    try {
-        // Load defaults, overwrite with options.
-        let o = Object.assign({
-            volume: 1,
-        }, options);
-
-        // Generate a nice name for the image based on the filename.
-        o.name = await basename(o.src);
-        o.niceName = o.name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim();
-
-        // Make a sound.
-        o.sound = new Audio(convertFileSrc(o.src));
-        o.sound.addEventListener("canplaythrough", () => {
-            o.sound.volume = 0;
-            o.sound.loop = true;
-            o.sound.play();
-        })
-
-        // Determine the sound origin point coords if they haven't been provided.
-        if (typeof o.x == "undefined") o.x = 0;
-        if (typeof o.y == "undefined") o.y = 0; 
-
-        // Determine the area coords if provided
-        o.areaCoords = [];
-        options?.areaCoords.forEach(val => o.areaCoords.push(Object.assign({}, val)));
-        o.areaCoords.forEach(val => { val.x += 10; val. y += 10; });
-
-        R.setHasMedia(true);
-        R.setProjectDirty;
-        R.addToSounds(o);
-        R.getCanvas().update();
-    } catch(err) {
         console.error(err);
     }
 }
@@ -107,8 +84,14 @@ export async function newSound(options?:canvasSoundOptions) {
  * @param sound The canvas sound to duplicate.
  */
 export async function duplicateSound(sound:CanvasSound) {
+
+    // Offset the area coords
+    let newAreaCoords:Vector2D[] = [];
+    sound.areaCoords.forEach(val => newAreaCoords.push(Object.assign({}, val)));
+    newAreaCoords.forEach(val => { val.x += 10; val. y += 10; });
+
     newSound({
-        areaCoords:sound.areaCoords,
+        areaCoords:newAreaCoords,
         editable:sound.editable,
         grabbed:sound.grabbed,
         loop:sound.loop,

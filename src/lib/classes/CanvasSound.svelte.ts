@@ -1,27 +1,28 @@
 import { CanvasObject } from "./CanvasObject.svelte";
-import { getCanvas, getHandleSize, getHandleSlop, SoundType, TriggerType } from "$lib/registry.svelte";
+import { getAudioContext, getCanvas, getHandleSize, getHandleSlop, getMasterGain, SoundType, TriggerType } from "$lib/registry.svelte";
 import { Vector2D } from "$lib/util.vectors";
+import { convertFileSrc } from "@tauri-apps/api/core";
 
 /** Canvas Sound options. */
 export type canvasSoundOptions = {
-    areaCoords:Vector2D[],
-    editable:boolean,
-    grabbed:boolean,
-    localHandleAngle:number,
-    loop:boolean,
-    muted:boolean,
-    name:string,
-    niceName:string,
-    radius:number,
-    selected:boolean,
-    solo:boolean,
-    sound:HTMLAudioElement,
-    src:string,
-    soundType:SoundType,
-    triggerType:TriggerType,
-    volume:number,
-    x:number,
-    y:number,
+    areaCoords:         Vector2D[],
+    editable:           boolean,
+    grabbed:            boolean,
+    localHandleAngle:   number,
+    loop:               boolean,
+    muted:              boolean,
+    name:               string,
+    niceName:           string,
+    radius:             number,
+    selected:           boolean,
+    solo:               boolean,
+    sound:              HTMLAudioElement,
+    src:                string,
+    soundType:          SoundType,
+    triggerType:        TriggerType,
+    volume:             number,
+    x:                  number,
+    y:                  number
 }
 
 /**
@@ -29,20 +30,22 @@ export type canvasSoundOptions = {
  * @extends CanvasObject
  */
 export class CanvasSound extends CanvasObject{
-    #areaBounds:[Vector2D,Vector2D];
-    #areaCoords:Vector2D[];
-    #areaHandleIndex:number;
-    #localHandleAngle = 0;
-    #loop = true;
-    #muted:boolean = $state(false);
-    #originalAreaCoords:Vector2D[];
-    #radius:number = $state(0);
-    #solo:boolean = $state(false);
-    #src:string;
-    #sound:HTMLAudioElement;
-    #soundType:SoundType;
-    #triggerType:TriggerType;
-    #volume:number = $state(0);
+    #areaBounds:            [Vector2D,Vector2D];
+    #areaCoords:            Vector2D[];
+    #areaHandleIndex:       number;
+    #gain:                  GainNode;
+    #localHandleAngle:      number              = 0;
+    #loop:                  boolean             = true;
+    #muted:                 boolean             = $state(false);
+    #originalAreaCoords:    Vector2D[];
+    #radius:                number              = $state(0);
+    #solo:                  boolean             = $state(false);
+    #src:                   string;
+    #sound:                 HTMLAudioElement;
+    #soundType:             SoundType;
+    #track:                 MediaElementAudioSourceNode;
+    #triggerType:           TriggerType;
+    #volume:                number              = $state(0);
 
     constructor(options:canvasSoundOptions) {
         super({ 
@@ -55,7 +58,12 @@ export class CanvasSound extends CanvasObject{
             grabbed:options.grabbed,
         });
         this.#src = options.src;
-        this.#sound = options.sound;
+        this.#sound = new Audio(convertFileSrc(this.#src));
+        this.#sound.addEventListener("canplaythrough", () => {
+            this.#sound.volume = 0;
+            this.#sound.loop = true;
+            this.#sound.play();
+        });
         this.#soundType = options.soundType;
 
         this.#areaCoords = options.areaCoords;
@@ -65,11 +73,22 @@ export class CanvasSound extends CanvasObject{
         this.#localHandleAngle = options.localHandleAngle;
         this.#radius = options.radius;
 
+        this.#gain = getAudioContext().createGain();
         this.#loop = options.loop;
         this.#muted = options.muted;
         this.#solo = options.solo;
         this.#triggerType = options.triggerType;
         this.#volume = options.volume;
+
+        this.#track = getAudioContext().createMediaElementSource(this.#sound);
+        this.#gain = getAudioContext().createGain();
+
+        // Hook up audio context nodes
+        // Track -> Track gain -> Master gain -> Output
+        this.#track
+            .connect(this.#gain)
+            .connect(getMasterGain())
+            .connect(getAudioContext().destination);
     }
 
     /** Get if the sound is looped. @returns True: looped. False: not looped. */
@@ -160,7 +179,16 @@ export class CanvasSound extends CanvasObject{
     public get originalAreaCoords() { return this.#originalAreaCoords; }
     public set originalAreaCoords(coords:Vector2D[]) { this.#originalAreaCoords = coords; }
 
-
     public get sound() { return this.#sound; }
     public set sound(snd:HTMLAudioElement) { this.#sound = snd; }
+
+    public get track() { return this.#track; }
+    public set track(t:MediaElementAudioSourceNode) { this.#track = t; }
+
+    public get gain() { return this.#gain.gain.value; }
+    public set gain(g:number) { 
+        if (g<0) g=0;
+        else if (g>1) g=1;
+        this.#gain.gain.value = g; 
+    }
 }

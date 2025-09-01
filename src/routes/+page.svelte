@@ -1,4 +1,5 @@
 <script lang="ts">
+
     // ###################
     // ##### IMPORTS #####
     // ###################
@@ -239,7 +240,7 @@
         soundList = R.getSounds();
         isHelpActive = R.getIsHelpActive();
         masterOpacity = R.getMasterOpacity();
-        masterVolume = R.getMasterVolume();
+        masterVolume = R.getMasterGain().gain.value;
         manageCanvasSounds();
         R.getCanvas().panInertia();
         R.getCanvas().update();
