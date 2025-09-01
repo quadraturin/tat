@@ -10,7 +10,7 @@ import { pointCircleCollision, pointPolyCollision } from './util.collision';
 
 
 /**
- * Create a new sound in the project from a file path.
+ * Create a new sound in the project from a file path, optionally with X,Y coordinates.
  * @param src File path to the image.
  * @param x X position of the image.
  * @param y Y position of the image.
@@ -25,8 +25,15 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
             snd.play();
         })
         const name = await basename(src);
+        const newR = 30;
+        const newX = x ? x : 50;
+        const newY = y ? y : 50;
+        const newAreaCoords = [ new Vector2D(newX, newY + newR), 
+                                new Vector2D(newX + newR, newY), 
+                                new Vector2D(newX, newY - newR), 
+                                new Vector2D(newX - newR ,newY)];
         let options:canvasSoundOptions = {
-            areaCoords:[new Vector2D(20,0), new Vector2D(10,20), new Vector2D(80,90), new Vector2D(120,45)],
+            areaCoords:newAreaCoords,
             editable: true,
             grabbed: false,
             localHandleAngle: 0,
@@ -34,7 +41,7 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
             muted: false,
             name: name,
             niceName: name.replace(/\.[^/.]+$/, "").replace(/\_/," ").trim(),
-            radius: 23,
+            radius: newR,
             selected: false,
             solo: false,
             sound: snd,
@@ -42,8 +49,8 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
             triggerType: R.TriggerType.PlayOnLoad,
             src: src,
             volume: 1,
-            x: x? x : Math.random()*100,
-            y: y? y : Math.random()*100,
+            x: newX,
+            y: newY,
         }
         R.addToSounds(options);
         R.getCanvas().update();
@@ -80,6 +87,11 @@ export async function newSound(options?:canvasSoundOptions) {
         if (typeof o.x == "undefined") o.x = 0;
         if (typeof o.y == "undefined") o.y = 0; 
 
+        // Determine the area coords if provided
+        o.areaCoords = [];
+        options?.areaCoords.forEach(val => o.areaCoords.push(Object.assign({}, val)));
+        o.areaCoords.forEach(val => { val.x += 10; val. y += 10; });
+
         R.setHasMedia(true);
         R.setProjectDirty;
         R.addToSounds(o);
@@ -112,8 +124,8 @@ export async function duplicateSound(sound:CanvasSound) {
         soundType:sound.soundType,
         triggerType:sound.triggerType,
         volume:sound.volume,
-        x:sound.x + 20,
-        y:sound.y + 20,
+        x:sound.x + 10,
+        y:sound.y + 10,
     });
 }
 
