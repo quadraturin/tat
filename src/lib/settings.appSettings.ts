@@ -17,3 +17,5 @@ export const defaultUserSettings = new UserSettings;
 
 /** Whether to show debug widgets. */
 export const debugWidgets = false;
+
+export const objectFillAlpha = 0.2;

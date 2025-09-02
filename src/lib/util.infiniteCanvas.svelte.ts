@@ -2,7 +2,7 @@ import * as R from "$lib/registry.svelte";
 import type { CanvasImage } from "./classes/CanvasImage.svelte";
 import type { CanvasListener } from "./classes/CanvasListener.svelte";
 import type { CanvasSound } from "./classes/CanvasSound.svelte";
-import { debugWidgets } from "./settings.appSettings";
+import { debugWidgets, objectFillAlpha } from "./settings.appSettings";
 import { Vector2D } from "./util.vectors";
 
 /** The infinite canvas. */
@@ -264,6 +264,7 @@ export class InfiniteCanvas {
 
       // Next, draw test shapes. TODO: remove this.
       //this.#drawTests();
+      this.#drawRect(4, 4, 24, 29, true, true)
 
       if (!R.getImagesHidden()) {
         // Next, cycle through all images and draw them.
@@ -357,10 +358,16 @@ export class InfiniteCanvas {
    * @param y Y position of the center of the circle.
    * @param r Radius of the circle.
    */
-  #drawCircle(x: number, y: number, r: number, selected:boolean=false): void {
+  #drawCircle(x: number, y: number, r: number, selected:boolean=false, fill:boolean=false): void {
     if (this.canvas && this.context) {
-      if (selected && this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
-      else if (this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
+      if (selected && this.#wrap){ 
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c2");
+      }
+      else if (this.#wrap) { 
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cC");
+      }
       this.context.beginPath();
       this.context.arc(
         x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
@@ -368,6 +375,11 @@ export class InfiniteCanvas {
         r * this.#scale * this.#z,
         0, 360);
       this.context.stroke();
+      if (fill) {
+        this.context.globalAlpha = objectFillAlpha;
+        this.context.fill();
+        this.context.globalAlpha = 1;
+      }
     }
   }
 
@@ -379,17 +391,28 @@ export class InfiniteCanvas {
    * @param width Width of the rectangle.
    * @param height Height of the rectangle.
    */
-  #drawRect(x: number, y: number, width: number, height: number, selected:boolean|null) {
+  #drawRect(x: number, y: number, width: number, height: number, selected:boolean=false, fill:boolean=false) {
     if (this.canvas && this.context) {
       this.context.beginPath();
-      if (selected && this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
-      else if (this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
+      if (selected && this.#wrap) {
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c2");
+      }
+      else if (this.#wrap){
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cC");
+      }
       this.context.rect(
         x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
         y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
         width * this.#scale * this.#z,
         height * this.#scale * this.#z);
       this.context.stroke();
+      if (fill) {
+        this.context.globalAlpha = objectFillAlpha;
+        this.context.fill();
+        this.context.globalAlpha = 1;
+      }
     }
   }
 
@@ -399,11 +422,17 @@ export class InfiniteCanvas {
    * @param coords List of coordinates forming the points of the polygon.
    * @param selected Whether or not the polygon is selected.
    */
-  #drawPoly(coords:Vector2D[], selected:boolean=false) {
+  #drawPoly(coords:Vector2D[], selected:boolean=false, fill:boolean=false) {
     if (this.canvas && this.context) {
       this.context.beginPath();
-      if (selected && this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
-      else if (this.#wrap) this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
+      if (selected && this.#wrap) {
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c2");
+      }
+      else if (this.#wrap) { 
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cC");
+      }
       this.context.moveTo(
         coords[0].x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z, 
         coords[0].y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z);
@@ -414,7 +443,11 @@ export class InfiniteCanvas {
       }
       this.context.closePath()
       this.context.stroke();
-      //this.context.fill();
+      if (fill) {
+        this.context.globalAlpha = objectFillAlpha;
+        this.context.fill("evenodd");
+        this.context.globalAlpha = 1;
+      }
     }
   }
 
@@ -480,7 +513,7 @@ export class InfiniteCanvas {
    */
   #drawLocalSound(snd:CanvasSound): void {
     if (this.canvas && this.context) {
-      this.#drawCircle(snd.x, snd.y, snd.radius, snd.selected);
+      this.#drawCircle(snd.x, snd.y, snd.radius, snd.selected, true);
       this.#drawHandle(snd.x, snd.y, 0.5, snd.selected);
       if (snd.editable) {
         this.#drawHandle(
@@ -500,7 +533,7 @@ export class InfiniteCanvas {
   #drawAreaSound(snd:CanvasSound) {
     if (this.canvas && this.context) {
       // Draw the polygon.
-      this.#drawPoly(snd.areaCoords, snd.selected);
+      this.#drawPoly(snd.areaCoords, snd.selected, true);
       if (snd.editable) {
         // Draw the handles.
         for (let i=0; i<snd.areaCoords.length; i++) {

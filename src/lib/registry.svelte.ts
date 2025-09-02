@@ -185,19 +185,48 @@ export function setImages(newImages:Array<CanvasImage>) { images = newImages; }
 /** Add an image to the image list. @param options The new image information. */
 export function addToImages(options:canvasImageOptions) { 
     images.push(new CanvasImage(options)); 
-    console.log(images);
 }
 
 
 // ===== SOUNDS =====
 
-const audioContext = new AudioContext({ sampleRate: 48000, latencyHint: 'interactive' });
+const audioContext = new AudioContext();//{ sampleRate: 48000, latencyHint: 'interactive' });
 export function getAudioContext() { return audioContext; }
 
 const masterGain = audioContext.createGain();
-const compressor = audioContext.createDynamicsCompressor();
-masterGain.connect(compressor).connect(audioContext.destination);
 export function getMasterGain() { return masterGain; }
+
+const compressor = audioContext.createDynamicsCompressor();
+
+const lowpass    = audioContext.createBiquadFilter();
+lowpass.type = 'lowpass';
+lowpass.frequency.setValueAtTime(2000, audioContext.currentTime);
+//lowpass.Q.setValueAtTime(20, audioContext.currentTime);
+
+const highpass    = audioContext.createBiquadFilter();
+highpass.type = 'highpass';
+highpass.frequency.setValueAtTime(2000, audioContext.currentTime);
+//highpass.Q.setValueAtTime(20, audioContext.currentTime);
+
+const bandpass    = audioContext.createBiquadFilter();
+bandpass.type = 'bandpass';
+bandpass.frequency.setValueAtTime(2000, audioContext.currentTime);
+bandpass.Q.setValueAtTime(20, audioContext.currentTime);
+
+const waveShaper = audioContext.createWaveShaper();
+const distortionCurve = new Float32Array(1024);
+for (let i = 0; i < 1024; ++i) {
+    const x = (i * 2) / 1024 - 1; // Normalize to -1 to 1
+    distortionCurve[i] = (x < 0) ? Math.pow(x, 2) : Math.pow(x, 0.5); // Distortion effect
+}
+waveShaper.curve = distortionCurve;
+waveShaper.oversample = '4x';
+
+// Sound processing chain
+masterGain//.connect(waveShaper)
+    .connect(compressor)
+    .connect(audioContext.destination);
+
 
 /** The sound list. */
 let sounds = new Array<CanvasSound>;
@@ -227,6 +256,19 @@ export enum TriggerType {
     ReplayInside  = "REPLAYINSIDE", 
     PlayOnTimer   = "PLAYONTIMER"
 };
+
+// ===== EFFECTS =====
+
+export enum EffectType {
+    Lowpass         = "LOWPASS",        // BiquadFilterNode
+    Highpass        = "HIGHPASS",       // BiquadFilterNode
+    Reverb          = "REVERB",         // ConvolverNode
+    Compressor      = "COMPRESSOR",     // DynamicsCompressorNode
+    Distortion      = "DISTORTION",     // WaveShaperNode
+    Panner          = "PANNER",         // PannerNode
+    StereoPanner    = "STEREOPANNER"    // StereoPannerNode
+
+}
 
 // ##########################
 // ##### MEDIA CONTROLS #####
