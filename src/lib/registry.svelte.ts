@@ -191,12 +191,12 @@ export function addToImages(options:canvasImageOptions) {
 
 // ===== SOUNDS =====
 
-const audioContext = new AudioContext();
-if (audioContext.state === "suspended") audioContext.resume();
+const audioContext = new AudioContext({ sampleRate: 48000, latencyHint: 'interactive' });
 export function getAudioContext() { return audioContext; }
 
 const masterGain = audioContext.createGain();
-masterGain.connect(audioContext.destination);
+const compressor = audioContext.createDynamicsCompressor();
+masterGain.connect(compressor).connect(audioContext.destination);
 export function getMasterGain() { return masterGain; }
 
 /** The sound list. */

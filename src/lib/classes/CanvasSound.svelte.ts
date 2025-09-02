@@ -59,9 +59,9 @@ export class CanvasSound extends CanvasObject{
         });
         this.#src = options.src;
         this.#sound = new Audio(convertFileSrc(this.#src));
+        this.#sound.volume = options.volume;
+        this.#sound.loop = options.loop;
         this.#sound.addEventListener("canplaythrough", () => {
-            this.#sound.volume = 0;
-            this.#sound.loop = true;
             this.#sound.play();
         });
         this.#soundType = options.soundType;

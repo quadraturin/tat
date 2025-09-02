@@ -18,7 +18,7 @@
     // ===== Modules =====
     import { onMount } from 'svelte'
     import { image } from '@tauri-apps/api';
-    import { LogicalSize } from '@tauri-apps/api/window'
+    import { LogicalSize, Window } from '@tauri-apps/api/window'
     import { getCurrentWindow } from '@tauri-apps/api/window';
 	import { tryQuit } from '$lib/quit';
 

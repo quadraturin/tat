@@ -44,8 +44,10 @@ export async function changeMasterVolume(event:WheelEvent) {
     if (getUserSettings().invertVolumeScroll) delta *= -1;
 
     // Set master volume, clamped between 0 and 1.
-    getMasterGain().gain.value = Math.max(0, Math.min(1, 
-        getMasterGain().gain.value + delta * 0.01 * getUserSettings().uiScrollSensitivity));
+    const val = Math.max(0, Math.min(1, getMasterGain().gain.value + delta * 0.01 * getUserSettings().uiScrollSensitivity))
+    if (getMasterGain().gain.value != val) {
+        getMasterGain().gain.setValueAtTime(val, getAudioContext().currentTime + 0.03);
+    }
 }
 
 /**
