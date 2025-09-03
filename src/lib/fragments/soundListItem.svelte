@@ -104,6 +104,26 @@
         {item.niceName}
     </button>
 
+    <!-- Sound Add Button -->
+    <button class="item-button item-add button-l" 
+    onclick     = {()=>duplicateSound(item)}
+    onfocus     = {()=>{}} 
+    onblur      = {()=>{}}
+    onmouseout  = {()=>{help()}}
+    onmouseover = {()=>{help($t('help.map.soundDuplicate'))}}>
+        +
+    </button>
+
+    <!-- Sound Delete Button -->
+    <button class="item-button item-delete button-r" 
+    onclick     = {()=>removeSound(i)}
+    onfocus     = {()=>{}} 
+    onblur      = {()=>{}}
+    onmouseout  = {()=>{help()}}
+    onmouseover = {()=>{help($t('help.map.soundDelete'))}}>
+        ×
+    </button>
+
     <!-- Sound Progress Track / Seek Button -->
     <button class="sound-item-progress-track" aria-label="seek"
     bind:this   = {soundTrack} 
@@ -209,25 +229,5 @@
         item.solo ? help($t('help.map.soundUnSolo')) : help($t('help.map.soundSolo'))
     }}>
         S
-    </button>
-
-    <!-- Sound Add Button -->
-    <button class="item-button item-add button-l" 
-    onclick     = {()=>duplicateSound(item)}
-    onfocus     = {()=>{}} 
-    onblur      = {()=>{}}
-    onmouseout  = {()=>{help()}}
-    onmouseover = {()=>{help($t('help.map.soundDuplicate'))}}>
-        +
-    </button>
-
-    <!-- Sound Delete Button -->
-    <button class="item-button item-delete button-r" 
-    onclick     = {()=>removeSound(i)}
-    onfocus     = {()=>{}} 
-    onblur      = {()=>{}}
-    onmouseout  = {()=>{help()}}
-    onmouseover = {()=>{help($t('help.map.soundDelete'))}}>
-        ×
     </button>
 </div>
