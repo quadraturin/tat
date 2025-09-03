@@ -678,14 +678,11 @@ body {
     margin-bottom: 0;
 }
 #browser .item-name {
-    flex: 10;
+    flex: 80%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     z-index: 10;
-}
-#browser .image-item .item-name {
-    flex: 12;
 }
 #browser .item-button {
     flex: 1;
@@ -717,11 +714,6 @@ body {
 }
 #browser .item-button svg {
     margin: 0 auto;
-}
-.sound-item .item-name {
-    flex-basis: 100%;
-    height:10px;
-    flex:none !important;
 }
 .sound-item-progress-track {
     flex-basis: 100%;
