@@ -19,6 +19,9 @@ export async function newImageFromPath(src:string, x?:number, y?:number) {
         const img = new Image();
         img.src = convertFileSrc(src);
         const name = await basename(src);
+        const vpc = R.getCanvas().viewportCenterInWorldSpace();
+        const newX = x ? x : vpc.x;
+        const newY = y ? y : vpc.y;
 
         let options:canvasImageOptions = {
             editable: true,
@@ -33,9 +36,8 @@ export async function newImageFromPath(src:string, x?:number, y?:number) {
             selected: false,
             src: src,
             width: img.width,
-            x: x? x : Math.random()*100,
-            y: y? y : Math.random()*100,
-            
+            x: newX,
+            y: newY           
         }
         R.addToImages(options);
         R.getCanvas().update();

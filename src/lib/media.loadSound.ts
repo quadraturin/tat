@@ -46,8 +46,9 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
         const snd = new Audio(convertFileSrc(src));
         const name = await basename(src);
         const newR = 30;
-        const newX = x ? x : 50;
-        const newY = y ? y : 50;
+        const vpc = R.getCanvas().viewportCenterInWorldSpace();
+        const newX = x ? x : vpc.x;
+        const newY = y ? y : vpc.y;
         const newAreaCoords = [ new Vector2D(newX, newY + newR), 
                                 new Vector2D(newX + newR, newY), 
                                 new Vector2D(newX, newY - newR), 

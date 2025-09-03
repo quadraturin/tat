@@ -117,6 +117,29 @@ export class InfiniteCanvas {
   here(){ return({x:this.#offsetX, y:this.#offsetY}); }
 
 
+  /** Get the center point of the viewport in world space. @returns The X and Y of the center point. */
+  viewportCenter(){
+    return {
+      x: (this.canvas?.clientWidth ?? 0)/2,
+      y: (this.canvas?.clientHeight ?? 0)/2
+    }
+  }
+
+  /** Get the center point of the viewport in world space. @returns The X and Y of the center point. */
+  viewportCenterInWorldSpace(){
+    return {
+      x: this.toWorldX(0) + this.toWorldLength(this.canvas?.clientWidth ?? 0)/2,
+      y: this.toWorldY(0) + this.toWorldLength(this.canvas?.clientHeight ?? 0)/2
+    }
+  }
+/*
+  viewportToWorld(){
+    return {
+      x: this.toWorldX(0),
+      y: this.toWorldY(0),
+      x2: this.toWorldX()
+  }
+*/
   // ####################################
   // ##### CANVAS VIEWPORT CONTROLS #####
   // ####################################
@@ -160,34 +183,52 @@ export class InfiniteCanvas {
    * @param x The x position to center the zoom at.
    * @param y The y position to center the zoom at.
    */
-  zoom(amount?: number, x?: number, y?: number): void {
+  zoom(amount?: number, x?:number, y?:number): void {
     let preZoomX = 0;
     let preZoomY = 0;
     let postZoomX = 0;
     let postZoomY = 0;
 
     if (typeof amount != "undefined") {
+      // Only zoom if current zoom is in bounds, or at max and decreasing, or at min and increasing
       if ((this.#z < this.#maxZ && this.#z > this.#minZ) ||
           (this.#z >= this.#maxZ && amount < 1) ||
           (this.#z <= this.#minZ && amount > 1)) {
-        // default to 0
-        if (typeof x == "undefined") x = 0;
-        if (typeof y == "undefined") y = 0;
 
-        // get mouse pos in world space
-        preZoomX = this.toWorldX(x);
-        preZoomY = this.toWorldY(y);
+        // If x and y are unspecified, set them to the viewport center.
+        if (typeof x == "undefined") { 
+          x = this.viewportCenter().x;
+          preZoomX = this.viewportCenterInWorldSpace().x 
+        } else { 
+          preZoomX = this.toWorldX(x);
+        }
+        if (typeof y == "undefined") { 
+          y = this.viewportCenter().y;
+          preZoomY = this.viewportCenterInWorldSpace().y 
+        } else {
+          preZoomY = this.toWorldY(y);
+        }
+
+        // Set the zoom level.
         this.#z*=amount;
+
+        // Get the viewport offsets for the post-zoom locations.
         postZoomX = this.toWorldX(x);
         postZoomY = this.toWorldY(y);
+        
+        // Set the new viewport offsets.
         this.#offsetX -= preZoomX - postZoomX;
         this.#offsetY -= preZoomY - postZoomY;
       }
     } else {
+      // If no zoom is specified, reset zoom to 1.
       this.#z = 1;
     }
+    // Clamp zoom between min and max values.
     if (this.#z > this.#maxZ) this.#z = this.#maxZ;
     if (this.#z < this.#minZ) this.#z = this.#minZ;
+
+    // Redraw the canvas.
     this.#draw();
   }
 
@@ -264,7 +305,7 @@ export class InfiniteCanvas {
 
       // Next, draw test shapes. TODO: remove this.
       //this.#drawTests();
-      this.#drawRect(4, 4, 24, 29, true, true)
+      //this.#drawCircle(this.viewportCenterInWorldSpace().x, this.viewportCenterInWorldSpace().y, 5, true);
 
       if (!R.getImagesHidden()) {
         // Next, cycle through all images and draw them.
