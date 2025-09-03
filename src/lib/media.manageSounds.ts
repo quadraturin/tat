@@ -56,14 +56,17 @@ export function manageCanvasSounds(){
         else {
             // Global sound: only modify with master volume.
             if (snd.soundType == R.SoundType.Global) { 
-                if(snd.gain != snd.volume) snd.gain = snd.volume; 
+                if(snd.gain != snd.volume) 
+                    snd.gainNode.gain.linearRampToValueAtTime(snd.volume, R.getAudioContext().currentTime+0.5); 
             }
             // Area sound: only audible if listener in area, modify with master volume.
             else if (snd.soundType == R.SoundType.Area) {
                 if (pointPolyCollision(l.x, l.y, snd.areaCoords)){
-                    if(snd.gain != snd.volume) snd.gain = snd.volume; 
+                    if(snd.gain != snd.volume) 
+                        snd.gainNode.gain.linearRampToValueAtTime(snd.volume, R.getAudioContext().currentTime+0.5); 
                 } else {
-                    if(snd.gain != 0) snd.gain = 0; 
+                    if(snd.gain != 0) 
+                        snd.gainNode.gain.linearRampToValueAtTime(0, R.getAudioContext().currentTime+0.5); 
                 }
             }
             // Local sound: louder as listener approaches center, modify with master volume.
@@ -80,7 +83,8 @@ export function manageCanvasSounds(){
                         snd.gainNode.gain.setTargetAtTime(snd.volume * distVolume, R.getAudioContext().currentTime, 0.015); 
                     }
                 } else {
-                    if(snd.gain != 0) snd.gain = 0; 
+                    if(snd.gain != 0) 
+                        snd.gainNode.gain.linearRampToValueAtTime(0, R.getAudioContext().currentTime+0.5); 
                 }
             }
         }
