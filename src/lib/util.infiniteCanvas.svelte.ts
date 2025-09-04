@@ -35,7 +35,7 @@ export class InfiniteCanvas {
    * Constructor for the Infinite Canvas.
    * @param cellSize Determines size of the grid.
    */
-  constructor(cellSize = 240) {
+  constructor(cellSize = 1000) {
     this.cellSize = cellSize;
     const canvas = document.getElementById("canvas");
 
@@ -294,15 +294,25 @@ export class InfiniteCanvas {
         this.context.rect(0, 0, this.canvas.width, this.canvas.height);
         this.context.fill();
         this.context.closePath();
+
+        const width = this.canvas.clientWidth;
+        const height = this.canvas.clientHeight;
+
+        // Grid styles
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c2");
+        this.context.lineWidth = 1;
+        this.context.font = "10px monospace";
+        this.context.beginPath();
+        
+        //this.context.fillText(`${this.#z}`, 100, 100);
+
+        // Bottom layer: draw the canvas grid.
+        if (this.#z < 0.75)                 this.#drawGrid(false, this.context, width, height, 1, false);
+        if (this.#z < 7.5 && this.#z > 0.1) this.#drawGrid(false, this.context, width, height, 0.1);
+        if (this.#z < 75 && this.#z > 1)    this.#drawGrid(false, this.context, width, height, 0.01);
+        if (this.#z > 10)                   this.#drawGrid(false, this.context, width, height, 0.001);
       }
-
-      // Bottom layer: draw the canvas grid.
-      if (this.#z < 1.4)                  this.#drawGrid(true,1/2, false);
-      if (this.#z > 0.2 && this.#z <= 3)  this.#drawGrid(true,1/8);
-      if (this.#z > 0.8 && this.#z <= 12) this.#drawGrid(true,1/32);
-      if (this.#z > 3)                    this.#drawGrid(true,1/128);
-      if (this.#z > 12)                   this.#drawGrid(true,1/512);
-
       // Next, draw test shapes. TODO: remove this.
       //this.#drawTests();
       //this.#drawCircle(this.viewportCenterInWorldSpace().x, this.viewportCenterInWorldSpace().y, 5, true);
@@ -334,38 +344,33 @@ export class InfiniteCanvas {
    * Draw the grid on the canvas.
    * @param showNumbers Whether or not to display the grid numbers.
    */
-  #drawGrid(showNumbers:boolean, scaleFactor:number = 1, fade:boolean = true): void {
-    if (this.canvas && this.context && this.#wrap) {
-      const width = this.canvas.clientWidth;
-      const height = this.canvas.clientHeight;
-
-      // Grid styles
-      this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
-      this.context.fillStyle = this.#wrap.style.getPropertyValue("--cC");
-      this.context.lineWidth = 1;
-      this.context.font = "10px monospace";
-      this.context.beginPath();
-      
-      //this.context.fillText(`${this.#z}`, 100, 100);
+  #drawGrid(showNumbers:boolean, 
+            ctx:CanvasRenderingContext2D, 
+            width:number, 
+            height:number,
+            scaleFactor:number = 1, 
+            fade:boolean = true): void {
 
       // Increment size (world space) to draw grid lines
-      let inc = (this.cellSize*2) * this.#scale * this.#z * scaleFactor;
+      let inc = this.cellSize * this.#scale * this.#z * scaleFactor;
 
-      let a = fade ? Math.min(1, Math.max(0, 1 - (this.cellSize * this.#scale - inc)/(inc*16))) : 1;
-      this.context.globalAlpha = a;
+      // Determine opacity
+      let a = fade ? Math.min(1, Math.max(0, 1 - (this.cellSize * this.#scale - inc)/(inc*100))) : 1;
+      ctx.globalAlpha = a;
       
-      // draw vertical lines
+      // Draw vertical lines
       for (let x = this.#offsetX % this.cellSize * this.#scale * this.#z - (this.cellSize * this.#scale * this.#z);
            x <= width;
            x += inc) {
         const source = x;
-        this.context.moveTo(source, 0);
-        this.context.lineTo(source, height);
+        ctx.moveTo(source, 0);
+        ctx.lineTo(source, height);
 
-        if (showNumbers && this.#z >= 0.075) {
+        if (showNumbers) {
           let num = this.toWorldX(source).toFixed(0);
           if (num == "-0") num = "0";
-          this.context.fillText(`${num}`, source + 2, height - 20);
+          let bottomPadding = R.getIsHelpActive() ? 26 : 2;
+          ctx.fillText(`${num}`, source + 2, height - bottomPadding);
         }
       }
 
@@ -374,17 +379,16 @@ export class InfiniteCanvas {
         y <= height;
         y += inc) {
         const destination = y;
-        this.context.moveTo(0, destination);
-        this.context.lineTo(width, destination);
-        if (showNumbers && this.#z >= 0.075) {
+        ctx.moveTo(0, destination);
+        ctx.lineTo(width, destination);
+        if (showNumbers) {
           let num = this.toWorldY(destination).toFixed(0);
           if (num == "-0") num = "0";
-          this.context.fillText(`${num}`, 2, destination - 2);
+          ctx.fillText(`${num}`, 2, destination - 2);
         }
       }
-      this.context.stroke();
-      this.context.globalAlpha = 1;
-    }
+      ctx.stroke();
+      ctx.globalAlpha = 1;
   }
 
 
@@ -402,12 +406,12 @@ export class InfiniteCanvas {
   #drawCircle(x: number, y: number, r: number, selected:boolean=false, fill:boolean=false): void {
     if (this.canvas && this.context) {
       if (selected && this.#wrap){ 
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c2");
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cF");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cF");
       }
       else if (this.#wrap) { 
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cC");
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c8");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c8");
       }
       this.context.beginPath();
       this.context.arc(
@@ -436,12 +440,12 @@ export class InfiniteCanvas {
     if (this.canvas && this.context) {
       this.context.beginPath();
       if (selected && this.#wrap) {
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c2");
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cF");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cF");
       }
       else if (this.#wrap){
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cC");
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cF");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cF");
       }
       this.context.rect(
         x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
@@ -467,12 +471,12 @@ export class InfiniteCanvas {
     if (this.canvas && this.context) {
       this.context.beginPath();
       if (selected && this.#wrap) {
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c2");
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cF");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cF");
       }
       else if (this.#wrap) { 
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cC");
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c8");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c8");
       }
       this.context.moveTo(
         coords[0].x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z, 
@@ -506,11 +510,11 @@ export class InfiniteCanvas {
   #drawHandle(x:number, y:number, r:number, selected:boolean, fill:boolean=true): void {
     if (this.canvas && this.context) {
       if (selected && this.#wrap) { 
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");;
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c2");;
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cF");;
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cF");;
       } else if (this.#wrap) { 
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");;
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cC");;
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c8");;
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c8");;
       }
       this.context.beginPath();
       this.context.arc(
@@ -532,8 +536,8 @@ export class InfiniteCanvas {
   #drawListener(l:CanvasListener, r: number): void {
     if (this.canvas && this.context) {
       if (this.#wrap) {
-        this.context.strokeStyle = l.selected ? this.#wrap.style.getPropertyValue("--c2") : this.#wrap.style.getPropertyValue("--c4");
-        this.context.fillStyle = l.selected ? this.#wrap.style.getPropertyValue("--c2") : this.#wrap.style.getPropertyValue("--c4");
+        this.context.strokeStyle = l.selected ? this.#wrap.style.getPropertyValue("--cF") : this.#wrap.style.getPropertyValue("--c0");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cE");
       }
       this.context.beginPath();
       this.context.arc(

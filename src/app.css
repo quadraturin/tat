@@ -35,23 +35,23 @@
 :root {
     height: 100%;
     overscroll-behavior: none;
-    /* debug theme */
-    --c0: gray;
-    --c1: darkgray;
-    --c2: lightgray;
-    --c3: white;
-    --c4: navy;
-    --c5: skyblue;
-    --c6: black;
-    --c7: gray;
-    --c8: yellow;
-    --c9: red;
-    --cA: black;
-    --cB: orange;
-    --cC: orange;
-    --cD: orange;
-    --cE: orange;
-    --cF: orange;
+    /* debug theme: value */
+    --c0: #000; /* Window borders */
+    --c1: #111; /* Canvas background */
+    --c2: #222; /* Canvas grid lines */
+    --c3: #333; /* UI background */
+    --c4: #444; /* UI foreground */
+    --c5: #555; /* UI button */
+    --c6: #666; /* UI button highlight */
+    --c7: #777; /* UI text */
+    --c8: #888; /* Sounds */
+    --c9: #999; /* Title text */
+    --cA: #aaa;
+    --cB: #bbb;
+    --cC: #ccc;
+    --cD: #ddd; 
+    --cE: #eee; /* Listener */
+    --cF: #fff; /* Selected */
 
     --f0: monospace;
     
@@ -62,8 +62,7 @@ body {
     height: 100%;
 }
 .container {
-    border: 1px solid gray;
-    border-top: none;
+    border: 1px solid var(--c0);
     touch-action: none;
     user-select: none;
     position: absolute;
@@ -71,218 +70,6 @@ body {
     width: 100%;
     height: 100%;
 }
-
-/* App Colors */
-
-/* c0: Map background */
-#map { 
-    background-color: var(--c0); 
-}
-
-/* c1: UI background & item list foreground */
-.titlebar, 
-#help-text, 
-#help-toggle,
-#browser, 
-#controls,
-.sound-item-progress-bar { 
-    background-color: var(--c1); 
-}
-
-/* c2: Map items */
-.leaflet-tile { 
-    color: var(--c2); 
-}
-.leaflet-vertex-icon { 
-    background: var(--c2); 
-}
-.leaflet-middle-icon { 
-    border: 1px solid var(--c2); 
-}
-.leaflet-interactive { 
-    stroke: var(--c2); 
-}
-.leaflet-sound-pane 
-.leaflet-interactive { 
-    fill: var(--c2); 
-}
-.listener-stroke {
-    stroke: var(--c2);
-}
-
-/* c3: Button text */
-.toolbar-button,
-#controls button,  
-#browser .item-button { 
-    color: var(--c3); 
-}
-
-/* c4: List item backgrounds */
-#master-volume, #master-opacity, .item-volume { 
-    background-color: var(--c4); 
-}
-
-/* c5: UI foregrounds & list item volume */
-.titlebar, 
-#help, 
-#help-toggle,
-#browser-sounds, 
-#browser-images { 
-    color: var(--c5); 
-}
-#master-volume, #master-opacity, .item-volume, .item { 
-    border: 1px solid var(--c5); 
-}
-.item-name {
-    color: var(--c5);
-}
-
-/* c6: Button backgrounds */
-.toolbar-button,
-#controls button, 
-#browser .item-button, 
-#master-volume-bar, #master-opacity-bar, .volume { 
-    background-color: var(--c6); 
-}
-.browser-heading-button,
-.titlebar-button { 
-    color: var(--c6); 
-}
-
-/* c7: Menu & tab background */
-.toolbar-button.selected, 
-.menu, 
-.menu::-webkit-scrollbar { 
-    background-color: var(--c7) !important; 
-}
-.menu h2, 
-.setting button, 
-.rangeValue {
-    color: var(--c7); 
-};
-
-/* c7-8: Menu scrollbar */
-.menu { 
-    scrollbar-color: var(--c7) var(--c8); 
-}
-
-/* c8: Menu & tab foreground */
-.menu h2,
-input[type=checkbox]::after, 
-input[type=checkbox]:hover::after, 
-.setting button, 
-input[type=range]::-webkit-slider-thumb {
-    background-color: var(--c8); 
-}
-.menu::-webkit-scrollbar-corner, 
-.menu::-webkit-resizer, 
-.menu::-webkit-scrollbar-thumb, 
-input[type=range]::-webkit-slider-thumb,
-.rangeValue {
-    background-color: var(--c8); 
-}
-input[type=range]::-moz-range-thumb {
-    background-color: var(--c8); 
-}    
-.menu, input[type=range], 
-select, 
-.toolbar-button.selected { 
-    color:var(--c8) !important; 
-}
-input[type=checkbox] {
-    border: 1px solid var(--c8) !important;
-} 
-input[type=range], 
-select {
-    border: 1px solid var(--c8);
-}
-.rangeValue::after {
-    border-right: 3px solid var(--c8);
-}
-
-/* c9: Menu highlights & links */
-input:focus, 
-select:focus, 
-button:focus {
-    outline: 1px solid var(--c9);
-}
-.changed label, .menu a {
-    color:var(--c9);
-}
-.changed select {
-    color:var(--c9) !important;
-}
-.changed input, .changed select {
-    border-color: var(--c9) !important;
-}
-.changed input[type=range]::-webkit-slider-thumb {
-    background-color: var(--c9);
-}
-.changed input[type=range]::-moz-range-thumb {
-    background-color: var(--c9);
-}
-.changed .rangeValue {
-    background-color: var(--c9);
-}
-.changed .rangeValue::after {
-    border-right: 3px solid var(--c9);
-}
-.changed input[type=checkbox]::after {
-    background-color: var(--c9);
-}
-
-/* cA: Activated button foreground */
-#browser .activated {
-    color: var(--cA) !important;
-}
-
-/* cB: Activated button background */
-#browser .activated {
-    background-color: var(--cB) !important;
-}
-
-/* cC: Selected item highlights */
-.leaflet-interactive.selected { 
-    stroke:var(--cC); 
-}
-#browser .item.selected { 
-    border: 1px solid var(--cC) !important; 
-}
-
-/* cD: Listener */
-.listener-stroke {
-    fill: var(--cD);
-}
-
-/* cE: Hover backgrounds */
-#controls button:hover, 
-.toolbar-button:hover, 
-#browser .item-button:hover, 
-.setting button:hover { 
-    background-color: var(--cE); 
-}
-.titlebar .titlebar-button:hover, 
-.browser-heading-button:hover, 
-.browser-heading-button.soundsHidden,
-.browser-heading-button.imagesHidden,
-.menu a:hover { 
-    color: var(--cE); 
-}
-#browser button.activated:hover {
-    color: var(--cE) !important;
-}
-
-/* cF: Hover foregrounds */
-#controls button:hover, 
-.toolbar-button:hover, 
-#browser .item-button:hover, 
-.setting button:hover { 
-    color: var(--cF); 
-}
-#browser .activated:hover {
-    color: var(--cF) !important;
-}
-
 
 .listener {
     background: none;
@@ -318,28 +105,26 @@ button:focus {
 .toolbar-button,
 #controls button,
 #browser .item-button {
-    border: 1px solid var(--c5);
+    border: 1px solid var(--c0);
+    background-color: var(--c5);
+}
+.toolbar-button:hover,
+#controls button:hover,
+#browser .item-button:hover {
+    background-color: var(--c6);
 }
 .titlebar-button .svg-outer {
-    stroke: var(--c5);
+    stroke: var(--c0);
     stroke-width: 1px;
+    fill: var(--c5);
+}
+.titlebar-button:hover .svg-outer {
+    fill: var(--c6);
 }
 .titlebar-button .svg-inner {
-    fill: var(--c3);
+    fill: var(--c0);
 }
-#controls,
-#browser,
-.titlebar,
-.leaflet-touch, 
-#help-text,
-#help-toggle,
-.menu { 
-    border: 1px solid #93a1a1;
-}
-
 #browser .item.locked { 
-    border: 1px dashed var(--c5); 
-    border-left-style: solid;
 }
 .leaflet-touch {border-top: none;}
 #help-text {
@@ -347,14 +132,10 @@ button:focus {
     border-right: none;
 }
 #help-toggle {
-    border-left: none;
-    border-bottom: none;
 }
 #help.activated #help-toggle {
-    border-right:none;
 }
 .sound-item-progress-track {
-    background-color: #93a1a1;
 }
 
 
@@ -364,15 +145,12 @@ button:focus {
 #browser::-webkit-scrollbar-thumb, 
 input[type=range]::-webkit-slider-thumb,
 .rangeValue {
-    background-color: #93a1a1; 
 }
 
 
 
 
 #modal {
-    background-color: black;
-    color: white;
 }
 
 /* app styles */
@@ -411,8 +189,14 @@ body {
 }
 
 /* Tool Bar */
+.titlebar{
+    background-color: var(--c3);
+    border-color: var(--c0);
+    border: 1px solid var(--c0);
+}
 
 .titlebar h1 {
+    color: var(--c9);
     float:left;
     display: block;
     font-size: 10pt;
@@ -428,6 +212,11 @@ body {
     padding: 2px 0;
     font-size: 10pt;
     display: flex;
+    border: 1px solid var(--c0);
+    background-color: var(--c5);
+}
+.toolbar-button:hover {
+    background-color: var(--c6);
 }
 .toolbar-button.button-l {
     border-radius: 4px 0 0 4px;
@@ -501,38 +290,14 @@ body {
     margin: auto 6px auto 0;
 }
 
-/* Not showing real world maps - hide attribution */
-
-.leaflet-control-attribution {
-    display: none;
-}
-
-/*  Classes for leaflet markers: 
-    leaflet-marker-icon 
-    leaflet-div-icon 
-    leaflet-vertex-icon 
-    leaflet-zoom-animated 
-    leaflet-interactive 
-    leaflet-marker-draggable  */
-
-.leaflet-vertex-icon {
-    border: none;
-    border-radius: 9999px;
-}
-.leaflet-middle-icon {
-    background: none;
-    opacity: 100% !important;
-    border-radius: 9999px;
-}
-
 /* help area */
 
 #help {
+    color: var(--c7);
     z-index: 10000;
     position: absolute;
-    bottom: 0;
-    left: 0;
-    padding: 0 1px 1px 1px;
+    bottom: 6px;
+    left: 6px;
     font-size: 0.7rem;
     font-weight: bold;
     -webkit-user-select: none;  /* Chrome all / Safari all */
@@ -540,30 +305,40 @@ body {
     -ms-user-select: none;      /* IE 10+ */
     user-select: none;          /* Likely future */  
     cursor: default;
-    width: 100%;
+    width: calc(100% - 12px);
     display: flex;
+    border-radius: 8px;
 }
 #help.activated {
     box-shadow: 0 0 5px rgba(0,0,0,0.25);
+    background-color: var(--c3);
+    border: 1px solid var(--c0);
 }
 #help.activated #help-text { 
     display:block; 
 }
 #help.activated #help-toggle {
-    border-radius: 0;
     box-shadow: none;
+    border-top: none;
+    border-left: none;
+    border-bottom: none;
+    border-radius: 8px 0 0 8px;
 }
 #help-toggle {
     font-weight: bold;
     padding: 0;
     flex-basis: 18px;
     width: 18px;
-    border-top-right-radius: 8px;
     box-shadow: 0 0 5px rgba(0,0,0,0.25);
+    background-color: var(--c5);
+    border: 1px solid var(--c0);
+    border-radius: 8px;
+}
+#help-toggle:hover {
+    background-color: var(--c6);
 }
 #help-text {
     display: none;
-    min-height:18px;
     padding: 0 4px;
     flex-grow: 1;
 }
@@ -574,13 +349,15 @@ body {
 /* Map Controls */
 
 #controls{
+    background-color: var(--c3);
+    border: 1px solid var(--c0);
     z-index: 10000;
     position: absolute;
     top: 42px;
     left: 6px;
     font-size: 0.7rem;
     font-weight: bold;
-    border-radius: 4px;
+    border-radius: 8px;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     -webkit-user-select: none;  /* Chrome all / Safari all */
@@ -595,7 +372,7 @@ body {
     flex: 1;
     margin-right: 2px;
     padding: 0;
-    border-radius: 2px;
+    border-radius: 4px;
     width: 22px;
 }
 #controls button svg {
@@ -631,6 +408,8 @@ body {
 /* Media Browser */
 
 #browser {
+    background-color: var(--c3);
+    border: 1px solid var(--c0);
     z-index: 10000;
     position: absolute;
     top: 78px;
@@ -645,7 +424,10 @@ body {
     cursor: default;
     max-height: calc(100% - 104px);
     overflow: scroll;
-    border-radius: 4px;
+    border-radius: 8px;
+}
+.browser-heading {
+    color: var(--c9);
 }
 .browser-heading svg {
     height: 14px;
@@ -666,18 +448,21 @@ body {
     margin: 4px;
 }
 #browser .item {
+    background-color: var(--c4);
+    border: 1px solid var(--c0); 
     margin: 0 0 4px 8px;
     padding: 3px;
     display: flex;
     line-height: 10px;
     flex-wrap: wrap;
     position: relative;
-    border-radius: 0 2px 2px 0;
+    border-radius: 0 4px 4px 0;
 }
 #browser .item:first-child {
     margin-bottom: 0;
 }
 #browser .item-name {
+    color: var(--c7);
     flex: 80%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -723,6 +508,7 @@ body {
     z-index: 10;
     border: none;
     padding: 0 1px;
+    background-color: var(--c0);
 }
 .sound-item-progress-bar {
     height: 4px;
@@ -731,15 +517,22 @@ body {
     width: 0%;
     z-index: 10;
     border: none;
+    background-color: var(--c5);
 }
+.sound-item-progress-track:hover .sound-item-progress-bar {
+    background-color: var(--c6);
+}
+
 .item-volume {
     position: absolute;
     width: 8px;
-    border-right: none;
     height: calc(100% + 2px);
     top: -1px;
     left: -9px;
-    border-radius: 2px 0 0 2px;
+    background-color: var(--c4);
+    border: 1px solid var(--c0); 
+    border-right: none;
+    border-radius: 4px 0 0 4px;
 }
 .volume {
     position:absolute;
@@ -748,6 +541,7 @@ body {
     height: 80%;
     z-index: 0;
     border-radius: 1px 0 0 1px;
+    background-color: var(--c0);
 }
 .item-name {
     background: none;
@@ -756,18 +550,32 @@ body {
     text-align: left;
 }
 #master-volume, #master-opacity {
+    border: 1px solid var(--c0);
     width: 9px;
     height: 14px;
     display: inline-block;
     position: relative;
     vertical-align: top;
-    border-radius: 1px;
+    border-radius: 4px;
     margin-bottom: 4px;
 }
 #master-volume-bar, #master-opacity-bar {
     width: 100%;
     position: absolute;
     bottom: 0;
+    background-color: var(--c0);
+}
+#browser .item.selected, #browser .item.selected .item-volume {
+    border-color: var(--cE);
+}
+#browser .item.selected .volume {
+    background-color: var(--cE);
+}
+#browser .item.locked, #browser .item.locked .item-volume {
+    border-color: var(--c2);
+}
+#browser .item.locked .volume {
+    background-color: var(--c2);
 }
 
 /* Menus */
