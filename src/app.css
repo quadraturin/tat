@@ -36,7 +36,7 @@
     height: 100%;
     overscroll-behavior: none;
     /* debug theme: value */
-    --c0: #000; /* Window borders */
+    --c0: #252525; /* Window borders */
     --c1: #111; /* Canvas background */
     --c2: #222; /* Canvas grid lines */
     --c3: #333; /* UI background */
@@ -108,6 +108,7 @@ body {
 .menu button {
     border: 1px solid var(--c0);
     background-color: var(--c5);
+    color: var(--c0);
 }
 .toolbar-button:hover,
 #controls button:hover,
@@ -482,6 +483,12 @@ body {
     border-radius: 2px;
     z-index: 10;
 }
+#browser .item-button.activated {
+    background-color: var(--c6);
+}
+#browser .item-button.disabled {
+    background-color: var(--c4);
+}
 #browser .item-button.button-l {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -716,7 +723,7 @@ input[type=range], select {
     border-radius: 4px;
     border: none;
     border: 1px solid var(--c0);
-    padding: 0 12px 0 0;
+    padding: 1px 6px 1px 0;
 }
 .setting button svg {
     display: inline-block;
@@ -758,7 +765,7 @@ input[type=range]::-moz-range-thumb {
 .rangeValue {
     height: 16px;
     padding: 1px 5px;
-    border-radius: 1px;
+    border-radius: 4px;
     position: relative;
     display: inline-block;
     vertical-align: middle;

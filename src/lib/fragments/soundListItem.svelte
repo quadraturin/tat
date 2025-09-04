@@ -22,6 +22,7 @@
 	import IconReplayOnEnter from '$lib/icons/iconReplayOnEnter.svelte';
 	import IconReplayInside from '$lib/icons/iconReplayInside.svelte';
 	import IconSoundPlay from '$lib/icons/IconSoundPlay.svelte';
+	import IconNoLoop from '$lib/icons/IconNoLoop.svelte';
 
     let {item, i} : {item:CanvasSound, i:number} = $props();
     let soundTrack:any = $state();
@@ -184,7 +185,7 @@
     </button>
 
     <!-- Sound Pause Button -->
-    <button class="item-button item-pause button-r" class:activated={paused} class:disabled={triggerType != TriggerType.PlayOnLoad}
+    <button class="item-button item-pause button-m" class:activated={!paused} class:disabled={triggerType != TriggerType.PlayOnLoad}
     onclick     = {()=>{if (triggerType == TriggerType.PlayOnLoad) item.sound.paused ? item.sound.play() : item.sound.pause()}}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
@@ -196,15 +197,15 @@
     </button>
 
     <!-- Sound Loop Button -->
-    <button class="item-button item-loop" class:activated={looped} 
-    onclick     = {()=>{item.loop = !item.loop;}}
+    <button class="item-button item-loop button-r" class:activated={looped} class:disabled={triggerType == TriggerType.PlayInside || triggerType == TriggerType.ReplayInside}
+    onclick     = {()=>{if (triggerType != TriggerType.PlayInside && triggerType != TriggerType.ReplayInside) item.loop = !item.loop;}}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
     onmouseover = {()=>{
         item.loop? help($t('help.map.soundMute')) : help($t('help.map.soundUnMute'))
     }}>
-        <IconLoop/>
+        {#if looped}<IconLoop/>{:else}<IconNoLoop/>{/if}
     </button>
 
 

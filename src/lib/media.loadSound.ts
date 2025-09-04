@@ -154,8 +154,8 @@ export async function cycleTriggerType(sound:CanvasSound) {
             pointCircleCollision(R.getListener().x, R.getListener().y, sound.x, sound.y, sound.radius)) ||
         (sound.soundType == R.SoundType.Area &&
             pointPolyCollision(R.getListener().x, R.getListener().y, sound.areaCoords))) {
-        if      (sound.triggerType == R.TriggerType.PlayOnLoad) { sound.triggerType = R.TriggerType.PlayInside; }
-        else if (sound.triggerType == R.TriggerType.PlayInside)  sound.triggerType = R.TriggerType.ReplayInside;
+        if      (sound.triggerType == R.TriggerType.PlayOnLoad) { sound.triggerType = R.TriggerType.PlayInside; sound.loop = true; }
+        else if (sound.triggerType == R.TriggerType.PlayInside) { sound.triggerType = R.TriggerType.ReplayInside; sound.loop = true; }
         else if (sound.triggerType == R.TriggerType.ReplayInside)  sound.triggerType = R.TriggerType.PlayOnTimer;
         else if (sound.triggerType == R.TriggerType.PlayOnTimer)  sound.triggerType = R.TriggerType.PlayOnLoad;
     } 
@@ -165,8 +165,8 @@ export async function cycleTriggerType(sound:CanvasSound) {
     else {
         if      (sound.triggerType == R.TriggerType.PlayOnLoad)  { sound.triggerType = R.TriggerType.PlayOnEnter;   sound.sound.pause(); }
         else if (sound.triggerType == R.TriggerType.PlayOnEnter) { sound.triggerType = R.TriggerType.ReplayOnEnter; sound.sound.pause(); }
-        else if (sound.triggerType == R.TriggerType.ReplayOnEnter) sound.triggerType = R.TriggerType.PlayInside;
-        else if (sound.triggerType == R.TriggerType.PlayInside)    sound.triggerType = R.TriggerType.ReplayInside;
+        else if (sound.triggerType == R.TriggerType.ReplayOnEnter){sound.triggerType = R.TriggerType.PlayInside; sound.loop = true; }
+        else if (sound.triggerType == R.TriggerType.PlayInside)   {sound.triggerType = R.TriggerType.ReplayInside; sound.loop = true; }
         else if (sound.triggerType == R.TriggerType.ReplayInside)  sound.triggerType = R.TriggerType.PlayOnTimer;
         else if (sound.triggerType == R.TriggerType.PlayOnTimer)   sound.triggerType = R.TriggerType.PlayOnLoad;    
     }
