@@ -104,13 +104,15 @@ body {
 
 .toolbar-button,
 #controls button,
-#browser .item-button {
+#browser .item-button,
+.menu button {
     border: 1px solid var(--c0);
     background-color: var(--c5);
 }
 .toolbar-button:hover,
 #controls button:hover,
-#browser .item-button:hover {
+#browser .item-button:hover,
+.menu button:hover {
     background-color: var(--c6);
 }
 .titlebar-button .svg-outer {
@@ -231,6 +233,10 @@ body {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border-bottom: none;
+    background-color: var(--c4);
+}
+.toolbar-button.selected:hover {
+    background: linear-gradient(var(--c6), 10%, var(--c4))
 }
 .toolbar-button svg {
     display: inline-block;
@@ -592,6 +598,8 @@ body {
     font-size: 0.8rem;
     overflow-y: scroll;
     font-weight: bold;
+    background-color: var(--c4);
+    color: var(--c7);
 }
 .menu::-webkit-scrollbar {
     width: 5px;
@@ -604,13 +612,18 @@ body {
 }
 .menu h2 {
     padding: 0 8px;
-    border-radius: 2px;
+    border-radius: 4px;
+    background-color: var(--c9);
+    color: var(--c4);
 }
 .menu h3 {
     text-decoration: underline;
 }
 .menu p {
     margin-bottom: 1rem;
+}
+.menu label {
+    user-select: none;
 }
 .links {
     margin-top: 1rem;
@@ -624,6 +637,35 @@ body {
 }
 .setting+h2 {
     margin-top: 30px;
+}
+input[type=checkbox]::after, 
+input[type=checkbox]:hover::after,
+input[type=range]::-webkit-slider-thumb {
+    background-color: var(--c7); 
+    border-radius: 2px;
+}
+.menu::-webkit-scrollbar-corner, 
+.menu::-webkit-resizer, 
+.menu::-webkit-scrollbar-thumb, 
+input[type=range]::-webkit-slider-thumb,
+.rangeValue {
+    background-color: var(--c7); 
+    border-radius: 2px;
+ }
+.rangeValue {
+    color: var(--c4);
+}
+.menu, input[type=range], 
+select { 
+    color: var(--c7);
+}
+input[type=checkbox],
+input[type=range], 
+select {
+    border: 1px solid var(--c7) !important;
+}
+.rangeValue::after {
+    border-right: 3px solid var(--c7);
 }
 
 /* fancy inputs */
@@ -639,7 +681,7 @@ input[type=checkbox] {
     width: 30px;
     vertical-align: middle;
     transition-duration: 0s;
-    border-radius: 1px;
+    border-radius: 4px;
 }
 input[type=checkbox]::before {
     bottom: -6px;
@@ -668,11 +710,19 @@ input[type=range], select {
     background: transparent;
     width: 50px;
     text-align: center;
-    border-radius: 1px;
+    border-radius: 4px;
 }
 .setting button {
-    border-radius: 2px;
+    border-radius: 4px;
     border: none;
+    border: 1px solid var(--c0);
+    padding: 0 12px 0 0;
+}
+.setting button svg {
+    display: inline-block;
+    margin: 1px;
+    height: 16px;
+    vertical-align: bottom;
 }
 select {
     font-family: inherit;

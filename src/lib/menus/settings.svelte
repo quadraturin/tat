@@ -5,6 +5,7 @@
 	import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 	import { saveUserSettings } from '$lib/settings.saveUserSettings';
 	import { getThemesList } from '$lib/settings.theme';
+	import IconReset from '$lib/icons/iconReset.svelte';
     const appWindow = getCurrentWebviewWindow();
 
     let themesList = $state(getThemesList());
@@ -113,7 +114,7 @@
     <div class="setting">
         <button id="resetSettings" class="fancy"
         onclick={()=>{ resetUserSettings() }}>
-            {$t('settings.reset')}
+            <IconReset/><span>{$t('settings.reset')}</span>
         </button>
         <em>{$t('settings.autoSave')}</em>
     </div>
