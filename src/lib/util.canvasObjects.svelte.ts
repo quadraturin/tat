@@ -128,7 +128,7 @@ export function canvasMouseMove(e:MouseEvent) {
         }
 
         // If listener not under cursor, cycle thru sounds
-        if (R.getHoveredCanvasObject() == null) {
+        if (R.getHoveredCanvasObject() == null && !R.getSoundsHidden()) {
             for (let i = R.getSounds().length - 1; i >= 0; i--) {
                 const snd = R.getSounds()[i];
 
