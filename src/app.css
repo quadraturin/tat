@@ -14,9 +14,13 @@ html, body {
     padding: 0 !important;
 }
 body {
-line-height: 1.5;
--webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    border-radius: 13px;
 }
+.container { border-radius: 13px; background-color: var(--c0);}
+canvas {     border-radius: 12px; }
+#titlebar {  border-radius: 12px 12px 0 0; }
 img, picture, video, canvas, svg {
 display: block;
 /*max-width: 100%; <- broke leaflet custom panes*/
@@ -323,6 +327,10 @@ button.activated {
     flex-direction: column-reverse;
     border-radius: 4px;
     margin: 4px;
+}
+#browser .dragging {
+    opacity: 50%;
+    border: 1px solid fuchsia !important;
 }
 #browser .item {
     background-color: var(--c4);

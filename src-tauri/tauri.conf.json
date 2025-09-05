@@ -48,6 +48,7 @@
   "identifier": "ooo.paradiso.tat",
   "plugins": {},
   "app": {
+    "macOSPrivateApi": true,
     "windows": [
       {
         "fullscreen": false,
