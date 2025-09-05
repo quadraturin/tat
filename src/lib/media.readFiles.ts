@@ -26,7 +26,7 @@ export async function readFiles() {
         // check if the user opened one or more files.
         if (selected === null) {
             // user cancelled the selection.
-            console.log('canceled selection');
+            //console.log('canceled selection');
             return;
         }
         else if (Array.isArray(selected)) {
@@ -41,7 +41,7 @@ export async function readFiles() {
 
             // load each selected file.
             selected.forEach(e => {
-                console.log("LOAD", e);
+                //console.log("LOAD", e);
                 promises.push(loadFile(e as string));
             });
 

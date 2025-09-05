@@ -56,9 +56,7 @@ export async function changeMasterOpacity(event:WheelEvent) {
  */
 export async function solo(sound:CanvasSound) {
     // Flip the solo state on the sound.
-    console.log(sound.name, "solo", sound.solo)
     sound.solo = !sound.solo;
-    console.log(sound.name, "solo", sound.solo)
     // Unmute the sound if soloed.
     if (sound.solo) sound.muted = false;
 

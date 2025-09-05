@@ -256,7 +256,6 @@ export function canvasMouseMove(e:MouseEvent) {
             if (obj.handle != R.Handle.None && obj instanceof CanvasSound) {
                 // If a local sound handle was grabbed, resize the local sound.
                 if (obj.soundType == R.SoundType.Local && obj.handle == R.Handle.Radius) {
-                    console.log("resize local")
                     const vertical = obj.y - c.toWorldY(e.clientY);
                     const horizontal = obj.x - c.toWorldX(e.clientX)
                     obj.radius = Math.sqrt(horizontal**2 + vertical**2);
@@ -404,7 +403,6 @@ export function canvasMouseUp(e:MouseEvent) {
     // If there was a clicked object but it was not dragged
     if(!R.getDragging()) {
         // Click on canvasSound
-        console.log(o)
         if (o instanceof CanvasSound && 
             o.soundType == R.SoundType.Area && 
             o.areaCoords.length > 3 &&

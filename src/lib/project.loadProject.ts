@@ -37,7 +37,7 @@ export async function loadProject()
         R.setProjectPath(filePath as string);
         const project = JSON.parse(await readTextFile(jsonPath));
 
-        console.log(project);
+        //console.log(project);
 
         let projectName = await basename(R.getProjectPath() as string)
         R.setProjectName(projectName);
@@ -53,7 +53,7 @@ export async function loadProject()
             for (let j=0; j<project.maps[i].images.length; j++) {
                 const obj = project.maps[i].images[j];
                 let src = R.getProjectPath() as string + sep() + "images" + sep() + obj.src
-                console.log(src);
+                //console.log(src);
                 /* TODO: replace with new function
                 newImage({
                     src: src, 
@@ -71,7 +71,7 @@ export async function loadProject()
             for (let j=0; j<project.maps[i].sounds.length; j++) {
                 const obj = project.maps[i].sounds[j];
                 let src = R.getProjectPath() as string + sep() + "sounds" + sep() + obj.src
-                console.log(src);
+                //console.log(src);
                 /* TODO: replace with new function
                 newSound({
                     src: src,
