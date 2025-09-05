@@ -4,7 +4,7 @@ import { help } from './util.help';
 import { basename } from '@tauri-apps/api/path';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { t, locales, locale } from '$lib/util.localization';
-import type { CanvasSound, canvasSoundOptions } from './classes/CanvasSound.svelte';
+import type { Timer, CanvasSound, CanvasSoundOptions } from './classes/CanvasSound.svelte';
 import { Vector2D } from './util.vectors';
 import { pointCircleCollision, pointPolyCollision } from './util.collision';
 
@@ -13,7 +13,7 @@ import { pointCircleCollision, pointPolyCollision } from './util.collision';
  * Create a new sound on the canvas.
  * @param options New sound options.
  */
-export async function newSound(options?:canvasSoundOptions) {
+export async function newSound(options?:CanvasSoundOptions) {
     try {
         // Load defaults, overwrite with options.
         let o = Object.assign({
@@ -53,7 +53,7 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
                                 new Vector2D(newX + newR, newY), 
                                 new Vector2D(newX, newY - newR), 
                                 new Vector2D(newX - newR ,newY)];
-        let options:canvasSoundOptions = {
+        let options:CanvasSoundOptions = {
             areaCoords: newAreaCoords,
             editable: true,
             grabbed: false,
@@ -67,6 +67,7 @@ export async function newSoundFromPath(src:string, x?:number, y?:number) {
             solo: false,
             sound: snd,
             soundType: R.SoundType.Local,
+            timer: {setHours:0, setMinutes:0, setSeconds:1, hours:0, minutes:0, seconds:1, active:false},
             triggerType: R.TriggerType.PlayOnLoad,
             src: src,
             volume: 1,
@@ -106,68 +107,10 @@ export async function duplicateSound(sound:CanvasSound) {
         sound:new Audio(),
         src:sound.src,
         soundType:sound.soundType,
+        timer:Object.assign(new Object, sound.timer),
         triggerType:sound.triggerType,
         volume:sound.volume,
         x:sound.x + 10,
         y:sound.y + 10,
     });
-}
-
-/**
- * Cycle a canvas sound between the 3 types (area, global, local).
- * @param sound canvas sound to change.
- */
-export async function cycleSoundType(sound:CanvasSound) {
-    // Local -> Area
-    if (sound.soundType == R.SoundType.Local) { 
-        sound.soundType = R.SoundType.Area; 
-    }
-    // Area -> Global: Unset invalid trigger types.
-    else if (sound.soundType == R.SoundType.Area){ 
-        sound.soundType = R.SoundType.Global;
-        if (sound.triggerType != R.TriggerType.PlayOnLoad && sound.triggerType != R.TriggerType.PlayOnTimer) {
-            sound.triggerType = R.TriggerType.PlayOnLoad;
-        }
-    }
-    // Global -> Local
-    else if (sound.soundType == R.SoundType.Global) { 
-        sound.soundType = R.SoundType.Local; 
-    }
-}
-
-/**
- * Cycle a canvas sound trigger between the types (onload, onenter, onexit, ontimer).
- * @param sound canvas sound to change.
- */
-export async function cycleTriggerType(sound:CanvasSound) {
-
-    // Global sound:
-    // PlayOnLoad -> PlayOnTimer -> back
-    if (sound.soundType == R.SoundType.Global) {
-        if      (sound.triggerType == R.TriggerType.PlayOnLoad)  sound.triggerType = R.TriggerType.PlayOnTimer;
-        else if (sound.triggerType == R.TriggerType.PlayOnTimer) sound.triggerType = R.TriggerType.PlayOnLoad;
-    }
-
-    // Local or Area sound, listener colliding: 
-    // PlayOnLoad -> PlayInside -> ReplayInside -> PlayOnTimer -> back
-    if ((sound.soundType == R.SoundType.Local &&
-            pointCircleCollision(R.getListener().x, R.getListener().y, sound.x, sound.y, sound.radius)) ||
-        (sound.soundType == R.SoundType.Area &&
-            pointPolyCollision(R.getListener().x, R.getListener().y, sound.areaCoords))) {
-        if      (sound.triggerType == R.TriggerType.PlayOnLoad) { sound.triggerType = R.TriggerType.PlayInside; sound.loop = true; }
-        else if (sound.triggerType == R.TriggerType.PlayInside) { sound.triggerType = R.TriggerType.ReplayInside; sound.loop = true; }
-        else if (sound.triggerType == R.TriggerType.ReplayInside)  sound.triggerType = R.TriggerType.PlayOnTimer;
-        else if (sound.triggerType == R.TriggerType.PlayOnTimer)  sound.triggerType = R.TriggerType.PlayOnLoad;
-    } 
-
-    // Local or Area sound, listener not colliding:
-    // PlayOnLoad -> PlayOnEnter -> ReplayOnEnter -> PlayInside -> ReplayInside -> PlayOnTimer -> back
-    else {
-        if      (sound.triggerType == R.TriggerType.PlayOnLoad)  { sound.triggerType = R.TriggerType.PlayOnEnter;   sound.sound.pause(); }
-        else if (sound.triggerType == R.TriggerType.PlayOnEnter) { sound.triggerType = R.TriggerType.ReplayOnEnter; sound.sound.pause(); }
-        else if (sound.triggerType == R.TriggerType.ReplayOnEnter){sound.triggerType = R.TriggerType.PlayInside; sound.loop = true; }
-        else if (sound.triggerType == R.TriggerType.PlayInside)   {sound.triggerType = R.TriggerType.ReplayInside; sound.loop = true; }
-        else if (sound.triggerType == R.TriggerType.ReplayInside)  sound.triggerType = R.TriggerType.PlayOnTimer;
-        else if (sound.triggerType == R.TriggerType.PlayOnTimer)   sound.triggerType = R.TriggerType.PlayOnLoad;    
-    }
 }

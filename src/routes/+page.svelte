@@ -177,11 +177,11 @@
      */
     $effect(()=>{
         isAboutMenuOpen ? 
-            document.getElementById("about-button")?.setAttribute('class', 'toolbar-button selected') : 
-            document.getElementById("about-button")?.setAttribute('class', 'toolbar-button');
+            document.getElementById("about-button")?.setAttribute('class', 'adaptive selected') : 
+            document.getElementById("about-button")?.setAttribute('class', 'adaptive');
         isSettingsMenuOpen ? 
-            document.getElementById("settings-button")?.setAttribute('class', 'toolbar-button selected') : 
-            document.getElementById("settings-button")?.setAttribute('class', 'toolbar-button');
+            document.getElementById("settings-button")?.setAttribute('class', 'adaptive selected') : 
+            document.getElementById("settings-button")?.setAttribute('class', 'adaptive');
     });
 
     // ######################
@@ -255,7 +255,7 @@
 />
 
 <!-- The Window Titlebar -->
-<div data-tauri-drag-region class="titlebar" onwheel={(event) => { event.preventDefault() }}>
+<div data-tauri-drag-region id="titlebar" class="shadow" onwheel={(event) => { event.preventDefault() }}>
 
     <!-- Project Name -->
     <h1 data-tauri-drag-region  
@@ -267,110 +267,95 @@
         <span data-tauri-drag-region>{#if isDirty}*{/if}</span>
     </h1>
 
-    <!-- Spacer -->
-    <span data-tauri-drag-region class="toolbar-spacer"></span>
-
     <!-- Add Media Button -->
-    <button class="toolbar-button" 
+    <button class="adaptive"
     onclick     = {readFiles} 
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.addMedia'), $t('help.titlebar.addMediaShortcut'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconImageFile />{/if}
-        <span class="button-title-short">{$t('ui.addMediaShort')}</span>
-        <span class="button-title-full">{$t('ui.addMedia')}</span>
+        <span class="text-short">{$t('ui.addMediaShort')}</span>
+        <span class="text-full">{$t('ui.addMedia')}</span>
     </button>
-    
-    <!-- Spacer -->
-    <span data-tauri-drag-region class="toolbar-spacer"></span>
 
     <!-- Save Button -->
-    <button class="toolbar-button button-l"
+    <button class="adaptive l"
     onclick     = {()=>saveProject(false)} 
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.save'), $t('help.titlebar.saveShortcut'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         {#if R.getIsSaving()}<IconLoading />{:else}<IconSave />{/if}
-        <span class="button-title-short">{$t('ui.saveShort')}</span>
-        <span class="button-title-full">{$t('ui.save')}</span>
+        <span class="text-short">{$t('ui.saveShort')}</span>
+        <span class="text-full">{$t('ui.save')}</span>
     </button>
 
     <!-- Save As Button -->
-    <button class="toolbar-button button-r"
+    <button class="adaptive r"
     onclick     = {()=>saveProject(true)}
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.saveAs'), $t('help.titlebar.saveAsShortcut'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         {#if R.getIsSaving()}<IconLoading />{:else}<IconSaveAs />{/if}
-        <span class="button-title-short">{$t('ui.saveAsShort')}</span>
-        <span class="button-title-full">{$t('ui.saveAs')}</span>
+        <span class="text-short">{$t('ui.saveAsShort')}</span>
+        <span class="text-full">{$t('ui.saveAs')}</span>
     </button>
 
-    <!-- Spacer -->
-    <span data-tauri-drag-region class="toolbar-spacer"></span>
-
     <!-- Open Project Button -->
-    <button class="toolbar-button button-l"
+    <button class="adaptive l"
     onclick     = {loadProject} 
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.openProject'), $t('help.titlebar.openProjectShortcut'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconLoad />{/if}
-        <span class="button-title-short">{$t('ui.openProjectShort')}</span>
-        <span class="button-title-full">{$t('ui.openProject')}</span>
+        <span class="text-short">{$t('ui.openProjectShort')}</span>
+        <span class="text-full">{$t('ui.openProject')}</span>
     </button>
 
     <!-- New Project Button -->
-    <button class="toolbar-button button-r"
+    <button class="adaptive r"
     onclick     = {clearProject} 
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.newProject'), $t('help.titlebar.newProjectShortcut'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         <IconNew />
-        <span class="button-title-short">{$t('ui.newProjectShort')}</span>
-        <span class="button-title-full">{$t('ui.newProject')}</span>
+        <span class="text-short">{$t('ui.newProjectShort')}</span>
+        <span class="text-full">{$t('ui.newProject')}</span>
     </button>
 
-    <!-- Spacer -->
-    <span data-tauri-drag-region class="toolbar-spacer"></span>
-
     <!-- Settings Menu Button -->
-    <button class="toolbar-button button-l" id="settings-button"
+    <button class="adaptive l" id="settings-button"
     onclick     = {toggleSettingsMenu} 
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.settings'), $t('help.titlebar.settingsShortcut'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         <IconSettings />
-        <span class="button-title-short">{$t('ui.settingsShort')}</span>
-        <span class="button-title-full">{$t('ui.settings')}</span>
+        <span class="text-short">{$t('ui.settingsShort')}</span>
+        <span class="text-full">{$t('ui.settings')}</span>
     </button>
 
-    <!-- Spacer -->
-    <span data-tauri-drag-region class="toolbar-spacer"></span>
-
     <!-- About Menu Button -->
-    <button class="toolbar-button button-r" id="about-button" 
+    <button class="adaptive r" id="about-button" 
     onclick     = {toggleAboutMenu} 
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.about'), $t('help.titlebar.aboutShortcut'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         <IconAbout />
-        <span class="button-title-short">{$t('ui.aboutShort')}</span>
-        <span class="button-title-full">{$t('ui.about')}</span>
+        <span class="text-short">{$t('ui.aboutShort')}</span>
+        <span class="text-full">{$t('ui.about')}</span>
     </button>
 
     <!-- Spacer -->
-    <div data-tauri-drag-region class="titlebar-drag"></div>
+    <div data-tauri-drag-region class="spacer"></div>
 
     <!-- Minimize Button -->
-    <button class="titlebar-button" id="titlebar-minimize" title="minimize" aria-label="minimize"
+    <button class="window-button" id="titlebar-minimize" title="minimize" aria-label="minimize"
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.minimize'))}}
     onmouseout  = {()=>{help()}}
@@ -379,7 +364,7 @@
     </button>
 
     <!-- Maximize Button -->
-    <button class="titlebar-button" id="titlebar-maximize" title="maximize" aria-label="maximize"
+    <button class="window-button" id="titlebar-maximize" title="maximize" aria-label="maximize"
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.maximize'))}}
     onmouseout  = {()=>{help()}}
@@ -388,7 +373,7 @@
     </button>
 
     <!-- Quit Button -->
-    <button class="titlebar-button" id="titlebar-close" title="close" aria-label="close"
+    <button class="window-button" id="titlebar-close" title="close" aria-label="close"
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.titlebar.close'), $t('help.titlebar.closeShortcut'))}}
     onmouseout  = {()=>{help()}}
@@ -405,10 +390,10 @@
 
 
 <!-- The Sidebar Controls -->
-<div id="controls" class:sidebarHidden onwheel={(event) => {event.preventDefault(); }}>
+<div id="controls" class="shadow" class:sidebarHidden onwheel={(event) => {event.preventDefault(); }}>
 
     <!-- Zoom In -->
-    <button id="zoom-in" class="button-l"
+    <button id="zoom-in" class="l"
     onclick     = {()=>{R.getCanvas().zoom(1.05)}}
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.map.zoomIn'), $t('help.map.zoomInShortcut'))}}
@@ -418,7 +403,7 @@
     </button>
 
     <!-- Zoom Out -->
-    <button id="zoom-out" class="button-r"
+    <button id="zoom-out" class="r"
     onclick     = {()=>{R.getCanvas().zoom(0.95)}}
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.map.zoomOut'), $t('help.map.zoomOutShortcut'))}}
@@ -426,9 +411,6 @@
     onblur      = {()=>{}}>
         <IconZoomOut/>
     </button>
-
-    <!-- Spacer -->
-    <div class="control-spacer"></div>
 
     <!-- Recenter On Listener -->
     <button id="recenter"
@@ -439,9 +421,6 @@
     onblur      = {()=>{}}>
         <IconRecenter/>
     </button>
-    
-    <!-- Spacer -->
-    <div class="control-spacer"></div>
     
     <!-- Sidebar Hide/Show Toggle -->
     <button id="hide-show"
@@ -460,7 +439,7 @@
 
 <!-- The Sidebar Media Browser -->
 {#if (soundList.length>0 || imageList.length>0)}
-    <div id="browser" class:sidebarHidden>
+    <div id="browser" class="shadow" class:sidebarHidden>
         {#if soundList.length>0}
 
             <!-- The Sounds Browser -->
@@ -472,7 +451,7 @@
                 {/each}
 
                 <!-- Sound List Header -->
-                <div role="heading" class="browser-heading" aria-level="2" 
+                <div role="heading" class="heading" aria-level="2" 
                 onwheel={(event) => {
                     event.preventDefault(); 
                     changeMasterVolume(event);
@@ -519,7 +498,7 @@
                 {/each}
 
                 <!-- Images List Header -->
-                <div role="heading" class="browser-heading" aria-level="2" onwheel={(event) => {
+                <div role="heading" class="heading" aria-level="2" onwheel={(event) => {
                     event.preventDefault(); 
                     changeMasterOpacity(event);
                 }}>
@@ -559,7 +538,7 @@
 
 
 <!-- Help Text Display Area -->
-<div id="help" class:activated={isHelpActive}>
+<div id="help" class="shadow" class:activated={isHelpActive}>
 
     <!-- Help Text Show / Hide Toggle -->
     <button id="help-toggle" onclick={()=>{R.toggleHelpActive()}}> ? </button>

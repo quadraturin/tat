@@ -1,4 +1,4 @@
-import type { CanvasSound, canvasSoundOptions } from "./classes/CanvasSound.svelte";
+import type { CanvasSound, CanvasSoundOptions } from "./classes/CanvasSound.svelte";
 import { getAudioContext, getMasterGain, getMasterOpacity, getMasterVolume, getSounds, setMasterOpacity, setMasterVolume } from "./registry.svelte";
 import { getUserSettings } from "./settings.userSettings.svelte";
 
@@ -17,23 +17,6 @@ export async function seekToByClick(sound:CanvasSound, mouseX:number) {
 }
 
 /**
- * Change the base volume of a sound based on a mouse wheel scroll.
- * @param sound The sound to change the base volume of.
- * @param event A mouse wheel event.
- */
-export async function changeBaseVolume(sound:CanvasSound, event:WheelEvent) {
-    let delta = event.deltaY;
-
-    // invert based on user settings.
-    if (getUserSettings().invertVolumeScroll) delta *= -1;
-
-    // adjust and clamp volume.
-    sound.volume += delta * 0.01 * getUserSettings().uiScrollSensitivity;
-    if (sound.volume < 0) sound.volume = 0;
-    else if (sound.volume > 1) sound.volume = 1;
-}
-
-/**
  * Change the master volume of the app based on a mouse wheel scroll.
  * @param event A mouse wheel event.
  */
@@ -43,10 +26,12 @@ export async function changeMasterVolume(event:WheelEvent) {
     // Invert based on user settings.
     if (getUserSettings().invertVolumeScroll) delta *= -1;
 
+    delta = delta < 0 ? -0.05 : 0.05;
     // Set master volume, clamped between 0 and 1.
-    const val = Math.max(0, Math.min(1, getMasterGain().gain.value + delta * 0.01 * getUserSettings().uiScrollSensitivity))
+    const val = Math.max(0, Math.min(1, getMasterGain().gain.value + delta))
     if (getMasterGain().gain.value != val) {
-        getMasterGain().gain.setValueAtTime(val, getAudioContext().currentTime + 0.03);
+        getMasterGain().gain.cancelScheduledValues(getAudioContext().currentTime);
+        getMasterGain().gain.setValueAtTime(val, getAudioContext().currentTime);
     }
 }
 

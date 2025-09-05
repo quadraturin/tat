@@ -4,7 +4,8 @@ import { pointCircleCollision, pointPolyCollision } from "./util.collision";
 /**
  * Set all sound volumes on the map. gets called repeatedly while the app is open.
  */
-export function manageCanvasSounds(){
+export async function manageCanvasSounds(){
+    const l = R.getListener();
     // Check if any sound is soloed.
     let solo = false;
     for (let i = 0; i < R.getSounds().length; i++) {
@@ -13,52 +14,19 @@ export function manageCanvasSounds(){
             break;
         }
     }
-    const l = R.getListener();
     R.getSounds().forEach(snd => {
 
-        // Manage play state: check collision
-        if ((snd.soundType == R.SoundType.Local && pointCircleCollision(l.x, l.y, snd.x, snd.y, snd.radius)) ||
-            (snd.soundType == R.SoundType.Area  && pointPolyCollision(l.x, l.y, snd.areaCoords))) {
-            // Inside PlayOnEnter: play & set trigger type to play on load.
-            if (snd.triggerType == R.TriggerType.PlayOnEnter && snd.sound.paused) {
-                snd.sound.play();
-                snd.triggerType = R.TriggerType.PlayOnLoad;
-            }
-            // Inside PlayInside: play.
-            else if (snd.triggerType == R.TriggerType.PlayInside && snd.sound.paused) {
-                snd.sound.play();
-            }
-            // Inside ReplayOnEnter: restart, play, & set trigger type to play on load.
-            else if (snd.triggerType == R.TriggerType.ReplayOnEnter && snd.sound.paused) {
-                snd.sound.currentTime = 0;
-                snd.sound.play();
-                snd.triggerType = R.TriggerType.PlayOnLoad;
-            }
-            // Inside ReplayInside: restart & play.
-            else if (snd.triggerType == R.TriggerType.ReplayInside && snd.sound.paused) {
-                snd.sound.currentTime = 0;
-                snd.sound.play();
-            }
-        }
-        // Outside PlayInside/ReplayInside/PlayOnEnter/ReplayOnEnter: pause.
-        else if ((  snd.triggerType == R.TriggerType.PlayInside || 
-                    snd.triggerType == R.TriggerType.ReplayInside || 
-                    snd.triggerType == R.TriggerType.PlayOnEnter || 
-                    snd.triggerType == R.TriggerType.ReplayOnEnter) && 
-                !snd.sound.paused) {
-            snd.sound.pause();
-        }
-        
-        // Manage volume
+        // Manage volume.
+
         if ((solo && !snd.solo) || snd.muted) {
-            //snd.gain = 0;
+            snd.gain = 0;
         }
         else {
             // Global sound: only modify with master volume.
             if (snd.soundType == R.SoundType.Global) { 
                 if(snd.gain != snd.volume) {
                     snd.gainNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
-                    snd.gainNode.gain.linearRampToValueAtTime(snd.volume, R.getAudioContext().currentTime+0.5); 
+                    snd.gainNode.gain.setTargetAtTime(snd.volume, R.getAudioContext().currentTime, 0.1); 
                 }
             }
             // Area sound: only audible if listener in area, modify with master volume.
@@ -66,12 +34,12 @@ export function manageCanvasSounds(){
                 if (pointPolyCollision(l.x, l.y, snd.areaCoords)){
                     if(snd.gain != snd.volume) {
                         snd.gainNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
-                        snd.gainNode.gain.linearRampToValueAtTime(snd.volume, R.getAudioContext().currentTime+0.5); 
+                        snd.gainNode.gain.setTargetAtTime(snd.volume, R.getAudioContext().currentTime, 0.1); 
                     }
                 } else {
                     if(snd.gain != 0) {
                         snd.gainNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
-                        snd.gainNode.gain.linearRampToValueAtTime(0, R.getAudioContext().currentTime+0.5); 
+                        snd.gainNode.gain.setTargetAtTime(0, R.getAudioContext().currentTime, 0.1); 
                     }
                 }
             }
@@ -92,10 +60,51 @@ export function manageCanvasSounds(){
                 } else {
                     if(snd.gain != 0) {
                         snd.gainNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
-                        snd.gainNode.gain.linearRampToValueAtTime(0, R.getAudioContext().currentTime+0.5); 
+                        snd.gainNode.gain.setTargetAtTime(0, R.getAudioContext().currentTime, 0.015); 
                     }
                 }
             }
         }
+
+        // Manage play state.
+
+        // Local or Area sound: check collision.
+        if ((snd.soundType == R.SoundType.Local && pointCircleCollision(l.x, l.y, snd.x, snd.y, snd.radius)) ||
+            (snd.soundType == R.SoundType.Area  && pointPolyCollision(l.x, l.y, snd.areaCoords))) {
+
+            // Inside PlayOnEnter trigger: play & set trigger type to PlayOnLoad.
+            if (snd.triggerType == R.TriggerType.PlayOnEnter && snd.sound.paused) {
+                snd.sound.play();
+                snd.triggerType = R.TriggerType.PlayOnLoad;
+            }
+            // Inside PlayInside trigger: play.
+            else if (snd.triggerType == R.TriggerType.PlayInside && snd.sound.paused) {
+                snd.sound.play();
+            }
+            // Inside ReplayOnEnter trigger: restart, play, & set trigger type to PlayOnLoad.
+            else if (snd.triggerType == R.TriggerType.ReplayOnEnter && snd.sound.paused) {
+                snd.sound.play();
+                snd.sound.fastSeek(0);
+                snd.triggerType = R.TriggerType.PlayOnLoad;
+            }
+            // Inside ReplayInside: restart & play.
+            else if (snd.triggerType == R.TriggerType.ReplayInside && snd.sound.paused) {
+                snd.sound.play();
+                snd.sound.fastSeek(0);
+            }
+        }
+        // If not colliding and sound is PlayInside/ReplayInside/PlayOnEnter/ReplayOnEnter: pause.
+        else if ((  snd.triggerType == R.TriggerType.PlayInside || 
+                    snd.triggerType == R.TriggerType.ReplayInside || 
+                    snd.triggerType == R.TriggerType.PlayOnEnter || 
+                    snd.triggerType == R.TriggerType.ReplayOnEnter) && 
+                !snd.sound.paused) {
+            snd.sound.pause();
+        }
+        // Timer sound.
+        else if (snd.triggerType == R.TriggerType.PlayOnTimer) {
+            
+        }
+        
     });
 }

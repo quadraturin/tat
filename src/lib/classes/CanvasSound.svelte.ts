@@ -1,10 +1,22 @@
 import { CanvasObject } from "./CanvasObject.svelte";
-import { getAudioContext, getCanvas, getHandleSize, getHandleSlop, getMasterGain, SoundType, TriggerType } from "$lib/registry.svelte";
+import { getAudioContext, getCanvas, getHandleSize, getHandleSlop, getListener, getMasterGain, SoundType, TriggerType } from "$lib/registry.svelte";
 import { Vector2D } from "$lib/util.vectors";
 import { convertFileSrc } from "@tauri-apps/api/core";
+import { getUserSettings } from "$lib/settings.userSettings.svelte";
+import { pointCircleCollision, pointPolyCollision } from "$lib/util.collision";
+
+export type Timer = {
+    setHours: number;
+    setMinutes: number;
+    setSeconds: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+    active: boolean;
+}
 
 /** Canvas Sound options. */
-export type canvasSoundOptions = {
+export type CanvasSoundOptions = {
     areaCoords:         Vector2D[],
     editable:           boolean,
     grabbed:            boolean,
@@ -19,6 +31,7 @@ export type canvasSoundOptions = {
     sound:              HTMLAudioElement,
     src:                string,
     soundType:          SoundType,
+    timer:              Timer,
     triggerType:        TriggerType,
     volume:             number,
     x:                  number,
@@ -43,11 +56,13 @@ export class CanvasSound extends CanvasObject{
     #src:                   string;
     #sound:                 HTMLAudioElement;
     #soundType:             SoundType;
+    #timer:                 Timer;
+    #timerID:               number              = 0;
     #track:                 MediaElementAudioSourceNode;
     #triggerType:           TriggerType;
     #volume:                number              = $state(0);
 
-    constructor(options:canvasSoundOptions) {
+    constructor(options:CanvasSoundOptions) {
         super({ 
             x:options.x, 
             y:options.y, 
@@ -77,6 +92,7 @@ export class CanvasSound extends CanvasObject{
         this.#loop = options.loop;
         this.#muted = options.muted;
         this.#solo = options.solo;
+        this.#timer = options.timer;
         this.#triggerType = options.triggerType;
         this.#volume = options.volume;
 
@@ -95,7 +111,8 @@ export class CanvasSound extends CanvasObject{
     /** Set if the sound is looped. @param loop True: looped. False: not looped. */
     public set loop(loop:boolean) { 
         this.#loop = loop; 
-        this.#sound.loop = loop;
+        if (this.#triggerType == TriggerType.PlayOnTimer) this.#sound.loop = false;
+        else this.#sound.loop = loop;
     }
 
     /** Get the sound emitter radius. @returns The radius. */
@@ -191,4 +208,182 @@ export class CanvasSound extends CanvasObject{
         this.#gain.gain.value = g; 
     }
     public get gainNode() {return this.#gain; }
+
+    public get timer() { return this.#timer; }
+    public get timerID() { return this.#timerID; }
+    public set timerID(id:number) { this.#timerID = id; }
+
+    public changeTimer(e:WheelEvent, hms:string) {
+        let delta = e.deltaY;
+        if (getUserSettings().invertVolumeScroll) delta *= -1;
+        delta = delta < 0 ? -1 : 1;
+        if (hms == "h") {
+            this.#timer.setHours += delta;
+            if (this.#timer.setHours < 0) this.#timer.setHours = 0;
+            else if (this.#timer.setHours > 99) this.#timer.setHours = 99;
+            this.#timer.hours = this.#timer.setHours;
+        } else if (hms == "m") {
+            this.#timer.setMinutes += delta;
+            if (this.#timer.setMinutes < 0) this.#timer.setMinutes = 0;
+            else if (this.#timer.setMinutes > 59) this.#timer.setMinutes = 59;
+            this.#timer.minutes = this.#timer.setMinutes;
+        } else if (hms == "s") {
+            this.#timer.setSeconds += delta;
+            if(this.#timer.setSeconds < 0) this.#timer.setSeconds = 0;
+            else if (this.#timer.setSeconds > 59) this.#timer.setSeconds = 59;
+            this.#timer.seconds = this.#timer.setSeconds;
+        }
+        if(this.#timer.setSeconds == 0 && this.#timer.setMinutes == 0 && this.#timer.setHours == 0) {
+            this.#timer.setSeconds = 1;
+            this.#timer.seconds = 1;
+        }
+    }
+    public startTimer():number{
+        this.#timer.hours = this.#timer.setHours;
+        this.#timer.minutes = this.#timer.setMinutes;
+        this.#timer.seconds = this.#timer.setSeconds;
+        this.#timer.active = true;
+        return setInterval(()=>this.runTimer(),1000);
+    }
+    public stopTimer(id:number){
+        clearInterval(id);
+        this.#timer.active = false;
+        this.#timer.hours = this.#timer.setHours;
+        this.#timer.minutes = this.#timer.setMinutes;
+        this.#timer.seconds = this.#timer.setSeconds;
+    }
+    private runTimer(){
+        // If at 1s, count down to 0 and play the sound.
+        if (this.timer.hours == 0 && this.timer.minutes == 0 && this.timer.seconds == 1) {
+            this.timer.seconds--;
+            this.sound.play();
+            this.sound.fastSeek(0);
+            this.stopTimer(this.timerID);
+            if (this.loop) {
+                this.timerID = this.startTimer();
+            }
+            return;
+        }
+        // Seconds is over 0: decrement seconds.
+        if (this.timer.seconds > 0) { 
+            this.timer.seconds--;
+            return;
+        }
+        if (this.timer.seconds == 0) {
+            if (this.timer.minutes > 0) {
+                this.timer.minutes--;
+                this.timer.seconds = 59;
+                return;
+            }
+            if (this.timer.minutes == 0) {
+                if (this.timer.hours > 0) {
+                    this.timer.hours--;
+                    this.timer.minutes = 59;
+                    this.timer.seconds = 59;
+                    return;
+                }
+            }
+        }
+
+    }
+
+
+    public changeVolume(e:WheelEvent) {
+        let delta = e.deltaY;
+        // invert based on user settings.
+        if (getUserSettings().invertVolumeScroll) delta *= -1;
+        delta = delta < 0 ? -0.05 : 0.05;
+        // adjust and clamp volume.
+        this.volume += delta;
+        if (this.volume < 0) this.volume = 0;
+        else if (this.volume > 1) this.volume = 1;
+    }
+
+
+    /**
+     * Cycle a canvas sound between the 3 types (area, global, local).
+     * @param sound canvas sound to change.
+     */
+    public async cycleSoundType() {
+        // Local -> Area
+        if (this.soundType == SoundType.Local) { 
+            this.soundType = SoundType.Area; 
+        }
+        // Area -> Global: Unset invalid trigger types.
+        else if (this.soundType == SoundType.Area){ 
+            this.soundType = SoundType.Global;
+            if (this.triggerType != TriggerType.PlayOnLoad && this.triggerType != TriggerType.PlayOnTimer) {
+                this.triggerType = TriggerType.PlayOnLoad;
+            }
+        }
+        // Global -> Local
+        else if (this.soundType == SoundType.Global) { 
+            this.soundType = SoundType.Local; 
+        }
+    }
+
+
+    /**
+     * Cycle a canvas sound trigger between the types (onload, onenter, onexit, ontimer).
+     * @param sound canvas sound to change.
+     */
+    public async cycleTriggerType() {
+        // Global sound:
+        // PlayOnLoad -> PlayOnTimer -> back
+        if (this.soundType == SoundType.Global) {
+            if (this.triggerType == TriggerType.PlayOnLoad)  { 
+                this.triggerType = TriggerType.PlayOnTimer; 
+                this.sound.pause(); 
+            } else if (this.triggerType == TriggerType.PlayOnTimer) { 
+                this.triggerType = TriggerType.PlayOnLoad; 
+            }
+        }
+
+        // Local or Area sound, listener colliding: 
+        // PlayOnLoad -> PlayInside -> ReplayInside -> PlayOnTimer -> back
+        else if ((this.soundType == SoundType.Local && pointCircleCollision(getListener().x, getListener().y, this.x, this.y, this.radius)) ||
+                (this.soundType == SoundType.Area && pointPolyCollision(getListener().x, getListener().y, this.areaCoords))) {
+            if (this.triggerType == TriggerType.PlayOnLoad) { 
+                this.triggerType = TriggerType.PlayInside;   
+                this.loop = true; 
+            } else if (this.triggerType == TriggerType.PlayInside) { 
+                this.triggerType = TriggerType.ReplayInside; 
+                this.loop = true; 
+            } else if (this.triggerType == TriggerType.ReplayInside) {
+                this.triggerType = TriggerType.PlayOnTimer;
+                this.sound.pause(); 
+                this.#sound.loop = false; 
+            } else if (this.triggerType == TriggerType.PlayOnTimer) { 
+                this.triggerType = TriggerType.PlayOnLoad; 
+                this.#sound.loop = this.#loop;
+            }
+        } 
+
+        // Local or Area sound, listener not colliding:
+        // PlayOnLoad -> PlayOnEnter -> ReplayOnEnter -> PlayInside -> ReplayInside -> PlayOnTimer -> back
+        else {
+            if (this.triggerType == TriggerType.PlayOnLoad) {
+                this.triggerType = TriggerType.PlayOnEnter;
+                this.sound.pause(); 
+            } else if (this.triggerType == TriggerType.PlayOnEnter) { 
+                this.triggerType = TriggerType.ReplayOnEnter; 
+                this.sound.pause(); 
+            } else if (this.triggerType == TriggerType.ReplayOnEnter) { 
+                this.triggerType = TriggerType.PlayInside;
+                this.loop = true; 
+            } else if (this.triggerType == TriggerType.PlayInside) { 
+                this.triggerType = TriggerType.ReplayInside;
+                this.loop = true;
+            } else if (this.triggerType == TriggerType.ReplayInside) { 
+                this.triggerType = TriggerType.PlayOnTimer; 
+                this.sound.pause();
+                this.#sound.loop = false; 
+            } else if (this.triggerType == TriggerType.PlayOnTimer) { 
+                this.triggerType = TriggerType.PlayOnLoad; 
+                this.#sound.loop = this.#loop;
+            }
+        }
+    }
+
+    
 }

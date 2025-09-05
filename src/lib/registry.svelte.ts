@@ -4,7 +4,7 @@ import { getThemesList } from "./settings.theme";
 import { InfiniteCanvas } from "./util.infiniteCanvas.svelte";
 import type { CanvasObject } from "./classes/CanvasObject.svelte";
 import { CanvasImage, type canvasImageOptions } from "./classes/CanvasImage.svelte";
-import { CanvasSound, type canvasSoundOptions } from "./classes/CanvasSound.svelte";
+import { CanvasSound, type CanvasSoundOptions } from "./classes/CanvasSound.svelte";
 import { CanvasListener } from "./classes/CanvasListener.svelte";
 
 
@@ -238,7 +238,7 @@ export function getSounds():Array<CanvasSound> { return sounds; }
 export function setSounds(newSounds:Array<CanvasSound>) { sounds = newSounds; }
 
 /** Add a sound to the sound list. @param options The new sound information. */
-export function addToSounds(options:canvasSoundOptions) { sounds.push(new CanvasSound(options)); }
+export function addToSounds(options:CanvasSoundOptions) { sounds.push(new CanvasSound(options)); }
 
 /** Canvas sound types. Local (circle falloff), Area (polygon), Global. */
 export enum SoundType {

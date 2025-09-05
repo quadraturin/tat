@@ -15,8 +15,8 @@
 class={["item image-item", item.selected && "selected", !item.editable && "locked"]}>
 
     <!-- Opacity Display -->
-    <div class="item-volume" onwheel = {(event) => { event.preventDefault(); item.changeOpacity(event)}}>
-        <div class="volume" style={"height: "+ item.opacity*100 +"%"}></div>
+    <div class="volume-track" onwheel = {(event) => { event.preventDefault(); item.changeOpacity(event)}}>
+        <div class="volume-bar" style={"height: "+ item.opacity*100 +"%"}></div>
     </div>
 
     <!-- Image Name -->
@@ -50,7 +50,7 @@ class={["item image-item", item.selected && "selected", !item.editable && "locke
 
 
     <!-- Image Add Button -->
-    <button class="item-button item-add button-l" title="duplicate image" 
+    <button class="item-add l" title="duplicate image" 
     onclick     = {()=>duplicateImage(item)}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
@@ -60,7 +60,7 @@ class={["item image-item", item.selected && "selected", !item.editable && "locke
     </button>
 
     <!-- Image Delete Button -->
-    <button class="item-button item-delete button-r" title="delete image" 
+    <button class="item-delete r" title="delete image" 
     onclick     = {()=>removeImage(i)}
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.map.imageDelete'))}}
