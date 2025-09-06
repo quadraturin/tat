@@ -298,23 +298,6 @@
                         }
                     }
                 }
-                /*
-                // If there's an element we're dragging over, splice the relevant list.
-                if (draggingOverItem.element) {
-                    // Determine the index to splice into: if above, index of item, if below, +1
-                    let i = draggingOverItem.above ? draggingOverItem.index : draggingOverItem.index+1;
-                    // But if the item getting spliced out is before its destination location, -1
-                    i = draggingItem.index < 1 ? i-1 : i;
-
-                    if (list == browserImages) {
-                        const img = R.getImages().splice(draggingItem.index, 1)[0];
-                        R.getImages().splice(i, 0, img);
-                    }
-                    else if (list == browserSounds) {
-                        const snd = R.getSounds().splice(draggingItem.index, 1)[0];
-                        R.getSounds().splice(i, 0, snd);
-                    }
-                } */
             }
         }
 
@@ -577,14 +560,13 @@
     <div id="browser-sounds">
 
         <!-- Sound List Header -->
-        <div role="heading" class="heading" aria-level="2" 
-        onwheel={(event) => {
-            event.preventDefault(); 
-            changeMasterVolume(event);
-        }}>
+        <div role="heading" class="heading" aria-level="2">
 
             <!-- Master Volume -->
-            <div id="master-volume">
+            <div id="master-volume" onwheel={(event) => {
+                event.preventDefault(); 
+                changeMasterVolume(event);
+            }}>
                 <div id="master-volume-bar" style={"height:" + (masterVolume * 100) + "%"}></div>
             </div>
 
@@ -624,13 +606,13 @@
     <div id="browser-images">
 
         <!-- Images List Header -->
-        <div role="heading" class="heading" aria-level="2" onwheel={(event) => {
-            event.preventDefault(); 
-            changeMasterOpacity(event);
-        }}>
+        <div role="heading" class="heading" aria-level="2">
 
             <!-- Master Opacity -->
-            <div id="master-opacity">
+            <div id="master-opacity" onwheel={(event) => {
+                event.preventDefault(); 
+                changeMasterOpacity(event);
+            }}>
                 <div id="master-opacity-bar" style={"height:" + (masterOpacity * 100) + "%"}></div>
             </div>
 
