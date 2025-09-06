@@ -129,7 +129,7 @@ export function canvasMouseMove(e:MouseEvent) {
 
         // If listener not under cursor, cycle thru sounds
         if (R.getHoveredCanvasObject() == null && !R.getSoundsHidden()) {
-            for (let i = R.getSounds().length - 1; i >= 0; i--) {
+            for (let i = 0; i < R.getSounds().length; i++) {
                 const snd = R.getSounds()[i];
 
                 // Reset handle
@@ -193,7 +193,7 @@ export function canvasMouseMove(e:MouseEvent) {
 
         // If no listener or sounds under cursor, cycle thru images
         if (R.getHoveredCanvasObject() == null && !R.getImagesHidden()) {
-            for (let i = R.getImages().length - 1; i >= 0; i--) {
+            for (let i = 0; i < R.getImages().length; i++) {
                 const img = R.getImages()[i];
                 // NW handle
                 if (pointCircleCollision(wX, wY, img.x, img.y, c.toWorldLength(R.getHandleSize()+R.getHandleSlop()))) {

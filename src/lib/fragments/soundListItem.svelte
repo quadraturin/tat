@@ -25,6 +25,7 @@
 	import IconNoLoop from '$lib/icons/IconNoLoop.svelte';
 	import IconReset from '$lib/icons/iconReset.svelte';
 	import { concat } from 'uint8-util';
+	import type { event } from '@tauri-apps/api';
 
     let {item, i} : {item:CanvasSound, i:number} = $props();
     let soundTrack:any = $state();
@@ -60,7 +61,7 @@
 </script>
 
 <!-- A Sound Item -->
-<div class="item sound-item" id="sound-item-{i}" class:selected={item.selected} class:locked={!item.editable}>
+<div class="item sound-item" draggable="true" id="item-{item.uuid}" class:selected={item.selected} class:locked={!item.editable} role="listitem">
 
     <!-- Volume Display -->
     <div class="volume-track" onwheel={(event) =>{ event.preventDefault(); item.changeVolume(event); }}>

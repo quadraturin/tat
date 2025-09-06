@@ -11,7 +11,7 @@
 </script>
 
 <!-- An Image Item -->
-<div  id="image-item-{i}" role="listitem"
+<div id="item-{item.uuid}" role="listitem" draggable="true"
 class={["item image-item", item.selected && "selected", !item.editable && "locked"]}>
 
     <!-- Opacity Display -->
@@ -21,7 +21,7 @@ class={["item image-item", item.selected && "selected", !item.editable && "locke
 
     <!-- Image Name -->
 
-    <button class="item-name" title="{item.niceName}"
+    <button class="item-name"  title="{item.niceName}"
     onclick     = {()=>{
         item.selected = !item.selected; }}
     ondblclick  = {()=>{

@@ -24,6 +24,7 @@ export class CanvasObject {
     #grabOffsetY:number = 0;
     #handle:Handle = Handle.None;
     #hoverHandle:Handle = Handle.None;
+    #uuid:`${string}-${string}-${string}-${string}-${string}`;
 
     constructor(options:canvasObjectOptions) {
         this.#x = options.x;
@@ -35,7 +36,8 @@ export class CanvasObject {
         this.#grabbed = options.grabbed;
         this.#handle = Handle.None;
         this.#hoverHandle = Handle.None;
-    }
+        this.#uuid = self.crypto.randomUUID();
+    }    
 
     /** Get the X position of the object. @returns The X position. */
     public get x() { return this.#x; }
@@ -70,6 +72,9 @@ export class CanvasObject {
             this.#grabOffsetY = this.#y - y;
         }
     }
+
+    /** Get the difference on the X axis from the object's origin to the mouse. */
+    public get uuid() { return this.#uuid; }
 
     /** Get the difference on the X axis from the object's origin to the mouse. */
     public get grabOffsetX() { return this.#grabOffsetX; }

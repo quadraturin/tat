@@ -317,16 +317,16 @@ export class InfiniteCanvas {
       //this.#drawTests();
       //this.#drawCircle(this.viewportCenterInWorldSpace().x, this.viewportCenterInWorldSpace().y, 5, true);
 
+      // Next, cycle through all images and draw them.
       if (!R.getImagesHidden()) {
-        // Next, cycle through all images and draw them.
-        for (let i = 0; i < R.getImages().length; i++) {
+        for (let i = R.getImages().length - 1; i >= 0; i--) {
           this.#drawImage(R.getImages()[i]);
         }
       }
 
+      // Next, cycle through all audio emitters and draw them.
       if (!R.getSoundsHidden()) {
-        // Next, cycle through all audio emitters and draw them.
-        for (let i = 0; i < R.getSounds().length; i++) {
+        for (let i = R.getSounds().length - 1; i>=0; i--) {
           if (R.getSounds()[i].soundType == R.SoundType.Area) this.#drawAreaSound(R.getSounds()[i]);
           else if (R.getSounds()[i].soundType == R.SoundType.Local) this.#drawLocalSound(R.getSounds()[i]);
         }

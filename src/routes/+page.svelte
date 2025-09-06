@@ -17,7 +17,6 @@
 
     // ===== Modules =====
     import { onMount } from 'svelte'
-    import { image } from '@tauri-apps/api';
     import { LogicalSize, Window } from '@tauri-apps/api/window'
     import { getCurrentWindow } from '@tauri-apps/api/window';
 	import { tryQuit } from '$lib/quit';
@@ -68,6 +67,11 @@
 	import IconQuit from '$lib/icons/iconQuit.svelte';
 	import SoundListItem from '$lib/fragments/soundListItem.svelte';
 	import ImageListItem from '$lib/fragments/imageListItem.svelte';
+	import { listen } from '@tauri-apps/api/event';
+	import { browser } from '$app/environment';
+	import type { CanvasObject } from '$lib/classes/CanvasObject.svelte';
+	import { CanvasImage } from '$lib/classes/CanvasImage.svelte';
+	import type { CanvasSound } from '$lib/classes/CanvasSound.svelte';
 	
 
     // #####################
@@ -224,6 +228,135 @@
         document.getElementById("canvas")!.addEventListener("mousedown", (e) => { canvasMouseDown(e); });
         document.getElementById("canvas")!.addEventListener("mousemove", (e) => { canvasMouseMove(e); });
         document.getElementById("canvas")!.addEventListener("mouseup",   (e) => { canvasMouseUp(e);   })
+
+        // Draggable lists. Have to do it a roundabout way because
+        // normal HTML dragover doesn't work if drag-and-drop files are
+        // enabled in Tauri. :(
+        const browserSounds = document.getElementById("browser-sounds-list");
+        const browserImages = document.getElementById("browser-images-list");
+        let draggingItem: {element:HTMLElement|null, index:number} = {element:browserSounds, index:0};
+        let dragIntervalID = 0;
+        let draggingOverItem:{element:Element|null, above:boolean, index:number};
+
+        // Sound list drag start
+        browserSounds?.addEventListener("dragstart", (e) => {
+            if (draggingItem) {
+                draggingItem.element = e.target as HTMLElement;
+                draggingItem.element.classList.add("dragging");
+                dragIntervalID = setInterval(()=>{dragOver(browserSounds)}, 15);
+            }
+        });
+
+        // Image list drag start
+        browserImages?.addEventListener("dragstart", (e) => {
+            if (draggingItem) {
+                draggingItem.element = e.target as HTMLElement;
+                draggingItem.element.classList.add("dragging");
+                dragIntervalID = setInterval(()=>{dragOver(browserImages)}, 15);
+            }
+        });
+
+        // Sound list drag end
+        browserSounds?.addEventListener("dragend", () => { dragEnd(browserSounds); });
+
+        // Image list drag end
+        browserImages?.addEventListener("dragend", () => { dragEnd(browserImages); });
+
+        /**
+         * Handle the list item drag drop.
+         * @param list The list an item's being drag/dropped in.
+         */
+        function dragEnd(list:Element) {
+            if (draggingItem.element) {
+                // Stop the dragging loop.
+                clearInterval(dragIntervalID);
+
+                // Reset classes.
+                draggingItem.element?.classList.remove("dragging");
+                document.querySelectorAll("#browser .item")
+                    .forEach(item => item.classList.remove("over", "insertAbove", "insertBelow"));
+
+                // If not dropping on anything or dropping an item on itself, return.
+                if (!draggingOverItem.element || draggingOverItem.element.id == draggingItem.element.id) return;
+
+                let regItems: Array<CanvasObject> = R.getImages();
+                if (list == browserSounds) regItems = R.getSounds();
+                // Handle image item.
+                let item;
+                for (let i = 0; i < regItems.length; i++){
+                    if (regItems[i].uuid == draggingItem.element.id.replace("item-","")){
+                        item = regItems.splice(i, 1)[0];
+                        break;
+                    }
+                }
+                if (item) {
+                    for (let i = 0; i < regItems.length; i++){
+                        if (regItems[i].uuid == draggingOverItem.element.id.replace("item-","")){
+                            if (draggingOverItem.above) regItems.splice(i, 0, item);
+                            else regItems.splice(i+1, 0, item);
+                            break;
+                        }
+                    }
+                }
+                /*
+                // If there's an element we're dragging over, splice the relevant list.
+                if (draggingOverItem.element) {
+                    // Determine the index to splice into: if above, index of item, if below, +1
+                    let i = draggingOverItem.above ? draggingOverItem.index : draggingOverItem.index+1;
+                    // But if the item getting spliced out is before its destination location, -1
+                    i = draggingItem.index < 1 ? i-1 : i;
+
+                    if (list == browserImages) {
+                        const img = R.getImages().splice(draggingItem.index, 1)[0];
+                        R.getImages().splice(i, 0, img);
+                    }
+                    else if (list == browserSounds) {
+                        const snd = R.getSounds().splice(draggingItem.index, 1)[0];
+                        R.getSounds().splice(i, 0, snd);
+                    }
+                } */
+            }
+        }
+
+        /**
+         * Called repeatedly while user is dragging a list item. Finds the item under the dragged item.
+         * @param list The item list to drag over.
+         */
+        function dragOver(list:HTMLElement) {
+            if (list != null) {
+                // Find the closest item being dragged over.
+                draggingOverItem = getDragOverElement(list);
+                console.log(draggingOverItem)
+
+                // Reset classes.
+                document.querySelectorAll("#browser .item").forEach(item => item.classList.remove("over", "insertAbove", "insertBelow"));
+                
+                // Add classes to the relevant item.
+                if (draggingItem && draggingOverItem) {
+                    draggingOverItem.element?.classList.add("over", draggingOverItem.above ? "insertAbove" : "insertBelow");
+                }
+            }
+        }
+
+        /**
+         * Gets the closest item being dragged over, whether to insert above or below, and the item index.
+         * @param list The list the item is in.
+         */
+        function getDragOverElement(list:Element):{element:Element|null, above:boolean, index:number} {
+            // Get all sounds not currently being dragged in sound list
+            const draggableElements = [...list.querySelectorAll(".item")];
+            let closest;
+            for (let i = 0; i < draggableElements.length; i++) {
+                if (draggableElements[i] == draggingItem.element) draggingItem.index = i;
+                const box = draggableElements[i].getBoundingClientRect();
+                if (R.getMouse().y > box.y && R.getMouse().y < box.bottom + 5) {
+                    let putAbove = false;
+                    if (R.getMouse().y < box.y + box.height/2) putAbove = true;
+                    return {element:draggableElements[i], above:putAbove, index:i};
+                }
+            }
+            return {element:null, above:false, index:0};
+        }
     });
 
     
@@ -438,103 +571,101 @@
 
 
 <!-- The Sidebar Media Browser -->
-{#if (soundList.length>0 || imageList.length>0)}
-    <div id="browser" class="shadow" class:sidebarHidden>
-        {#if soundList.length>0}
+<div id="browser" class="shadow" class:sidebarHidden>
 
-            <!-- The Sounds Browser -->
-            <div id="browser-sounds">
+    <!-- The Sounds Browser -->
+    <div id="browser-sounds">
 
-                <!-- List Of Sounds -->
-                {#each soundList as item, i }
-                    <SoundListItem item={item} i={i} />
-                {/each}
+        <!-- Sound List Header -->
+        <div role="heading" class="heading" aria-level="2" 
+        onwheel={(event) => {
+            event.preventDefault(); 
+            changeMasterVolume(event);
+        }}>
 
-                <!-- Sound List Header -->
-                <div role="heading" class="heading" aria-level="2" 
-                onwheel={(event) => {
-                    event.preventDefault(); 
-                    changeMasterVolume(event);
-                }}>
-
-                    <!-- Master Volume -->
-                    <div id="master-volume">
-                        <div id="master-volume-bar" style={"height:" + (masterVolume * 100) + "%"}></div>
-                    </div>
-
-                    <!-- Sound List Title -->
-                    <span role="heading" aria-level="3"
-                    onfocus     = {()=>{}} 
-                    onblur      = {()=>{}}
-                    onmouseout  = {()=>{help()}}
-                    onmouseover = {()=>{help($t('help.map.soundsTitle'))}}>
-                    {$t('ui.sounds')}
-                    </span>
-
-                    <!-- Sound List Show/Hide Toggle -->
-                    <button class="browser-heading-button" id="hide-sounds-toggle" class:R.getSoundsHidden()
-                    onclick     = {()=>{
-                        R.toggleSoundsHidden();
-                        R.getSoundsHidden() ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))}}
-                    onfocus     = {()=>{}} 
-                    onblur      = {()=>{}}
-                    onmouseout  = {()=>{help()}}
-                    onmouseover = {()=>{
-                        R.getSoundsHidden() ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))
-                    }}>
-                        {#if R.getSoundsHidden()}<IconEye/>{:else}<IconEyeOff/>{/if}
-                    </button>
-                </div>
+            <!-- Master Volume -->
+            <div id="master-volume">
+                <div id="master-volume-bar" style={"height:" + (masterVolume * 100) + "%"}></div>
             </div>
-        {/if}
 
-        <!-- The Images Browser -->
-        {#if imageList.length > 0}
-            <div id="browser-images">
+            <!-- Sound List Title -->
+            <span role="heading" aria-level="3"
+            onfocus     = {()=>{}} 
+            onblur      = {()=>{}}
+            onmouseout  = {()=>{help()}}
+            onmouseover = {()=>{help($t('help.map.soundsTitle'))}}>
+            {$t('ui.sounds')}
+            </span>
 
-                <!-- The Images List -->
-                {#each imageList as item, i}
-                    <ImageListItem item={item} i={i} />
-                {/each}
+            <!-- Sound List Show/Hide Toggle -->
+            <button class="browser-heading-button" id="hide-sounds-toggle" class:R.getSoundsHidden()
+            onclick     = {()=>{
+                R.toggleSoundsHidden();
+                R.getSoundsHidden() ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))}}
+            onfocus     = {()=>{}} 
+            onblur      = {()=>{}}
+            onmouseout  = {()=>{help()}}
+            onmouseover = {()=>{
+                R.getSoundsHidden() ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))
+            }}>
+                {#if R.getSoundsHidden()}<IconEye/>{:else}<IconEyeOff/>{/if}
+            </button>
+        </div>
 
-                <!-- Images List Header -->
-                <div role="heading" class="heading" aria-level="2" onwheel={(event) => {
-                    event.preventDefault(); 
-                    changeMasterOpacity(event);
-                }}>
-
-                    <!-- Master Opacity -->
-                    <div id="master-opacity">
-                        <div id="master-opacity-bar" style={"height:" + (masterOpacity * 100) + "%"}></div>
-                    </div>
-
-                    <!-- Image List Title -->
-                    <span role="heading" aria-level="3"
-                    onfocus     = {()=>{}} 
-                    onmouseover = {()=>{help($t('help.map.imagesTitle'))}}
-                    onmouseout  = {()=>{help()}}
-                    onblur      = {()=>{}}>
-                        {$t('ui.images')}
-                    </span>
-
-                    <!-- Image List Show/Hide Toggle -->
-                    <button class="browser-heading-button" id="hide-images-toggle"  class:R.getImagesHidden()
-                    onclick={()=>{
-                        R.toggleImagesHidden()
-                        R.getImagesHidden() ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))}}
-                    onfocus={()=>{}} 
-                    onblur={()=>{}}
-                    onmouseout={()=>{help()}}
-                    onmouseover = {()=>{
-                        R.getImagesHidden() ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))
-                    }}>
-                        {#if R.getImagesHidden()}<IconEye/>{:else}<IconEyeOff/>{/if}
-                    </button>
-                </div>
-            </div>
-        {/if}
+        <!-- List Of Sounds -->
+         <div id="browser-sounds-list">
+            {#each soundList as item, i }
+                <SoundListItem item={item} i={i} />
+            {/each}
+        </div>
     </div>
-{/if}
+
+    <!-- The Images Browser -->
+    <div id="browser-images">
+
+        <!-- Images List Header -->
+        <div role="heading" class="heading" aria-level="2" onwheel={(event) => {
+            event.preventDefault(); 
+            changeMasterOpacity(event);
+        }}>
+
+            <!-- Master Opacity -->
+            <div id="master-opacity">
+                <div id="master-opacity-bar" style={"height:" + (masterOpacity * 100) + "%"}></div>
+            </div>
+
+            <!-- Image List Title -->
+            <span role="heading" aria-level="3"
+            onfocus     = {()=>{}} 
+            onmouseover = {()=>{help($t('help.map.imagesTitle'))}}
+            onmouseout  = {()=>{help()}}
+            onblur      = {()=>{}}>
+                {$t('ui.images')}
+            </span>
+
+            <!-- Image List Show/Hide Toggle -->
+            <button class="browser-heading-button" id="hide-images-toggle"  class:R.getImagesHidden()
+            onclick={()=>{
+                R.toggleImagesHidden()
+                R.getImagesHidden() ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))}}
+            onfocus={()=>{}} 
+            onblur={()=>{}}
+            onmouseout={()=>{help()}}
+            onmouseover = {()=>{
+                R.getImagesHidden() ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))
+            }}>
+                {#if R.getImagesHidden()}<IconEye/>{:else}<IconEyeOff/>{/if}
+            </button>
+        </div>
+
+        <!-- The Images List -->
+         <div id="browser-images-list">
+            {#each imageList as item, i}
+                <ImageListItem item={item} i={i} />
+            {/each}
+        </div>
+    </div>
+</div>
 
 
 <!-- Help Text Display Area -->

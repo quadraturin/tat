@@ -322,15 +322,32 @@ button.activated {
 #browser.sidebarHidden {
     display:none;
 }
-#browser-sounds, #browser-images { /* display lists in reverse order to reflect stacking */
+#browser-sounds, #browser-images {
     display:flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     border-radius: 4px;
     margin: 4px;
 }
-#browser .dragging {
+#browser .item.dragging {
     opacity: 50%;
-    border: 1px solid fuchsia !important;
+}
+#browser .item.over.insertAbove::before {
+    content:"";
+    width: 100%;
+    height: 2px;
+    background-color: var(--cF);
+    position:absolute;
+    top: -4px;
+    border-radius: 2px;
+}
+#browser .item.over.insertBelow::before {
+    content:"";
+    width: 100%;
+    height: 2px;
+    background-color: var(--cF);
+    position:absolute;
+    bottom: -4px;
+    border-radius: 2px;
 }
 #browser .item {
     background-color: var(--c4);
@@ -343,8 +360,8 @@ button.activated {
     position: relative;
     border-radius: 0 4px 4px 0;
 }
-#browser .item:first-child {
-    margin-bottom: 0;
+#browser .item:hover {
+    background-color: var(--c5);
 }
 #browser .item-name {
     color: var(--c7);
@@ -353,6 +370,10 @@ button.activated {
     text-overflow: ellipsis;
     white-space: nowrap;
     z-index: 10;
+    background: none;
+}
+#browser .item:hover .item-name {
+    color: var(--c9);
 }
 #browser button {
     flex: 1;

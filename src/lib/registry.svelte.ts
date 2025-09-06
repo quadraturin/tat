@@ -8,6 +8,20 @@ import { CanvasSound, type CanvasSoundOptions } from "./classes/CanvasSound.svel
 import { CanvasListener } from "./classes/CanvasListener.svelte";
 
 
+
+// #################
+// ##### MOUSE #####
+// #################
+let mouseX = $state(0);
+let mouseY = $state(0);
+export function getMouse() { return { x:mouseX, y:mouseY }; }
+export function setMouse(x:number, y:number) {
+    mouseX = x;
+    mouseY = y;
+}
+
+
+
 // ###########################
 // ##### INFINITE CANVAS #####
 // ###########################
@@ -34,7 +48,6 @@ export function setHoveredCanvasObject(obj:CanvasObject|null) { hoveredCanvasObj
 let clickedCanvasObject:CanvasObject|null;
 export function getClickedCanvasObject() { return clickedCanvasObject; }
 export function setClickedCanvasObject(obj:CanvasObject|null) { clickedCanvasObject = obj; }
-
 
 // ===== DRAGGING ON THE CANVAS =====
 
