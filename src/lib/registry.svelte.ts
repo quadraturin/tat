@@ -1,11 +1,12 @@
 import { AppTheme } from "./classes/AppTheme.svelte";
 import { getThemesList } from "./settings.theme";
-import { InfiniteCanvas } from "./util.infiniteCanvas.svelte";
-import type { CanvasObject } from "./classes/CanvasObject.svelte";
+import { InfiniteCanvas } from "./util.canvas.svelte";
+import { CanvasObject } from "./classes/CanvasObject.svelte";
 import { CanvasImage, type canvasImageOptions } from "./classes/CanvasImage.svelte";
 import { CanvasSound, type CanvasSoundOptions } from "./classes/CanvasSound.svelte";
 import { CanvasListener } from "./classes/CanvasListener.svelte";
 import { CanvasShape, type CanvasShapeOptions } from './classes/CanvasShape.svelte';
+import { Menu } from "@tauri-apps/api/menu";
 
 
 /**
@@ -43,6 +44,97 @@ import { CanvasShape, type CanvasShapeOptions } from './classes/CanvasShape.svel
  *      6.1 Project Path
  *      6.2 Project Name
  */
+
+
+export let ctxMenuCanvas:Menu;
+export async function setupCtxMenu(e:MouseEvent) {
+    ctxMenuCanvas = await Menu.new({
+        items: [
+            {
+                id: 'canvas',
+                text: 'Canvas',
+                enabled: false,
+            },
+            {
+                id: 'coords',
+                text: 'Click: (' + Math.round(getCanvas().toWorldX(e.x))+ ", " + Math.round(getCanvas().toWorldY(e.y)) +")",
+                enabled: false,
+            }
+        ]
+    });
+}
+
+export let ctxMenuCanvasListener:Menu;
+export async function setupCtxMenuCanvasListener() {
+    ctxMenuCanvasListener = await Menu.new({
+        items: [
+            {
+                id: 'listener',
+                text: 'Listener',
+                action: () => { getCanvas().flyToPoint(getListener().x, getListener().y)},
+            },
+            {
+                id: 'coords',
+                text: '(' + Math.round(getListener().x)+ ", " + Math.round(getListener().y) +")",
+                enabled: false
+            },
+            {
+                id: 'move_listener_to_origin',
+                text: 'Move to (0, 0)',
+                enabled: (getListener().x != 0 || getListener().y != 0),
+                action: () => { 
+                    getListener().x = 0; 
+                    getListener().y = 0; 
+                    getCanvas().flyToPoint(0, 0)},
+            }
+        ]
+    });
+}
+
+export let ctxMenuCanvasObject:Menu;
+export async function setupCtxMenuCanvasObject() {
+    let objTypePrefix:string = "";
+    let disableToFront:boolean = false;
+    let disableToBack:boolean = false;
+    const hovered = getHoveredCanvasObject();
+    if (hovered instanceof CanvasObject) {
+        if(hovered instanceof CanvasImage) {
+            objTypePrefix = "Image: ";
+            if (hovered == getImages()[0]) disableToFront = true;
+            if (hovered == getImages()[getImages().length-1]) disableToBack = true;
+        }
+        else if(hovered instanceof CanvasSound){ 
+            objTypePrefix = "Sound: ";
+            if (hovered == getSounds()[0]) disableToFront = true;
+            if (hovered == getSounds()[getSounds().length-1]) disableToBack = true;
+        }
+        ctxMenuCanvasObject = await Menu.new({
+            items: [
+                {
+                    id: 'object_name',
+                    text: 'Object name',
+                    action: () => { hovered.selected = !hovered.selected}
+                },
+                {
+                    id: 'bring_to_front',
+                    text: 'Bring to front',
+                    enabled: !disableToFront,
+                    action: () => { moveObjectToFront(hovered) }
+                },
+                {
+                    id: 'send_to_back',
+                    text: 'Send to back',
+                    enabled: !disableToBack,
+                    action: () => { moveObjectToBack(hovered) }
+                },
+            ]
+        });
+        const menuObjectName = await ctxMenuCanvasObject.get('object_name');
+        if (getHoveredCanvasObject() instanceof CanvasObject) {
+            menuObjectName?.setText(objTypePrefix + getHoveredCanvasObject()!.niceName);
+        }
+    }
+}
 
 
 
@@ -103,7 +195,7 @@ export function setCanvas(gridSize?:number) { canvas = new InfiniteCanvas(gridSi
 
 let hoveredCanvasObject:CanvasObject|null = null;
 export function getHoveredCanvasObject() { return hoveredCanvasObject; }
-export function setHoveredCanvasObject(obj:CanvasObject|null) { hoveredCanvasObject = obj; }
+export async function setHoveredCanvasObject(obj:CanvasObject|null) { hoveredCanvasObject = obj; }
 
 let clickedCanvasObject:CanvasObject|null;
 export function getClickedCanvasObject() { return clickedCanvasObject; }
@@ -253,6 +345,45 @@ export function setImages(newImages:Array<CanvasImage>) { images = newImages; }
 /** Add an image to the image list. @param options The new image information. */
 export function addToImages(options:canvasImageOptions) { 
     images.push(new CanvasImage(options)); 
+}
+
+export function moveObjectToFront(obj:CanvasObject){
+    if (obj instanceof CanvasImage) {
+        for (let i = 0; i < getImages().length; i++) {
+            if (getImages()[i] == obj){
+                getImages().splice(i,1);
+                break;
+            }
+        }
+        getImages().splice(0, 0, obj);
+    } else if (obj instanceof CanvasSound) {
+        for (let i = 0; i < getSounds().length; i++) {
+            if (getSounds()[i] == obj){
+                getSounds().splice(i,1);
+                break;
+            }
+        }
+        getSounds().splice(0, 0, obj);
+    }
+}
+export function moveObjectToBack(obj:CanvasObject){
+    if (obj instanceof CanvasImage) {
+        for (let i = 0; i < getImages().length; i++) {
+            if (getImages()[i] == obj){
+                getImages().splice(i,1);
+                break;
+            }
+        }
+        getImages().push(obj);
+    } else if (obj instanceof CanvasSound) {
+        for (let i = 0; i < getSounds().length; i++) {
+            if (getSounds()[i] == obj){
+                getSounds().splice(i,1);
+                break;
+            }
+        }
+        getSounds().push(obj);
+    }
 }
 
 

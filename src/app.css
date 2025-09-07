@@ -322,7 +322,7 @@ button.activated {
 #browser.sidebarHidden {
     display:none;
 }
-#browser-sounds, #browser-images {
+#browser-sounds, #browser-shapes, #browser-images {
     display:flex;
     flex-direction: column;
     border-radius: 4px;
@@ -468,7 +468,7 @@ button.activated {
     padding: 0;
     text-align: left;
 }
-#master-volume, #master-opacity {
+#master-volume, #master-opacity, #master-shapes-opacity {
     border: 1px solid var(--c0);
     width: 9px;
     height: 14px;

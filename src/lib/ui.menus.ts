@@ -1,8 +1,6 @@
 import * as R from '$lib/registry.svelte';
 
-/**
- * close all open menus.
- */
+/** Close all open menus. */
 export async function closeAllMenus() {
     document.getElementById("about")?.setAttribute("style", "display:none");
     document.getElementById("settings")?.setAttribute("style", "display:none");
@@ -10,30 +8,28 @@ export async function closeAllMenus() {
     R.setIsSettingsMenuOpen(false);
 }
 
-/**
- * toggle visibilty of the about menu.
- */
+/** Toggle visibilty of the about menu. */
 export async function toggleAboutMenu() {
-    if (R.getIsAboutMenuOpen()) {
-        closeAllMenus();
-    }
-    else {
-        closeAllMenus();
-        document.getElementById("about")?.setAttribute("style", "display:block");
-        R.setIsAboutMenuOpen(true);
-    }
+    if (R.getIsAboutMenuOpen()) closeAllMenus();
+    else openAboutMenu();
 }
 
-/**
- * toggle visibility of the settings menu.
- */
+/** Open the about menu. */
+export async function openAboutMenu() {
+    closeAllMenus();
+    document.getElementById("about")?.setAttribute("style", "display:block");
+    R.setIsAboutMenuOpen(true);
+}
+
+/** Toggle visibility of the settings menu. */
 export async function toggleSettingsMenu() {
-    if (R.getIsSettingsMenuOpen()) {
-        closeAllMenus();
-    }
-    else {
-        closeAllMenus();
-        document.getElementById("settings")?.setAttribute("style", "display:block");
-        R.setIsSettingsMenuOpen(true);
-    }
+    if (R.getIsSettingsMenuOpen()) closeAllMenus();
+    else openSettingsMenu();
+}
+
+/** Open the settings menu. */
+export async function openSettingsMenu() {
+    closeAllMenus();
+    document.getElementById("settings")?.setAttribute("style", "display:block");
+    R.setIsSettingsMenuOpen(true);
 }

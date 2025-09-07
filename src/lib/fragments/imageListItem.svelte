@@ -7,7 +7,6 @@
 	import type { CanvasImage } from '$lib/classes/CanvasImage.svelte';
 
     let {item, i} : {item:CanvasImage, i:number} = $props();
-
 </script>
 
 <!-- An Image Item -->
@@ -20,7 +19,6 @@ class={["item image-item", item.selected && "selected", !item.editable && "locke
     </div>
 
     <!-- Image Name -->
-
     <button class="item-name"  title="{item.niceName}"
     onclick     = {()=>{
         item.selected = !item.selected; }}
@@ -48,6 +46,7 @@ class={["item image-item", item.selected && "selected", !item.editable && "locke
         {item.niceName}
     </button>
 
+    <!--<input type="text" class="item-name" value="{item.niceName}"/>-->
 
     <!-- Image Add Button -->
     <button class="item-add l" title="duplicate image" 

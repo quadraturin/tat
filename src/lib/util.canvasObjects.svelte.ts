@@ -2,19 +2,18 @@ import * as R from "$lib/registry.svelte";
 import { CanvasObject } from "./classes/CanvasObject.svelte";
 import { CanvasImage } from "./classes/CanvasImage.svelte";
 import { CanvasSound } from "./classes/CanvasSound.svelte";
-import { Vector2D } from "./util.vectors";
 import { CanvasListener } from "./classes/CanvasListener.svelte";
 import { pointCircleCollision, pointRectCollision, pointPolyCollision } from "./util.collision";
 
 
 /**
  * Handle a double click on the canvas.
- * Toggle the editablilty of an item under the cursor.
+ * Toggle the editablilty of an item (other than the listener) under the cursor.
  * @param e Mouse double click event.
  */
 export function canvasDblClick(e:MouseEvent) {
     const hov = R.getHoveredCanvasObject()
-    if (hov) { 
+    if (hov && hov != R.getListener()) { 
         hov.editable = !R.getHoveredCanvasObject()?.editable;
         if (!hov.editable) hov.selected = false;
     }
@@ -409,8 +408,8 @@ export function canvasMouseUp(e:MouseEvent) {
             o.handle == R.Handle.PolyVertex) {
             o.removeAreaVertex(o.areaHandleIndex);
         }
-        // Selection toggle
-        else if (o instanceof CanvasObject && o.editable) o.selected = !o.selected; 
+        // Selection toggle: only select if editable and not listener.
+        else if (o instanceof CanvasObject && o.editable && o != l) o.selected = !o.selected; 
     }
     if (o != null) o.handle = R.Handle.None;
 

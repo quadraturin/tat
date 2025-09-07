@@ -7,6 +7,7 @@ import { Vector2D } from "./util.vectors";
 
 /** The infinite canvas. */
 export class InfiniteCanvas {
+  
   // Setup canvas properties.
   canvas: HTMLCanvasElement | null = null;
   context: CanvasRenderingContext2D | null = null;
@@ -23,12 +24,7 @@ export class InfiniteCanvas {
   #prevTouch: [Touch | null, Touch | null] = [null, null];
   #velocityX = 0;
   #velocityY = 0;
-
   #wrap = document.getElementById('themeWrapper');
-  #backgroundColor = R.activeTheme.c0;
-  #gridColor = R.activeTheme.c1;
-  #widgetColor = $state(R.activeTheme.cA);
-  #widgetSelectedColor = $state(R.activeTheme.cB);
 
 
   /**
@@ -559,11 +555,15 @@ export class InfiniteCanvas {
    */
   #drawLocalSound(snd:CanvasSound): void {
     if (this.canvas && this.context) {
+      // Draw the circle.
       this.#drawCircle(snd.x, snd.y, snd.radius, snd.selected, true);
+      // Draw the center point.
       this.#drawHandle(snd.x, snd.y, 0.5, snd.selected);
-      this.context.textAlign = "center";
-      this.context.fillText(snd.niceName, this.toWindowX(snd.x), this.toWindowY(snd.y)-4);
       if (snd.editable) {
+        // Draw the name.
+        this.context.textAlign = "center";
+        this.context.fillText(snd.niceName, this.toWindowX(snd.x), this.toWindowY(snd.y)-4);
+        // Draw the edit handle.
         this.#drawHandle(
           snd.x + Math.cos(snd.localHandleAngle)*snd.radius, 
           snd.y + Math.sin(snd.localHandleAngle)*snd.radius, 
@@ -582,11 +582,12 @@ export class InfiniteCanvas {
     if (this.canvas && this.context) {
       // Draw the polygon.
       this.#drawPoly(snd.areaCoords, snd.selected, true);
-      this.context.textAlign = "center";
-      this.context.fillText(snd.niceName, 
-        this.toWindowX((snd.areaBounds[0].x + snd.areaBounds[1].x) / 2), 
-        this.toWindowY((snd.areaBounds[0].y + snd.areaBounds[1].y) / 2));
       if (snd.editable) {
+        // Draw the name.
+        this.context.textAlign = "center";
+        this.context.fillText(snd.niceName, 
+          this.toWindowX((snd.areaBounds[0].x + snd.areaBounds[1].x) / 2), 
+          this.toWindowY((snd.areaBounds[0].y + snd.areaBounds[1].y) / 2));
         // Draw the handles.
         for (let i=0; i<snd.areaCoords.length; i++) {
           const next = i + 1 == snd.areaCoords.length ? 0 : i + 1;

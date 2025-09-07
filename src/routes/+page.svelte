@@ -19,7 +19,6 @@
     import { onMount } from 'svelte'
     import { LogicalSize, Window } from '@tauri-apps/api/window'
     import { getCurrentWindow } from '@tauri-apps/api/window';
-	import { tryQuit } from '$lib/quit';
 
     // ===== Project =====
 	import { saveProject } from '$lib/project.saveProject';
@@ -36,10 +35,12 @@
 	import { closeAllMenus, toggleAboutMenu, toggleSettingsMenu } from '$lib/ui.menus';
 
     // ===== Utilities =====
+	import { tryQuit } from '$lib/util.quit';
     import { t } from '$lib/util.localization';
 	import { help } from '$lib/util.help';
     import { dragDrop } from '$lib/util.dragDrop';
 	import { canvasMouseUp, canvasDblClick, canvasMouseDown, canvasMouseMove, canvasWheel } from '$lib/util.canvasObjects.svelte';
+    import { Menu } from '@tauri-apps/api/menu';
 
     // ===== Menus =====
 	import Loading from '$lib/menus/loading.svelte';
@@ -67,12 +68,9 @@
 	import IconQuit from '$lib/icons/iconQuit.svelte';
 	import SoundListItem from '$lib/fragments/soundListItem.svelte';
 	import ImageListItem from '$lib/fragments/imageListItem.svelte';
-	import { listen } from '@tauri-apps/api/event';
-	import { browser } from '$app/environment';
 	import type { CanvasObject } from '$lib/classes/CanvasObject.svelte';
-	import { CanvasImage } from '$lib/classes/CanvasImage.svelte';
-	import type { CanvasSound } from '$lib/classes/CanvasSound.svelte';
-	
+	import { setWindowMenu } from '$lib/util.appMenus.svelte';
+	import { CanvasListener } from '$lib/classes/CanvasListener.svelte';
 
     // #####################
     // ##### VARIABLES #####
@@ -188,14 +186,19 @@
             document.getElementById("settings-button")?.setAttribute('class', 'adaptive');
     });
 
+    
+
     // ######################
     // ##### INITIALIZE #####
     // ######################
 
     onMount( () => 
     {
-        // Set minimum window size
+        // Set minimum window size.
         appWindow.setMinSize(new LogicalSize(480,320));
+
+        // Set the native app window menu.
+        setWindowMenu();
 
         // Load the user's settings, or, if none, the defaults, then set the theme.
         loadUserSettings().then(()=>{R.setTheme(getUserSettings().theme)})
@@ -217,17 +220,33 @@
         // Set up the drag-and-drop handler
         dragDrop();
 
-        //document.addEventListener("contextmenu", (e) => e.preventDefault(), false);
+        // Handle the context menu
+        document.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+            if (R.getHoveredCanvasObject() instanceof CanvasListener) {
+                R.setupCtxMenuCanvasListener().then(() => {
+                    R.ctxMenuCanvasListener.popup();
+                });
+            } else if (R.getHoveredCanvasObject()) {
+                R.setupCtxMenuCanvasObject().then(() => {
+                    R.ctxMenuCanvasObject.popup();
+                });
+            } else {
+                R.setupCtxMenu(e).then(()=>{
+                    R.ctxMenuCanvas.popup();
+                });
+            }
+        });
 
         // Canvas setup
         R.setCanvas();
 
         // Canvas mouse actions
-        document.getElementById("canvas")!.addEventListener("dblclick",  (e) => { canvasDblClick(e);  });
-        document.getElementById("canvas")!.addEventListener("wheel",     (e) => { canvasWheel(e);     });
-        document.getElementById("canvas")!.addEventListener("mousedown", (e) => { canvasMouseDown(e); });
+        document.getElementById("canvas")!.addEventListener("dblclick",  (e) => { if (e.button===0) canvasDblClick(e); });
+        document.getElementById("canvas")!.addEventListener("wheel",     (e) => { canvasWheel(e); });
+        document.getElementById("canvas")!.addEventListener("mousedown", (e) => { if (e.button===0) canvasMouseDown(e); });
         document.getElementById("canvas")!.addEventListener("mousemove", (e) => { canvasMouseMove(e); });
-        document.getElementById("canvas")!.addEventListener("mouseup",   (e) => { canvasMouseUp(e);   })
+        document.getElementById("canvas")!.addEventListener("mouseup",   (e) => { if (e.button===0) canvasMouseUp(e); })
 
         // Draggable lists. Have to do it a roundabout way because
         // normal HTML dragover doesn't work if drag-and-drop files are
@@ -602,6 +621,46 @@
         </div>
     </div>
 
+    <!-- 
+    <div id="browser-shapes">
+        <div role="heading" class="heading" aria-level="2">
+
+            <div id="master-shapes-opacity" onwheel={(event) => {
+                event.preventDefault(); 
+                changeMasterOpacity(event);
+            }}>
+                <div id="master-shapes-opacity-bar" style={"height:" + (masterOpacity * 100) + "%"}></div>
+            </div>
+
+            <span role="heading" aria-level="3"
+            onfocus     = {()=>{}} 
+            onmouseover = {()=>{help($t('help.map.imagesTitle'))}}
+            onmouseout  = {()=>{help()}}
+            onblur      = {()=>{}}>
+                Shapes 
+            </span>
+
+            <button id="hide-images-toggle"  class:R.getImagesHidden()
+            onclick={()=>{
+                R.toggleImagesHidden()
+                R.getImagesHidden() ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))}}
+            onfocus={()=>{}} 
+            onblur={()=>{}}
+            onmouseout={()=>{help()}}
+            onmouseover = {()=>{
+                R.getImagesHidden() ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))
+            }}>
+                {#if R.getImagesHidden()}<IconEye/>{:else}<IconEyeOff/>{/if}
+            </button>
+
+            <button id="new-shape" onclick={()=>{
+            }}>+</button>
+        </div>
+        <div id="browser-shapes-list">
+            shapes
+        </div>
+    </div> -->
+
     <!-- The Images Browser -->
     <div id="browser-images">
 
@@ -641,7 +700,7 @@
         </div>
 
         <!-- The Images List -->
-         <div id="browser-images-list">
+        <div id="browser-images-list">
             {#each imageList as item, i}
                 <ImageListItem item={item} i={i} />
             {/each}
