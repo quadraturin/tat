@@ -1,4 +1,3 @@
-import type * as H from 'howler';
 import { AppTheme } from "./classes/AppTheme.svelte";
 import { getThemesList } from "./settings.theme";
 import { InfiniteCanvas } from "./util.infiniteCanvas.svelte";
@@ -6,28 +5,89 @@ import type { CanvasObject } from "./classes/CanvasObject.svelte";
 import { CanvasImage, type canvasImageOptions } from "./classes/CanvasImage.svelte";
 import { CanvasSound, type CanvasSoundOptions } from "./classes/CanvasSound.svelte";
 import { CanvasListener } from "./classes/CanvasListener.svelte";
+import { CanvasShape, type CanvasShapeOptions } from './classes/CanvasShape.svelte';
+
+
+/**
+ *  1. MOUSE
+ *      1.1 Mouse Position
+ *      1.2 Mouse Clicked
+ *  2. INFINITE CANVAS
+ *      2.1 The Canvas
+ *      2.2 Canvas Object Handling
+ *      2.3 Dragging On The Canvas
+ *      2.4 Panning On The Canvas
+ *      2.5 Canvas Object Handles
+ *  3. PROJECT OBJECTS
+ *      3.1 Listener
+ *      3.2 Images
+ *      3.3 Shapes
+ *      3.4 Sounds 
+ *      3.5 Effects
+ *  4. MEDIA CONTROLS
+ *      4.1 Master Volume
+ *      4.2 Master Opacity
+ *  5. APPLICATION STATES
+ *      5.1 Loading
+ *      5.2 Saving
+ *      5.3 Has Media
+ *      5.4 Unsaved Changes
+ *      5.5 Menu States
+ *      5.6 Help Active
+ *      5.7 Proportional Image Scaling
+ *      5.8 Delete Mode
+ *      5.9 Theme
+ *      5.10 Images Hidden
+ *      5.11 Sounds Hidden
+ *  6. PROJECT INFORMATION
+ *      6.1 Project Path
+ *      6.2 Project Name
+ */
 
 
 
-// #################
-// ##### MOUSE #####
-// #################
+// ####################
+// ##### 1. MOUSE #####
+// ####################
+
+
+// ===== 1.1 MOUSE POSITION =====
+
+/** The mouse X position. */
 let mouseX = $state(0);
+
+/** The mouse Y position. */
 let mouseY = $state(0);
+
+/** Get the mouse position. @returns The mouse X and Y positions. */
 export function getMouse() { return { x:mouseX, y:mouseY }; }
-export function setMouse(x:number, y:number) {
-    mouseX = x;
-    mouseY = y;
+
+/** Set the mouse position. @param x The mouse X position. @param y The mouse Y position. */
+export function setMouse(x:number, y:number) { mouseX = x; mouseY = y; }
+
+
+// ===== 1.2 MOUSE CLICKED =====
+
+/** Whether or not the mouse is clicked. */
+let mouseDown = false;
+
+/** Get if the mouse is clicked. @returns True: mouse is clicked. False: mouse is not clicked. */
+export function getMouseDown() { return mouseDown; }
+
+/** Set if the mouse is clicked. @param down True: mouse is clicked. False: mouse is not clicked. */
+export function setMouseDown(down?:boolean) {
+    if (typeof down =="undefined") mouseDown = !mouseDown;
+    else mouseDown = down;
 }
 
 
 
-// ###########################
-// ##### INFINITE CANVAS #####
-// ###########################
+// ##############################
+// ##### 2. INFINITE CANVAS #####
+// ##############################
 
 
-// ===== THE CANVAS =====
+// ===== 2.1 THE CANVAS =====
 
 /** The "infinite canvas" that all images, emitters, etc. get drawn to. */
 let canvas:InfiniteCanvas;
@@ -39,7 +99,7 @@ export function getCanvas() { return canvas; }
 export function setCanvas(gridSize?:number) { canvas = new InfiniteCanvas(gridSize); }
 
 
-// ===== CANVAS OBJECT HANDLING =====
+// ===== 2.2 CANVAS OBJECT HANDLING =====
 
 let hoveredCanvasObject:CanvasObject|null = null;
 export function getHoveredCanvasObject() { return hoveredCanvasObject; }
@@ -49,7 +109,8 @@ let clickedCanvasObject:CanvasObject|null;
 export function getClickedCanvasObject() { return clickedCanvasObject; }
 export function setClickedCanvasObject(obj:CanvasObject|null) { clickedCanvasObject = obj; }
 
-// ===== DRAGGING ON THE CANVAS =====
+
+// ===== 2.3 DRAGGING ON THE CANVAS =====
 
 /** Whether or not the user is currently dragging something(s). */
 let dragging = false;
@@ -60,14 +121,7 @@ export function setDragging(d?:boolean) {
 }
 
 
-// ===== PANNING THE CANVAS =====
-
-let mouseDown = false;
-export function getMouseDown() { return mouseDown; }
-export function setMouseDown(down?:boolean) {
-    if (typeof down =="undefined") mouseDown = !mouseDown;
-    else mouseDown = down;
-}
+// ===== 2.4 PANNING THE CANVAS =====
 
 /** Whether or not the user is currently panning. */
 let panning = false;
@@ -81,6 +135,7 @@ let panLastY = 0;
 /** Friction for panning. */
 let friction = 0.94;
 
+/** Get the canvas friction. @returns The friction. */
 export function getFriction() { return friction; }
 
 /** Start panning the canvas. @param x X position of cursor. @param y Y position of cursor. */
@@ -111,7 +166,7 @@ export function setPanLastX(n:number) { panLastX = n; }
 export function setPanLastY(n:number) { panLastY = n; }
 
 
-// ===== HANDLES =====
+// ===== 2.5 CANVAS OBJECT HANDLES =====
 
 let handleSize = 4;
 let handleSlop = 4;
@@ -145,12 +200,12 @@ export function getOriginalY() { return originalY; }
 export function setOriginalY(y:number) { originalY = y; }
 
 
-// #######################################
-// ##### PROJECT CONTENTS MANAGEMENT #####
-// #######################################
+// ##############################
+// ##### 3. PROJECT OBJECTS #####
+// ##############################
 
 
-// ===== LISTENER =====
+// ===== 3.1 LISTENER =====
 
 /** The listener. */
 let listener:CanvasListener;
@@ -184,7 +239,7 @@ export function getListenerRadius() { return listenerRadius; }
 export function setListenerRadius(newRadius:number) { listenerRadius = newRadius; }
 
 
-// ===== IMAGES =====
+// ===== 3.2 IMAGES =====
 
 /** The list of images. */
 let images = new Array<CanvasImage>;
@@ -201,7 +256,33 @@ export function addToImages(options:canvasImageOptions) {
 }
 
 
-// ===== SOUNDS =====
+// ===== 3.3 SHAPES =====
+
+/** The list of shapes. */
+let shapes = new Array<CanvasShape>;
+
+/** Get the list of images. @returns The list of images. */
+export function getShapes():Array<CanvasShape> { return shapes; }
+
+/** Set the list of images to a new list. @param newImages The new list of images. */
+export function setShapes(newShapes:Array<CanvasShape>) { shapes = newShapes; }
+
+/** Add an image to the image list. @param options The new image information. */
+export function addToShapes(options:CanvasShapeOptions) { 
+    shapes.push(new CanvasShape(options)); 
+}
+
+export enum ShapeType {
+    Area   = "AREA",
+    Grid   = "GRID",
+    Circle = "CIRCLE",
+    Rect   = "RECT",
+    Symbol = "SYMBOL",
+    Text   = "TEXT"
+};
+
+
+// ===== 3.4 SOUNDS =====
 
 const audioContext = new AudioContext();//{ sampleRate: 48000, latencyHint: 'interactive' });
 export function getAudioContext() { return audioContext; }
@@ -240,7 +321,6 @@ masterGain//.connect(waveShaper)
     .connect(compressor)
     .connect(audioContext.destination);
 
-
 /** The sound list. */
 let sounds = new Array<CanvasSound>;
 
@@ -270,8 +350,9 @@ export enum TriggerType {
     PlayOnTimer   = "PLAYONTIMER"
 };
 
-// ===== EFFECTS =====
+// ===== 3.5 EFFECTS =====
 
+/** Canvas effect types. */
 export enum EffectType {
     Lowpass         = "LOWPASS",        // BiquadFilterNode
     Highpass        = "HIGHPASS",       // BiquadFilterNode
@@ -283,22 +364,36 @@ export enum EffectType {
 
 }
 
-// ##########################
-// ##### MEDIA CONTROLS #####
-// ##########################
+// #############################
+// ##### 4. MEDIA CONTROLS #####
+// #############################
+
+
+// ===== 4.1 MASTER VOLUME =====
 
 /** The master volume. */
 let masterVolume = 1;
+
+/** Get the master volume. @returns The master volume. */
 export function getMasterVolume() { return masterVolume; }
+
+/** Set the master volume. @param vol The volume to set, between 0 and 1. */
 export function setMasterVolume(vol:number) {
     if (vol < 0) vol = 0;
     else if (vol > 1) vol = 1;
     masterVolume = vol;
 }
 
+
+// ===== 4.2 MASTER OPACITY =====
+
 /** The master opacity. */
 let masterOpacity = 1;
+
+/** Get the master opacity. @returns The master opacity. */
 export function getMasterOpacity() { return masterOpacity; }
+
+/** Set the master opacity. @param opacity The opacity to set, between 0 and 1. */
 export function setMasterOpacity(opacity:number) {
     if (opacity < 0) opacity = 0;
     else if (opacity > 1) opacity = 1;
@@ -306,12 +401,12 @@ export function setMasterOpacity(opacity:number) {
 }
 
 
-// ########################################
-// ##### APPLICATION STATE MANAGEMENT #####
-// ########################################
+// #################################
+// ##### 5. APPLICATION STATES #####
+// #################################
 
 
-// ===== LOADING =====
+// ===== 5.1 LOADING =====
 
 /** The loading state. */
 let isLoading = false;
@@ -323,7 +418,7 @@ export function getIsLoading():boolean { return isLoading; };
 export function setIsLoading(value:boolean) { isLoading = value; };
 
 
-// ===== SAVING =====
+// ===== 5.2 SAVING =====
 
 /** The saving state. */
 let isSaving = false;
@@ -335,7 +430,7 @@ export function getIsSaving():boolean { return isSaving; };
 export function setIsSaving(value:boolean) {isSaving = value; };
 
 
-// ===== HAS MEDIA =====
+// ===== 5.3 HAS MEDIA =====
 
 /** Whether or not the project has any media. */
 let hasMedia = $state(false);
@@ -347,7 +442,7 @@ export function getHasMedia():boolean { return hasMedia; };
 export function setHasMedia(b:boolean) { hasMedia = b; };
 
 
-// ===== UNSAVED CHANGES =====
+// ===== 5.4 UNSAVED CHANGES =====
 
 /** Whether or not the project has unsaved changes. */
 let isProjectDirty = false;
@@ -362,7 +457,7 @@ export function setProjectDirty() { isProjectDirty = true; };
 export function setProjectClean() { isProjectDirty = false; };
 
 
-// ===== MENUS =====
+// ===== 5.5 MENU STATES =====
 
 /** Whether or not the about menu is open. */
 let aboutMenuOpen = false;
@@ -383,7 +478,7 @@ export function getIsSettingsMenuOpen():boolean { return settingsMenuOpen; }
 export function setIsSettingsMenuOpen(val:boolean) { settingsMenuOpen = val; }
 
 
-// ===== HELP =====
+// ===== 5.6 HELP ACTIVE =====
 
 /** Whether or not help is active. */
 let helpActive = true;
@@ -395,7 +490,7 @@ export function toggleHelpActive() { helpActive = !helpActive; }
 export function getIsHelpActive():boolean { return helpActive; }
 
 
-// ===== PROPORTIONAL IMAGE SCALING =====
+// ===== 5.7 PROPORTIONAL IMAGE SCALING =====
 
 /** Whether or not proportional image scaling is currently on. */
 let isProportionalScaleOn = false;
@@ -416,7 +511,7 @@ export function setIsProportionalScaleOn(b:boolean) { isProportionalScaleOn = b;
 export function toggleProportionalScale(){ isProportionalScaleOn = !isProportionalScaleOn };
 
 
-// ===== DELETE MODE =====
+// ===== 5.8 DELETE MODE =====
 
 /** Whether or not delete mode is active. */
 let isInDeleteMode = false;
@@ -424,7 +519,7 @@ export function getIsInDeleteMode():boolean { return isInDeleteMode; };
 export function setIsInDeleteMode(b:boolean) {isInDeleteMode = b; };
 
 
-// ===== THEME =====
+// ===== 5.9 THEME =====
 
 /** The theme. */
 export let activeTheme = $state(new AppTheme());
@@ -440,14 +535,14 @@ export function setTheme(themeName:string) {
 }
 
 
-// ===== IMAGES HIDDEN =====
+// ===== 5.10 IMAGES HIDDEN =====
 
 let imagesHidden = $state(false);
 export function getImagesHidden() { return imagesHidden; }
 export function toggleImagesHidden() { imagesHidden = !imagesHidden; }
 
 
-// ===== SOUNDS HIDDEN =====
+// ===== 5.11 SOUNDS HIDDEN =====
 
 let soundsHidden = $state(false);
 export function getSoundsHidden() { return soundsHidden; }
@@ -455,12 +550,12 @@ export function toggleSoundsHidden() { soundsHidden = !soundsHidden; }
 
 
 
-// #################################
-// ###### PROJECT INFORMATION ######
-// #################################
+// ####################################
+// ###### 6. PROJECT INFORMATION ######
+// ####################################
 
 
-// ===== PROJECT PATH =====
+// ===== 6.1 PROJECT PATH =====
 
 /** The project path. */
 let projectPath:string | undefined;
@@ -472,7 +567,7 @@ export function setProjectPath(p:string) { projectPath = p; projectPath = projec
 export function getProjectPath():string|undefined { return projectPath; };
 
 
-// ===== PROJECT NAME =====
+// ===== 6.2 PROJECT NAME =====
 
 /** The project name. */
 let projectName:string;
