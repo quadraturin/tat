@@ -484,16 +484,16 @@ button.activated {
     bottom: 0;
     background-color: var(--c0);
 }
-#browser .item.selected, #browser .item.selected .item-volume {
+#browser .item.selected, #browser .item.selected .volume-track {
     border-color: var(--cE);
 }
-#browser .item.selected .volume {
+#browser .item.selected .volume-bar {
     background-color: var(--cE);
 }
-#browser .item.locked, #browser .item.locked .item-volume {
+#browser .item.locked, #browser .item.locked .volume-track {
     border-color: var(--c2);
 }
-#browser .item.locked .volume {
+#browser .item.locked .volume-bar {
     background-color: var(--c2);
 }
 

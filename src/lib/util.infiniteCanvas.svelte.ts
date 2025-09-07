@@ -370,6 +370,7 @@ export class InfiniteCanvas {
           let num = this.toWorldX(source).toFixed(0);
           if (num == "-0") num = "0";
           let bottomPadding = R.getIsHelpActive() ? 26 : 2;
+          ctx.textAlign = "left";
           ctx.fillText(`${num}`, source + 2, height - bottomPadding);
         }
       }
@@ -560,6 +561,8 @@ export class InfiniteCanvas {
     if (this.canvas && this.context) {
       this.#drawCircle(snd.x, snd.y, snd.radius, snd.selected, true);
       this.#drawHandle(snd.x, snd.y, 0.5, snd.selected);
+      this.context.textAlign = "center";
+      this.context.fillText(snd.niceName, this.toWindowX(snd.x), this.toWindowY(snd.y)-4);
       if (snd.editable) {
         this.#drawHandle(
           snd.x + Math.cos(snd.localHandleAngle)*snd.radius, 
@@ -579,6 +582,10 @@ export class InfiniteCanvas {
     if (this.canvas && this.context) {
       // Draw the polygon.
       this.#drawPoly(snd.areaCoords, snd.selected, true);
+      this.context.textAlign = "center";
+      this.context.fillText(snd.niceName, 
+        this.toWindowX((snd.areaBounds[0].x + snd.areaBounds[1].x) / 2), 
+        this.toWindowY((snd.areaBounds[0].y + snd.areaBounds[1].y) / 2));
       if (snd.editable) {
         // Draw the handles.
         for (let i=0; i<snd.areaCoords.length; i++) {
@@ -631,6 +638,10 @@ export class InfiniteCanvas {
         this.#drawHandle(img.x + img.width, img.y, handleSize, img.selected);
         this.#drawHandle(img.x, img.y + img.height, handleSize, img.selected);
         this.#drawHandle(img.x + img.width, img.y + img.height, handleSize, img.selected);
+        this.context.textAlign = "left";
+        this.context.fillText(img.niceName, 
+          this.toWindowX(img.x), 
+          this.toWindowY(img.y) - R.getHandleSize()*2);
       }
     }
   }
