@@ -11,7 +11,7 @@
 
 <!-- An Image Item -->
 <div id="item-{item.uuid}" role="listitem" draggable="true"
-class={["item image-item", item.selected && "selected", !item.editable && "locked"]}>
+class={["item image-item", item.selected && "selected", item.locked && "locked"]}>
 
     <!-- Opacity Display -->
     <div class="volume-track" onwheel = {(event) => { event.preventDefault(); item.changeOpacity(event)}}>
@@ -23,7 +23,7 @@ class={["item image-item", item.selected && "selected", !item.editable && "locke
     onclick     = {()=>{
         item.selected = !item.selected; }}
     ondblclick  = {()=>{
-        item.editable = !item.editable; }}
+        item.locked = !item.locked; }}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
@@ -33,7 +33,7 @@ class={["item image-item", item.selected && "selected", !item.editable && "locke
             $t('help.map.image'), 
             $t('help.map.imageItemActions'), 
             $t('help.map.itemSelectedActions'));
-        else if (!item.editable) 
+        else if (item.locked) 
             help($t('help.map.locked'), 
             $t('help.map.image'), 
             $t('help.map.imageItemActions'), 

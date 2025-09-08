@@ -75,7 +75,7 @@ export async function manageCanvasSounds(){
             // Inside PlayOnEnter trigger: play & set trigger type to PlayOnLoad.
             if (snd.triggerType == R.TriggerType.PlayOnEnter && snd.sound.paused) {
                 snd.sound.play();
-                snd.triggerType = R.TriggerType.PlayOnLoad;
+                snd.triggerType = R.TriggerType.Manual;
             }
             // Inside PlayInside trigger: play.
             else if (snd.triggerType == R.TriggerType.PlayInside && snd.sound.paused) {
@@ -85,7 +85,7 @@ export async function manageCanvasSounds(){
             else if (snd.triggerType == R.TriggerType.ReplayOnEnter && snd.sound.paused) {
                 snd.sound.play();
                 snd.sound.fastSeek(0);
-                snd.triggerType = R.TriggerType.PlayOnLoad;
+                snd.triggerType = R.TriggerType.Manual;
             }
             // Inside ReplayInside: restart & play.
             else if (snd.triggerType == R.TriggerType.ReplayInside && snd.sound.paused) {

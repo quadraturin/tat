@@ -38,7 +38,7 @@
     let soloed = $state(false);
     let muted = $state(false);
     let soundType = $state(SoundType.Local);
-    let triggerType = $state(TriggerType.PlayOnLoad);
+    let triggerType = $state(TriggerType.Manual);
     let timerH = $state(0);
     let timerM = $state(0);
     let timerS = $state(0);
@@ -61,7 +61,7 @@
 </script>
 
 <!-- A Sound Item -->
-<div class="item sound-item" draggable="true" id="item-{item.uuid}" class:selected={item.selected} class:locked={!item.editable} role="listitem">
+<div class="item sound-item" draggable="true" id="item-{item.uuid}" class:selected={item.selected} class:locked={item.locked} role="listitem">
 
     <!-- Volume Display -->
     <div class="volume-track" onwheel={(event) =>{ event.preventDefault(); item.changeVolume(event); }}>
@@ -71,7 +71,7 @@
     <!-- Sound Name -->
     <button class="item-name" title="{item.niceName}"
     onclick     = {()=>{item.selected = !item.selected;}}
-    ondblclick  = {()=>{if(item.soundType != SoundType.Global) item.editable = !item.editable;}}
+    ondblclick  = {()=>{if(item.soundType != SoundType.Global) item.locked = !item.locked;}}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
@@ -90,7 +90,7 @@
                         $t('help.map.soundTypeLocal'), 
                         $t('help.map.soundItemActions'), 
                         $t('help.map.itemSelectedActions') );
-        } else if (!item.editable) {
+        } else if (!item.locked) {
             if (item.soundType == SoundType.Area) 
                 help(   $t('help.map.locked'), 
                         $t('help.map.soundTypeArea'), 
@@ -187,7 +187,7 @@
     onmouseover = {()=>{
         item.muted? help($t('help.map.soundMute')) : help($t('help.map.soundUnMute'))
     }}>
-        {#if triggerType == TriggerType.PlayOnLoad}<IconPlayOnLoad/>
+        {#if triggerType == TriggerType.Manual}<IconPlayOnLoad/>
         {:else if triggerType == TriggerType.PlayOnEnter}<IconPlayOnEnter/>
         {:else if triggerType == TriggerType.ReplayOnEnter}<IconReplayOnEnter/>
         {:else if triggerType == TriggerType.PlayInside}<IconPlayInside/>
@@ -195,7 +195,7 @@
         {:else if triggerType == TriggerType.PlayOnTimer}<IconPlayOnTimer/>{/if}
     </button>
 
-    {#if triggerType == TriggerType.PlayOnLoad}
+    {#if triggerType == TriggerType.Manual}
     <!-- Sound Pause Button -->
     <button class="item-pause m" class:activated={!paused}
     onclick     = {()=>{item.sound.paused ? item.sound.play() : item.sound.pause()}}

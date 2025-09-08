@@ -8,7 +8,7 @@ import { CanvasListener } from "./classes/CanvasListener.svelte";
 import { CanvasShape, type CanvasShapeOptions } from './classes/CanvasShape.svelte';
 import { Menu } from "@tauri-apps/api/menu";
 
-
+console.log("aaaa")
 /**
  *  1. MOUSE
  *      1.1 Mouse Position
@@ -265,7 +265,7 @@ let handleSlop = 4;
 export function getHandleSize() { return handleSize; }
 export function getHandleSlop() { return handleSlop; }
 
-export enum Handle { None="NONE", NW="NW", NE="NE", SW="SW", SE="SE", Radius="RADIUS", PolyVertex="POLYVERTEX", PolyEdge="POLYEDGE"};
+export enum Handle { None="none", NW="nw", NE="ne", SW="sw", SE="se", Radius="radius", PolyVertex="polyvertex", PolyEdge="polyedge"};
 
 let mouseDownX = 0;
 export function getMouseDownX() { return mouseDownX; }
@@ -307,18 +307,7 @@ export function getListener():CanvasListener { return listener; }
 
 /** Set a new listener. @param newListener The new listener to set. */
 export function setListener() { 
-    listener = new CanvasListener({
-        x: 0,
-        y: 0,
-        order: 0,
-        name: "Listener",
-        niceName: "Listener",
-        editable: true,
-        selected: false,
-        grabbed: false,
-        locked: false,
-        handle: Handle.None
-    }); 
+    listener = new CanvasListener({ x: 0, y: 0 }); 
 }
 
 /** The size of the listener's radius. */
@@ -404,12 +393,12 @@ export function addToShapes(options:CanvasShapeOptions) {
 }
 
 export enum ShapeType {
-    Area   = "AREA",
-    Grid   = "GRID",
-    Circle = "CIRCLE",
-    Rect   = "RECT",
-    Symbol = "SYMBOL",
-    Text   = "TEXT"
+    Area   = "area",
+    Grid   = "grid",
+    Circle = "circle",
+    Rect   = "rect",
+    Symbol = "symbol",
+    Text   = "text"
 };
 
 
@@ -466,32 +455,32 @@ export function addToSounds(options:CanvasSoundOptions) { sounds.push(new Canvas
 
 /** Canvas sound types. Local (circle falloff), Area (polygon), Global. */
 export enum SoundType {
-    Local  = "LOCAL", 
-    Global = "GLOBAL", 
-    Area   = "AREA"
+    Local  = "local", 
+    Global = "global", 
+    Area   = "area"
 };
 
 /** Canvas sound types. Local (circle falloff), Area (polygon), Global. */
 export enum TriggerType {
-    PlayOnLoad    = "PLAYONLOAD", 
-    PlayOnEnter   = "PLAYONENTER",
-    ReplayOnEnter = "REPLAYONENTER",
-    PlayInside    = "PLAYINSIDE", 
-    ReplayInside  = "REPLAYINSIDE", 
-    PlayOnTimer   = "PLAYONTIMER"
+    Manual        = "manual", 
+    PlayOnEnter   = "playonenter",
+    ReplayOnEnter = "replayonenter",
+    PlayInside    = "playinside", 
+    ReplayInside  = "replayinside", 
+    PlayOnTimer   = "playontimer"
 };
 
 // ===== 3.5 EFFECTS =====
 
 /** Canvas effect types. */
 export enum EffectType {
-    Lowpass         = "LOWPASS",        // BiquadFilterNode
-    Highpass        = "HIGHPASS",       // BiquadFilterNode
-    Reverb          = "REVERB",         // ConvolverNode
-    Compressor      = "COMPRESSOR",     // DynamicsCompressorNode
-    Distortion      = "DISTORTION",     // WaveShaperNode
-    Panner          = "PANNER",         // PannerNode
-    StereoPanner    = "STEREOPANNER"    // StereoPannerNode
+    Lowpass         = "lowpass",        // BiquadFilterNode
+    Highpass        = "highpass",       // BiquadFilterNode
+    Reverb          = "reverb",         // ConvolverNode
+    Compressor      = "compressor",     // DynamicsCompressorNode
+    Distortion      = "distortion",     // WaveShaperNode
+    Panner          = "panner",         // PannerNode
+    StereoPanner    = "stereopanner"    // StereoPannerNode
 
 }
 

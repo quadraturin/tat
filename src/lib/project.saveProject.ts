@@ -61,51 +61,49 @@ export async function saveProject(saveAs=false): Promise<boolean>
 
     // cycle through loaded images, adding each to the project object
     let i = 0; 
-    /*imageList.forEach(e => {
+    imageList.forEach(img => {
         project.maps[0].images[i] = {
-            src: e.name,
-            x: e.overlay.getBounds().getWest(),
-            y: e.overlay.getBounds().getSouth(),
-            width: e.overlay.getBounds().getEast() - e.overlay.getBounds().getWest(),
-            height: e.overlay.getBounds().getNorth() - e.overlay.getBounds().getSouth(),
-            opacity: e.opacity,
-            order: i,
-            locked: !e.rect.editEnabled(),
-            originalWidth: e.originalWidth,
-            originalHeight: e.originalHeight
+            src: img.name,
+            height: img.height,
+            locked: img.locked,
+            name: img.name,
+            niceName: img.niceName,
+            opacity: img.opacity,
+            originalHeight: img.originalHeight,
+            originalWidth: img.originalWidth,
+            width: img.width,
+            x: img.x,
+            y: img.y,
         }
-        promises.push(writeImageFile(e, filePath as string));
+        promises.push(writeImageFile(img, filePath as string));
         i++;
-    });*/
+    });
 
     // cycle through loaded sounds, adding each to the project object
     i = 0;
-    /*soundList.forEach(e => {
-        if (e.sound) project.maps[0].sounds[i] = {
-            src: e.name,
-            soundType: e.soundType,
-            volume: e.volume,
-            solo: e.solo,
-            muted: e.muted,
-            order: i,
-            seek: e.sound.seek(),
-            locked: !e.emitter?.editEnabled()
+    soundList.forEach(snd => {
+        project.maps[0].sounds[i] = {
+            src: snd.name,
+            areaCoords: snd.areaCoords,
+            locked: snd.locked,
+            localHandleAngle: snd.localHandleAngle,
+            loop: snd.loop,
+            muted: snd.muted,
+            name: snd.name,
+            niceName: snd.niceName,
+            radius: snd.radius,
+            selected: snd.selected,
+            solo: snd.solo,
+            soundType: snd.soundType,
+            timer: snd.timer,
+            triggerType: snd.triggerType,
+            volume: snd.volume,
+            x: snd.x,
+            y: snd.y,
         }
-        if (e.emitter instanceof L.Circle) {
-            project.maps[0].sounds[i].x = e.emitter.getLatLng().lng;
-            project.maps[0].sounds[i].y = e.emitter.getLatLng().lat;
-            project.maps[0].sounds[i].radius = e.emitter.getRadius();
-        } else if (e.emitter instanceof L.Polygon) {
-            project.maps[0].sounds[i].points = [];
-            for (let j=0; j<(e.emitter.getLatLngs()[0]as L.LatLng[]).length; j++) {
-                project.maps[0].sounds[i].points.push([(e.emitter.getLatLngs()[0] as L.LatLng[])[j].lng, (e.emitter.getLatLngs()[0] as L.LatLng[])[j].lat]);
-            }
-            console.log(e.emitter.getLatLngs());
-        }
-
-        promises.push(writeSoundFile(e, filePath as string));
+        promises.push(writeSoundFile(snd, filePath as string));
         i++;
-    });*/
+    });
 
     // write the project JSON
     promises.push(writeTextFile(await join(filePath, 'project.json'), JSON.stringify(project)));

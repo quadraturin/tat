@@ -126,19 +126,19 @@
         else if (e.key == "c") R.getCanvas().flyToPoint(R.getListener().x, R.getListener().y);
         // Move the listener
         else if (e.key == "w") {
-            if(R.getListener().editable) {
+            if(!R.getListener().locked) {
                 R.getListener().y = R.getListener().y - speed;
             }
         } else if (e.key == "a") {
-            if(R.getListener().editable) { 
+            if(!R.getListener().locked) { 
                 R.getListener().x = R.getListener().x - speed;
             }
         } else if (e.key == "s") {
-            if(R.getListener().editable) { 
+            if(!R.getListener().locked) { 
                 R.getListener().y = R.getListener().y + speed;
             }
         } else if (e.key == "d") {
-            if(R.getListener().editable) { 
+            if(!R.getListener().locked) { 
                 R.getListener().x = R.getListener().x + speed;
             }
         }
@@ -222,7 +222,7 @@
 
         // Handle the context menu
         document.addEventListener("contextmenu", (e) => {
-            e.preventDefault();
+            //e.preventDefault();
             if (R.getHoveredCanvasObject() instanceof CanvasListener) {
                 R.setupCtxMenuCanvasListener().then(() => {
                     R.ctxMenuCanvasListener.popup();

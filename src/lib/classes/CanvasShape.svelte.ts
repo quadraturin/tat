@@ -14,8 +14,7 @@ export type Timer = {
 
 /** Canvas Sound options. */
 export type CanvasShapeOptions = {
-    editable:           boolean,
-    grabbed:            boolean,
+    locked:           boolean,
     name:               string,
     niceName:           string,
     selected:           boolean,
@@ -56,9 +55,8 @@ export class CanvasShape extends CanvasObject{
             y:options.circleY, 
             name:options.name,
             niceName:options.niceName,
-            editable:options.editable,
+            locked:options.locked,
             selected:options.selected,
-            grabbed:options.grabbed,
         });
         this.#areaCoords = options.areaCoords;
         this.#areaBounds = this.setBounds();

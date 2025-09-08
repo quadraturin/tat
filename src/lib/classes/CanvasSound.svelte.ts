@@ -4,6 +4,7 @@ import { Vector2D } from "$lib/util.vectors";
 import { convertFileSrc } from "@tauri-apps/api/core";
 import { getUserSettings } from "$lib/settings.userSettings.svelte";
 import { pointCircleCollision, pointPolyCollision } from "$lib/util.collision";
+import { niceName } from "$lib/util.getNiceName";
 
 export type Timer = {
     setHours: number;
@@ -17,25 +18,23 @@ export type Timer = {
 
 /** Canvas Sound options. */
 export type CanvasSoundOptions = {
-    areaCoords:         Vector2D[],
-    editable:           boolean,
-    grabbed:            boolean,
-    localHandleAngle:   number,
-    loop:               boolean,
-    muted:              boolean,
-    name:               string,
-    niceName:           string,
-    radius:             number,
-    selected:           boolean,
-    solo:               boolean,
-    sound:              HTMLAudioElement,
-    src:                string,
-    soundType:          SoundType,
-    timer:              Timer,
-    triggerType:        TriggerType,
-    volume:             number,
-    x:                  number,
-    y:                  number
+    src:                 string,
+    areaCoords?:         Vector2D[],
+    locked?:           boolean,
+    localHandleAngle?:   number,
+    loop?:               boolean,
+    muted?:              boolean,
+    name?:               string,
+    niceName?:           string,
+    radius?:             number,
+    selected?:           boolean,
+    solo?:               boolean,
+    soundType?:          SoundType,
+    timer?:              Timer,
+    triggerType?:        TriggerType,
+    volume?:             number,
+    x?:                  number,
+    y?:                  number
 }
 
 /**
@@ -66,36 +65,48 @@ export class CanvasSound extends CanvasObject{
         super({ 
             x:options.x, 
             y:options.y, 
-            name:options.name,
+            name:options.name ? options.name : "Sound",
             niceName:options.niceName,
-            editable:options.editable,
+            locked:options.locked,
             selected:options.selected,
-            grabbed:options.grabbed,
         });
         this.#src = options.src;
+        this.niceName = options.niceName ? options.niceName : niceName(this.name);
         this.#sound = new Audio(convertFileSrc(this.#src));
-        this.#sound.volume = options.volume;
-        this.#sound.loop = options.loop;
-        this.#sound.addEventListener("canplaythrough", () => {
-            this.#sound.play();
-        });
-        this.#soundType = options.soundType;
+        this.#sound.volume = options.volume ? options.volume : 1;
+        this.#sound.loop = options.loop ? options.loop : true;
+        this.#soundType = options.soundType ? options.soundType : SoundType.Local;
+        this.#radius = options.radius ? options.radius : 30;
 
-        this.#areaCoords = options.areaCoords;
+        const newAreaCoords = [ new Vector2D(this.x, this.y + this.#radius), 
+                                new Vector2D(this.x + this.#radius, this.y), 
+                                new Vector2D(this.x, this.y - this.#radius), 
+                                new Vector2D(this.x - this.#radius, this.y)];
+
+        this.#areaCoords = options.areaCoords ? options.areaCoords : newAreaCoords;
         this.#areaBounds = this.setBounds();
         this.#areaHandleIndex = 0;
-        this.#originalAreaCoords = options.areaCoords;
-        this.#localHandleAngle = options.localHandleAngle;
-        this.#radius = options.radius;
+        this.#originalAreaCoords = this.#areaCoords;
+        this.#localHandleAngle = options.localHandleAngle ? options.localHandleAngle : 0;
 
         this.#gain = getAudioContext().createGain();
-        this.#loop = options.loop;
-        this.#muted = options.muted;
-        this.#solo = options.solo;
-        this.#timer = options.timer;
-        this.#triggerType = options.triggerType;
-        this.#volume = options.volume;
-
+        this.#loop = options.loop ? options.loop : true;
+        this.#muted = options.muted ? options.muted : false;
+        this.#solo = options.solo ? options.solo : false;
+        this.#timer = options.timer ? options.timer : {
+            setHours: 0,
+            setMinutes: 0,
+            setSeconds: 30,
+            hours: 0,
+            minutes: 0,
+            seconds: 30,
+            active: false,
+        };
+        this.#triggerType = options.triggerType ? options.triggerType : TriggerType.Manual;
+        if (this.#triggerType == TriggerType.Manual) this.#sound.addEventListener("canplaythrough", () => {
+            this.#sound.play();
+        });
+        this.#volume = options.volume ? options.volume : 1;
         this.#track = getAudioContext().createMediaElementSource(this.#sound);
         this.#gain = getAudioContext().createGain();
 
@@ -312,8 +323,8 @@ export class CanvasSound extends CanvasObject{
         // Area -> Global: Unset invalid trigger types.
         else if (this.soundType == SoundType.Area){ 
             this.soundType = SoundType.Global;
-            if (this.triggerType != TriggerType.PlayOnLoad && this.triggerType != TriggerType.PlayOnTimer) {
-                this.triggerType = TriggerType.PlayOnLoad;
+            if (this.triggerType != TriggerType.Manual && this.triggerType != TriggerType.PlayOnTimer) {
+                this.triggerType = TriggerType.Manual;
             }
         }
         // Global -> Local
@@ -331,11 +342,11 @@ export class CanvasSound extends CanvasObject{
         // Global sound:
         // PlayOnLoad -> PlayOnTimer -> back
         if (this.soundType == SoundType.Global) {
-            if (this.triggerType == TriggerType.PlayOnLoad)  { 
+            if (this.triggerType == TriggerType.Manual)  { 
                 this.triggerType = TriggerType.PlayOnTimer; 
                 this.sound.pause(); 
             } else if (this.triggerType == TriggerType.PlayOnTimer) { 
-                this.triggerType = TriggerType.PlayOnLoad; 
+                this.triggerType = TriggerType.Manual; 
             }
         }
 
@@ -343,7 +354,7 @@ export class CanvasSound extends CanvasObject{
         // PlayOnLoad -> PlayInside -> ReplayInside -> PlayOnTimer -> back
         else if ((this.soundType == SoundType.Local && pointCircleCollision(getListener().x, getListener().y, this.x, this.y, this.radius)) ||
                 (this.soundType == SoundType.Area && pointPolyCollision(getListener().x, getListener().y, this.areaCoords))) {
-            if (this.triggerType == TriggerType.PlayOnLoad) { 
+            if (this.triggerType == TriggerType.Manual) { 
                 this.triggerType = TriggerType.PlayInside;   
                 this.loop = true; 
             } else if (this.triggerType == TriggerType.PlayInside) { 
@@ -354,7 +365,7 @@ export class CanvasSound extends CanvasObject{
                 this.sound.pause(); 
                 this.#sound.loop = false; 
             } else if (this.triggerType == TriggerType.PlayOnTimer) { 
-                this.triggerType = TriggerType.PlayOnLoad; 
+                this.triggerType = TriggerType.Manual; 
                 this.#sound.loop = this.#loop;
             }
         } 
@@ -362,7 +373,7 @@ export class CanvasSound extends CanvasObject{
         // Local or Area sound, listener not colliding:
         // PlayOnLoad -> PlayOnEnter -> ReplayOnEnter -> PlayInside -> ReplayInside -> PlayOnTimer -> back
         else {
-            if (this.triggerType == TriggerType.PlayOnLoad) {
+            if (this.triggerType == TriggerType.Manual) {
                 this.triggerType = TriggerType.PlayOnEnter;
                 this.sound.pause(); 
             } else if (this.triggerType == TriggerType.PlayOnEnter) { 
@@ -379,7 +390,7 @@ export class CanvasSound extends CanvasObject{
                 this.sound.pause();
                 this.#sound.loop = false; 
             } else if (this.triggerType == TriggerType.PlayOnTimer) { 
-                this.triggerType = TriggerType.PlayOnLoad; 
+                this.triggerType = TriggerType.Manual; 
                 this.#sound.loop = this.#loop;
             }
         }

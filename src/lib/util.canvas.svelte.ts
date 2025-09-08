@@ -542,7 +542,7 @@ export class InfiniteCanvas {
         l.y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
         r,
         0, 360);
-      if(l.editable) this.context.fill();
+      if(!l.locked) this.context.fill();
       this.context.stroke();
     }
   }
@@ -559,7 +559,7 @@ export class InfiniteCanvas {
       this.#drawCircle(snd.x, snd.y, snd.radius, snd.selected, true);
       // Draw the center point.
       this.#drawHandle(snd.x, snd.y, 0.5, snd.selected);
-      if (snd.editable) {
+      if (!snd.locked) {
         // Draw the name.
         this.context.textAlign = "center";
         this.context.fillText(snd.niceName, this.toWindowX(snd.x), this.toWindowY(snd.y)-4);
@@ -582,7 +582,7 @@ export class InfiniteCanvas {
     if (this.canvas && this.context) {
       // Draw the polygon.
       this.#drawPoly(snd.areaCoords, snd.selected, true);
-      if (snd.editable) {
+      if (!snd.locked) {
         // Draw the name.
         this.context.textAlign = "center";
         this.context.fillText(snd.niceName, 
@@ -632,7 +632,7 @@ export class InfiniteCanvas {
       this.context.drawImage(img.image, imgX, imgY, imgW, imgH);
       this.context.globalAlpha = 1;
       this.context.restore();
-      if (img.editable) { 
+      if (!img.locked) { 
         const handleSize = R.getHandleSize();
         this.#drawRect(img.x, img.y, img.width, img.height, img.selected);
         this.#drawHandle(img.x, img.y, handleSize, img.selected);

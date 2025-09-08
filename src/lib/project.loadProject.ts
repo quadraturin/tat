@@ -5,6 +5,9 @@ import { basename, join, sep } from '@tauri-apps/api/path';
 import * as R from '$lib/registry.svelte'
 import { clearProject } from './project.clearProject';
 import { closeModal, openLoadingModal } from './ui.modals';
+import { newImage, newImageFromPath } from './media.loadImage';
+import { loadFile } from './media.loadFile';
+import { newSound } from './media.loadSound';
 
 /** Load a project. */
 export async function loadProject() 
@@ -52,41 +55,54 @@ export async function loadProject()
             // find unique images
             for (let j=0; j<project.maps[i].images.length; j++) {
                 const obj = project.maps[i].images[j];
-                let src = R.getProjectPath() as string + sep() + "images" + sep() + obj.src
-                //console.log(src);
-                /* TODO: replace with new function
-                newImage({
-                    src: src, 
-                    height: obj.height, 
-                    width: obj.width, 
-                    lat: obj.y, 
-                    lng: obj.x, 
-                    opacity: obj.opacity, 
-                    order: obj.order, 
-                    locked: obj.locked
-                });*/
+                let src = R.getProjectPath() as string + sep() + "images" + sep() + obj.src;
+                const options = {
+                    src:            src,
+                    height:         obj.height,
+                    locked:         obj.locked,
+                    name:           obj.name,
+                    niceName:       obj.niceName,
+                    opacity:        obj.opacity,
+                    originalHeight: obj.originalHeight,
+                    originalWidth:  obj.originalWidth,
+                    selected:       obj.selected,
+                    width:          obj.width,
+                    x:              obj.x,
+                    y:              obj.y,
+                }
+                // Take Lat, Lng from older versions of TAT and convert to X,Y.
+                if (obj.lat) options.y = obj.lat;
+                if (obj.lng) options.x = obj.lng;
+                newImage(options);
             }
 
             // find unique sounds
             for (let j=0; j<project.maps[i].sounds.length; j++) {
                 const obj = project.maps[i].sounds[j];
                 let src = R.getProjectPath() as string + sep() + "sounds" + sep() + obj.src
-                //console.log(src);
-                /* TODO: replace with new function
-                newSound({
-                    src: src,
-                    soundType: obj.soundType,
-                    volume: obj.volume,
-                    muted: obj.muted,
-                    solo: obj.solo,
-                    lat: obj.y,
-                    lng: obj.x,
-                    radius: obj.radius,
-                    points: obj.points,
-                    order: obj.order,
-                    seek: obj.seek,
-                    locked: obj.locked
-                });*/
+                const options = {
+                    src:                src,
+                    areaCoords:         obj.areaCoords,
+                    locked:             obj.locked,
+                    localHandleAngle:   obj.localHandleAngle,
+                    loop:               obj.loop,
+                    muted:              obj.muted,
+                    name:               obj.name,
+                    niceName:           obj.niceName,
+                    radius:             obj.radius,
+                    selected:           obj.selected,
+                    solo:               obj.solo,
+                    soundType:          obj.soundType,
+                    timer:              obj.timer,
+                    triggerType:        obj.triggerType,
+                    volume:             obj.volume,
+                    x:                  obj.x,
+                    y:                  obj.y,
+                }
+                // Take Lat, Lng from older versions of TAT and convert to X,Y.
+                if (obj.lat) options.y = obj.lat;
+                if (obj.lng) options.x = obj.lng;
+                newSound(options);
             }
 
             // sort the images and sounds

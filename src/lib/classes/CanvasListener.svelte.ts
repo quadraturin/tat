@@ -3,16 +3,8 @@ import { Handle } from "$lib/registry.svelte";
 
 /** Canvas Listener options. */
 export type canvasListenerOptions = {
-    x:number,
-    y:number,
-    order:number,
-    name:string,
-    niceName:string,
-    editable:boolean,
-    selected:boolean,
-    grabbed:boolean,
-    locked:boolean,
-    handle:Handle
+    x?:number,
+    y?:number,
 }
 
 /** The Canvas Listener class. @extends CanvasObject */

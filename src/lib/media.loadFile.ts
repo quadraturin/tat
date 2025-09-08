@@ -16,6 +16,7 @@ export async function loadFile(filePath: string, x?:number, y?:number): Promise<
             // file is an image.
             if (typeof x != "undefined" && typeof y != "undefined") newImageFromPath(filePath, x, y);
             else newImageFromPath(filePath);
+            console.log(filePath)
         }
         else if (soundFileTypes.includes(ext)) { 
             // file is a sound.

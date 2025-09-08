@@ -1,14 +1,14 @@
-import { Handle } from "$lib/registry.svelte";
+import { getCanvas, Handle } from "$lib/registry.svelte";
+import { niceName } from "$lib/util.getNiceName";
 
 /** Canvas Object options. */
 export type canvasObjectOptions = {
-    editable:boolean,
-    grabbed:boolean,
-    name:string,
-    niceName:string,
-    selected:boolean,
-    x:number,
-    y:number,
+    locked?:boolean,
+    name?:string,
+    niceName?:string,
+    selected?:boolean,
+    x?:number,
+    y?:number,
 }
 
 /** The base Canvas Object class. */
@@ -17,7 +17,7 @@ export class CanvasObject {
     #y:number = $state(0);
     #name:string;
     #niceName:string;
-    #editable:boolean = $state(true);
+    #locked:boolean = $state(false);
     #selected:boolean = $state(false);
     #grabbed:boolean = $state(false);
     #grabOffsetX:number = 0;
@@ -27,13 +27,12 @@ export class CanvasObject {
     #uuid:`${string}-${string}-${string}-${string}-${string}`;
 
     constructor(options:canvasObjectOptions) {
-        this.#x = options.x;
-        this.#y = options.y;
-        this.#name = options.name;
-        this.#niceName = options.niceName;
-        this.#editable = options.editable;
-        this.#selected = options.selected;
-        this.#grabbed = options.grabbed;
+        this.#x = options.x ? options.x : 0; //getCanvas().viewportCenterInWorldSpace().x;
+        this.#y = options.y ? options.y : 0; //getCanvas().viewportCenterInWorldSpace().y;
+        this.#name = options.name ? options.name : "Object";
+        this.#niceName = options.niceName ? options.niceName : niceName(this.#name);
+        this.#locked = options.locked ? options.locked : false;
+        this.#selected = options.selected ? options.selected : false;
         this.#handle = Handle.None;
         this.#hoverHandle = Handle.None;
         this.#uuid = self.crypto.randomUUID();
@@ -82,9 +81,9 @@ export class CanvasObject {
     public get grabOffsetY() { return this.#grabOffsetY; }
 
     /** Get if the object is editable. */
-    public get editable() { return this.#editable; }
-    /** Set if the object is editable. @param l True: make the object editable. False: make the object not editable. */
-    public set editable(enable:boolean) { this.#editable = enable; }
+    public get locked() { return this.#locked; }
+    /** Set if the object is editable. @param isLocked True: make the object not editable. False: make the object editable. */
+    public set locked(isLocked:boolean) { this.#locked = isLocked; }
 
     /** Get the edit handle (if any) under the mouse. */
     public get hoverHandle() { return this.#hoverHandle; }

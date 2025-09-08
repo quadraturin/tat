@@ -14,8 +14,8 @@ import { pointCircleCollision, pointRectCollision, pointPolyCollision } from "./
 export function canvasDblClick(e:MouseEvent) {
     const hov = R.getHoveredCanvasObject()
     if (hov && hov != R.getListener()) { 
-        hov.editable = !R.getHoveredCanvasObject()?.editable;
-        if (!hov.editable) hov.selected = false;
+        hov.locked = !R.getHoveredCanvasObject()?.locked;
+        if (hov.locked) hov.selected = false;
     }
 }
 
@@ -40,7 +40,7 @@ export function canvasMouseDown(e:MouseEvent) {
     R.setClickedCanvasObject(null);
 
     // Grab the hovered object if any (if it's editable)
-    if (R.getHoveredCanvasObject() != null && R.getHoveredCanvasObject()?.editable) {
+    if (R.getHoveredCanvasObject() != null && !R.getHoveredCanvasObject()?.locked) {
         let obj = R.getHoveredCanvasObject();
         R.setClickedCanvasObject(obj);
         if (obj != null) {
@@ -122,7 +122,7 @@ export function canvasMouseMove(e:MouseEvent) {
         R.setHoveredCanvasObject(null);
 
         // Get listener if under cursor
-        if (l.editable && pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), l.x, l.y, c.toWorldLength(R.getListenerRadius()))){
+        if (!l.locked && pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), l.x, l.y, c.toWorldLength(R.getListenerRadius()))){
             R.setHoveredCanvasObject(l);
         }
 
@@ -229,10 +229,10 @@ export function canvasMouseMove(e:MouseEvent) {
 
         // Set mouse cursor
         const hov = R.getHoveredCanvasObject();
-        if (hov == null || !hov?.editable) { 
+        if (hov == null || hov?.locked) { 
             if (R.getMouseDown())                               c.canvas.style.cursor = "grabbing";
             else                                                c.canvas.style.cursor = "grab";
-        } else if (hov?.editable){
+        } else if (!hov?.locked){
             if (hov?.hoverHandle == R.Handle.NW)                c.canvas.style.cursor = "default";
             else if (hov?.hoverHandle == R.Handle.SE)           c.canvas.style.cursor = "context-menu";
             else if (hov?.hoverHandle == R.Handle.NE)           c.canvas.style.cursor = "context-menu";
@@ -409,7 +409,7 @@ export function canvasMouseUp(e:MouseEvent) {
             o.removeAreaVertex(o.areaHandleIndex);
         }
         // Selection toggle: only select if editable and not listener.
-        else if (o instanceof CanvasObject && o.editable && o != l) o.selected = !o.selected; 
+        else if (o instanceof CanvasObject && !o.locked && o != l) o.selected = !o.selected; 
     }
     if (o != null) o.handle = R.Handle.None;
 

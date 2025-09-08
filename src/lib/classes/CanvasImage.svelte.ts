@@ -1,28 +1,26 @@
 import { getUserSettings } from "$lib/settings.userSettings.svelte";
 import { CanvasObject } from "./CanvasObject.svelte";
+import { niceName } from "$lib/util.getNiceName";
+import { convertFileSrc } from "@tauri-apps/api/core";
+
 
 /** Canvas Image options. */
 export type canvasImageOptions = {
-    editable:boolean,
-    grabbed:boolean,
-    height:number,
-    image:HTMLImageElement,
-    name:string,
-    niceName:string,
-    opacity:number,
-    originalHeight:number,
-    originalWidth:number,
-    selected:boolean,
     src:string,
-    width:number,
-    x:number,
-    y:number,
+    height?:number,
+    locked?:boolean,
+    name?:string,
+    niceName?:string,
+    opacity?:number,
+    originalHeight?:number,
+    originalWidth?:number,
+    selected?:boolean,
+    width?:number,
+    x?:number,
+    y?:number,
 }
 
-/**
- * The Canvas Image class. 
- * @extends CanvasObject
- */
+/** The Canvas Image class.  @extends CanvasObject */
 export class CanvasImage extends CanvasObject {
     #image:HTMLImageElement;
     #height:number = $state(0);
@@ -34,21 +32,23 @@ export class CanvasImage extends CanvasObject {
 
     constructor(options:canvasImageOptions) {
         super({ 
-            editable:options.editable,
-            grabbed:options.grabbed,
-            name:options.name,
+            locked:options.locked,
+            name:options.name ? options.name : "Image",
             niceName:options.niceName,
             selected:options.selected,
             x:options.x, 
             y:options.y, 
         });
-        this.#height = options.height;
-        this.#image = options.image;
-        this.#opacity = options.opacity;
-        this.#originalHeight = options.originalHeight;
-        this.#originalWidth = options.originalWidth;
         this.#src = options.src;
-        this.#width = options.width;
+        this.niceName = options.niceName ? options.niceName : niceName(this.name);
+        this.#opacity = options.opacity ? options.opacity : 1;
+
+        this.#image = new Image();
+        this.#image.src = convertFileSrc(this.#src);
+        this.#originalHeight = options.originalHeight ? options.originalHeight : this.#image.height;
+        this.#originalWidth = options.originalWidth ? options.originalWidth : this.#image.width;
+        this.#height = options.height ? options.height : this.#originalHeight;
+        this.#width = options.width ? options.width : this.#originalWidth;
     }
 
     /** Get the image element. @returns The image element. */
@@ -79,6 +79,7 @@ export class CanvasImage extends CanvasObject {
     /** Get the image file's original height. @returns The original height. */
     public get originalHeight() { return this.#originalHeight; }
 
+    /** Change the image opacity. @param e Mouse wheel event. */
     public changeOpacity(e:WheelEvent) {
         try {
             let delta = e.deltaY;
