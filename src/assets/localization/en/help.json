@@ -1,95 +1,141 @@
 {
-    "titlebar":{
-        "title": "Your project has no unsaved changes.",
-        "titleDirty": "Your project has unsaved changes.",
+    "titlebar": {
+        "title":                "Your project has no unsaved changes.",
+        "titleDirty":           "Your project has unsaved changes.",
 
-        "addMedia": "<strong>Add media:</strong> add images and/or audio to your project. These will be copied to your project folder when you save.",
-        "addMediaShortcut": "<strong>(ctrl/cmd+i)</strong>",
+        "addMedia":             "<em>Add media:</em> Add images and/or audio to your project. These will be copied to your project folder when you save.",
+        "addMediaKey":          "<em>(ctrl/cmd+i)</em>",
 
-        "save": "<strong>Save:</strong> save your project.",
-        "saveShortcut": "<strong>(ctrl/cmd+s)</strong>",
+        "save":                 "<em>Save project:</em> Save your project.",
+        "saveKey":              "<em>(ctrl/cmd+s)</em>",
 
-        "saveAs": "<strong>Save as:</strong> save a copy of your project to a new location.",
-        "saveAsShortcut": "<strong>(ctrl/cmd+shift+s)</strong>",
+        "saveAs":               "<em>Save project as:</em> Save a copy of your project to a new location.",
+        "saveAsKey":            "<em>(ctrl/cmd+shift+s)</em>",
 
-        "openProject": "<strong>Open:</strong> open an existing project.",
-        "openProjectShortcut": "<strong>(ctrl/cmd+o)</strong>",
+        "openProject":          "<em>Open project:</em> Open an existing project.",
+        "openProjectKey":       "<em>(ctrl/cmd+o)</em>",
 
-        "newProject": "<strong>New:</strong> create a new project.",
-        "newProjectShortcut": "<strong>(ctrl/cmd+n)</strong>",
+        "newProject":           "<em>New project:</em> Create a new project.",
+        "newProjectKey":        "<em>(ctrl/cmd+n)</em>",
 
-        "settings": "<strong>Settings:</strong>view the application settings.",
-        "settingsShortcut": "<strong>(ctrl/cmd+1)</strong>",
+        "settings":             "<em>Settings:</em> View the application settings.",
+        "settingsKey":          "<em>(ctrl/cmd+1)</em>",
 
-        "about": "<strong>About:</strong> what is this anyway?.",
-        "aboutShortcut": "<strong>(ctrl/cmd+2)</strong>",
+        "about":                "<em>About:</em> What is this anyway?.",
+        "aboutKey":             "<em>(ctrl/cmd+2)</em>",
 
-        "minimize": "<strong>Minimize</strong> this window.",
-        "minimizeShortcut": "<strong>ctrl/cmd+m</strong>",
+        "minimize":             "<em>Minimize</em> this window.",
+        "minimizeKey":          "<em>(ctrl/cmd+m)</em>",
 
-        "maximize": "<strong>Maximize</strong> this window.",
-        "maximizeShortcut": "<strong>(ctrl/cmd+shift+m)</strong>",
+        "maximize":             "<em>Maximize</em> this window.",
+        "maximizeKey":          "<em>(ctrl/cmd+shift+m)</em>",
         
-        "close": "<strong>Close</strong> tat.",
-        "closeShortcut": "<strong>(ctrl/cmd+w)</strong>"
+        "close":                "<em>Close</em> tat.",
+        "closeKey":             "<em>(ctrl/cmd+w)</em>"
     },
-    "map": {
-        "helpArea": "<strong>Info:</strong> mouse over things in the application to show information about them here. click the \"?\" button to collapse.",
-        
-        "zoomIn": "<strong>Zoom in:</strong> zoom in on the map.",
-        "zoomInShortcut": "<strong>(Mouse wheel or + or =)</strong>",
-        "zoomInDisabled": "You are currently as zoomed is as you can be!",
 
-        "zoomOut": "<strong>Zoom out:</strong> zoom out on the map.",
-        "zoomOutShortcut": "<strong>(Mouse wheel or - or _)</strong>",
-        "zoomOutDisabled": "You are currently as zoomed out as you can be!",
+    "helpPanel": {
+        "helpArea":             "<em>Info:</em> Mouse over things in the application to show information about them here. Click the \"i\" button to collapse."
+    },
 
-        "recenter": "<strong>Recenter:</strong> center the view on the listener.",
-        "recenterShortcut": "<strong>(c)</strong>",
+    "controlsPanel": {
+        "zoomIn":               "<em>Zoom in:</em> Zoom in on the map.",
+        "zoomInKey":            "<em>(Mouse wheel or + or =)</em>",
+        "zoomInDisabled":       "You are currently as zoomed is as you can be!",
 
-        "hideSidebar": "<strong>Hide sidebar:</strong> hide the sidebar interface.",
-        "showSidebar": "<strong>Show sidebar:</strong> show the sidebar interface.",
-        "toggleSidebarShortcut": "<strong>(h)</strong>",
-        
-        "listener": "<strong>Listener:</strong> represents the players' location. you will hear sounds when the listener is overlapping them.",
-        "listenerActions": "<strong>Drag:</strong> move. <strong>W/A/S/D:</strong> move.",
-        
-        "locked": "<strong>Locked</strong>",
-        "selected": "<strong>Selected</strong>",
-        "itemLocked": "Map objects cannot be moved or edited while locked.",
-        "itemLockedActions": "<strong>Double-click:<strong> unlock.",
-        "itemSelectedActions": "<strong>Click:</strong> deselect. <strong>delete/backspace:</strong> delete.",
-        "itemUnselectedActions": "<strong>Click:</strong> select.",
+        "zoomOut":              "<em>Zoom out:</em> Zoom out on the map.",
+        "zoomOutKey":           "<em>(Mouse wheel or - or _)</em>",
+        "zoomOutDisabled":      "You are currently as zoomed out as you can be!",
 
-        "imagesTitle": "<strong>Images:</strong> the list of images in your project. Images higher on the list are closer to the front.",
-        "imagesHide": "<strong>Hide images:</strong> click to hide all images on the map.",
-        "imagesShow": "<strong>Show images:</strong> click to show all images on the map. (Images are currently hidden)",
-        "image": "<strong>Image:</strong> represents the game environtment. A map, or something more abstract.",
-        "imageItemActions": "<strong>Scroll:</strong> adjust opacity.",
-        "imageDuplicate": "<strong>Duplicate image:</strong> make a copy of this image on the map.",
-        "imageDelete": "<strong>Delete image:</strong> delete this image from the map.",
-        "imageActions": "<strong>Drag:</strong> move. <strong>Drag corner:</strong> resize (<strong>+shift:</strong> proportional resize). <strong>alt/opt+click:</strong> delete.",
+        "recenter":             "<em>Recenter:</em> Center the view on the listener.",
+        "recenterKey":          "<em>(c)</em>",
+
+        "hideSidebar":          "<em>Hide sidebar:</em> Hide the sidebar interface.",
+        "showSidebar":          "<em>Show sidebar:</em> Show the sidebar interface.",
+        "toggleSidebarKey":     "<em>(h)</em>"
+    },
+    
+    "mediaPanel": {
+        "imagesTitle":          "<em>Images:</em> The list of images in your project. Images higher on the list are closer to the front.",
+        "imagesOpacity":        "<em>Master opacity:</em> Scroll or click to adjust master opacity.",
+        "imagesHide":           "<em>Hide images:</em> Click to hide all images on the map.",
+        "imagesShow":           "<em>Show images:</em> Click to show all images on the map. (Images are currently hidden)",
         
-        "soundsTitle": "<strong>Sounds:</strong> the list of sounds in your project. Sounds higher on the list are closer to the front. <strong>Scroll:</strong> adjust master volume.",
-        "soundsHide": "<strong>Hide sounds:</strong> click to hide all sounds on the map. This can be useful for accessing images underneath sound areas.",
-        "soundsShow": "<strong>Show sounds:</strong> click to show all sounds on the map. (Sounds are currently hidden)",
-        "soundTypeGlobal": "<strong>Global sound:</strong> plays everywhere and does not have an emitter on the map.",
-        "soundTypeLocal": "<strong>Local sound:</strong> emanates from a single point on the map.",
-        "soundTypeArea": "<strong>Area sound:</strong> plays at a constant volume across an area.",
-        "soundTypeGlobalActions": "<strong>Click:</strong> change to a local sound.",
-        "soundTypeLocalActions": "<strong>Click:</strong> change to a area sound.",
-        "soundTypeAreaActions": "<strong>Click:</strong> change to a global sound.",
-        "soundItemActions": "<strong>Scroll:</strong> adjust volume.",
-        "soundPause": "<strong>Play/pause:</strong> this sound is playing. <strong>Click:</strong> pause this sound.",
-        "soundUnPause": "<strong>Play/pause:</strong> this sound is paused. <strong>Click:</strong> play this sound.",
-        "soundMute": "<strong>Mute:</strong> this sound is muted. <strong>Click:</strong> unmute this sound.",
-        "soundUnMute": "<strong>Mute:</strong> this sound is not muted. <strong>Click:</strong> mute this sound.",
-        "soundSolo": "<strong>Solo:</strong> this sound is not soloed. <strong>Click:</strong> solo this sound. This will silence all other sounds.",
-        "soundUnSolo": "<strong>Solo:</strong> this sound is currently soloed, meaning all other sounds are silenced. <strong>Click</strong> unsolo.",
-        "soundDuplicate": "<strong>Duplicate sound:</strong> make a copy of this sound on the map.",
-        "soundDelete": "<strong>Delete sound:</strong> delete this sound from the map.",
-        "soundSeek": "<strong>Seek:</strong> seek to a playback position in the sound.",
-        "soundLocalActions": "<strong>Drag:</strong> move. <strong>Drag edge handle:</strong> resize. <strong>Double-click:</strong> lock. <strong>alt/opt+click:</strong> delete.",
-        "soundAreaActions": "<strong>Drag:</strong> move. <strong>Drag corner:</strong> reshape. <strong>Drag edge handle:</strong> create corner. <strong>Click corner handle:</strong> remove corner."
+        "imageTitle":           "<em>An image.</em> <em>Drag:</em> Reorder.",
+        "imageOpacity":         "<em>Opacity:</em> The image opacity. <em>Scroll or click:</em> Adjust opacity.",
+        "imageDuplicate":       "<em>Duplicate image:</em> Make a copy of this image on the map.",
+        "imageDelete":          "<em>Delete image:</em> Delete this image from the map.",
+        
+        "soundsTitle":          "<em>Sounds:</em> The list of sounds in your project. Sounds higher on the list are closer to the front.",
+        "soundsVolume":         "<em>Master volume:</em> Scroll or click to adjust master volume.",
+        "soundsHide":           "<em>Hide sounds:</em> Click to hide all sounds on the map. This can be useful for accessing images underneath sound areas.",
+        "soundsShow":           "<em>Show sounds:</em> Click to show all sounds on the map. (Sounds are currently hidden)",
+        
+        "soundTriggerManual":           "<em>Manual trigger:</em> Control when the sound plays and pauses manually.",
+        "soundTriggerPlayOnEnter":      "<em>Play On Enter trigger:</em> The sound is paused until the listener first comes in contact with it, then it plays and reverts to Manual control.",
+        "soundTriggerRestartOnEnter":   "<em>Restart On Enter trigger:</em> The sound is paused until the listener first comes in contact with it, then it plays from the beginning and reverts to Manual control.",
+        "soundTriggerPlayInside":       "<em>Play Inside trigger:</em> The sound is paused while the listener is not in contact with it, and plays only while the listener is in contact with it.",
+        "soundTriggerRestartInside":    "<em>Restart Inside trigger:</em> The sound is paused while the listener is not in contact with it, plays from the beginning whenever the listener comes into contact with it, and plays only while the listener is in contact with it.",
+        "soundTriggerPlayOnTimer":      "<em>Play On Timer trigger:</em> The sound is paused until the timer counts down to 00:00:00, then the sound plays and the timer resets.",
+
+        "soundTitleKey":        "<em>Drag:</em> Reorder.",
+        "soundTypeGlobal":      "<em>Global sound:</em> Plays everywhere and does not have an emitter on the map. Can not be locked or selected.",
+        "soundTypeLocal":       "<em>Local sound:</em> Emanates from a single point on the map.",
+        "soundTypeArea":        "<em>Area sound:</em> Plays at a constant volume across an area.",
+        "soundTypeGlobalKey":   "<em>Click:</em> Change to a Local sound.",
+        "soundTypeLocalKey":    "<em>Click:</em> Change to an Area sound.",
+        "soundTypeAreaKey":     "<em>Click:</em> Change to a Global sound.",
+        
+        "soundVolume":          "<em>Volume:</em> Scroll or click to adjust volume.",
+        
+        "soundPause":           "<em>Play/pause:</em> This sound is playing. <em>Click:</em> Pause this sound.",
+        "soundUnPause":         "<em>Play/pause:</em> This sound is paused. <em>Click:</em> Play this sound.",
+        
+        "soundMute":            "<em>Mute:</em> This sound is muted. <em>Click:</em> Unmute this sound.",
+        "soundUnMute":          "<em>Mute:</em> This sound is not muted. <em>Click:</em> Mute this sound.",
+        
+        "soundSolo":            "<em>Solo:</em> This sound is not soloed. <em>Click:</em> Solo this sound. This will silence all other sounds.",
+        "soundUnSolo":          "<em>Solo:</em> This sound is currently soloed, meaning all other sounds are silenced. <em>Click:</em> Unsolo.",
+        
+        "soundDuplicate":       "<em>Duplicate sound:</em> Make a copy of this sound on the map.",
+        
+        "soundDelete":          "<em>Delete sound:</em> Delete this sound from the map.",
+        
+        "timerHours":           "<em>Timer hours:</em> Use the mouse wheel to set the number of hours for the timer.",
+        "timerMinutes":         "<em>Timer minutes:</em> Use the mouse wheel to set the number of minutes for the timer.",
+        "timerSeconds":         "<em>Timer seconds:</em> Use the mouse wheel to set the number of seconds for the timer.",
+        "timerStart":           "<em>Start the timer:</em> The timer is currently paused. <em>Click</em> to start it.",
+        "timerStop":            "<em>Stop the timer:</em> The timer is currently running. <em>Click</em> to stop it.",
+
+        "soundLoop":            "<em>Loop:</em> Replay this sound after it has played. <em>Click:</em> Turn off looping.",
+        "soundNoLoop":          "<em>No loop:</em> Stop playing after this sound has played. <em>Click:</em> Turn on looping.",
+        "soundLoopTimer":       "<em>Timer loop:</em> Restart the timer after it has finished. <em>Click:</em> Turn off looping.",
+        "soundNoLoopTimer":     "<em>No Timer loop:</em> Do not restart the timer after it has finished. <em>Click:</em> Turn on looping.",
+        
+        "soundSeek":            "<em>Seek:</em> Seek to a playback position in the sound."
+    },
+
+    "objects": {
+        "locked":               "<em>Locked:</em> Shapes cannot be moved or edited while locked.",
+        "lockKey":              "<em>Double-click:<em> Lock.",
+        "unlockKey":            "<em>Double-click:<em> Unlock.",
+        "selected":             "<em>Selected:</em> Object is currently selected.",
+        "deselectKey":          "<em>Click:</em> Deselect. <em>Delete or backspace:</em> delete.",
+        "selectKey":            "<em>Click:</em> Select."
+    },
+
+    "canvas": {
+        
+        "listener":             "<em>Listener:</em> Represents the players' location. You will hear sounds when the listener is overlapping them.",
+        "listenerKey":          "<em>Drag:</em> Move. <em>W/A/S/D:</em> Move.",
+        
+        "image":                "<em>Image:</em> Represents the game environtment. A map, or something more abstract.",
+        "imageKey":             "<em>Drag:</em> Move. <em>Drag corner:</em> Resize (<em>+shift:</em> proportional resize). <em>alt/opt+click:</em> Delete.",
+        
+        "soundLocal":           "<em>Local sound:</em> Only audible within the radius. Volume increases towards the center.",
+        "soundArea":            "<em>Area sound:</em> Only audible inside the shape. Volume is constant throughout.",
+        "soundLocalKey":        "<em>Drag:</em> Move. <em>Drag edge handle:</em> Resize.",
+        "soundAreaKey":         "<em>Drag:</em> Move. <em>Drag corner handle:</em> reshape. <em>Click corner handle:</em> Remove corner. <em>Drag edge handle:</em> Create corner. "
+        
     }
 }

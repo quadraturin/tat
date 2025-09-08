@@ -358,9 +358,9 @@ export class CanvasSound extends CanvasObject{
                 this.triggerType = TriggerType.PlayInside;   
                 this.loop = true; 
             } else if (this.triggerType == TriggerType.PlayInside) { 
-                this.triggerType = TriggerType.ReplayInside; 
+                this.triggerType = TriggerType.RestartInside; 
                 this.loop = true; 
-            } else if (this.triggerType == TriggerType.ReplayInside) {
+            } else if (this.triggerType == TriggerType.RestartInside) {
                 this.triggerType = TriggerType.PlayOnTimer;
                 this.sound.pause(); 
                 this.#sound.loop = false; 
@@ -377,15 +377,15 @@ export class CanvasSound extends CanvasObject{
                 this.triggerType = TriggerType.PlayOnEnter;
                 this.sound.pause(); 
             } else if (this.triggerType == TriggerType.PlayOnEnter) { 
-                this.triggerType = TriggerType.ReplayOnEnter; 
+                this.triggerType = TriggerType.RestartOnEnter; 
                 this.sound.pause(); 
-            } else if (this.triggerType == TriggerType.ReplayOnEnter) { 
+            } else if (this.triggerType == TriggerType.RestartOnEnter) { 
                 this.triggerType = TriggerType.PlayInside;
                 this.loop = true; 
             } else if (this.triggerType == TriggerType.PlayInside) { 
-                this.triggerType = TriggerType.ReplayInside;
+                this.triggerType = TriggerType.RestartInside;
                 this.loop = true;
-            } else if (this.triggerType == TriggerType.ReplayInside) { 
+            } else if (this.triggerType == TriggerType.RestartInside) { 
                 this.triggerType = TriggerType.PlayOnTimer; 
                 this.sound.pause();
                 this.#sound.loop = false; 

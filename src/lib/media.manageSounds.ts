@@ -82,22 +82,22 @@ export async function manageCanvasSounds(){
                 snd.sound.play();
             }
             // Inside ReplayOnEnter trigger: restart, play, & set trigger type to PlayOnLoad.
-            else if (snd.triggerType == R.TriggerType.ReplayOnEnter && snd.sound.paused) {
+            else if (snd.triggerType == R.TriggerType.RestartOnEnter && snd.sound.paused) {
                 snd.sound.play();
                 snd.sound.fastSeek(0);
                 snd.triggerType = R.TriggerType.Manual;
             }
             // Inside ReplayInside: restart & play.
-            else if (snd.triggerType == R.TriggerType.ReplayInside && snd.sound.paused) {
+            else if (snd.triggerType == R.TriggerType.RestartInside && snd.sound.paused) {
                 snd.sound.play();
                 snd.sound.fastSeek(0);
             }
         }
         // If not colliding and sound is PlayInside/ReplayInside/PlayOnEnter/ReplayOnEnter: pause.
         else if ((  snd.triggerType == R.TriggerType.PlayInside || 
-                    snd.triggerType == R.TriggerType.ReplayInside || 
+                    snd.triggerType == R.TriggerType.RestartInside || 
                     snd.triggerType == R.TriggerType.PlayOnEnter || 
-                    snd.triggerType == R.TriggerType.ReplayOnEnter) && 
+                    snd.triggerType == R.TriggerType.RestartOnEnter) && 
                 !snd.sound.paused) {
             snd.sound.pause();
         }

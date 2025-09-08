@@ -14,7 +14,12 @@
 class={["item image-item", item.selected && "selected", item.locked && "locked"]}>
 
     <!-- Opacity Display -->
-    <div class="volume-track" onwheel = {(event) => { event.preventDefault(); item.changeOpacity(event)}}>
+    <div class="volume-track" role="heading" aria-level="4"
+        onwheel = {(event) => { event.preventDefault(); item.changeOpacity(event)}}
+        onfocus     = {()=>{}} 
+        onblur      = {()=>{}}
+        onmouseover = {()=>{help($t('help.mediaPanel.imageOpacity'))}}
+        onmouseout  = {()=>{help()}}>
         <div class="volume-bar" style={"height: "+ item.opacity*100 +"%"}></div>
     </div>
 
@@ -29,19 +34,19 @@ class={["item image-item", item.selected && "selected", item.locked && "locked"]
     onmouseout  = {()=>{help()}}
     onmouseover = {()=>{
         if (item.selected) 
-            help($t('help.map.selected'), 
-            $t('help.map.image'), 
-            $t('help.map.imageItemActions'), 
-            $t('help.map.itemSelectedActions'));
+            help(
+                $t('help.mediaPanel.imageTitle'),
+                $t('help.objects.selected'), 
+                $t('help.objects.deselectKey'));
         else if (item.locked) 
-            help($t('help.map.locked'), 
-            $t('help.map.image'), 
-            $t('help.map.imageItemActions'), 
-            $t('help.map.itemLockedActions'));
+            help(
+                $t('help.mediaPanel.imageTitle'),
+                $t('help.objects.locked'), 
+                $t('help.objects.unlockKey'));
         else 
-            help($t('help.map.image'), 
-            $t('help.map.imageItemActions'), 
-            $t('help.map.itemUnselectedActions'))
+            help(
+                $t('help.mediaPanel.imageTitle'),
+                $t('help.objects.selectKey'))
     }}>
         {item.niceName}
     </button>
@@ -53,7 +58,7 @@ class={["item image-item", item.selected && "selected", item.locked && "locked"]
     onclick     = {()=>duplicateImage(item)}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
-    onmouseover = {()=>{help($t('help.map.imageDuplicate'))}}
+    onmouseover = {()=>{help($t('help.mediaPanel.imageDuplicate'))}}
     onmouseout  = {()=>{help()}}>
         +
     </button>
@@ -62,7 +67,7 @@ class={["item image-item", item.selected && "selected", item.locked && "locked"]
     <button class="item-delete r" title="delete image" 
     onclick     = {()=>removeImage(i)}
     onfocus     = {()=>{}} 
-    onmouseover = {()=>{help($t('help.map.imageDelete'))}}
+    onmouseover = {()=>{help($t('help.mediaPanel.imageDelete'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         ×

@@ -7,6 +7,8 @@ import { CanvasSound, type CanvasSoundOptions } from "./classes/CanvasSound.svel
 import { CanvasListener } from "./classes/CanvasListener.svelte";
 import { CanvasShape, type CanvasShapeOptions } from './classes/CanvasShape.svelte';
 import { Menu } from "@tauri-apps/api/menu";
+import { help } from "./util.help";
+import { t } from '$lib/util.localization';
 
 console.log("aaaa")
 /**
@@ -195,7 +197,38 @@ export function setCanvas(gridSize?:number) { canvas = new InfiniteCanvas(gridSi
 
 let hoveredCanvasObject:CanvasObject|null = null;
 export function getHoveredCanvasObject() { return hoveredCanvasObject; }
-export async function setHoveredCanvasObject(obj:CanvasObject|null) { hoveredCanvasObject = obj; }
+export async function setHoveredCanvasObject(obj:CanvasObject|null) { 
+    hoveredCanvasObject = obj; 
+
+    // If there's nothing or help is off, clear the help display and bail.
+    if (obj == null || !helpActive) { 
+        help();
+        return;
+    }
+    
+    // Otherwise, build the help text based on what's hovered and its state.
+    let h:string[] = [];
+
+    if (obj instanceof CanvasListener) {                    h.push(t.get('help.canvas.listener')); 
+    } else {
+        if (obj instanceof CanvasImage) {                   h.push(t.get('help.canvas.image')); 
+
+        } else if (obj instanceof CanvasSound) {
+            if (obj.soundType == SoundType.Area) {          h.push(t.get('help.canvas.soundArea'));
+                if (!obj.locked)                            h.push(t.get('help.canvas.soundAreaKey'));
+            } else if (obj.soundType == SoundType.Local) {  h.push(t.get('help.canvas.soundLocal'));
+                if (!obj.locked)                            h.push(t.get('help.canvas.soundLocalKey'));
+            }
+        }
+
+        if (obj.selected)     h.push(t.get('help.objects.selected'), t.get('help.objects.deselectKey'));
+        else if (!obj.locked) h.push(t.get('help.objects.selectKey'));
+
+        if (obj.locked)       h.push(t.get('help.objects.locked'), t.get('help.objects.unlockKey'));
+        else                  h.push(t.get('help.objects.lockKey'));
+    }
+    help(...h);
+}
 
 let clickedCanvasObject:CanvasObject|null;
 export function getClickedCanvasObject() { return clickedCanvasObject; }
@@ -464,9 +497,9 @@ export enum SoundType {
 export enum TriggerType {
     Manual        = "manual", 
     PlayOnEnter   = "playonenter",
-    ReplayOnEnter = "replayonenter",
+    RestartOnEnter = "replayonenter",
     PlayInside    = "playinside", 
-    ReplayInside  = "replayinside", 
+    RestartInside  = "replayinside", 
     PlayOnTimer   = "playontimer"
 };
 

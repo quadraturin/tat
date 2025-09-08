@@ -504,7 +504,7 @@ button.activated {
 
 #help {
     color: var(--c7);
-    z-index: 10000;
+    z-index: 100000;
     position: absolute;
     bottom: 6px;
     left: 6px;
@@ -518,6 +518,9 @@ button.activated {
     width: calc(100% - 12px);
     display: flex;
     border-radius: 8px;
+}
+#help:not(.activated) {
+    box-shadow: none;
 }
 #help.activated {
     background-color: var(--c3);
@@ -573,6 +576,7 @@ button.activated {
     font-weight: bold;
     background-color: var(--c4);
     color: var(--c7);
+    border-radius: 0 0 11px 11px;
 }
 .menu::-webkit-scrollbar {
     width: 5px;

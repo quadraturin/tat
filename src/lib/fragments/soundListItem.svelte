@@ -12,20 +12,16 @@
 	import IconSoundPause from '$lib/icons/iconSoundPause.svelte';
 	import type { CanvasSound } from '$lib/classes/CanvasSound.svelte';
 	import { SoundType, TriggerType } from '$lib/registry.svelte';
-	import IconOnLoad from '$lib/icons/iconPlayOnLoad.svelte';
 	import IconLoop from '$lib/icons/iconLoop.svelte';
-	import IconTimer from '$lib/icons/iconPlayOnTimer.svelte';
 	import IconPlayOnLoad from '$lib/icons/iconPlayOnLoad.svelte';
 	import IconPlayOnEnter from '$lib/icons/iconPlayOnEnter.svelte';
 	import IconPlayInside from '$lib/icons/iconPlayInside.svelte';
 	import IconPlayOnTimer from '$lib/icons/iconPlayOnTimer.svelte';
-	import IconReplayOnEnter from '$lib/icons/iconReplayOnEnter.svelte';
-	import IconReplayInside from '$lib/icons/iconReplayInside.svelte';
+	import IconRestartOnEnter from '$lib/icons/iconReplayOnEnter.svelte';
+	import IconRestartInside from '$lib/icons/iconReplayInside.svelte';
 	import IconSoundPlay from '$lib/icons/IconSoundPlay.svelte';
 	import IconNoLoop from '$lib/icons/IconNoLoop.svelte';
 	import IconReset from '$lib/icons/iconReset.svelte';
-	import { concat } from 'uint8-util';
-	import type { event } from '@tauri-apps/api';
 
     let {item, i} : {item:CanvasSound, i:number} = $props();
     let soundTrack:any = $state();
@@ -64,7 +60,12 @@
 <div class="item sound-item" draggable="true" id="item-{item.uuid}" class:selected={item.selected} class:locked={item.locked} role="listitem">
 
     <!-- Volume Display -->
-    <div class="volume-track" onwheel={(event) =>{ event.preventDefault(); item.changeVolume(event); }}>
+    <div class="volume-track" role="heading" aria-level="4" 
+        onwheel={(event) =>{ event.preventDefault(); item.changeVolume(event); }}
+        onfocus     = {()=>{}} 
+        onblur      = {()=>{}}
+        onmouseout  = {()=>{help()}}
+        onmouseover = {()=>{help($t('help.mediaPanel.soundVolume'))}}>
         <div class="volume-bar" style={"height: "+(item.volume*100)+"%"}></div>
     </div>
 
@@ -77,41 +78,42 @@
     onmouseout  = {()=>{help()}}
     onmouseover = {()=>{
         if (item.soundType == SoundType.Global) {
-            help(   $t('help.map.soundTypeGlobal'), 
-                    $t('help.map.soundItemActions') );
+            help(   $t('help.mediaPanel.soundTypeGlobal'));
         } else if (item.selected) {
             if (item.soundType == SoundType.Area) 
-                help(   $t('help.map.selected'), 
-                        $t('help.map.soundTypeArea'), 
-                        $t('help.map.soundItemActions'), 
-                        $t('help.map.itemSelectedActions') );
+                help(   $t('help.mediaPanel.soundTypeArea'), 
+                        $t('help.mediaPanel.soundTitleKey'), 
+                        $t('help.objects.selected'), 
+                        $t('help.objects.deselectKey'),
+                        $t('help.objects.lockKey'));
             else if (item.soundType == SoundType.Local)
-                help(   $t('help.map.selected'), 
-                        $t('help.map.soundTypeLocal'), 
-                        $t('help.map.soundItemActions'), 
-                        $t('help.map.itemSelectedActions') );
-        } else if (!item.locked) {
+                help(   $t('help.mediaPanel.soundTypeLocal'),  
+                        $t('help.mediaPanel.soundTitleKey'),
+                        $t('help.objects.selected'), 
+                        $t('help.objects.deselectKey'),
+                        $t('help.objects.lockKey'));
+        } else if (item.locked) {
             if (item.soundType == SoundType.Area) 
-                help(   $t('help.map.locked'), 
-                        $t('help.map.soundTypeArea'), 
-                        $t('help.map.itemLocked'), 
-                        $t('help.map.soundItemActions'), 
-                        $t('help.map.itemLockedActions') );
+                help(   $t('help.mediaPanel.soundTypeArea'),  
+                        $t('help.mediaPanel.soundTitleKey'),
+                        $t('help.objects.locked'), 
+                        $t('help.objects.unlockKey'));
             else if (item.soundType == SoundType.Local)
-                help(   $t('help.map.locked'), 
-                        $t('help.map.soundTypeLocal'), 
-                        $t('help.map.itemLocked'), 
-                        $t('help.map.soundItemActions'), 
-                        $t('help.map.itemLockedActions') );
+                help(   $t('help.mediaPanel.soundTypeLocal'), 
+                        $t('help.mediaPanel.soundTitleKey'), 
+                        $t('help.objects.locked'), 
+                        $t('help.objects.unlockKey'));
         } else {
             if (item.soundType == SoundType.Area) 
-                help(   $t('help.map.soundTypeArea'), 
-                        $t('help.map.soundItemActions'), 
-                        $t('help.map.itemUnselectedActions') );
+                help(   $t('help.mediaPanel.soundTypeArea'), 
+                        $t('help.mediaPanel.soundTitleKey'), 
+                        $t('help.objects.selectKey'),
+                        $t('help.objects.lockKey'));
             else if (item.soundType == SoundType.Local)
-                help(   $t('help.map.soundTypeLocal'), 
-                        $t('help.map.soundItemActions'), 
-                        $t('help.map.itemUnselectedActions') );
+                help(   $t('help.mediaPanel.soundTypeLocal'),  
+                        $t('help.mediaPanel.soundTitleKey'),
+                        $t('help.objects.selectKey'),
+                        $t('help.objects.lockKey'));
         }
     }}>
         {item.niceName}
@@ -123,7 +125,7 @@
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
-    onmouseover = {()=>{help($t('help.map.soundDuplicate'))}}>
+    onmouseover = {()=>{help($t('help.mediaPanel.soundDuplicate'))}}>
         +
     </button>
 
@@ -133,7 +135,7 @@
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
-    onmouseover = {()=>{help($t('help.map.soundDelete'))}}>
+    onmouseover = {()=>{help($t('help.mediaPanel.soundDelete'))}}>
         ×
     </button>
 
@@ -147,7 +149,7 @@
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
-    onmouseover = {()=>{help($t('help.map.soundSeek'))}}>
+    onmouseover = {()=>{help($t('help.mediaPanel.soundSeek'))}}>
 
         <!-- Sound Progress Bar -->
         {#if item.sound}
@@ -164,14 +166,14 @@
     onmouseout  = {()=>{help()}}
     onmouseover = {()=>{
         if (item.soundType == SoundType.Area) 
-            help(   $t('help.map.soundTypeArea'), 
-                    $t('help.map.soundTypeAreaActions') );
+            help(   $t('help.mediaPanel.soundTypeArea'), 
+                    $t('help.mediaPanel.soundTypeAreaKey') );
         else if (item.soundType == SoundType.Global) 
-            help(   $t('help.map.soundTypeGlobal'), 
-                    $t('help.map.soundTypeGlobalActions') );
+            help(   $t('help.mediaPanel.soundTypeGlobal'), 
+                    $t('help.mediaPanel.soundTypeGlobalKey') );
         else 
-            help(   $t('help.map.soundTypeLocal'), 
-                    $t('help.map.soundTypeLocalActions') );
+            help(   $t('help.mediaPanel.soundTypeLocal'), 
+                    $t('help.mediaPanel.soundTypeLocalKey') );
     }}>
         {#if soundType == SoundType.Area}<IconSoundArea/>
         {:else if soundType == SoundType.Global}<IconSoundGlobal/>
@@ -185,62 +187,91 @@
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
     onmouseover = {()=>{
-        item.muted? help($t('help.map.soundMute')) : help($t('help.map.soundUnMute'))
+        if      (item.triggerType == TriggerType.Manual) help($t('help.mediaPanel.soundTriggerManual'));
+        else if (item.triggerType == TriggerType.PlayOnEnter) help($t('help.mediaPanel.soundTriggerPlayOnEnter'));
+        else if (item.triggerType == TriggerType.RestartOnEnter) help($t('help.mediaPanel.soundTriggerRestartOnEnter'));
+        else if (item.triggerType == TriggerType.PlayInside) help($t('help.mediaPanel.soundTriggerPlayInside'));
+        else if (item.triggerType == TriggerType.RestartInside) help($t('help.mediaPanel.soundTriggerRestartInside'));
+        else if (item.triggerType == TriggerType.PlayOnTimer) help($t('help.mediaPanel.soundTriggerPlayOnTimer'));
     }}>
         {#if triggerType == TriggerType.Manual}<IconPlayOnLoad/>
         {:else if triggerType == TriggerType.PlayOnEnter}<IconPlayOnEnter/>
-        {:else if triggerType == TriggerType.ReplayOnEnter}<IconReplayOnEnter/>
+        {:else if triggerType == TriggerType.RestartOnEnter}<IconRestartOnEnter/>
         {:else if triggerType == TriggerType.PlayInside}<IconPlayInside/>
-        {:else if triggerType == TriggerType.ReplayInside}<IconReplayInside/>
+        {:else if triggerType == TriggerType.RestartInside}<IconRestartInside/>
         {:else if triggerType == TriggerType.PlayOnTimer}<IconPlayOnTimer/>{/if}
     </button>
 
     {#if triggerType == TriggerType.Manual}
-    <!-- Sound Pause Button -->
-    <button class="item-pause m" class:activated={!paused}
-    onclick     = {()=>{item.sound.paused ? item.sound.play() : item.sound.pause()}}
-    onfocus     = {()=>{}} 
-    onblur      = {()=>{}}
-    onmouseout  = {()=>{help()}}
-    onmouseover = {()=>{
-        !paused ? help($t('help.map.soundPause')) : help($t('help.map.soundUnPause'))
-    }}>
-        <span>{#if paused}<IconSoundPause/> paused{:else}<IconSoundPlay/> playing{/if}</span>
-    </button>
+        <!-- Sound Pause Button -->
+        <button class="item-pause m" class:activated={!paused}
+        onclick     = {()=>{item.sound.paused ? item.sound.play() : item.sound.pause()}}
+        onfocus     = {()=>{}} 
+        onblur      = {()=>{}}
+        onmouseout  = {()=>{help()}}
+        onmouseover = {()=>{
+            !paused ? help($t('help.mediaPanel.soundPause')) : help($t('help.mediaPanel.soundUnPause'))
+        }}>
+            <span>{#if paused}<IconSoundPause/> paused{:else}<IconSoundPlay/> playing{/if}</span>
+        </button>
     {:else}
-    <span class="item-pause m disabled">
-        {#if triggerType == TriggerType.PlayOnTimer}
-            <span class="timer" onwheel={(e)=>{e.preventDefault(); item.changeTimer(e,"h")}}>{timerH.toString().padStart(2,"0")}</span><!--
-            --><span class="timer" onwheel={(e)=>{e.preventDefault(); item.changeTimer(e,"m")}}>:{timerM.toString().padStart(2,"0")}</span><!--
-            --><span class="timer" onwheel={(e)=>{e.preventDefault(); item.changeTimer(e,"s")}}>:{timerS.toString().padStart(2,"0")}</span><!--
-            --><button onclick={(e)=>{
-                if (item.timer.active) { 
-                    item.sound.pause();
-                    item.stopTimer(item.timerID);
-                } else {
-                    item.timerID = item.startTimer();
-                }
-                }}>{#if timerActive}<IconSoundPause/>{:else}<IconSoundPlay/>{/if}</button>
+        <span class="item-pause m disabled">
+            {#if triggerType == TriggerType.PlayOnTimer}
+                <span class="timer" role="timer"
+                    onwheel={(e)=>{e.preventDefault(); item.changeTimer(e,"h")}}
+                    onfocus     = {()=>{}} 
+                    onblur      = {()=>{}}
+                    onmouseout  = {()=>{help()}}
+                    onmouseover = {()=>{help($t('help.mediaPanel.timerHours'))}}>{timerH.toString().padStart(2,"0")}</span><!--
+                --><span class="timer" role="timer"
+                    onwheel={(e)=>{e.preventDefault(); item.changeTimer(e,"m")}}
+                    onfocus     = {()=>{}} 
+                    onblur      = {()=>{}}
+                    onmouseout  = {()=>{help()}}
+                    onmouseover = {()=>{help($t('help.mediaPanel.timerMinutes'))}}>:{timerM.toString().padStart(2,"0")}</span><!--
+                --><span class="timer" role="timer"
+                    onwheel={(e)=>{e.preventDefault(); item.changeTimer(e,"s")}}
+                    onfocus     = {()=>{}} 
+                    onblur      = {()=>{}}
+                    onmouseout  = {()=>{help()}}
+                    onmouseover = {()=>{help($t('help.mediaPanel.timerSeconds'))}}>:{timerS.toString().padStart(2,"0")}</span><!--
+                --><button 
+                    onfocus     = {()=>{}} 
+                    onblur      = {()=>{}}
+                    onmouseout  = {()=>{help()}}
+                    onmouseover = {()=>{
+                        if (item.timer.active) help($t('help.mediaPanel.timerStop'))
+                        else help($t('help.mediaPanel.timerStart'))}}
+                    onclick={()=>{
+                        if (item.timer.active) { 
+                            item.sound.pause();
+                            item.stopTimer(item.timerID);
+                        } else {
+                            item.timerID = item.startTimer();
+                        }}}>{#if timerActive}<IconSoundPause/>{:else}<IconSoundPlay/>{/if}</button>
             {:else if triggerType == TriggerType.PlayOnEnter}
                 {#if paused}<IconSoundPlay/> on enter{:else}<IconSoundPlay/> playing{/if}
             {:else if triggerType == TriggerType.PlayInside}
                 {#if paused}<IconSoundPlay/> inside{:else}<IconSoundPlay/> playing{/if}
-            {:else if triggerType == TriggerType.ReplayOnEnter}
+            {:else if triggerType == TriggerType.RestartOnEnter}
                 {#if paused}<IconReset/> on enter{:else}<IconSoundPlay/> playing{/if}
-            {:else if triggerType == TriggerType.ReplayInside}
+            {:else if triggerType == TriggerType.RestartInside}
                 {#if paused}<IconReset/> inside{:else}<IconSoundPlay/> playing{/if}
             {/if}
-    </span>
+        </span>
     {/if}
 
     <!-- Sound Loop Button -->
-    <button class="item-loop r" class:disabled={triggerType == TriggerType.PlayInside || triggerType == TriggerType.ReplayInside}
-    onclick     = {()=>{if (triggerType != TriggerType.PlayInside && triggerType != TriggerType.ReplayInside) item.loop = !item.loop;}}
+    <button class="item-loop r" class:disabled={triggerType == TriggerType.PlayInside || triggerType == TriggerType.RestartInside}
+    onclick     = {()=>{if (triggerType != TriggerType.PlayInside && triggerType != TriggerType.RestartInside) item.loop = !item.loop;}}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
     onmouseover = {()=>{
-        item.loop? help($t('help.map.soundMute')) : help($t('help.map.soundUnMute'))
+        if (item.triggerType == TriggerType.PlayOnTimer)
+            item.loop? help($t('help.mediaPanel.soundLoopTimer')) : help($t('help.mediaPanel.soundNoLoopTimer'))
+        else
+            item.loop? help($t('help.mediaPanel.soundLoop')) : help($t('help.mediaPanel.soundNoLoop'))
     }}>
         {#if looped}<IconLoop/>{:else}<IconNoLoop/>{/if}
     </button>
@@ -253,7 +284,7 @@
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
     onmouseover = {()=>{
-        item.muted? help($t('help.map.soundMute')) : help($t('help.map.soundUnMute'))
+        item.muted? help($t('help.mediaPanel.soundMute')) : help($t('help.mediaPanel.soundUnMute'))
     }}>
         M
     </button>
@@ -265,7 +296,7 @@
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
     onmouseover = {()=>{
-        item.solo ? help($t('help.map.soundUnSolo')) : help($t('help.map.soundSolo'))
+        item.solo ? help($t('help.mediaPanel.soundUnSolo')) : help($t('help.mediaPanel.soundSolo'))
     }}>
         S
     </button>

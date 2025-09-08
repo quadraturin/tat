@@ -406,7 +406,7 @@
     <button class="adaptive"
     onclick     = {readFiles} 
     onfocus     = {()=>{}} 
-    onmouseover = {()=>{help($t('help.titlebar.addMedia'), $t('help.titlebar.addMediaShortcut'))}}
+    onmouseover = {()=>{help($t('help.titlebar.addMedia'), $t('help.titlebar.addMediaKey'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconImageFile />{/if}
@@ -418,7 +418,7 @@
     <button class="adaptive l"
     onclick     = {()=>saveProject(false)} 
     onfocus     = {()=>{}} 
-    onmouseover = {()=>{help($t('help.titlebar.save'), $t('help.titlebar.saveShortcut'))}}
+    onmouseover = {()=>{help($t('help.titlebar.save'), $t('help.titlebar.saveKey'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         {#if R.getIsSaving()}<IconLoading />{:else}<IconSave />{/if}
@@ -430,7 +430,7 @@
     <button class="adaptive r"
     onclick     = {()=>saveProject(true)}
     onfocus     = {()=>{}} 
-    onmouseover = {()=>{help($t('help.titlebar.saveAs'), $t('help.titlebar.saveAsShortcut'))}}
+    onmouseover = {()=>{help($t('help.titlebar.saveAs'), $t('help.titlebar.saveAsKey'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         {#if R.getIsSaving()}<IconLoading />{:else}<IconSaveAs />{/if}
@@ -442,7 +442,7 @@
     <button class="adaptive l"
     onclick     = {loadProject} 
     onfocus     = {()=>{}} 
-    onmouseover = {()=>{help($t('help.titlebar.openProject'), $t('help.titlebar.openProjectShortcut'))}}
+    onmouseover = {()=>{help($t('help.titlebar.openProject'), $t('help.titlebar.openProjectKey'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconLoad />{/if}
@@ -454,7 +454,7 @@
     <button class="adaptive r"
     onclick     = {clearProject} 
     onfocus     = {()=>{}} 
-    onmouseover = {()=>{help($t('help.titlebar.newProject'), $t('help.titlebar.newProjectShortcut'))}}
+    onmouseover = {()=>{help($t('help.titlebar.newProject'), $t('help.titlebar.newProjectKey'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         <IconNew />
@@ -466,7 +466,7 @@
     <button class="adaptive l" id="settings-button"
     onclick     = {toggleSettingsMenu} 
     onfocus     = {()=>{}} 
-    onmouseover = {()=>{help($t('help.titlebar.settings'), $t('help.titlebar.settingsShortcut'))}}
+    onmouseover = {()=>{help($t('help.titlebar.settings'), $t('help.titlebar.settingsKey'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         <IconSettings />
@@ -478,7 +478,7 @@
     <button class="adaptive r" id="about-button" 
     onclick     = {toggleAboutMenu} 
     onfocus     = {()=>{}} 
-    onmouseover = {()=>{help($t('help.titlebar.about'), $t('help.titlebar.aboutShortcut'))}}
+    onmouseover = {()=>{help($t('help.titlebar.about'), $t('help.titlebar.aboutKey'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         <IconAbout />
@@ -492,7 +492,7 @@
     <!-- Minimize Button -->
     <button class="window-button" id="titlebar-minimize" title="minimize" aria-label="minimize"
     onfocus     = {()=>{}} 
-    onmouseover = {()=>{help($t('help.titlebar.minimize'))}}
+    onmouseover = {()=>{help($t('help.titlebar.minimize'), $t('help.titlebar.minimizeKey'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         <IconMinimize />
@@ -501,7 +501,7 @@
     <!-- Maximize Button -->
     <button class="window-button" id="titlebar-maximize" title="maximize" aria-label="maximize"
     onfocus     = {()=>{}} 
-    onmouseover = {()=>{help($t('help.titlebar.maximize'))}}
+    onmouseover = {()=>{help($t('help.titlebar.maximize'), $t('help.titlebar.maximizeKey'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         <IconMaximize />
@@ -510,7 +510,7 @@
     <!-- Quit Button -->
     <button class="window-button" id="titlebar-close" title="close" aria-label="close"
     onfocus     = {()=>{}} 
-    onmouseover = {()=>{help($t('help.titlebar.close'), $t('help.titlebar.closeShortcut'))}}
+    onmouseover = {()=>{help($t('help.titlebar.close'), $t('help.titlebar.closeKey'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         <IconQuit />
@@ -531,7 +531,7 @@
     <button id="zoom-in" class="l"
     onclick     = {()=>{R.getCanvas().zoom(1.05)}}
     onfocus     = {()=>{}} 
-    onmouseover = {()=>{help($t('help.map.zoomIn'), $t('help.map.zoomInShortcut'))}}
+    onmouseover = {()=>{help($t('help.controlsPanel.zoomIn'), $t('help.controlsPanel.zoomInKey'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         <IconZoomIn/>
@@ -541,7 +541,7 @@
     <button id="zoom-out" class="r"
     onclick     = {()=>{R.getCanvas().zoom(0.95)}}
     onfocus     = {()=>{}} 
-    onmouseover = {()=>{help($t('help.map.zoomOut'), $t('help.map.zoomOutShortcut'))}}
+    onmouseover = {()=>{help($t('help.controlsPanel.zoomOut'), $t('help.controlsPanel.zoomOutKey'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         <IconZoomOut/>
@@ -551,7 +551,7 @@
     <button id="recenter"
     onclick     = {()=>{R.getCanvas().flyToPoint(R.getListener().x, R.getListener().y)}}
     onfocus     = {()=>{}} 
-    onmouseover = {()=>{help($t('help.map.recenter'), $t('help.map.recenterShortcut'))}}
+    onmouseover = {()=>{help($t('help.controlsPanel.recenter'), $t('help.controlsPanel.recenterKey'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         <IconRecenter/>
@@ -563,8 +563,8 @@
     onfocus     = {()=>{}} 
     onmouseover = {()=>{
         sidebarHidden? 
-            help($t('help.map.showSidebar'), $t('help.map.toggleSidebarShortcut')) : 
-            help($t('help.map.hideSidebar'), $t('help.map.toggleSidebarShortcut'))}}
+            help($t('help.controlsPanel.showSidebar'), $t('help.controlsPanel.toggleSidebarKey')) : 
+            help($t('help.controlsPanel.hideSidebar'), $t('help.controlsPanel.toggleSidebarKey'))}}
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         {#if sidebarHidden}<IconExpand/>{:else}<IconCollapse/>{/if}
@@ -582,10 +582,12 @@
         <div role="heading" class="heading" aria-level="2">
 
             <!-- Master Volume -->
-            <div id="master-volume" onwheel={(event) => {
-                event.preventDefault(); 
-                changeMasterVolume(event);
-            }}>
+            <div id="master-volume" aria-level="3" role="heading"
+            onfocus     = {()=>{}} 
+            onblur      = {()=>{}}
+            onwheel={(e) => { e.preventDefault(); changeMasterVolume(e); }}
+            onmouseout  = {()=>{help()}}
+            onmouseover = {()=>{help($t('help.mediaPanel.soundsVolume'))}}>
                 <div id="master-volume-bar" style={"height:" + (masterVolume * 100) + "%"}></div>
             </div>
 
@@ -594,7 +596,7 @@
             onfocus     = {()=>{}} 
             onblur      = {()=>{}}
             onmouseout  = {()=>{help()}}
-            onmouseover = {()=>{help($t('help.map.soundsTitle'))}}>
+            onmouseover = {()=>{help($t('help.mediaPanel.soundsTitle'))}}>
             {$t('ui.sounds')}
             </span>
 
@@ -602,12 +604,12 @@
             <button class="browser-heading-button" id="hide-sounds-toggle" class:R.getSoundsHidden()
             onclick     = {()=>{
                 R.toggleSoundsHidden();
-                R.getSoundsHidden() ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))}}
+                R.getSoundsHidden() ? help($t('help.mediaPanel.soundsShow')) : help($t('help.mediaPanel.soundsHide'))}}
             onfocus     = {()=>{}} 
             onblur      = {()=>{}}
             onmouseout  = {()=>{help()}}
             onmouseover = {()=>{
-                R.getSoundsHidden() ? help($t('help.map.soundsShow')) : help($t('help.map.soundsHide'))
+                R.getSoundsHidden() ? help($t('help.mediaPanel.soundsShow')) : help($t('help.mediaPanel.soundsHide'))
             }}>
                 {#if R.getSoundsHidden()}<IconEye/>{:else}<IconEyeOff/>{/if}
             </button>
@@ -668,17 +670,19 @@
         <div role="heading" class="heading" aria-level="2">
 
             <!-- Master Opacity -->
-            <div id="master-opacity" onwheel={(event) => {
-                event.preventDefault(); 
-                changeMasterOpacity(event);
-            }}>
+            <div id="master-opacity"  aria-level="3" role="heading"
+            onfocus     = {()=>{}} 
+            onblur      = {()=>{}}
+            onwheel={(e) => { e.preventDefault(); changeMasterOpacity(e); }}
+            onmouseout  = {()=>{help()}}
+            onmouseover = {()=>{help($t('help.mediaPanel.imagesOpacity'))}}>
                 <div id="master-opacity-bar" style={"height:" + (masterOpacity * 100) + "%"}></div>
             </div>
 
             <!-- Image List Title -->
             <span role="heading" aria-level="3"
             onfocus     = {()=>{}} 
-            onmouseover = {()=>{help($t('help.map.imagesTitle'))}}
+            onmouseover = {()=>{help($t('help.mediaPanel.imagesTitle'))}}
             onmouseout  = {()=>{help()}}
             onblur      = {()=>{}}>
                 {$t('ui.images')}
@@ -688,12 +692,12 @@
             <button class="browser-heading-button" id="hide-images-toggle"  class:R.getImagesHidden()
             onclick={()=>{
                 R.toggleImagesHidden()
-                R.getImagesHidden() ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))}}
+                R.getImagesHidden() ? help($t('help.mediaPanel.imagesShow')) : help($t('help.mediaPanel.imagesHide'))}}
             onfocus={()=>{}} 
             onblur={()=>{}}
             onmouseout={()=>{help()}}
             onmouseover = {()=>{
-                R.getImagesHidden() ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))
+                R.getImagesHidden() ? help($t('help.mediaPanel.imagesShow')) : help($t('help.mediaPanel.imagesHide'))
             }}>
                 {#if R.getImagesHidden()}<IconEye/>{:else}<IconEyeOff/>{/if}
             </button>
@@ -710,10 +714,16 @@
 
 
 <!-- Help Text Display Area -->
-<div id="help" class="shadow" class:activated={isHelpActive}>
+<div id="help" role="banner" class="shadow" class:activated={isHelpActive}>
+    
 
     <!-- Help Text Show / Hide Toggle -->
-    <button id="help-toggle" onclick={()=>{R.toggleHelpActive()}}> ? </button>
+    <button id="help-toggle" 
+        onclick={()=>{R.toggleHelpActive()}}
+        onfocus     = {()=>{}} 
+        onmouseover = {()=>{help($t('help.helpPanel.helpArea'))}}
+        onmouseout  = {()=>{help()}}
+        onblur      = {()=>{}}> i </button>
 
     <!-- Help Text -->
     <span id="help-text"></span>
