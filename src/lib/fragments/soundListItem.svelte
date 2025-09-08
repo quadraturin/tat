@@ -71,8 +71,11 @@
 
     <!-- Sound Name -->
     <button class="item-name" title="{item.niceName}"
-    onclick     = {()=>{item.selected = !item.selected;}}
-    ondblclick  = {()=>{if(item.soundType != SoundType.Global) item.locked = !item.locked;}}
+    onclick     = {()=>{if(!item.locked && item.soundType) item.selected = !item.selected;}}
+    ondblclick  = {()=>{if(item.soundType != SoundType.Global) {
+        item.locked = !item.locked;
+        item.selected = false;
+    }}}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}

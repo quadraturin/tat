@@ -28,7 +28,8 @@ class={["item image-item", item.selected && "selected", item.locked && "locked"]
     onclick     = {()=>{
         item.selected = !item.selected; }}
     ondblclick  = {()=>{
-        item.locked = !item.locked; }}
+        item.locked = !item.locked;
+        item.selected = false; }}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
