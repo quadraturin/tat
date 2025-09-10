@@ -40,8 +40,6 @@ export async function loadProject()
         R.setProjectPath(filePath as string);
         const project = JSON.parse(await readTextFile(jsonPath));
 
-        //console.log(project);
-
         let projectName = await basename(R.getProjectPath() as string)
         R.setProjectName(projectName);
 
@@ -51,7 +49,20 @@ export async function loadProject()
         let uniqueSounds:string[] = [];
 
         for (let i=0; i<project.maps.length; i++) {
-            // find unique images
+        
+            // Position the listener.
+            for (let j=0; j<project.maps[i].listeners.length; j++) {
+                R.getListener().x = project.maps[i].listeners[j].x;
+                R.getListener().y = project.maps[i].listeners[j].y;
+            }
+
+            // Position the viewport.
+            if ('view' in project.maps[i]){
+                R.getCanvas().zoom(project.maps[i].view.z);
+                R.getCanvas().flyToPoint(project.maps[i].view.x, project.maps[i].view.y);
+            }
+
+            // Find unique images.
             for (let j=0; j<project.maps[i].images.length; j++) {
                 const obj = project.maps[i].images[j];
                 let src = R.getProjectPath() as string + sep() + "images" + sep() + obj.src;
@@ -75,7 +86,7 @@ export async function loadProject()
                 newImage(options);
             }
 
-            // find unique sounds
+            // Find unique sounds
             for (let j=0; j<project.maps[i].sounds.length; j++) {
                 const obj = project.maps[i].sounds[j];
                 let src = R.getProjectPath() as string + sep() + "sounds" + sep() + obj.src

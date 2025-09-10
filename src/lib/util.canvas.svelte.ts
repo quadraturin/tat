@@ -144,6 +144,18 @@ export class InfiniteCanvas {
 
   // ===== CANVAS OFFSETS =====
 
+  /** Get the camera offset. */
+  getOffset() {
+    return {
+      x: this.#offsetX,
+      y: this.#offsetY
+    }
+  }
+  setOffset(x:number, y:number) {
+    this.#offsetX = x;
+    this.#offsetY = y;
+  }
+
   /** Offset the canvas view from the left edge. @param amount Distance to offset by. */
   offsetLeft(amount: number): void {
     this.#offsetX -= amount;

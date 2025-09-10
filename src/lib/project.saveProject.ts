@@ -25,6 +25,17 @@ export async function saveProject(saveAs=false): Promise<boolean>
     let project = { 
         maps: [
             {
+            view: {
+                x:R.getCanvas().viewportCenterInWorldSpace().x,
+                y:R.getCanvas().viewportCenterInWorldSpace().y,
+                z:R.getCanvas().getZoom()
+            },
+            listeners: [
+                {
+                    x: R.getListener().x,
+                    y: R.getListener().y
+                }
+            ],
             images: new Array<any>,
             sounds: new Array<any>
             }
