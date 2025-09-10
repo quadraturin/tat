@@ -44,10 +44,10 @@ pre { font-size: 0.8em; }
     --c0: #252525; /* Window borders */
     --c1: #111; /* Canvas background */
     --c2: #222; /* Canvas grid lines */
-    --c3: #333; /* UI background */
-    --c4: #444; /* UI foreground */
-    --c5: #555; /* UI button */
-    --c6: #666; /* UI button highlight */
+    --c4: #333; /* UI background */
+    --c5: #444; /* UI foreground */
+    --c6: #555; /* UI button */
+    --c7: #666; /* UI button highlight */
     --c7: #777; /* UI text */
     --c8: #888; /* Sounds */
     --c9: #999; /* Title text */
@@ -102,8 +102,8 @@ body {
 }
 button {
     border: 1px solid var(--c0);
-    background-color: var(--c3);
-    color: var(--c5);
+    background-color: var(--c4);
+    color: var(--c6);
     border-radius: var(--br-m);
     padding: 0;
 }
@@ -125,13 +125,13 @@ button.r {
     margin-left: 0 !important;
 }
 button.selected {
-    background-color: var(--c5);
+    background-color: var(--c6);
 }
 button:hover {
-    background-color: var(--c4);
+    background-color: var(--c5);
 }
 button.activated {
-    background-color: var(--c4);
+    background-color: var(--c5);
 }
 #help-text {
     border-bottom: none;
@@ -147,7 +147,7 @@ button.activated {
     background-color: var(--c1);
     border-color: var(--c0);
     border: 1px solid var(--c0);
-    color: var(--c5);
+    color: var(--c6);
 }
 #titlebar .spacer {
     flex: auto;
@@ -175,7 +175,7 @@ button.activated {
     background-color: var(--c2);
 }
 #titlebar button.adaptive.selected:hover {
-    background: linear-gradient(var(--c4) 4px, var(--c2) 4px)
+    background: linear-gradient(var(--c5) 4px, var(--c2) 4px)
 }
 #titlebar button.adaptive svg {
     display: inline-block;
@@ -230,19 +230,19 @@ button.activated {
 .window-button .svg-outer {
     stroke: var(--c0);
     stroke-width: 1px;
-    fill: var(--c3);
+    fill: var(--c4);
 }
 .window-button:hover {
     background: none;
 }
 .window-button:hover .svg-outer {
-    fill: var(--c4);
+    fill: var(--c5);
 }
 #titlebar-close:hover .svg-outer {
     fill: var(--cF);
 }
 .window-button .svg-inner {
-    fill: var(--c5);
+    fill: var(--c6);
 }
 
 
@@ -253,7 +253,7 @@ button.activated {
 #controls{
     background-color: var(--c1);
     border: 1px solid var(--c0);
-    color: var(--c5);
+    color: var(--c6);
     position: absolute;
     top: 40px;
     left: 6px;
@@ -302,7 +302,7 @@ button.activated {
 #browser {
     background-color: var(--c1);
     border: 1px solid var(--c0);
-    color: var(--c5);
+    color: var(--c6);
     border-radius: var(--br-l);
     z-index: 10000;
     position: absolute;
@@ -378,10 +378,10 @@ button.activated {
 #browser .item.hovered .volume-track 
 #browser .item:hover,
 #browser .item:hover .volume-track {
-    background-color: var(--c7) !important;
+    background-color: var(--c3) !important;
 }
 #browser .item .volume-track:hover .volume-bar {
-    background-color: var(--c4)
+    background-color: var(--c5)
 }
 #browser .item.hidden {
     opacity: 0.5;
@@ -421,7 +421,7 @@ button.activated {
     height: 14px;
 }
 #browser span.item-pause.activated {
-    background-color: var(--c4);
+    background-color: var(--c5);
 }
 #browser span.item-pause span.timer:first-child {
     padding-left: 5px;
@@ -433,7 +433,7 @@ button.activated {
     line-height: 14px;
 }
 #browser span.item-pause span.timer:hover {
-    background-color: var(--c4);
+    background-color: var(--c5);
 }
 #browser span.item-pause button {
     height: 10px;
@@ -464,10 +464,10 @@ button.activated {
     width: 0%;
     z-index: 10;
     border: none;
-    background-color: var(--c3);
+    background-color: var(--c4);
 }
 #browser .progress-track:hover .progress-bar {
-    background-color: var(--c4);
+    background-color: var(--c5);
 }
 #browser .item .volume-track {
     position: absolute;
@@ -514,13 +514,13 @@ button.activated {
     border-radius: var(--br-s);
 }
 #master-volume:hover, #master-opacity:hover {
-    background-color: var(--c7);
+    background-color: var(--c3);
 }
 #master-volume:hover #master-volume-bar, #master-opacity:hover #master-opacity-bar {
-    background-color: var(--c4);
+    background-color: var(--c5);
 }
 #browser .item.selected, #browser .item.selected .volume-track {
-    background-color: var(--c7);
+    background-color: var(--c3);
 }
 #browser .item.locked {
     border: 1px dashed var(--c0);
@@ -536,7 +536,7 @@ button.activated {
    #################### */
 
 #help {
-    color: var(--c5);
+    color: var(--c6);
     z-index: 100000;
     position: absolute;
     bottom: 6px;
@@ -603,7 +603,9 @@ button.activated {
     overflow-y: scroll;
     font-weight: bold;
     background-color: var(--c2);
-    color: var(--c5);
+    color: var(--c6);
+    border: 1px solid var(--c0);
+    border-top: none;
 }
 .menu::-webkit-scrollbar {
     width: 5px;
@@ -617,7 +619,7 @@ button.activated {
 .menu h2 {
     padding: 0 8px;
     border-radius: var(--br-m);
-    background-color: var(--c5);
+    background-color: var(--c6);
     color: var(--c2);
 }
 .menu h3 {
@@ -627,7 +629,7 @@ button.activated {
     margin-bottom: 1rem;
 }
 .menu a {
-    color: var(--c6)
+    color: var(--c7)
 }
 .menu a:hover {
     color: var(--cA)
@@ -651,27 +653,27 @@ button.activated {
 input[type=checkbox]::after, 
 input[type=checkbox]:hover::after,
 input[type=range]::-webkit-slider-thumb {
-    background-color: var(--c5); 
+    background-color: var(--c6); 
     border-radius: var(--br-s);
 }
 .rangeValue {
-    background-color: var(--c5); 
+    background-color: var(--c6); 
     color: var(--c2);
     float: right;
     margin-left: 8px;
 }
 .menu, input[type=range], 
 select { 
-    color: var(--c5);
+    color: var(--c6);
 }
 input[type=checkbox],
 input[type=range], 
 select {
-    border: 1px solid var(--c5) !important;
+    border: 1px solid var(--c6) !important;
     float: right;
 }
 .rangeValue::after {
-    border-right: 3px solid var(--c5);
+    border-right: 3px solid var(--c6);
 }
 
 
@@ -785,22 +787,22 @@ input[type=range]::-moz-range-thumb {
     left: -6px;
 }
 .setting.changed{
-    color: var(--c6);
+    color: var(--c7);
 }
 .setting.changed input {
-    border-color: var(--c6) !important;
+    border-color: var(--c7) !important;
 }
 .setting.changed input[type=checkbox]::after, 
 .setting.changed input[type=checkbox]:hover::after,
 .setting.changed input[type=range]::-webkit-slider-thumb {
-    background-color: var(--c6) !important;
+    background-color: var(--c7) !important;
 }
 
 .setting.changed .rangeValue {
-    background-color: var(--c6) !important;
+    background-color: var(--c7) !important;
 }
 .setting.changed .rangeValue::after {
-    border-right-color: var(--c6) !important;
+    border-right-color: var(--c7) !important;
 }
 
 /* #################
@@ -826,7 +828,7 @@ input[type=range]::-moz-range-thumb {
     overflow: scroll;
     margin: 50px auto 0;
     border-radius: var(--br-m);
-    color: var(--c5);
+    color: var(--c6);
     font-weight: bold;
 }
 #modal::-webkit-scrollbar { background-color: transparent; }
@@ -865,7 +867,7 @@ input[type=range]::-moz-range-thumb {
     font-size: 10pt;
     margin: 16px 24px 0;
     color: var(--c1);
-    background-color: var(--c5);
+    background-color: var(--c6);
     border-radius: var(--br-m) var(--br-m) 0 0;
     padding: 2px 8px;
 }

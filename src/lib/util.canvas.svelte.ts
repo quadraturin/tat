@@ -642,10 +642,13 @@ export class InfiniteCanvas {
   #setDrawColor(selected:boolean, locked:boolean, hovered:boolean) {
     if (this.#wrap && this.context)
     if (locked) {
+      this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cE");
+      this.context.fillStyle = this.#wrap.style.getPropertyValue("--cE");
+      this.context.setLineDash([3,3]);
+    } else if (selected) {
       this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cD");
       this.context.fillStyle = this.#wrap.style.getPropertyValue("--cD");
-      this.context.setLineDash([3,3]);
-    } else if (selected || hovered) {
+    } else if (hovered) {
       this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
       this.context.fillStyle = this.#wrap.style.getPropertyValue("--cC");
     } else {
