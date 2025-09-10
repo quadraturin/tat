@@ -11,7 +11,7 @@ const appWindow = getCurrentWebviewWindow()
  */
 export async function tryQuit() {
     if (getisProjectDirty()) {
-        let discardChanges = await ask(t.get('dialog.quitUnsavedChanges'));
+        let discardChanges = await ask(t.get('ui.menu.dialog.quitUnsavedChanges'));
         if (!discardChanges) return;
     }
     appWindow.close();
