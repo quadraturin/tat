@@ -10,7 +10,6 @@ import { Menu } from "@tauri-apps/api/menu";
 import { help } from "./util.help";
 import { t } from '$lib/util.localization';
 
-console.log("aaaa")
 /**
  *  1. MOUSE
  *      1.1 Mouse Position

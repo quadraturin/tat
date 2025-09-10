@@ -328,7 +328,6 @@
             if (list != null) {
                 // Find the closest item being dragged over.
                 draggingOverItem = getDragOverElement(list);
-                console.log(draggingOverItem)
 
                 // Reset classes.
                 document.querySelectorAll("#browser .item").forEach(item => item.classList.remove("over", "insertAbove", "insertBelow"));
