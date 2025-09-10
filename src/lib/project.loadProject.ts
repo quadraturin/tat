@@ -4,9 +4,8 @@ import { exists, readTextFile } from '@tauri-apps/plugin-fs';
 import { basename, join, sep } from '@tauri-apps/api/path';
 import * as R from '$lib/registry.svelte'
 import { clearProject } from './project.clearProject';
-import { closeModal, openModal } from './ui.modals';
-import { newImage, newImageFromPath } from './media.loadImage';
-import { loadFile } from './media.loadFile';
+import { closeModal } from './ui.modals';
+import { newImage } from './media.loadImage';
 import { newSound } from './media.loadSound';
 
 /** Load a project. */
@@ -51,15 +50,17 @@ export async function loadProject()
         for (let i=0; i<project.maps.length; i++) {
         
             // Position the listener.
-            for (let j=0; j<project.maps[i].listeners.length; j++) {
-                R.getListener().x = project.maps[i].listeners[j].x;
-                R.getListener().y = project.maps[i].listeners[j].y;
+            if ('listeners' in project.maps[i]) {
+                for (let j=0; j<project.maps[i].listeners.length; j++) {
+                    R.getListener().x = project.maps[i].listeners[j].x;
+                    R.getListener().y = project.maps[i].listeners[j].y;
+                }
             }
 
             // Position the viewport.
             if ('view' in project.maps[i]){
-                R.getCanvas().zoom(project.maps[i].view.z);
                 R.getCanvas().flyToPoint(project.maps[i].view.x, project.maps[i].view.y);
+                R.getCanvas().setZoom(project.maps[i].view.z);
             }
 
             // Find unique images.

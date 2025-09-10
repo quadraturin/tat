@@ -185,6 +185,11 @@ export class InfiniteCanvas {
 
   /** Get the current zoom level. @returns The zoom level. */
   getZoom() { return this.#z; }
+  setZoom(z:number) { 
+    if (z > this.#maxZ) z = this.#maxZ;
+    else if (z < this.#minZ) z = this.#minZ;
+    this.#z = z;
+  }
 
   /**
    * Zoom in or out, optionally centered on a point, or reset zoom.
