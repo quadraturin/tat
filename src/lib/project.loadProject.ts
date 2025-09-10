@@ -59,8 +59,8 @@ export async function loadProject()
 
             // Position the viewport.
             if ('view' in project.maps[i]){
-                R.getCanvas().flyToPoint(project.maps[i].view.x, project.maps[i].view.y);
                 R.getCanvas().setZoom(project.maps[i].view.z);
+                R.getCanvas().flyToPoint(project.maps[i].view.x, project.maps[i].view.y);
             }
 
             // Find unique images.

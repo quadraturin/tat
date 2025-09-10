@@ -42,6 +42,7 @@
 - **Upgraded to Svelte 5 and Sveltekit 2.**
 - **Added capital letters.**
 - **Much more help text** across the app.
+- **Projects now save and load listener and view positions.**
 
 ### v0.4.1: drag-and-drop (2024-12-22)
 - added drag-and-drop support for media files.
