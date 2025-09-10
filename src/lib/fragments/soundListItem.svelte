@@ -1,7 +1,6 @@
 <script lang="ts">
     import { t } from '$lib/util.localization';
 	import { solo } from '$lib/media.controlMedia';
-	import { removeSound } from '$lib/media.removeSound';
 	import { duplicateSound } from '$lib/media.loadSound';
 	import { seekToByClick } from '$lib/media.controlMedia'; 
 	import { help } from '$lib/util.help';
@@ -11,7 +10,7 @@
 	import IconSoundArea from '$lib/icons/iconSoundArea.svelte';
 	import IconSoundPause from '$lib/icons/iconSoundPause.svelte';
 	import type { CanvasSound } from '$lib/classes/CanvasSound.svelte';
-	import { SoundType, TriggerType } from '$lib/registry.svelte';
+	import { getHoveredCanvasObject, getSoundsHidden, setHoveredCanvasObject, SoundType, TriggerType } from '$lib/registry.svelte';
 	import IconLoop from '$lib/icons/iconLoop.svelte';
 	import IconPlayOnLoad from '$lib/icons/iconPlayOnLoad.svelte';
 	import IconPlayOnEnter from '$lib/icons/iconPlayOnEnter.svelte';
@@ -22,6 +21,7 @@
 	import IconSoundPlay from '$lib/icons/IconSoundPlay.svelte';
 	import IconNoLoop from '$lib/icons/IconNoLoop.svelte';
 	import IconReset from '$lib/icons/iconReset.svelte';
+	import { tryRemoveObject } from '$lib/media.remove';
 
     let {item, i} : {item:CanvasSound, i:number} = $props();
     let soundTrack:any = $state();
@@ -39,6 +39,7 @@
     let timerM = $state(0);
     let timerS = $state(0);
     let timerActive = $state(false);
+    let isHovered = $state(false);
 
     setInterval(() => {
         currentTime = item.sound.currentTime;
@@ -53,11 +54,18 @@
         timerM = item.timer.minutes;
         timerS = item.timer.seconds;
         timerActive = item.timer.active;
+        isHovered = (item == getHoveredCanvasObject());
     }, 15);
 </script>
 
 <!-- A Sound Item -->
-<div class="item sound-item" draggable="true" id="item-{item.uuid}" class:selected={item.selected} class:locked={item.locked} role="listitem">
+<div class="item sound-item" id="item-{item.uuid}"
+    draggable="true"  role="listitem" class:hovered={isHovered}
+    class:selected={item.selected} class:locked={item.locked}  class:hidden={getSoundsHidden()}
+    onfocus     = {()=>{}} 
+    onblur      = {()=>{}}
+    onmouseout  = {()=>{setHoveredCanvasObject(null)}}
+    onmouseover = {()=>{setHoveredCanvasObject(item)}}>
 
     <!-- Volume Display -->
     <div class="volume-track" role="heading" aria-level="4" 
@@ -134,7 +142,7 @@
 
     <!-- Sound Delete Button -->
     <button class="item-delete r" 
-    onclick     = {()=>removeSound(i)}
+    onclick     = {()=>tryRemoveObject(item)}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{help()}}
@@ -218,7 +226,7 @@
             <span>{#if paused}<IconSoundPause/> paused{:else}<IconSoundPlay/> playing{/if}</span>
         </button>
     {:else}
-        <span class="item-pause m disabled">
+        <span class="item-pause m disabled" class:activated={!paused}>
             {#if triggerType == TriggerType.PlayOnTimer}
                 <span class="timer" role="timer"
                     onwheel={(e)=>{e.preventDefault(); item.changeTimer(e,"h")}}
@@ -231,13 +239,13 @@
                     onfocus     = {()=>{}} 
                     onblur      = {()=>{}}
                     onmouseout  = {()=>{help()}}
-                    onmouseover = {()=>{help($t('help.mediaPanel.timerMinutes'))}}>:{timerM.toString().padStart(2,"0")}</span><!--
+                    onmouseover = {()=>{help($t('help.mediaPanel.timerMinutes'))}}><span class="timer-divider" class:blink={timerActive && timerS % 2 == 1} >:</span>{timerM.toString().padStart(2,"0")}</span><!--
                 --><span class="timer" role="timer"
                     onwheel={(e)=>{e.preventDefault(); item.changeTimer(e,"s")}}
                     onfocus     = {()=>{}} 
                     onblur      = {()=>{}}
                     onmouseout  = {()=>{help()}}
-                    onmouseover = {()=>{help($t('help.mediaPanel.timerSeconds'))}}>:{timerS.toString().padStart(2,"0")}</span><!--
+                    onmouseover = {()=>{help($t('help.mediaPanel.timerSeconds'))}}><span class="timer-divider" class:blink={timerActive && timerS % 2 == 1}>:</span>{timerS.toString().padStart(2,"0")}</span><!--
                 --><button 
                     onfocus     = {()=>{}} 
                     onblur      = {()=>{}}

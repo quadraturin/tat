@@ -1,25 +1,36 @@
 <script lang="ts">
-    import * as R from '$lib/registry.svelte';
-	import { removeImage } from '$lib/media.removeImage';
 	import { duplicateImage } from '$lib/media.loadImage';
     import { t } from '$lib/util.localization';
 	import { help } from '$lib/util.help';
 	import type { CanvasImage } from '$lib/classes/CanvasImage.svelte';
+	import { getHoveredCanvasObject, getImagesHidden, setHoveredCanvasObject } from '$lib/registry.svelte';
+	import { tryRemoveObject } from '$lib/media.remove';
 
     let {item, i} : {item:CanvasImage, i:number} = $props();
+
+    let isHovered = $state(false);
+
+    setInterval(() => {
+        isHovered = (item == getHoveredCanvasObject());
+    }, 15);
 </script>
 
 <!-- An Image Item -->
-<div id="item-{item.uuid}" role="listitem" draggable="true"
-class={["item image-item", item.selected && "selected", item.locked && "locked"]}>
+<div id="item-{item.uuid}" role="listitem" draggable="true" 
+class:hidden={getImagesHidden()} class:hovered={isHovered}
+class={["item image-item", item.selected && "selected", item.locked && "locked"]}
+    onfocus     = {()=>{}} 
+    onblur      = {()=>{}}
+    onmouseout  = {()=>{ setHoveredCanvasObject(null) }}
+    onmouseover = {()=>{ setHoveredCanvasObject(item) }}>
 
     <!-- Opacity Display -->
     <div class="volume-track" role="heading" aria-level="4"
-        onwheel = {(event) => { event.preventDefault(); item.changeOpacity(event)}}
+        onwheel     = {(e) => { e.preventDefault(); item.changeOpacity(e)}}
         onfocus     = {()=>{}} 
         onblur      = {()=>{}}
-        onmouseover = {()=>{help($t('help.mediaPanel.imageOpacity'))}}
-        onmouseout  = {()=>{help()}}>
+        onmouseover = {()=>{ help($t('help.mediaPanel.image.opacity')) }}
+        onmouseout  = {()=>{ help() }}>
         <div class="volume-bar" style={"height: "+ item.opacity*100 +"%"}></div>
     </div>
 
@@ -66,7 +77,7 @@ class={["item image-item", item.selected && "selected", item.locked && "locked"]
 
     <!-- Image Delete Button -->
     <button class="item-delete r" title="delete image" 
-    onclick     = {()=>removeImage(i)}
+    onclick     = {()=>tryRemoveObject(item)}
     onfocus     = {()=>{}} 
     onmouseover = {()=>{help($t('help.mediaPanel.imageDelete'))}}
     onmouseout  = {()=>{help()}}

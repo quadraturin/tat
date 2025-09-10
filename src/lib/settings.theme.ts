@@ -1,9 +1,9 @@
 import { readDir } from "@tauri-apps/plugin-fs";
 import tDefaultDark from "../assets/themes/default-dark.json";
 import tDefaultLight from "../assets/themes/default-light.json";
-import tSolarizedDark from "../assets/themes/solarized-dark.json";
-import tSolarizedLight from "../assets/themes/solarized-light.json";
-import tWarped from "../assets/themes/warped.json";
+import tMothershipDark from "../assets/themes/mothership-dark.json";
+import tMothershipLight from "../assets/themes/mothership-light.json";
+import tWarped from "../assets/themes/warped-beyond-recognition.json";
 import { AppTheme } from "./classes/AppTheme.svelte";
 
 export const themeDefault = new AppTheme(tDefaultDark);
@@ -19,8 +19,8 @@ export function getThemesList():AppTheme[] {
     themesList.push(
         new AppTheme(tDefaultDark), 
         new AppTheme(tDefaultLight),
-        new AppTheme(tSolarizedDark), 
-        new AppTheme(tSolarizedLight), 
+        new AppTheme(tMothershipDark), 
+        new AppTheme(tMothershipLight), 
         new AppTheme(tWarped));
     return themesList;
 }

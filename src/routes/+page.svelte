@@ -27,7 +27,7 @@
 
     // ===== Media =====
 	import { readFiles } from '$lib/media.readFiles';
-    import { removeSelected } from '$lib/media.removeSelected';
+    import { tryRemoveSelected } from '$lib/media.remove';
 	import { changeMasterOpacity, changeMasterVolume } from '$lib/media.controlMedia';
 	import { manageCanvasSounds } from '$lib/media.manageSounds';
 
@@ -43,7 +43,7 @@
     import { Menu } from '@tauri-apps/api/menu';
 
     // ===== Menus =====
-	import Loading from '$lib/menus/loading.svelte';
+	import Loading from '$lib/menus/modal.svelte';
 	import About from '$lib/menus/about.svelte';
 	import Settings from '$lib/menus/settings.svelte';
 
@@ -71,11 +71,12 @@
 	import type { CanvasObject } from '$lib/classes/CanvasObject.svelte';
 	import { setWindowMenu } from '$lib/util.appMenus.svelte';
 	import { CanvasListener } from '$lib/classes/CanvasListener.svelte';
+	import Modal from '$lib/menus/modal.svelte';
 
     // #####################
     // ##### VARIABLES #####
     // #####################
-
+    
     // ===== App Window =====
     const appWindow = getCurrentWindow();
 
@@ -109,7 +110,7 @@
             if(getUserSettings().proportionalScaleOnByDefault) R.setIsProportionalScaleOn(false);
             else R.setIsProportionalScaleOn(true);
         } 
-        else if (e.key == "Delete" || e.key == "Backspace") removeSelected();
+        else if (e.key == "Delete" || e.key == "Backspace") tryRemoveSelected();
         else if (e.key == "Alt") R.setIsInDeleteMode(true);
         else if (e.key == "s" && e.shiftKey && (e.metaKey || e.ctrlKey)) saveProject(true);
         else if (e.key == "s" && (e.metaKey || e.ctrlKey)) saveProject(false);
@@ -174,9 +175,7 @@
         sidebarHidden = !sidebarHidden;
     }
 
-    /**
-     * Update menu tab visuals
-     */
+    // Update menu tab visuals.
     $effect(()=>{
         isAboutMenuOpen ? 
             document.getElementById("about-button")?.setAttribute('class', 'adaptive selected') : 
@@ -192,6 +191,7 @@
     // ##### INITIALIZE #####
     // ######################
 
+    // Initialize the app.
     onMount( () => 
     {
         // Set minimum window size.
@@ -383,6 +383,7 @@
 
 </script>
 
+<!-- The Window -->
 <svelte:window
     onkeydown={onKeyDown}
     onkeyup={onKeyUp}
@@ -410,8 +411,8 @@
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconImageFile />{/if}
-        <span class="text-short">{$t('ui.addMediaShort')}</span>
-        <span class="text-full">{$t('ui.addMedia')}</span>
+        <span class="text-short">{$t('ui.titlebar.addMediaShort')}</span>
+        <span class="text-full">{$t('ui.titlebar.addMedia')}</span>
     </button>
 
     <!-- Save Button -->
@@ -422,8 +423,8 @@
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         {#if R.getIsSaving()}<IconLoading />{:else}<IconSave />{/if}
-        <span class="text-short">{$t('ui.saveShort')}</span>
-        <span class="text-full">{$t('ui.save')}</span>
+        <span class="text-short">{$t('ui.titlebar.saveShort')}</span>
+        <span class="text-full">{$t('ui.titlebar.save')}</span>
     </button>
 
     <!-- Save As Button -->
@@ -434,8 +435,8 @@
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         {#if R.getIsSaving()}<IconLoading />{:else}<IconSaveAs />{/if}
-        <span class="text-short">{$t('ui.saveAsShort')}</span>
-        <span class="text-full">{$t('ui.saveAs')}</span>
+        <span class="text-short">{$t('ui.titlebar.saveAsShort')}</span>
+        <span class="text-full">{$t('ui.titlebar.saveAs')}</span>
     </button>
 
     <!-- Open Project Button -->
@@ -446,8 +447,8 @@
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         {#if R.getIsLoading()}<IconLoading />{:else}<IconLoad />{/if}
-        <span class="text-short">{$t('ui.openProjectShort')}</span>
-        <span class="text-full">{$t('ui.openProject')}</span>
+        <span class="text-short">{$t('ui.titlebar.openProjectShort')}</span>
+        <span class="text-full">{$t('ui.titlebar.openProject')}</span>
     </button>
 
     <!-- New Project Button -->
@@ -458,8 +459,8 @@
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         <IconNew />
-        <span class="text-short">{$t('ui.newProjectShort')}</span>
-        <span class="text-full">{$t('ui.newProject')}</span>
+        <span class="text-short">{$t('ui.titlebar.newProjectShort')}</span>
+        <span class="text-full">{$t('ui.titlebar.newProject')}</span>
     </button>
 
     <!-- Settings Menu Button -->
@@ -470,8 +471,8 @@
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         <IconSettings />
-        <span class="text-short">{$t('ui.settingsShort')}</span>
-        <span class="text-full">{$t('ui.settings')}</span>
+        <span class="text-short">{$t('ui.titlebar.settingsShort')}</span>
+        <span class="text-full">{$t('ui.titlebar.settings')}</span>
     </button>
 
     <!-- About Menu Button -->
@@ -482,8 +483,8 @@
     onmouseout  = {()=>{help()}}
     onblur      = {()=>{}}>
         <IconAbout />
-        <span class="text-short">{$t('ui.aboutShort')}</span>
-        <span class="text-full">{$t('ui.about')}</span>
+        <span class="text-short">{$t('ui.titlebar.aboutShort')}</span>
+        <span class="text-full">{$t('ui.titlebar.about')}</span>
     </button>
 
     <!-- Spacer -->
@@ -585,9 +586,9 @@
             <div id="master-volume" aria-level="3" role="heading"
             onfocus     = {()=>{}} 
             onblur      = {()=>{}}
-            onwheel={(e) => { e.preventDefault(); changeMasterVolume(e); }}
+            onwheel     = {(e) => { e.preventDefault(); changeMasterVolume(e); }}
             onmouseout  = {()=>{help()}}
-            onmouseover = {()=>{help($t('help.mediaPanel.soundsVolume'))}}>
+            onmouseover = {()=>{help($t('help.mediaPanel.soundList.volume'))}}>
                 <div id="master-volume-bar" style={"height:" + (masterVolume * 100) + "%"}></div>
             </div>
 
@@ -596,22 +597,22 @@
             onfocus     = {()=>{}} 
             onblur      = {()=>{}}
             onmouseout  = {()=>{help()}}
-            onmouseover = {()=>{help($t('help.mediaPanel.soundsTitle'))}}>
-            {$t('ui.sounds')}
+            onmouseover = {()=>{help($t('help.mediaPanel.soundList.title'))}}>
+            {$t('ui.mediaPanel.sounds')}
             </span>
 
             <!-- Sound List Show/Hide Toggle -->
             <button class="browser-heading-button" id="hide-sounds-toggle" class:R.getSoundsHidden()
             onclick     = {()=>{
                 R.toggleSoundsHidden();
-                R.getSoundsHidden() ? help($t('help.mediaPanel.soundsShow')) : help($t('help.mediaPanel.soundsHide'))}}
+                R.getSoundsHidden() ? help($t('help.mediaPanel.soundList.show')) : help($t('help.mediaPanel.soundList.hide'))}}
             onfocus     = {()=>{}} 
             onblur      = {()=>{}}
             onmouseout  = {()=>{help()}}
             onmouseover = {()=>{
-                R.getSoundsHidden() ? help($t('help.mediaPanel.soundsShow')) : help($t('help.mediaPanel.soundsHide'))
+                R.getSoundsHidden() ? help($t('help.mediaPanel.soundList.show')) : help($t('help.mediaPanel.soundList.hide'))
             }}>
-                {#if R.getSoundsHidden()}<IconEye/>{:else}<IconEyeOff/>{/if}
+                {#if R.getSoundsHidden()}<IconEyeOff/>{:else}<IconEye/>{/if}
             </button>
         </div>
 
@@ -622,46 +623,6 @@
             {/each}
         </div>
     </div>
-
-    <!-- 
-    <div id="browser-shapes">
-        <div role="heading" class="heading" aria-level="2">
-
-            <div id="master-shapes-opacity" onwheel={(event) => {
-                event.preventDefault(); 
-                changeMasterOpacity(event);
-            }}>
-                <div id="master-shapes-opacity-bar" style={"height:" + (masterOpacity * 100) + "%"}></div>
-            </div>
-
-            <span role="heading" aria-level="3"
-            onfocus     = {()=>{}} 
-            onmouseover = {()=>{help($t('help.map.imagesTitle'))}}
-            onmouseout  = {()=>{help()}}
-            onblur      = {()=>{}}>
-                Shapes 
-            </span>
-
-            <button id="hide-images-toggle"  class:R.getImagesHidden()
-            onclick={()=>{
-                R.toggleImagesHidden()
-                R.getImagesHidden() ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))}}
-            onfocus={()=>{}} 
-            onblur={()=>{}}
-            onmouseout={()=>{help()}}
-            onmouseover = {()=>{
-                R.getImagesHidden() ? help($t('help.map.imagesShow')) : help($t('help.map.imagesHide'))
-            }}>
-                {#if R.getImagesHidden()}<IconEye/>{:else}<IconEyeOff/>{/if}
-            </button>
-
-            <button id="new-shape" onclick={()=>{
-            }}>+</button>
-        </div>
-        <div id="browser-shapes-list">
-            shapes
-        </div>
-    </div> -->
 
     <!-- The Images Browser -->
     <div id="browser-images">
@@ -675,31 +636,31 @@
             onblur      = {()=>{}}
             onwheel={(e) => { e.preventDefault(); changeMasterOpacity(e); }}
             onmouseout  = {()=>{help()}}
-            onmouseover = {()=>{help($t('help.mediaPanel.imagesOpacity'))}}>
+            onmouseover = {()=>{help($t('help.mediaPanel.imageList.opacity'))}}>
                 <div id="master-opacity-bar" style={"height:" + (masterOpacity * 100) + "%"}></div>
             </div>
 
             <!-- Image List Title -->
             <span role="heading" aria-level="3"
             onfocus     = {()=>{}} 
-            onmouseover = {()=>{help($t('help.mediaPanel.imagesTitle'))}}
+            onmouseover = {()=>{help($t('help.mediaPanel.imageList.title'))}}
             onmouseout  = {()=>{help()}}
             onblur      = {()=>{}}>
-                {$t('ui.images')}
+                {$t('ui.mediaPanel.images')}
             </span>
 
             <!-- Image List Show/Hide Toggle -->
             <button class="browser-heading-button" id="hide-images-toggle"  class:R.getImagesHidden()
             onclick={()=>{
                 R.toggleImagesHidden()
-                R.getImagesHidden() ? help($t('help.mediaPanel.imagesShow')) : help($t('help.mediaPanel.imagesHide'))}}
+                R.getImagesHidden() ? help($t('help.mediaPanel.imagelist.show')) : help($t('help.mediaPanel.imageList.hide'))}}
             onfocus={()=>{}} 
             onblur={()=>{}}
             onmouseout={()=>{help()}}
             onmouseover = {()=>{
-                R.getImagesHidden() ? help($t('help.mediaPanel.imagesShow')) : help($t('help.mediaPanel.imagesHide'))
+                R.getImagesHidden() ? help($t('help.mediaPanel.imageList.show')) : help($t('help.mediaPanel.imageList.hide'))
             }}>
-                {#if R.getImagesHidden()}<IconEye/>{:else}<IconEyeOff/>{/if}
+                {#if R.getImagesHidden()}<IconEyeOff/>{:else}<IconEye/>{/if}
             </button>
         </div>
 
@@ -738,8 +699,8 @@
 <About />
 
 
-<!-- Loading Menu -->
-<Loading />
+<!-- Modal Menu -->
+<Modal />
 
 
 <!-- Window Toolbar -->

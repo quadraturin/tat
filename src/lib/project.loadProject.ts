@@ -4,7 +4,7 @@ import { exists, readTextFile } from '@tauri-apps/plugin-fs';
 import { basename, join, sep } from '@tauri-apps/api/path';
 import * as R from '$lib/registry.svelte'
 import { clearProject } from './project.clearProject';
-import { closeModal, openLoadingModal } from './ui.modals';
+import { closeModal, openModal } from './ui.modals';
 import { newImage, newImageFromPath } from './media.loadImage';
 import { loadFile } from './media.loadFile';
 import { newSound } from './media.loadSound';
@@ -44,7 +44,7 @@ export async function loadProject()
 
         let projectName = await basename(R.getProjectPath() as string)
         R.setProjectName(projectName);
-        openLoadingModal(projectName);
+        openModal(projectName);
 
         let promises = new Array<Promise<any>>;
 

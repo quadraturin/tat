@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { t, locales, locale } from '$lib/util.localization';
+    import { t } from '$lib/util.localization';
 	import IconBluesky from "$lib/icons/iconBluesky.svelte";
 	import IconDiscord from "$lib/icons/iconDiscord.svelte";
 	import IconDriveThruRpg from "$lib/icons/iconDriveThruRPG.svelte";
@@ -14,126 +14,111 @@
 	import IconTumblr from "$lib/icons/iconTumblr.svelte";
 	import IconYouTube from "$lib/icons/iconYouTube.svelte";
     import IconBook from '$lib/icons/iconBook.svelte';
+	import { help } from '$lib/util.help';
 </script>
 
 <div class="menu" id="about">
     <div>
-        <h2>{$t('about.followTitle')}</h2>
+        <h2>{$t('ui.menu.about.follow.title')}</h2>
 
         <p class="links">
-            {$t('about.followWeb')}:
-            <a href="https://www.paradiso.zone" target="_blank" title="Paradiso Homepage"><IconParadiso/></a>
-            <a href="https://www.traaa.sh" target="_blank" title="TRAAA.SH RPG Blog"><IconTraaash/></a>
-            <a href="https://www.youtube.com/@ultraparadiso" target="_blank" title="YouTube"><IconYouTube/></a>
+            {$t('ui.menu.about.follow.web')}:
+            <a href="https://www.paradiso.zone" target="_blank"
+                onfocus     = {()=>{}} 
+                onblur      = {()=>{}}
+                onmouseover = {()=>{help($t('help.menu.about.follow.paradisoZone'))}}
+                onmouseout  = {()=>{help()}}><IconParadiso/></a>
+            <a href="https://www.traaa.sh" target="_blank" 
+                onfocus     = {()=>{}} 
+                onblur      = {()=>{}}
+                onmouseover = {()=>{help($t('help.menu.about.follow.traaash'))}}
+                onmouseout  = {()=>{help()}}><IconTraaash/></a>
+            <a href="https://www.youtube.com/@ultraparadiso" target="_blank" 
+                onfocus     = {()=>{}} 
+                onblur      = {()=>{}}
+                onmouseover = {()=>{help($t('help.menu.about.follow.youtube'))}}
+                onmouseout  = {()=>{help()}}><IconYouTube/></a>
             
-            {$t('about.followShop')}:
-            <a href="https://paradiso.works/" target="_blank" title="Paradiso Works Shop"><IconBook/></a>
-            <a href="https://ultraparadiso.itch.io/" target="_blank" title="Itch.io"><IconItch/></a>
-            <a href="https://www.drivethrurpg.com/browse/pub/23556/Paradiso" target="_blank" title="DriveThruRPG"><IconDriveThruRpg/></a>
+            {$t('ui.menu.about.follow.shop')}:
+            <a href="https://paradiso.works/" target="_blank" 
+                onfocus     = {()=>{}} 
+                onblur      = {()=>{}}
+                onmouseover = {()=>{help($t('help.menu.about.follow.paradisoWorks'))}}
+                onmouseout  = {()=>{help()}}><IconBook/></a>
+            <a href="https://ultraparadiso.itch.io/" target="_blank" 
+                onfocus     = {()=>{}} 
+                onblur      = {()=>{}}
+                onmouseover = {()=>{help($t('help.menu.about.follow.itchio'))}}
+                onmouseout  = {()=>{help()}}><IconItch/></a>
+            <a href="https://www.drivethrurpg.com/browse/pub/23556/Paradiso" target="_blank" 
+                onfocus     = {()=>{}} 
+                onblur      = {()=>{}}
+                onmouseover = {()=>{help($t('help.menu.about.follow.dtrpg'))}}
+                onmouseout  = {()=>{help()}}><IconDriveThruRpg/></a>
             
-            {$t('about.followSocial')}:
-            <a href="https://bsky.app/profile/traaa.sh" target="_blank" title="Bluesky"><IconBluesky/></a>
-            <a href="https://www.instagram.com/quadratraaash/" target="_blank" title="Instagram"><IconInstagram/></a>
-            <a href="https://www.tiktok.com/@paradiso102" target="_blank" title="TikTok"><IconTikTok/></a>
-            <a href="https://dice.camp/@quadra" target="_blank" title="Mastodon"><IconMastodon/></a>
-            <a href="https://www.tumblr.com/quadratrash" target="_blank" title="Tumblr"><IconTumblr/></a>
-            <a href="https://www.reddit.com/user/quadrazone/" target="_blank" title="Reddit"><IconReddit/></a>
-            <a href="https://github.com/quadraturin" target="_blank" title="GitHub"><IconGitHub/></a>
+            {$t('ui.menu.about.follow.social')}:
+            <a href="https://bsky.app/profile/traaa.sh" target="_blank" 
+                onfocus     = {()=>{}} 
+                onblur      = {()=>{}}
+                onmouseover = {()=>{help($t('help.menu.about.follow.bsky'))}}
+                onmouseout  = {()=>{help()}}><IconBluesky/></a>
+            <a href="https://www.instagram.com/quadratraaash/" target="_blank" 
+                onfocus     = {()=>{}} 
+                onblur      = {()=>{}}
+                onmouseover = {()=>{help($t('help.menu.about.follow.instagram'))}}
+                onmouseout  = {()=>{help()}}><IconInstagram/></a>
+            <a href="https://www.tiktok.com/@paradiso102" target="_blank" 
+                onfocus     = {()=>{}} 
+                onblur      = {()=>{}}
+                onmouseover = {()=>{help($t('help.menu.about.follow.tiktok'))}}
+                onmouseout  = {()=>{help()}}><IconTikTok/></a>
+            <a href="https://dice.camp/@quadra" target="_blank" 
+                onfocus     = {()=>{}} 
+                onblur      = {()=>{}}
+                onmouseover = {()=>{help($t('help.menu.about.follow.mastodon'))}}
+                onmouseout  = {()=>{help()}}><IconMastodon/></a>
+            <a href="https://www.tumblr.com/quadratrash" target="_blank" 
+                onfocus     = {()=>{}} 
+                onblur      = {()=>{}}
+                onmouseover = {()=>{help($t('help.menu.about.follow.tumblr'))}}
+                onmouseout  = {()=>{help()}}><IconTumblr/></a>
+            <a href="https://www.reddit.com/user/quadrazone/" target="_blank" 
+                onfocus     = {()=>{}} 
+                onblur      = {()=>{}}
+                onmouseover = {()=>{help($t('help.menu.about.follow.reddit'))}}
+                onmouseout  = {()=>{help()}}><IconReddit/></a>
+            <a href="https://github.com/quadraturin" target="_blank" 
+                onfocus     = {()=>{}} 
+                onblur      = {()=>{}}
+                onmouseover = {()=>{help($t('help.menu.about.follow.github'))}}
+                onmouseout  = {()=>{help()}}><IconGitHub/></a>
 
             <!--<a href="" target="_blank" title="Discord"><IconDiscord/></a>-->
         </p>
 
-        <h2>{$t('about.aboutTitle')}</h2>
+        <h2>{$t('ui.menu.about.about.title')}</h2>
         
-        <p><em>{$t('about.version')} 0.5.0</em></p>
+        <p><em>{$t('ui.menu.about.about.version')} 0.5.0</em></p>
         
-        <p>{@html $t('about.blurb')}</p>
+        <p>{@html $t('ui.menu.about.about.blurb')}</p>
         
-        <p>{@html $t('about.credits')}</p>
+        <p>{@html $t('ui.menu.about.about.credits')}</p>
         
-        <p>{@html $t('about.video')}</p>
+        <p>{@html $t('ui.menu.about.about.video')}</p>
 
         <p><a href="https://youtu.be/LQraTyCoS4E" target="_blank">https://youtu.be/LQraTyCoS4E</a></p>
 
-        <p>{@html $t('about.howToUse')}</p>
+        <p>{@html $t('ui.menu.about.about.howToUse')}</p>
 
-        <p>{@html $t('about.projectFiles')}</p>
+        <p>{@html $t('ui.menu.about.about.projectFiles')}</p>
 
-        <h2>{$t('about.changelogTitle')}</h2>
+        <h2>{$t('ui.menu.about.changelog.title')}</h2>
 
-        <h3>v0.5.0: Settings & localization (2024-12-29)</h3>
-        <ul>
-            <li>Added localization support</li>
-            <li>Reworked settings menu</li>
-            <li>About page links edits</li>
-            <li>Removed overscroll bounce affecting entire app</li>
-            <li>Upgraded to Svelte 5 and Sveltekit 2</li>
-            <li>Added capital letters</li>
-        </ul>
+       
 
-        <h3>v0.4.1: drag-and-drop (2024-12-22)</h3>
-        <ul>
-            <li>added drag-and-drop support for media files</li>
-            <li>fixed maximize button</li>
-        </ul>
+        <h2>{$t('ui.menu.about.licenses.title')}</h2>
 
-        <h3>v0.3.0: upgrades & tweaks (2024-12-19)</h3>
-        <ul>
-            <li>upgraded wrapper to tauri 2</li>
-            <li>added UI scroll sensitivity setting</li>
-            <li>updated social media links on about page</li>
-            <li>reset to default user settings now works properly</li>
-            <li>added show/hide toggles for images and sounds</li>
-            <li>nicer look for polygon middle anchors</li>
-        </ul>
-
-        <h3>v0.2.0: better for streaming (2024-01-29)</h3>
-        <ul>
-            <li>settings option to hide window contents from stream</li>
-            <li>fix for sometimes broken map at startup</li>
-            <li>opening settings or about menu now closes other menus</li>
-            <li>changelog corrections</li>
-        </ul>
-
-        <h3>v0.1.0: initial alpha release to kickstarter backers (2024-01-25)</h3>
-        <ul>
-            <li>create projects</li>
-            <li>save (+save as) projects: copies media files to folder, deletes unused media, writes project json</li>
-            <li>open projects</li>
-            <li>import images and sounds(supported image filetypes: .png, .gif, .jpg, .jpeg, .webp. supported audio filetypes: .wav, .m4a, .mp3, .ogg, .flac)</li>
-            <li>move images and sounds</li>
-            <li>resize images and sounds</li>
-            <li>proportionally resize images</li>
-            <li>move the sound listener pin</li>
-            <li>select images and sounds</li>
-            <li>delete selected images and sounds</li>
-            <li>lock and unlock images and sounds to prevent editing/moving</li>
-            <li>"about" menu</li>
-            <li>title bar layout adjusts to window size</li>
-            <li>confirm on exit when there are unsaved changes</li>
-            <li>localizable text</li>
-            <li>help text on hover in collapsible help bar</li>
-            <li>map zoom in and out</li>
-            <li>recenter on listener</li>
-            <li>sidebar ui lists sounds and images in stacking order</li>
-            <li>duplicate sounds and images</li>
-            <li>adjust opacity of images</li>
-            <li>adjust volume of sounds</li>
-            <li>adjust global volume</li>
-            <li>sound type - local: emanates from a point with falloff</li>
-            <li>sound type - area: constant volume within a polygon</li>
-            <li>sound type - global: audible everywhere</li>
-            <li>change sound type: cycle between local, area, and global</li>
-            <li>mute/unmute sounds</li>
-            <li>solo/unsolo sounds</li>
-            <li>pause/play sounds</li>
-            <li>interactive sound playback display</li>
-            <li>move listener with WASD</li>
-            <li>user settings: reverse scroll direction, listener movement speed, default to proportional image scaling</li>
-        </ul>
-
-        <h2>{$t('about.licensesTitle')}</h2>
-        <p>{@html $t('about.licenses')}</p>
+        <p>{@html $t('ui.menu.about.licenses.blurb')}</p>
 
 <h3>tauri</h3>
 <pre>MIT License

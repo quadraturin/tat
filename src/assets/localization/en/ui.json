@@ -1,19 +1,90 @@
-{
-    "addMedia": "Add media",
-    "addMediaShort": "Add",
-    "save": "Save",
-    "saveShort": "Save",
-    "saveAs": "Save as",
-    "saveAsShort": "Save as",
-    "openProject": "Open project",
-    "openProjectShort": "Open",
-    "newProject": "New project",
-    "newProjectShort": "New",
-    "about": "About",
-    "aboutShort": "About",
-    "settings": "Settings",
-    "settingsShort": "Settings",
-    "images": "Images",
-    "sounds": "Sounds",
-    "loading": "Loading..."
+{ 
+    "titlebar": 
+    {
+        "addMedia":         "Add media",
+        "addMediaShort":    "Add",
+        "save":             "Save",
+        "saveShort":        "Save",
+        "saveAs":           "Save as",
+        "saveAsShort":      "Save as",
+        "openProject":      "Open project",
+        "openProjectShort": "Open",
+        "newProject":       "New project",
+        "newProjectShort":  "New",
+        "about":            "About",
+        "aboutShort":       "About",
+        "settings":         "Settings",
+        "settingsShort":    "Settings"
+    },
+    "mediaPanel": 
+    {
+        "images":           "Images",
+        "sounds":           "Sounds"
+    },
+    "menu": 
+    {
+        "settings": 
+        {
+            "title":                "Settings",
+            "invertScroll":         "Invert UI scroll direction",
+            "scrollSensitivity":    "UI scroll sensitivity",
+            "proportionalScale":    "Proportional image scaling on by default (shift turns off)",
+            "listenerMoveSpeed":    "Listener movement speed (keyboard)",
+            "hideWindowContents":   "Hide window contents from stream",
+            "language":             "Language",
+            "theme":                "Theme",
+            "reset":                "Reset to defaults",
+            "autoSave":             "(All settings changes are immediately applied.)"
+        },
+        "about": 
+        {
+            "follow":
+            {
+                "title":    "Follow Paradiso",
+                "web":      "Web",
+                "shop":     "Shop",
+                "social":   "Social etc."
+            },
+            "about": 
+            {
+                "title":        "About tat",
+                "version":      "Version",
+                "blurb":        "tat is a tool for easily running environmental audio during your tabletop games.",
+                "credits":      "This tool was designed and programmed by Quadra for <a href='https://www.paradiso.zone' target='_blank'>PARADISO</a>, originally as a stretch goal reward for the <a href='https://www.kickstarter.com/projects/ultraparadiso/warped-beyond-recognition' target='_blank'>Warped Beyond Recognition Kickstarter</a>. The original prototype was programmed by <a href='https://galendrew.com/' target='_blank'>Galen Drew</a>.",
+                "video":        "To learn how to use tat, check out this video:",
+                "howToUse":     "Use \"add media\" to add images (maps, probably) and audio (ambience, soundtracks, etc.) to your project. You will then be able to arrange them as you like -- the assumed use is that you will overlay audio on areas of your maps that players should hear when they are in those areas. The map pin is the \"listener\": this represents where your players are. As your players move through environments in the game, drag the pin around on the map(s) you added, and the listener will automatically blend the audio sources that you have placed.",
+                "projectFiles": "When you save a project, it is saved as a folder containing a \"project.json\" file describing the project, a \"sounds\" folder, and an \"images\" folder, containing <em>copies</em> of the sounds and images you added, respectively. References to the original files are not saved."
+            },
+            "changelog":
+            {
+                "title":   "Changelog"
+            },
+            "licenses":
+            {
+                "title":    "Tech and licenses",
+                "blurb":    "tat is built on several technologies and tools:"
+            }    
+        },
+        "modal": 
+        {
+            "cancel":           "Cancel",
+            "confirm":          "Confirm",
+            "ok":               "OK",
+            "deleteUnique":
+            {
+                "title":        "Delete objects?",
+                "body":         "Removing the highlighted objects in the list below will result in their source files becoming unreferenced in the project! Any unreferenced source files will be deleted from the project folder when you save the project.",
+                "listTitle":    "Objects being deleted:",
+                "confirm":      "Delete objects"
+            }
+        },
+        "dialog": 
+        {
+            "confirmDeleteImage":           "This is the only instance of this image file in this project!\n\nIf you remove it and save the project, the image file will be deleted from the project folder.\n\nDo you still want to remove the image?",
+            "confirmDeleteSound":           "This is the only instance of this sound file in this project!\n\nIf you remove it and save the project, the sound file will be deleted from the project folder.\n\nDo you still want to remove the sound?",
+            "projectSaved":                 "Project saved!",
+            "closeProjectUnsavedChanges":   "Your project has unsaved changes. Are you sure you want to close this project and lose all unsaved changes?",
+            "quitUnsavedChanges":           "You have unsaved changes! are you sure you want to quit?"
+        }
+    }
 }

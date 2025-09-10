@@ -3,6 +3,7 @@ import type { CanvasImage } from "./classes/CanvasImage.svelte";
 import type { CanvasListener } from "./classes/CanvasListener.svelte";
 import type { CanvasSound } from "./classes/CanvasSound.svelte";
 import { debugWidgets, objectFillAlpha } from "./settings.appSettings";
+import { lerp } from "./util.lerp";
 import { Vector2D } from "./util.vectors";
 
 /** The infinite canvas. */
@@ -286,7 +287,7 @@ export class InfiniteCanvas {
 
       if (this.#wrap) {
         this.context.beginPath();
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c1");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c8");
         this.context.rect(0, 0, this.canvas.width, this.canvas.height);
         this.context.fill();
         this.context.closePath();
@@ -295,8 +296,8 @@ export class InfiniteCanvas {
         const height = this.canvas.clientHeight;
 
         // Grid styles
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c2");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c2");
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c9");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c9");
         this.context.lineWidth = 1;
         this.context.font = "10px monospace";
         this.context.beginPath();
@@ -400,16 +401,8 @@ export class InfiniteCanvas {
    * @param y Y position of the center of the circle.
    * @param r Radius of the circle.
    */
-  #drawCircle(x: number, y: number, r: number, selected:boolean=false, fill:boolean=false): void {
+  #drawCircle(x: number, y: number, r: number, fill:boolean=false): void {
     if (this.canvas && this.context) {
-      if (selected && this.#wrap){ 
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cF");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cF");
-      }
-      else if (this.#wrap) { 
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c8");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c8");
-      }
       this.context.beginPath();
       this.context.arc(
         x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
@@ -433,17 +426,9 @@ export class InfiniteCanvas {
    * @param width Width of the rectangle.
    * @param height Height of the rectangle.
    */
-  #drawRect(x: number, y: number, width: number, height: number, selected:boolean=false, fill:boolean=false) {
+  #drawRect(x: number, y: number, width: number, height: number, fill:boolean=false) {
     if (this.canvas && this.context) {
       this.context.beginPath();
-      if (selected && this.#wrap) {
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cF");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cF");
-      }
-      else if (this.#wrap){
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cF");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cF");
-      }
       this.context.rect(
         x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
         y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z,
@@ -464,17 +449,9 @@ export class InfiniteCanvas {
    * @param coords List of coordinates forming the points of the polygon.
    * @param selected Whether or not the polygon is selected.
    */
-  #drawPoly(coords:Vector2D[], selected:boolean=false, fill:boolean=false) {
+  #drawPoly(coords:Vector2D[], fill:boolean=false) {
     if (this.canvas && this.context) {
       this.context.beginPath();
-      if (selected && this.#wrap) {
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cF");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cF");
-      }
-      else if (this.#wrap) { 
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c8");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c8");
-      }
       this.context.moveTo(
         coords[0].x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z, 
         coords[0].y * this.#scale * this.#z + this.#offsetY * this.#scale * this.#z);
@@ -504,15 +481,8 @@ export class InfiniteCanvas {
    * @param selected If the object is selected.
    * @param fill If the handle should be drawn with a fill. Defaults to true.
    */
-  #drawHandle(x:number, y:number, r:number, selected:boolean, fill:boolean=true): void {
+  #drawHandle(x:number, y:number, r:number, fill:boolean=true): void {
     if (this.canvas && this.context) {
-      if (selected && this.#wrap) { 
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cF");;
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cF");;
-      } else if (this.#wrap) { 
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c8");;
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c8");;
-      }
       this.context.beginPath();
       this.context.arc(
         x * this.#scale * this.#z + this.#offsetX * this.#scale * this.#z,
@@ -533,8 +503,8 @@ export class InfiniteCanvas {
   #drawListener(l:CanvasListener, r: number): void {
     if (this.canvas && this.context) {
       if (this.#wrap) {
-        this.context.strokeStyle = l.selected ? this.#wrap.style.getPropertyValue("--cF") : this.#wrap.style.getPropertyValue("--c0");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cE");
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c9");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cA");
       }
       this.context.beginPath();
       this.context.arc(
@@ -555,8 +525,9 @@ export class InfiniteCanvas {
    */
   #drawLocalSound(snd:CanvasSound): void {
     if (this.canvas && this.context) {
+      this.#setDrawColor(snd.selected, snd.locked, snd == R.getHoveredCanvasObject() ? true : false);
       // Draw the circle.
-      this.#drawCircle(snd.x, snd.y, snd.radius, snd.selected, true);
+      this.#drawCircle(snd.x, snd.y, snd.radius, true);
       // Draw the center point.
       this.#drawHandle(snd.x, snd.y, 0.5, snd.selected);
       if (!snd.locked) {
@@ -567,8 +538,7 @@ export class InfiniteCanvas {
         this.#drawHandle(
           snd.x + Math.cos(snd.localHandleAngle)*snd.radius, 
           snd.y + Math.sin(snd.localHandleAngle)*snd.radius, 
-          R.getHandleSize(), 
-          snd.selected);
+          R.getHandleSize());
       }
     }
   }
@@ -580,8 +550,9 @@ export class InfiniteCanvas {
    */
   #drawAreaSound(snd:CanvasSound) {
     if (this.canvas && this.context) {
+      this.#setDrawColor(snd.selected, snd.locked, snd == R.getHoveredCanvasObject() ? true : false);
       // Draw the polygon.
-      this.#drawPoly(snd.areaCoords, snd.selected, true);
+      this.#drawPoly(snd.areaCoords, true);
       if (!snd.locked) {
         // Draw the name.
         this.context.textAlign = "center";
@@ -591,10 +562,10 @@ export class InfiniteCanvas {
         // Draw the handles.
         for (let i=0; i<snd.areaCoords.length; i++) {
           const next = i + 1 == snd.areaCoords.length ? 0 : i + 1;
-          this.#drawHandle(snd.areaCoords[i].x, snd.areaCoords[i].y, R.getHandleSize(), snd.selected);
+          this.#drawHandle(snd.areaCoords[i].x, snd.areaCoords[i].y, R.getHandleSize());
           const midX = (snd.areaCoords[next].x + snd.areaCoords[i].x)/2;
           const midY = (snd.areaCoords[next].y + snd.areaCoords[i].y)/2;
-          this.#drawHandle(midX, midY, R.getHandleSize(), snd.selected, false);
+          this.#drawHandle(midX, midY, R.getHandleSize(), false);
         }
       }
       if (debugWidgets) {
@@ -615,6 +586,7 @@ export class InfiniteCanvas {
    */
   #drawImage(img: CanvasImage): void {
     if (this.canvas && this.context) {
+      this.#setDrawColor(img.selected, img.locked, img == R.getHoveredCanvasObject() ? true : false);
       let imgX = this.toWindowX(img.x);
       let imgY = this.toWindowY(img.y);
       let imgW = img.width * this.#scale * this.#z;
@@ -634,16 +606,30 @@ export class InfiniteCanvas {
       this.context.restore();
       if (!img.locked) { 
         const handleSize = R.getHandleSize();
-        this.#drawRect(img.x, img.y, img.width, img.height, img.selected);
-        this.#drawHandle(img.x, img.y, handleSize, img.selected);
-        this.#drawHandle(img.x + img.width, img.y, handleSize, img.selected);
-        this.#drawHandle(img.x, img.y + img.height, handleSize, img.selected);
-        this.#drawHandle(img.x + img.width, img.y + img.height, handleSize, img.selected);
+        this.#drawRect(img.x, img.y, img.width, img.height);
+        this.#drawHandle(img.x, img.y, handleSize);
+        this.#drawHandle(img.x + img.width, img.y, handleSize);
+        this.#drawHandle(img.x, img.y + img.height, handleSize);
+        this.#drawHandle(img.x + img.width, img.y + img.height, handleSize);
         this.context.textAlign = "left";
         this.context.fillText(img.niceName, 
           this.toWindowX(img.x), 
           this.toWindowY(img.y) - R.getHandleSize()*2);
       }
+    }
+  }
+
+  #setDrawColor(selected:boolean, locked:boolean, hovered:boolean) {
+    if (this.#wrap && this.context)
+    if (locked) {
+      this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cD");
+      this.context.fillStyle = this.#wrap.style.getPropertyValue("--cD");
+    } else if (selected || hovered) {
+      this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
+      this.context.fillStyle = this.#wrap.style.getPropertyValue("--cC");
+    } else {
+      this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cB");
+      this.context.fillStyle = this.#wrap.style.getPropertyValue("--cB");
     }
   }
 

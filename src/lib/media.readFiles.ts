@@ -3,7 +3,7 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { imageFileTypes, soundFileTypes } from '$lib/settings.appSettings';
 import { loadFile } from "./media.loadFile";
 import { closeAllMenus } from './ui.menus';
-import { closeModal, openLoadingModal, updateLoadingModal } from './ui.modals';
+import { closeModal, openModal, updateModal } from './ui.modals';
 
 /**
  * read files and handle loading state.
@@ -36,7 +36,7 @@ export async function readFiles() {
             let promises = new Array<Promise<any>>;
 
             // open the loading modal.
-            openLoadingModal();
+            openModal();
             R.setIsLoading(true);
 
             // load each selected file.

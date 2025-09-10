@@ -139,6 +139,13 @@ export async function setupCtxMenuCanvasObject() {
 }
 
 
+let soundsToDelete:CanvasSound[] = [];
+export function getSoundsToDelete() { return soundsToDelete; }
+export function setSoundsToDelete(sounds:CanvasSound[]) { soundsToDelete = sounds; }
+let imagesToDelete:CanvasImage[] = [];
+export function getImagesToDelete() { return imagesToDelete; }
+export function setImagesToDelete(images:CanvasImage[]) { imagesToDelete = images; }
+
 
 // ####################
 // ##### 1. MOUSE #####
@@ -209,7 +216,7 @@ export async function setHoveredCanvasObject(obj:CanvasObject|null) {
     // Otherwise, build the help text based on what's hovered and its state.
     let h:string[] = [];
 
-    if (obj instanceof CanvasListener) {                    h.push(t.get('help.canvas.listener')); 
+    if (obj instanceof CanvasListener) {                    h.push(t.get('help.canvas.listener'), t.get('help.canvas.listenerKey')); 
     } else {
         if (obj instanceof CanvasImage) {                   h.push(t.get('help.canvas.image')); 
 
@@ -680,10 +687,16 @@ export let activeTheme = $state(new AppTheme());
 /** Set the theme. @param themeName The name of the theme to set. */
 export function setTheme(themeName:string) {
     const themesList = getThemesList();
+    let foundTheme = false;
     for (let i = 0; i < themesList.length; i++) {
         if(themeName == themesList[i].name){
             activeTheme.update(themesList[i]);
+            foundTheme = true;
+            break;
         }
+    }
+    if (!foundTheme){
+        activeTheme.update(themesList[0]);
     }
 }
 
