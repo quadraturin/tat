@@ -44,7 +44,6 @@ export async function loadProject()
 
         let projectName = await basename(R.getProjectPath() as string)
         R.setProjectName(projectName);
-        openModal(projectName);
 
         let promises = new Array<Promise<any>>;
 

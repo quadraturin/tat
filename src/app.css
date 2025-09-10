@@ -272,7 +272,7 @@ button.activated {
 }
 #controls button {
     margin-right: 4px;
-    width: 24px;
+    width: 22px;
 }
 #controls button svg {
     margin: 2px auto;
@@ -306,7 +306,7 @@ button.activated {
     border-radius: var(--br-l);
     z-index: 10000;
     position: absolute;
-    top: 78px;
+    top: 76px;
     left: 6px;
     width: 220px;
     font-size: 0.7rem;
@@ -316,7 +316,7 @@ button.activated {
     -ms-user-select: none;      /* IE 10+ */
     user-select: none;          /* Likely future */  
     cursor: default;
-    max-height: calc(100% - 104px);
+    max-height: calc(100% - 122px);
     overflow: scroll;
 }
 #browser::-webkit-scrollbar { background-color: transparent; }
@@ -371,6 +371,9 @@ button.activated {
     position: relative;
     border-radius: 0 var(--br-m) var(--br-m) 0;
 }
+#browser .item:last-child {
+    margin-bottom: 0;
+}
 #browser .item.hovered,
 #browser .item.hovered .volume-track 
 #browser .item:hover,
@@ -378,7 +381,7 @@ button.activated {
     background-color: var(--c7) !important;
 }
 #browser .item .volume-track:hover .volume-bar {
-    background-color: var(--c7);
+    background-color: var(--c4)
 }
 #browser .item.hidden {
     opacity: 0.5;
@@ -501,25 +504,26 @@ button.activated {
     vertical-align: top;
     border-radius: var(--br-m);
     margin-bottom: 4px;
+    background: var(--c2);
 }
 #master-volume-bar, #master-opacity-bar {
     width: 100%;
     position: absolute;
     bottom: 0;
     background-color: var(--c0);
+    border-radius: var(--br-s);
 }
 #master-volume:hover, #master-opacity:hover {
-    border-color: var(--c7);
-}
-#master-volume:hover #master-volume-bar, #master-opacity:hover #master-opacity-bar{
     background-color: var(--c7);
+}
+#master-volume:hover #master-volume-bar, #master-opacity:hover #master-opacity-bar {
+    background-color: var(--c4);
 }
 #browser .item.selected, #browser .item.selected .volume-track {
     background-color: var(--c7);
 }
 #browser .item.locked {
-    border: 1px dotted var(--c0);
-    background-color: transparent;
+    border: 1px dashed var(--c0);
     border-left-style: solid;
 }
 #browser .item-delete:hover {
@@ -858,6 +862,7 @@ input[type=range]::-moz-range-thumb {
     margin: 8px 24px;
 }
 #modal h3 {
+    font-size: 10pt;
     margin: 16px 24px 0;
     color: var(--c1);
     background-color: var(--c5);

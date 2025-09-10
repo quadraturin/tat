@@ -540,6 +540,7 @@ export class InfiniteCanvas {
           snd.y + Math.sin(snd.localHandleAngle)*snd.radius, 
           R.getHandleSize());
       }
+      this.context.setLineDash([]);
     }
   }
 
@@ -577,6 +578,7 @@ export class InfiniteCanvas {
           this.#drawCircle(snd.areaBounds[1].x,snd.areaBounds[0].y,1);
         }
       }
+      this.context.setLineDash([]);
     }
   }
 
@@ -616,6 +618,7 @@ export class InfiniteCanvas {
           this.toWindowX(img.x), 
           this.toWindowY(img.y) - R.getHandleSize()*2);
       }
+      this.context.setLineDash([]);
     }
   }
 
@@ -624,6 +627,7 @@ export class InfiniteCanvas {
     if (locked) {
       this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cD");
       this.context.fillStyle = this.#wrap.style.getPropertyValue("--cD");
+      this.context.setLineDash([3,3]);
     } else if (selected || hovered) {
       this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
       this.context.fillStyle = this.#wrap.style.getPropertyValue("--cC");

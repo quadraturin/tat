@@ -3,7 +3,6 @@ import { message, save } from "@tauri-apps/plugin-dialog";
 import { mkdir, writeTextFile, exists, readDir, remove, copyFile } from "@tauri-apps/plugin-fs";
 import { join, basename, sep } from "@tauri-apps/api/path";
 import { closeAllMenus } from './ui.menus';
-import { closeModal, openSavingModal } from './ui.modals';
 import { t } from './util.localization';
 import type { CanvasImage } from './classes/CanvasImage.svelte';
 import type { CanvasSound } from './classes/CanvasSound.svelte';
@@ -51,7 +50,6 @@ export async function saveProject(saveAs=false): Promise<boolean>
     // if they didn't back out, we are now in saving state
     R.setIsSaving(true);
     let newProjectName = await basename(filePath as string);
-    openSavingModal(newProjectName);
     let promises = new Array<Promise<any>>;
 
     // make a project directory with 'sounds' and 'images' directories inside
@@ -121,8 +119,7 @@ export async function saveProject(saveAs=false): Promise<boolean>
     await Promise.allSettled(promises);
     R.setIsSaving(false);
 
-    await message(t.get("dialog.projectSaved"));
-    closeModal();
+    await message(t.get("ui.menu.dialog.projectSaved"));
 
     return true;
 }

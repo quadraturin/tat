@@ -36,7 +36,6 @@ export async function readFiles() {
             let promises = new Array<Promise<any>>;
 
             // open the loading modal.
-            openModal();
             R.setIsLoading(true);
 
             // load each selected file.

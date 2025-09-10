@@ -2,6 +2,7 @@ import * as R from "$lib/registry.svelte"
 import * as S from "$lib/settings.appSettings"
 import type { CanvasImage } from "./classes/CanvasImage.svelte";
 import type { CanvasSound } from "./classes/CanvasSound.svelte";
+import { removeObject } from "./media.remove";
 import { shouldSaveProject } from "./project.shouldSaveProject";
 import { closeAllMenus } from "./ui.menus";
 
@@ -17,10 +18,10 @@ export async function clearProject():Promise<boolean> {
         // if they don't want to, back out.
         if (!await shouldSaveProject()) return false;
 
-        R.getImages().forEach(e => { /*removeImageByRect(e.rect, false, true);*/ });
+        R.getImages().forEach(obj => { removeObject(obj) });
         R.setImages(new Array<CanvasImage>);
 
-        R.getSounds().forEach(e => { /*removeSoundbyEmitter(e.emitter, false, true);*/ });
+        R.getSounds().forEach(obj => { removeObject(obj) });
         R.setSounds(new Array<CanvasSound>);
 
         R.setProjectPath('');

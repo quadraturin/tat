@@ -16,6 +16,7 @@ export function canvasDblClick(e:MouseEvent) {
     if (hov && hov != R.getListener()) { 
         hov.locked = !R.getHoveredCanvasObject()?.locked;
         if (hov.locked) hov.selected = false;
+        R.setProjectDirty()
     }
 }
 
@@ -376,6 +377,7 @@ export function canvasMouseMove(e:MouseEvent) {
                     }
                 }
             }
+            R.setProjectDirty();
         }
         // If not valid object clicked and not already panning, start panning.
         else if (!R.getPanning()){ 
