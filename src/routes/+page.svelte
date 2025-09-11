@@ -222,7 +222,7 @@
 
         // Handle the context menu
         document.addEventListener("contextmenu", (e) => {
-            //e.preventDefault();
+            e.preventDefault();
             if (R.getHoveredCanvasObject() instanceof CanvasListener) {
                 R.setupCtxMenuCanvasListener().then(() => {
                     R.ctxMenuCanvasListener.popup();
