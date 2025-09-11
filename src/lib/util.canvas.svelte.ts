@@ -524,8 +524,13 @@ export class InfiniteCanvas {
   #drawListener(l:CanvasListener, r: number): void {
     if (this.canvas && this.context) {
       if (this.#wrap) {
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--lst-b");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--lst-bg");
+        if (R.getHoveredCanvasObject() == l) {
+          this.context.strokeStyle = this.#wrap.style.getPropertyValue("--lst-hov-b");
+          this.context.fillStyle = this.#wrap.style.getPropertyValue("--lst-hov-bg");
+        } else {
+          this.context.strokeStyle = this.#wrap.style.getPropertyValue("--lst-b");
+          this.context.fillStyle = this.#wrap.style.getPropertyValue("--lst-bg");
+        }
       }
       this.context.beginPath();
       this.context.arc(

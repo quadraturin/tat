@@ -19,9 +19,10 @@ export function getThemesList():AppTheme[] {
     themesList.push(
         new AppTheme(tDefaultDark), 
         new AppTheme(tDefaultLight),
-        new AppTheme(tMothershipDark), 
-        new AppTheme(tMothershipLight), 
-        new AppTheme(tWarped));
+        //new AppTheme(tMothershipDark), 
+        //new AppTheme(tMothershipLight), 
+        //new AppTheme(tWarped)
+        );
     return themesList;
 }
 

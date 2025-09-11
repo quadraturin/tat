@@ -27,15 +27,33 @@ export class UserSettings {
     theme:string =                         $state({...defaults}.theme);
 
     update = (o:Object) => {
-        this.proportionalScaleOnByDefault = "proportionalScaleOnByDefault" in o ? o.proportionalScaleOnByDefault as boolean : defaults.proportionalScaleOnByDefault;
-        this.invertVolumeScroll =           "invertVolumeScroll" in o ?           o.invertVolumeScroll as boolean :           defaults.invertVolumeScroll;
-        this.listenerMoveSpeed =            "listenerMoveSpeed" in o ?            o.listenerMoveSpeed as number :             defaults.listenerMoveSpeed;
-        this.language =                     "language" in o ?                     o.language as string :                      defaults.language;
-        this.helpOpen =                     "helpOpen" in o ?                     o.helpOpen as boolean :                     defaults.helpOpen;
-        this.hideWindowContentsFromStream = "hideWindowContentsFromStream" in o ? o.hideWindowContentsFromStream as boolean : defaults.hideWindowContentsFromStream;
-        this.uiScrollSensitivity =          "uiScrollSensitivity" in o ?          o.uiScrollSensitivity as number :           defaults.uiScrollSensitivity;
-        this.soundsHidden =                 "soundsHidden" in o ?                 o.soundsHidden as boolean :                 defaults.soundsHidden;
-        this.imagesHidden =                 "imagesHidden" in o ?                 o.imagesHidden as boolean :                 defaults.imagesHidden;
-        this.theme =                        "theme" in o ?                        o.theme as string :                         defaults.theme;
+        this.proportionalScaleOnByDefault = "proportionalScaleOnByDefault" in o ? 
+            o.proportionalScaleOnByDefault as boolean : 
+            defaults.proportionalScaleOnByDefault;
+
+        this.invertVolumeScroll = "invertVolumeScroll" in o ? 
+            o.invertVolumeScroll as boolean : defaults.invertVolumeScroll;
+
+        this.listenerMoveSpeed = "listenerMoveSpeed" in o ? 
+            o.listenerMoveSpeed as number : defaults.listenerMoveSpeed;
+
+        this.language = "language" in o ? o.language as string : defaults.language;
+
+        this.helpOpen = "helpOpen" in o ? o.helpOpen as boolean : defaults.helpOpen;
+
+        this.hideWindowContentsFromStream = "hideWindowContentsFromStream" in o ? 
+            o.hideWindowContentsFromStream as boolean : 
+            defaults.hideWindowContentsFromStream;
+
+        this.uiScrollSensitivity = "uiScrollSensitivity" in o ? 
+            o.uiScrollSensitivity as number : defaults.uiScrollSensitivity;
+
+        this.soundsHidden = "soundsHidden" in o ? 
+            o.soundsHidden as boolean : defaults.soundsHidden;
+
+        this.imagesHidden = "imagesHidden" in o ? 
+            o.imagesHidden as boolean : defaults.imagesHidden;
+            
+        this.theme = "theme" in o ? o.theme as string : defaults.theme;
     }
 }

@@ -28,7 +28,9 @@ export async function saveProject(saveAs=false): Promise<boolean>
             view: {
                 x:R.getCanvas().viewportCenterInWorldSpace().x,
                 y:R.getCanvas().viewportCenterInWorldSpace().y,
-                z:R.getCanvas().getZoom()
+                z:R.getCanvas().getZoom(),
+                hideImages:R.getImagesHidden(),
+                hideSounds:R.getSoundsHidden()
             },
             listeners: [
                 {

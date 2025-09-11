@@ -680,10 +680,10 @@ export function setIsInDeleteMode(b:boolean) {isInDeleteMode = b; };
 
 // ===== 5.9 THEME =====
 
-/** The theme. */
+/** The active theme. */
 export let activeTheme:AppTheme = $state(new AppTheme());
 
-/** Set the theme. @param themeName The name of the theme to set. */
+/** Set the active theme. @param themeName The name of the theme to set. */
 export function setTheme(themeName:string) {
     const themesList = getThemesList();
     let foundTheme = false;
@@ -705,6 +705,7 @@ export function setTheme(themeName:string) {
 let imagesHidden = $state(false);
 export function getImagesHidden() { return imagesHidden; }
 export function toggleImagesHidden() { imagesHidden = !imagesHidden; }
+export function setImagesHidden(hide:boolean) { imagesHidden = hide; }
 
 
 // ===== 5.11 SOUNDS HIDDEN =====
@@ -712,6 +713,7 @@ export function toggleImagesHidden() { imagesHidden = !imagesHidden; }
 let soundsHidden = $state(false);
 export function getSoundsHidden() { return soundsHidden; }
 export function toggleSoundsHidden() { soundsHidden = !soundsHidden; }
+export function setSoundsHidden(hide:boolean) { soundsHidden = hide; }
 
 
 

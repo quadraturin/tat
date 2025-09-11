@@ -30,8 +30,6 @@ export function getUserSettingsObject() {
     settingsObj.helpOpen = userSettings.helpOpen;
     settingsObj.hideWindowContentsFromStream = userSettings.hideWindowContentsFromStream;
     settingsObj.uiScrollSensitivity = userSettings.uiScrollSensitivity;
-    settingsObj.soundsHidden = userSettings.soundsHidden;
-    settingsObj.imagesHidden = userSettings.imagesHidden;
     settingsObj.theme = userSettings.theme;
     return settingsObj;
 }

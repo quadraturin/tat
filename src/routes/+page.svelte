@@ -12,7 +12,7 @@
 
     // ===== Settings =====
     import * as S from '$lib/settings.appSettings';
-    import { getUserSettings } from '$lib/settings.userSettings.svelte'
+    import { getUserSettings, userSettings } from '$lib/settings.userSettings.svelte'
 	import { loadUserSettings } from '$lib/settings.loadUserSettings';
 
     // ===== Modules =====
@@ -72,6 +72,7 @@
 	import { setWindowMenu } from '$lib/util.appMenus.svelte';
 	import { CanvasListener } from '$lib/classes/CanvasListener.svelte';
 	import Modal from '$lib/menus/modal.svelte';
+	import { saveUserSettings } from '$lib/settings.saveUserSettings';
 
     // #####################
     // ##### VARIABLES #####
@@ -222,7 +223,7 @@
 
         // Handle the context menu
         document.addEventListener("contextmenu", (e) => {
-            e.preventDefault();
+            //e.preventDefault();
             if (R.getHoveredCanvasObject() instanceof CanvasListener) {
                 R.setupCtxMenuCanvasListener().then(() => {
                     R.ctxMenuCanvasListener.popup();
@@ -674,15 +675,15 @@
 
 
 <!-- Help Text Display Area -->
-<div id="help" role="banner" class="shadow" class:activated={isHelpActive}>
+<div id="help" role="banner" class="shadow" class:activated={getUserSettings().helpOpen}>
     
 
     <!-- Help Text Show / Hide Toggle -->
     <button id="help-toggle" 
-        onclick={()=>{R.toggleHelpActive()}}
+        onclick     = {()=>{ userSettings.helpOpen = !userSettings.helpOpen; saveUserSettings(); }}
         onfocus     = {()=>{}} 
-        onmouseover = {()=>{help($t('help.helpPanel.helpArea'))}}
-        onmouseout  = {()=>{help()}}
+        onmouseover = {()=>{ help($t('help.helpPanel.helpArea')); }}
+        onmouseout  = {()=>{ help() }}
         onblur      = {()=>{}}> i </button>
 
     <!-- Help Text -->

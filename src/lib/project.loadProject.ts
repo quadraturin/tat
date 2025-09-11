@@ -57,10 +57,13 @@ export async function loadProject()
                 }
             }
 
-            // Position the viewport.
-            if ('view' in project.maps[i]){
+            // Position the viewport & set object visibility.
+            if ('view' in project.maps[i]) {
                 R.getCanvas().setZoom(project.maps[i].view.z);
                 R.getCanvas().flyToPoint(project.maps[i].view.x, project.maps[i].view.y);
+                console.log(project.maps[i].view.hideImages);
+                R.setImagesHidden(project.maps[i].view.hideImages);
+                R.setSoundsHidden(project.maps[i].view.hideSounds);
             }
 
             // Find unique images.
