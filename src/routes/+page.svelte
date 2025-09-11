@@ -178,10 +178,10 @@
     // Update menu tab visuals.
     $effect(()=>{
         isAboutMenuOpen ? 
-            document.getElementById("about-button")?.setAttribute('class', 'adaptive selected') : 
+            document.getElementById("about-button")?.setAttribute('class', 'adaptive active') : 
             document.getElementById("about-button")?.setAttribute('class', 'adaptive');
         isSettingsMenuOpen ? 
-            document.getElementById("settings-button")?.setAttribute('class', 'adaptive selected') : 
+            document.getElementById("settings-button")?.setAttribute('class', 'adaptive active') : 
             document.getElementById("settings-button")?.setAttribute('class', 'adaptive');
     });
 
@@ -251,35 +251,35 @@
         // Draggable lists. Have to do it a roundabout way because
         // normal HTML dragover doesn't work if drag-and-drop files are
         // enabled in Tauri. :(
-        const browserSounds = document.getElementById("browser-sounds-list");
-        const browserImages = document.getElementById("browser-images-list");
-        let draggingItem: {element:HTMLElement|null, index:number} = {element:browserSounds, index:0};
+        const mediaSounds = document.getElementById("media-sounds-list");
+        const mediaImages = document.getElementById("media-images-list");
+        let draggingItem: {element:HTMLElement|null, index:number} = {element:mediaSounds, index:0};
         let dragIntervalID = 0;
         let draggingOverItem:{element:Element|null, above:boolean, index:number};
 
         // Sound list drag start
-        browserSounds?.addEventListener("dragstart", (e) => {
+        mediaSounds?.addEventListener("dragstart", (e) => {
             if (draggingItem) {
                 draggingItem.element = e.target as HTMLElement;
                 draggingItem.element.classList.add("dragging");
-                dragIntervalID = setInterval(()=>{dragOver(browserSounds)}, 15);
+                dragIntervalID = setInterval(()=>{dragOver(mediaSounds)}, 15);
             }
         });
 
         // Image list drag start
-        browserImages?.addEventListener("dragstart", (e) => {
+        mediaImages?.addEventListener("dragstart", (e) => {
             if (draggingItem) {
                 draggingItem.element = e.target as HTMLElement;
                 draggingItem.element.classList.add("dragging");
-                dragIntervalID = setInterval(()=>{dragOver(browserImages)}, 15);
+                dragIntervalID = setInterval(()=>{dragOver(mediaImages)}, 15);
             }
         });
 
         // Sound list drag end
-        browserSounds?.addEventListener("dragend", () => { dragEnd(browserSounds); });
+        mediaSounds?.addEventListener("dragend", () => { dragEnd(mediaSounds); });
 
         // Image list drag end
-        browserImages?.addEventListener("dragend", () => { dragEnd(browserImages); });
+        mediaImages?.addEventListener("dragend", () => { dragEnd(mediaImages); });
 
         /**
          * Handle the list item drag drop.
@@ -292,14 +292,14 @@
 
                 // Reset classes.
                 draggingItem.element?.classList.remove("dragging");
-                document.querySelectorAll("#browser .item")
+                document.querySelectorAll("#media .item")
                     .forEach(item => item.classList.remove("over", "insertAbove", "insertBelow"));
 
                 // If not dropping on anything or dropping an item on itself, return.
                 if (!draggingOverItem.element || draggingOverItem.element.id == draggingItem.element.id) return;
 
                 let regItems: Array<CanvasObject> = R.getImages();
-                if (list == browserSounds) regItems = R.getSounds();
+                if (list == mediaSounds) regItems = R.getSounds();
                 // Handle image item.
                 let item;
                 for (let i = 0; i < regItems.length; i++){
@@ -330,7 +330,7 @@
                 draggingOverItem = getDragOverElement(list);
 
                 // Reset classes.
-                document.querySelectorAll("#browser .item").forEach(item => item.classList.remove("over", "insertAbove", "insertBelow"));
+                document.querySelectorAll("#media .item").forEach(item => item.classList.remove("over", "insertAbove", "insertBelow"));
                 
                 // Add classes to the relevant item.
                 if (draggingItem && draggingOverItem) {
@@ -572,11 +572,11 @@
 </div>
 
 
-<!-- The Sidebar Media Browser -->
-<div id="browser" class="shadow" class:sidebarHidden>
+<!-- The Sidebar Media Lists -->
+<div id="media" class="shadow" class:sidebarHidden>
 
-    <!-- The Sounds Browser -->
-    <div id="browser-sounds">
+    <!-- The Sounds List -->
+    <div id="media-sounds">
 
         <!-- Sound List Header -->
         <div role="heading" class="heading" aria-level="2">
@@ -601,7 +601,7 @@
             </span>
 
             <!-- Sound List Show/Hide Toggle -->
-            <button class="browser-heading-button" id="hide-sounds-toggle" class:R.getSoundsHidden()
+            <button class="media-heading-button" id="hide-sounds-toggle" class:R.getSoundsHidden()
             onclick     = {()=>{
                 R.toggleSoundsHidden();
                 R.getSoundsHidden() ? help($t('help.mediaPanel.soundList.show')) : help($t('help.mediaPanel.soundList.hide'))}}
@@ -616,7 +616,7 @@
         </div>
 
         <!-- List Of Sounds -->
-         <div id="browser-sounds-list">
+         <div id="media-sounds-list">
             {#each soundList as item, i }
                 <SoundListItem item={item} i={i} />
             {/each}
@@ -624,7 +624,7 @@
     </div>
 
     <!-- The Images Browser -->
-    <div id="browser-images">
+    <div id="media-images">
 
         <!-- Images List Header -->
         <div role="heading" class="heading" aria-level="2">
@@ -649,7 +649,7 @@
             </span>
 
             <!-- Image List Show/Hide Toggle -->
-            <button class="browser-heading-button" id="hide-images-toggle"  class:R.getImagesHidden()
+            <button class="media-heading-button" id="hide-images-toggle"  class:R.getImagesHidden()
             onclick={()=>{
                 R.toggleImagesHidden()
                 R.getImagesHidden() ? help($t('help.mediaPanel.imagelist.show')) : help($t('help.mediaPanel.imageList.hide'))}}
@@ -664,7 +664,7 @@
         </div>
 
         <!-- The Images List -->
-        <div id="browser-images-list">
+        <div id="media-images-list">
             {#each imageList as item, i}
                 <ImageListItem item={item} i={i} />
             {/each}

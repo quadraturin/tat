@@ -1,97 +1,142 @@
-/**
- * App theme options.
- */
+export type appThemeInfo        = { name:string, description: string, author:string, url:string }
+export type appThemeItem    = { b:string, bg:string, fg:string,
+                        hov?: { b:string, bg:string, fg:string },
+                        act?: { b:string, bg:string, fg:string },
+                        lck?: { b:string, bg:string, fg:string } };
+
+/** App theme options. */
 type appThemeOptions = {
-    name?:string;
-    description?:string;
-    author?:string;
-    c0?:string;
-	c1?:string;
-	c2?:string;
-	c3?:string;
-    c4?:string;
-    c5?:string;
-    c6?:string;
-    c7?:string;
-    c8?:string;
-    c9?:string;
-    cA?:string;
-    cB?:string;
-    cC?:string;
-    cD?:string;
-    cE?:string;
-    cF?:string;
-    f0?:string;
+    // Theme metadata
+    info?:          appThemeInfo;
+
+    // Defaults, apply across theme
+    pnl?:           appThemeItem;
+    itm?:           appThemeItem;
+    btn?:           appThemeItem;
+    vol?:           appThemeItem;
+    trk?:           appThemeItem;
+    anc?:           appThemeItem;
+    cnv?:           appThemeItem;
+    obj?:           appThemeItem;
+    lst?:           appThemeItem;
+    wrn?:           appThemeItem;
+
+    // Individual panel overrides
+    pnl_tb?:        appThemeItem;
+    pnl_ctrl?:      appThemeItem;
+    pnl_media?:     appThemeItem;
+    pnl_help?:      appThemeItem;
+    pnl_menu?:      appThemeItem;
+
+    // Individual panel item overrides
+    itm_media?:     appThemeItem;
+    
+    // Individual button overrides
+    btn_tb?:        appThemeItem;
+    btn_ctrl?:      appThemeItem;
+    btn_media?:     appThemeItem;
+    btn_help?:      appThemeItem;
+    btn_menu?:      appThemeItem;
+    btn_tb_min?:    appThemeItem;
+    btn_tb_max?:    appThemeItem;
+    btn_tb_quit?:   appThemeItem;
+
+    // Individual volume overrides
+    vol_media?:     appThemeItem;
+    vol_itm_media?: appThemeItem;
+
+    // Individual track overrides
+    trk_itm_media?: appThemeItem;
+
+    // Individual object overrides
+    obj_img?:       appThemeItem;
+    obj_snd?:       appThemeItem;
 }
 
-/**
- * App Theme.
- */
+/** App Theme. */
 export class AppTheme {
-    name?:string = $state("");
-    description?:string = $state("");
-    author?:string = $state("");
-    c0?:string = $state("");
-	c1?:string = $state("");
-	c2?:string = $state("");
-	c3?:string = $state("");
-    c4?:string = $state("");
-    c5?:string = $state("");
-    c6?:string = $state("");
-    c7?:string = $state("");
-    c8?:string = $state("");
-    c9?:string = $state("");
-    cA?:string = $state("");
-    cB?:string = $state("");
-    cC?:string = $state("");
-    cD?:string = $state("");
-    cE?:string = $state("");
-    cF?:string = $state("");
-    f0?:string = $state("");
+    info:          appThemeInfo|null = $state(null);
+
+    pnl:           appThemeItem|null = $state(null);
+    itm:           appThemeItem|null = $state(null);
+    btn:           appThemeItem|null = $state(null);
+    vol:           appThemeItem|null = $state(null);
+    trk:           appThemeItem|null = $state(null);
+    anc:           appThemeItem|null = $state(null);
+    cnv:           appThemeItem|null = $state(null);
+    obj:           appThemeItem|null = $state(null);
+    lst:           appThemeItem|null = $state(null);
+    wrn:           appThemeItem|null = $state(null);
+
+    pnl_tb:        appThemeItem|null = $state(null);
+    pnl_ctrl:      appThemeItem|null = $state(null);
+    pnl_media:     appThemeItem|null = $state(null);
+    pnl_help:      appThemeItem|null = $state(null);
+    pnl_menu:      appThemeItem|null = $state(null);
+
+    itm_media:     appThemeItem|null = $state(null);
+    
+    btn_tb:        appThemeItem|null = $state(null);
+    btn_ctrl:      appThemeItem|null = $state(null);
+    btn_media:     appThemeItem|null = $state(null);
+    btn_help:      appThemeItem|null = $state(null);
+    btn_menu:      appThemeItem|null = $state(null);
+    btn_tb_min:    appThemeItem|null = $state(null);
+    btn_tb_max:    appThemeItem|null = $state(null);
+    btn_tb_quit:   appThemeItem|null = $state(null);
+
+    vol_media:     appThemeItem|null = $state(null);
+    vol_itm_media: appThemeItem|null = $state(null);
+
+    trk_itm_media: appThemeItem|null = $state(null);
+
+    obj_img:       appThemeItem|null = $state(null);
+    obj_snd:       appThemeItem|null = $state(null);
+
     constructor(themeJSON?:appThemeOptions) {
-        if (themeJSON){ 
-            if (themeJSON.name)        this.name =        themeJSON.name;
-            if (themeJSON.description) this.description = themeJSON.description;
-            if (themeJSON.author)      this.author =      themeJSON.author;
-            if (themeJSON.c0) this.c0 = themeJSON.c0;
-            if (themeJSON.c1) this.c1 = themeJSON.c1;
-            if (themeJSON.c2) this.c2 = themeJSON.c2;
-            if (themeJSON.c3) this.c3 = themeJSON.c3;
-            if (themeJSON.c4) this.c4 = themeJSON.c4;
-            if (themeJSON.c5) this.c5 = themeJSON.c5;
-            if (themeJSON.c6) this.c6 = themeJSON.c6;
-            if (themeJSON.c7) this.c7 = themeJSON.c7;
-            if (themeJSON.c8) this.c8 = themeJSON.c8;
-            if (themeJSON.c9) this.c9 = themeJSON.c9;
-            if (themeJSON.cA) this.cA = themeJSON.cA;
-            if (themeJSON.cB) this.cB = themeJSON.cB;
-            if (themeJSON.cC) this.cC = themeJSON.cC;
-            if (themeJSON.cD) this.cD = themeJSON.cD;
-            if (themeJSON.cE) this.cE = themeJSON.cE;
-            if (themeJSON.cF) this.cF = themeJSON.cF;
-            if (themeJSON.f0) this.f0 = themeJSON.f0;
-        }
+        if (!themeJSON) this.update();
+        else this.update(themeJSON);
     }
-    update(o:Object){
-        if("name" in o)        this.name =        o.name as string;
-        if("description" in o) this.description = o.description as string;
-        if("author" in o)      this.author =      o.author as string;
-        if("c0" in o) this.c0 = o.c0 as string;
-        if("c1" in o) this.c1 = o.c1 as string;
-        if("c2" in o) this.c2 = o.c2 as string;
-        if("c3" in o) this.c3 = o.c3 as string;
-        if("c4" in o) this.c4 = o.c4 as string;
-        if("c5" in o) this.c5 = o.c5 as string;
-        if("c6" in o) this.c6 = o.c6 as string;
-        if("c7" in o) this.c7 = o.c7 as string;
-        if("c8" in o) this.c8 = o.c8 as string;
-        if("c9" in o) this.c9 = o.c9 as string;
-        if("cA" in o) this.cA = o.cA as string;
-        if("cB" in o) this.cB = o.cB as string;
-        if("cC" in o) this.cC = o.cC as string;
-        if("cD" in o) this.cD = o.cD as string;
-        if("cE" in o) this.cE = o.cE as string;
-        if("cF" in o) this.cF = o.cF as string;
-        if("f0" in o) this.f0 = o.f0 as string;
+    update(o?:Object){
+        if (!o) o = {};
+        
+        this.info = "info" in o ? o.info as appThemeInfo : { name:"", description:"", author:"", url:"" };
+
+        this.pnl = "pnl" in o ? o.pnl as appThemeItem : { b:"", bg:"", fg:"" };
+        this.itm = "itm" in o ? o.itm as appThemeItem : { b:"", bg:"", fg:"" };
+        this.btn = "btn" in o ? o.btn as appThemeItem : { b:"", bg:"", fg:"" };
+        this.vol = "vol" in o ? o.vol as appThemeItem : { b:"", bg:"", fg:"" };
+        this.trk = "trk" in o ? o.trk as appThemeItem : { b:"", bg:"", fg:"" };
+        this.anc = "anc" in o ? o.anc as appThemeItem : { b:"", bg:"", fg:"" };
+        this.cnv = "cnv" in o ? o.cnv as appThemeItem : { b:"", bg:"", fg:"" };
+        this.obj = "obj" in o ? o.obj as appThemeItem : { b:"", bg:"", fg:"" };
+        this.lst = "lst" in o ? o.lst as appThemeItem : { b:"", bg:"", fg:"" };
+        this.wrn = "wrn" in o ? o.wrn as appThemeItem : { b:"", bg:"", fg:"" };
+
+        this.pnl_tb     = "pnl_tb"    in o ? o.pnl_tb    as appThemeItem : this.pnl;
+        this.pnl_ctrl   = "pnl_ctrl"  in o ? o.pnl_ctrl  as appThemeItem : this.pnl;
+        this.pnl_media  = "pnl_media" in o ? o.pnl_media as appThemeItem : this.pnl;
+        this.pnl_help   = "pnl_help"  in o ? o.pnl_help  as appThemeItem : this.pnl;
+        this.pnl_menu   = "pnl_menu"  in o ? o.pnl_menu  as appThemeItem : this.pnl;
+        
+        this.itm_media  = "itm_media" in o ? o.itm_media as appThemeItem : this.itm;
+        
+        this.btn_tb     = "btn_tb"    in o ? o.btn_tb    as appThemeItem : this.btn;
+        this.btn_ctrl   = "btn_ctrl"  in o ? o.btn_ctrl  as appThemeItem : this.btn;
+        this.btn_media  = "btn_media" in o ? o.btn_media as appThemeItem : this.btn;
+        this.btn_help   = "btn_help"  in o ? o.btn_help  as appThemeItem : this.btn;
+        this.btn_menu   = "btn_menu"  in o ? o.btn_menu  as appThemeItem : this.btn;
+        
+        this.btn_tb_min  = "btn_tb_min"  in o ? o.btn_tb_min  as appThemeItem : this.btn;
+        this.btn_tb_max  = "btn_tb_max"  in o ? o.btn_tb_max  as appThemeItem : this.btn;
+        this.btn_tb_quit = "btn_tb_quit" in o ? o.btn_tb_quit as appThemeItem : this.btn;
+        
+        this.vol_media     = "vol_media"     in o ? o.vol_media     as appThemeItem : this.vol;
+        this.vol_itm_media = "vol_itm_media" in o ? o.vol_itm_media as appThemeItem : this.vol;
+
+        this.trk_itm_media = "trk_itm_media" in o ? o.trk_itm_media as appThemeItem : this.trk;
+
+        this.obj_img = "obj_img" in o ? o.obj_img as appThemeItem : this.obj;
+        this.obj_snd = "obj_snd" in o ? o.obj_snd as appThemeItem : this.obj;
     }
 }

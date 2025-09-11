@@ -3,8 +3,12 @@ import type { CanvasImage } from "./classes/CanvasImage.svelte";
 import type { CanvasListener } from "./classes/CanvasListener.svelte";
 import type { CanvasSound } from "./classes/CanvasSound.svelte";
 import { debugWidgets, objectFillAlpha } from "./settings.appSettings";
-import { lerp } from "./util.lerp";
 import { Vector2D } from "./util.vectors";
+
+enum ObjectType {
+  Sound = "sound",
+  Image = "image"
+}
 
 /** The infinite canvas. */
 export class InfiniteCanvas {
@@ -304,7 +308,7 @@ export class InfiniteCanvas {
 
       if (this.#wrap) {
         this.context.beginPath();
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c8");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cnv-bg");
         this.context.rect(0, 0, this.canvas.width, this.canvas.height);
         this.context.fill();
         this.context.closePath();
@@ -313,8 +317,8 @@ export class InfiniteCanvas {
         const height = this.canvas.clientHeight;
 
         // Grid styles
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c9");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--c9");
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cnv-fg");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cnv-fg");
         this.context.lineWidth = 1;
         this.context.font = "10px monospace";
         this.context.beginPath();
@@ -520,8 +524,8 @@ export class InfiniteCanvas {
   #drawListener(l:CanvasListener, r: number): void {
     if (this.canvas && this.context) {
       if (this.#wrap) {
-        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--c9");
-        this.context.fillStyle = this.#wrap.style.getPropertyValue("--cA");
+        this.context.strokeStyle = this.#wrap.style.getPropertyValue("--lst-b");
+        this.context.fillStyle = this.#wrap.style.getPropertyValue("--lst-bg");
       }
       this.context.beginPath();
       this.context.arc(
@@ -542,7 +546,7 @@ export class InfiniteCanvas {
    */
   #drawLocalSound(snd:CanvasSound): void {
     if (this.canvas && this.context) {
-      this.#setDrawColor(snd.selected, snd.locked, snd == R.getHoveredCanvasObject() ? true : false);
+      this.#setDrawColor(ObjectType.Sound, snd.selected, snd.locked, snd == R.getHoveredCanvasObject() ? true : false);
       // Draw the circle.
       this.#drawCircle(snd.x, snd.y, snd.radius, true);
       // Draw the center point.
@@ -568,7 +572,7 @@ export class InfiniteCanvas {
    */
   #drawAreaSound(snd:CanvasSound) {
     if (this.canvas && this.context) {
-      this.#setDrawColor(snd.selected, snd.locked, snd == R.getHoveredCanvasObject() ? true : false);
+      this.#setDrawColor(ObjectType.Sound, snd.selected, snd.locked, snd == R.getHoveredCanvasObject() ? true : false);
       // Draw the polygon.
       this.#drawPoly(snd.areaCoords, true);
       if (!snd.locked) {
@@ -605,7 +609,7 @@ export class InfiniteCanvas {
    */
   #drawImage(img: CanvasImage): void {
     if (this.canvas && this.context) {
-      this.#setDrawColor(img.selected, img.locked, img == R.getHoveredCanvasObject() ? true : false);
+      this.#setDrawColor(ObjectType.Image, img.selected, img.locked, img == R.getHoveredCanvasObject() ? true : false);
       let imgX = this.toWindowX(img.x);
       let imgY = this.toWindowY(img.y);
       let imgW = img.width * this.#scale * this.#z;
@@ -639,21 +643,40 @@ export class InfiniteCanvas {
     }
   }
 
-  #setDrawColor(selected:boolean, locked:boolean, hovered:boolean) {
-    if (this.#wrap && this.context)
-    if (locked) {
-      this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cE");
-      this.context.fillStyle = this.#wrap.style.getPropertyValue("--cE");
-      this.context.setLineDash([3,3]);
-    } else if (selected) {
-      this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cD");
-      this.context.fillStyle = this.#wrap.style.getPropertyValue("--cD");
-    } else if (hovered) {
-      this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cC");
-      this.context.fillStyle = this.#wrap.style.getPropertyValue("--cC");
-    } else {
-      this.context.strokeStyle = this.#wrap.style.getPropertyValue("--cB");
-      this.context.fillStyle = this.#wrap.style.getPropertyValue("--cB");
+  #setDrawColor(objType:ObjectType, selected:boolean, locked:boolean, hovered:boolean) {
+    if (this.#wrap && this.context) {
+      if (objType == ObjectType.Image) {
+        if (locked) {
+          this.context.strokeStyle = this.#wrap.style.getPropertyValue("--obj-img-lck-b");
+          this.context.fillStyle = this.#wrap.style.getPropertyValue("--obj-img-lck-bg");
+          this.context.setLineDash([3,3]);
+        } else if (selected) {
+          this.context.strokeStyle = this.#wrap.style.getPropertyValue("--obj-img-act-b");
+          this.context.fillStyle = this.#wrap.style.getPropertyValue("--obj-img-act-bg");
+        } else if (hovered) {
+          this.context.strokeStyle = this.#wrap.style.getPropertyValue("--obj-img-hov-b");
+          this.context.fillStyle = this.#wrap.style.getPropertyValue("--obj-img-hov-bg");
+        } else {
+          this.context.strokeStyle = this.#wrap.style.getPropertyValue("--obj-img-b");
+          this.context.fillStyle = this.#wrap.style.getPropertyValue("--obj-img-bg");
+        }
+      }
+      else if (objType == ObjectType.Sound) {
+        if (locked) {
+          this.context.strokeStyle = this.#wrap.style.getPropertyValue("--obj-snd-lck-b");
+          this.context.fillStyle = this.#wrap.style.getPropertyValue("--obj-snd-lck-bg");
+          this.context.setLineDash([3,3]);
+        } else if (selected) {
+          this.context.strokeStyle = this.#wrap.style.getPropertyValue("--obj-snd-act-b");
+          this.context.fillStyle = this.#wrap.style.getPropertyValue("--obj-snd-act-bg");
+        } else if (hovered) {
+          this.context.strokeStyle = this.#wrap.style.getPropertyValue("--obj-snd-hov-b");
+          this.context.fillStyle = this.#wrap.style.getPropertyValue("--obj-snd-hov-bg");
+        } else {
+          this.context.strokeStyle = this.#wrap.style.getPropertyValue("--obj-snd-b");
+          this.context.fillStyle = this.#wrap.style.getPropertyValue("--obj-snd-bg");
+        }
+      }
     }
   }
 

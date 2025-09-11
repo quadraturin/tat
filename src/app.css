@@ -3,12 +3,8 @@
    #################################################
    https://www.joshwcomeau.com/css/custom-css-reset/ */
 
-*, *::before, *::after {
-    box-sizing: border-box;
-}
-* {
-margin: 0;
-}
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
 html, body {
     margin: 0 !important;
     padding: 0 !important;
@@ -18,18 +14,12 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 img, picture, video, canvas, svg {
-display: block;
-/*max-width: 100%; <- broke leaflet custom panes*/
+    display: block;
+    /*max-width: 100%; <- broke leaflet custom panes*/
 }
-input, button, textarea, select {
-font: inherit;
-}
-p, h1, h2, h3, h4, h5, h6 {
-overflow-wrap: break-word;
-}
-html {
-isolation: isolate;
-}
+input, button, textarea, select { font: inherit; }
+p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
+html { isolation: isolate; }
 pre { font-size: 0.8em; }
 
 
@@ -40,30 +30,157 @@ pre { font-size: 0.8em; }
 :root {
     height: 100%;
     overscroll-behavior: none;
-    /* debug theme: value */
-    --c0: #252525; /* Window borders */
-    --c1: #111; /* Canvas background */
-    --c2: #222; /* Canvas grid lines */
-    --c4: #333; /* UI background */
-    --c5: #444; /* UI foreground */
-    --c6: #555; /* UI button */
-    --c7: #666; /* UI button highlight */
-    --c7: #777; /* UI text */
-    --c8: #888; /* Sounds */
-    --c9: #999; /* Title text */
-    --cA: #aaa;
-    --cB: #bbb;
-    --cC: #ccc;
-    --cD: #ddd; 
-    --cE: #eee; /* Listener */
-    --cF: #fff; /* Selected */
 
+    /* Warning */
+    --wrn-bg: #fff;
+    --wrn-fg: #fff;
+    --wrn-hov-bg: #fff;
+    --wrn-hov-fg: #fff;
+
+    /* Canvas */
+    --cnv-b: #fff;
+    --cnv-bg: #fff;
+    --cnv-fg: #fff;
+
+    /* Anchors */
+    --anc-b: #fff;
+    --anc-bg: #fff;
+    --anc-fg: #fff;
+    --anc-hov-b: #fff;
+    --anc-hov-bg: #fff;
+    --anc-hov-fg: #fff;
+    --anc-act-b: #fff;
+    --anc-act-bg: #fff;
+    --anc-act-fg: #fff;
+    --anc-lck-b: #fff;
+    --anc-lck-bg: #fff;
+    --anc-lck-fg: #fff;
+
+    /* Titlebar Panel */
+    --pnl-tb-b:  #fff;
+    --pnl-tb-bg: #fff;
+    --pnl-tb-fg: #fff;
+    /* Control Panel */
+    --pnl-ctrl-b:  #fff;
+    --pnl-ctrl-bg: #fff;
+    --pnl-ctrl-fg: #fff;
+    /* Media Panel */
+    --pnl-media-b:  #fff;
+    --pnl-media-bg: #fff;
+    --pnl-media-fg: #fff;
+    /* Help Panel*/
+    --pnl-help-b:  #fff;
+    --pnl-help-bg: #fff;
+    --pnl-help-fg: #fff;
+    /* Menu Panel*/
+    --pnl-menu-b:  #fff;
+    --pnl-menu-bg: #fff;
+    --pnl-menu-fg: #fff;
+
+    /* Media Item Panel */
+    --itm-media-b:      #fff;
+    --itm-media-bg:     #fff;
+    --itm-media-fg:     #fff;
+    --itm-media-hov-b:  #fff;
+    --itm-media-hov-bg: #fff;
+    --itm-media-hov-fg: #fff;
+    --itm-media-act-b:  #fff;
+    --itm-media-act-bg: #fff;
+    --itm-media-act-fg: #fff;
+    --itm-media-lck-b:  #fff;
+    --itm-media-lck-bg: #fff;
+    --itm-media-lck-fg: #fff;
+
+    /* Titlebar Buttons */
+    --btn-tb-b:      #fff;
+    --btn-tb-bg:     #fff;
+    --btn-tb-fg:     #fff;
+    --btn-tb-hov-b:  #fff;
+    --btn-tb-hov-bg: #fff;
+    --btn-tb-hov-fg: #fff;
+    --btn-tb-act-b:  #fff;
+    --btn-tb-act-bg: #fff;
+    --btn-tb-act-fg: #fff;
+
+    /* Titlebar Minimize Button */
+    --btn-tb-min-b:       #fff;
+    --btn-tb-min-bg:      #fff;
+    --btn-tb-min-fg:      #fff;
+    --btn-tb-min-hov-b:   #fff;
+    --btn-tb-min-hov-bg:  #fff;
+    --btn-tb-min-hov-fg:  #fff;
+
+    /* Titlebar Maximize Button */
+    --btn-tb-max-b:       #fff;
+    --btn-tb-max-bg:      #fff;
+    --btn-tb-max-fg:      #fff;
+    --btn-tb-max-hov-b:   #fff;
+    --btn-tb-max-hov-bg:  #fff;
+    --btn-tb-max-hov-fg:  #fff;
+
+    /* Titlebar Quit Button */
+    --btn-tb-quit-b:      #fff;
+    --btn-tb-quit-bg:     #fff;
+    --btn-tb-quit-fg:     #fff;
+    --btn-tb-quit-hov-b:  #fff;
+    --btn-tb-quit-hov-bg: #fff;
+    --btn-tb-quit-hov-fg: #fff;
+
+    /* Control Panel Buttons */
+    --btn-ctrl-b:      #fff;
+    --btn-ctrl-bg:     #fff;
+    --btn-ctrl-fg:     #fff;
+    --btn-ctrl-hov-b:  #fff;
+    --btn-ctrl-hov-bg: #fff;
+    --btn-ctrl-hov-fg: #fff;
+    --btn-ctrl-act-b:  #fff;
+    --btn-ctrl-act-bg: #fff;
+    --btn-ctrl-act-fg: #fff;
+
+    /* Media Panel Buttons */
+    --btn-media-b:      #fff;
+    --btn-media-bg:     #fff;
+    --btn-media-fg:     #fff;
+    --btn-media-hov-b:  #fff;
+    --btn-media-hov-bg: #fff;
+    --btn-media-hov-fg: #fff;
+    --btn-media-act-b:  #fff;
+    --btn-media-act-bg: #fff;
+    --btn-media-act-fg: #fff;
+
+    /* Help Panel Buttons */
+    --btn-help-b:      #fff;
+    --btn-help-bg:     #fff;
+    --btn-help-fg:     #fff;
+    --btn-help-hov-b:  #fff;
+    --btn-help-hov-bg: #fff;
+    --btn-help-hov-fg: #fff;
+    --btn-help-act-b:  #fff;
+    --btn-help-act-bg: #fff;
+    --btn-help-act-fg: #fff;
+
+    /* Menu Panel Buttons */
+    --btn-menu-b:      #fff;
+    --btn-menu-bg:     #fff;
+    --btn-menu-fg:     #fff;
+    --btn-menu-hov-b:  #fff;
+    --btn-menu-hov-bg: #fff;
+    --btn-menu-hov-fg: #fff;
+    --btn-menu-act-b:  #fff;
+    --btn-menu-act-bg: #fff;
+    --btn-menu-act-fg: #fff;
+
+    /* Audio Progress Track */
+    --trk-itm-media-bg: #fff;
+    --trk-itm-media-fg: #fff;
+
+    /* Font */
     --f0: monospace;
     
-    --title-bar-height: 34px;
-    --br-m: 6px;
-    --br-l: calc(var(--br-m) + 4px);
-    --br-s: calc(var(--br-m) - 2px);
+    --tb-h:   34px;
+    --br-m:   6px;
+    --br-l:   calc(var(--br-m) + 4px);
+    --br-s:   calc(var(--br-m) - 2px);
     --br-win: 12px;
 }
 
@@ -88,8 +205,6 @@ body {
     overflow: hidden;
 }
 .container {
-    background-color: var(--c0);
-    border: 1px solid var(--c0);
     touch-action: none;
     user-select: none;
     position: absolute;
@@ -101,9 +216,8 @@ body {
     box-shadow: 0 2px 5px rgba(0,0,0,0.25); 
 }
 button {
-    border: 1px solid var(--c0);
-    background-color: var(--c4);
-    color: var(--c6);
+    border-width: 1px;
+    border-style: solid;
     border-radius: var(--br-m);
     padding: 0;
 }
@@ -124,31 +238,286 @@ button.r {
     border-bottom-left-radius: 0 !important;
     margin-left: 0 !important;
 }
-button.selected {
-    background-color: var(--c6);
-}
-button:hover {
-    background-color: var(--c5);
-}
-button.activated {
-    background-color: var(--c5);
-}
 #help-text {
     border-bottom: none;
     border-right: none;
 }
+#titlebar, #controls, #media, .container,
+#help-text, .menu, .item, #modal,
+.volume-track, #master-volume, #master-opacity,
+#media span.item-pause {
+    border: 1px solid white;
+}
 
+/* #################
+   ##### Theme #####
+   ################# */
+
+/* Canvas */
+.container {    
+    border-color:     var(--cnv-b); }
+
+/* Panels */
+#titlebar {
+    border-color:     var(--pnl-tb-b);
+    background-color: var(--pnl-tb-bg);
+    color:            var(--pnl-tb-fg); }
+#controls {
+    border-color:     var(--pnl-ctrl-b);
+    background-color: var(--pnl-ctrl-bg);
+    color:            var(--pnl-ctrl-fg); }
+#media {
+    border-color:     var(--pnl-media-b);
+    background-color: var(--pnl-media-bg);
+    color:            var(--pnl-media-fg); }
+#help-text {
+    border-color:     var(--pnl-help-b);
+    background-color: var(--pnl-help-bg);
+    color:            var(--pnl-help-fg); }
+.menu, #modal { 
+    border-color:       var(--pnl-menu-b);
+    background-color:   var(--pnl-menu-bg);
+    color:              var(--pnl-menu-fg); }
+
+/* Menu Styles */
+.menu h2, #modal h3 { 
+    background-color:   var(--pnl-menu-fg); 
+    color:              var(--pnl-menu-bg); }
+#modal-title {
+    border-bottom: 1px solid var(--pnl-menu-b); }
+#modal li {
+    border: 1px solid var(--pnl-menu-b); }
+#modal li:first-child {
+    border-top: 1px solid var(--pnl-menu-b); }
+#modal li.unique {
+    background-color: var(--anc-act-fg);
+    color:            var(--pnl-menu-bg); }
+.menu a, #modal a {
+    color:            var(--anc-fg); }
+.menu a:hover, #modal a:hover {
+    color:            var(--anc-hov-fg); }
+.menu input[type=checkbox]::after, 
+.menu input[type=checkbox]:hover::after,
+.menu input[type=range]::-webkit-slider-thumb {
+    background-color: var(--anc-fg); }
+.rangeValue {
+    background-color: var(--anc-fg); 
+    color: var(--pnl-menu-bg); }
+.menu input[type=range], 
+.menu select { 
+    color: var(--anc-fg); }
+.menu input[type=checkbox], 
+.menu input[type=range], select {
+    border: 1px solid var(--anc-fg) !important; }
+.rangeValue::after {
+    border-right: 3px solid var(--anc-fg); }
+.setting button {
+    border-color: var(--btn-menu-b);
+    color: var(--btn-menu-fg);
+    background-color: var(--btn-menu-bg); }
+.setting button:hover {
+    border-color: var(--btn-menu-hov-b);
+    color: var(--btn-menu-hov-fg);
+    background-color: var(--btn-menu-hov-bg); }
+.setting.changed{
+    color: var(--anc-act-fg); }
+.setting.changed input {
+    border-color: var(--anc-act-fg) !important; }
+.setting.changed input[type=checkbox]::after, 
+.setting.changed input[type=checkbox]:hover::after,
+.setting.changed input[type=range]::-webkit-slider-thumb {
+    background-color: var(--anc-act-fg) !important; }
+.setting.changed .rangeValue {
+    background-color: var(--anc-act-fg) !important; }
+.setting.changed .rangeValue::after {
+    border-right-color: var(--anc-act-fg) !important; }
+
+/* Items */
+#media .item { 
+    border-color:     var(--itm-media-b);
+    background-color: var(--itm-media-bg);
+    color:            var(--itm-media-fg); }
+#media .item .item-name {
+    color:            var(--itm-media-fg); }  
+#media .item:hover, #media .item.hovered {    
+    border-color:     var(--itm-media-hov-b);
+    background-color: var(--itm-media-hov-bg);
+    color:            var(--itm-media-hov-fg); }
+#media .item:hover .item-name, #media .item.hovered .item-name {
+    color:            var(--itm-media-hov-fg); }  
+#media .item.active { 
+    border-color:     var(--itm-media-act-b);
+    background-color: var(--itm-media-act-bg);
+    color:            var(--itm-media-act-fg); }
+#media .item.active .item-name {
+    color:            var(--itm-media-act-fg); }  
+#media .item.locked {   
+    border-color:     var(--itm-media-lck-b);
+    background-color: var(--itm-media-lck-bg);
+    color:            var(--itm-media-lck-fg); }
+#media .item.locked .item-name {
+    color:            var(--itm-media-lck-fg); }  
+
+#media .item.over.insertAbove::before,
+#media .item.over.insertBelow::before {
+    background-color: var(--itm-media-b); }
+
+/* Titlebar Buttons */
+#titlebar button { 
+    border-color:     var(--btn-tb-b);
+    background-color: var(--btn-tb-bg);
+    color:            var(--btn-tb-fg); }
+#titlebar button:hover {    
+    border-color:     var(--btn-tb-hov-b);
+    background-color: var(--btn-tb-hov-bg);
+    color:            var(--btn-tb-hov-fg); }
+#titlebar button.active {   
+    border-color:     var(--btn-tb-act-b);
+    background-color: var(--btn-tb-act-bg);
+    color:            var(--btn-tb-act-fg); }
+
+/* Titlebar Minimize Button */
+#titlebar-minimize .svg-outer {        
+    stroke: var(--btn-tb-min-b);
+    fill:   var(--btn-tb-min-bg); }
+#titlebar-minimize .svg-inner {         
+    fill:   var(--btn-tb-min-fg); }
+#titlebar-minimize:hover .svg-outer {   
+    stroke: var(--btn-tb-min-hov-b);
+    fill:   var(--btn-tb-min-hov-bg); }
+#titlebar-minimize:hover .svg-inner {   
+    fill:   var(--btn-tb-min-hov-fg); }
+
+/* Titlebar Maximize Button*/
+#titlebar-maximize .svg-outer {         
+    stroke: var(--btn-tb-max-b);
+    fill:   var(--btn-tb-max-bg); }
+#titlebar-maximize .svg-inner {         
+    fill:   var(--btn-tb-max-fg); }
+#titlebar-maximize:hover .svg-outer {   
+    stroke: var(--btn-tb-max-hov-b);
+    fill:   var(--btn-tb-max-hov-bg); }
+#titlebar-maximize:hover .svg-inner {   
+    fill:   var(--btn-tb-max-hov-fg); }
+
+/* Titlebar Quit Button */
+#titlebar-close .svg-outer {            
+    stroke: var(--btn-tb-quit-b);
+    fill:   var(--btn-tb-quit-bg); }
+#titlebar-close .svg-inner {
+    fill:   var(--btn-tb-quit-fg); }
+#titlebar-close:hover .svg-outer { 
+    stroke: var(--btn-tb-quit-hov-b);
+    fill:   var(--btn-tb-quit-hov-bg); }
+#titlebar-close:hover .svg-inner { 
+    fill:   var(--btn-tb-quit-hov-fg); }
+
+/* Controls Panel Buttons */
+#controls button { 
+    border-color:     var(--btn-ctrl-b);
+    background-color: var(--btn-ctrl-bg);
+    color:            var(--btn-ctrl-fg); }
+#controls button:hover {    
+    border-color:     var(--btn-ctrl-hov-b);
+    background-color: var(--btn-ctrl-hov-bg);
+    color:            var(--btn-ctrl-hov-fg); }
+#controls button.active {   
+    border-color:     var(--btn-ctrl-act-b);
+    background-color: var(--btn-ctrl-act-bg);
+    color:            var(--btn-ctrl-act-fg); }
+
+/* Media Panel Buttons*/
+#media button {  
+    border-color:     var(--btn-media-b);
+    background-color: var(--btn-media-bg);
+    color:            var(--btn-media-fg); }
+#media button:hover { 
+    border-color:     var(--btn-media-hov-b);
+    background-color: var(--btn-media-hov-bg);
+    color:            var(--btn-media-hov-fg); }
+#media button.active { 
+    border-color:     var(--btn-media-act-b);
+    background-color: var(--btn-media-act-bg);
+    color:            var(--btn-media-act-fg); }
+#media span.item-pause.disabled {
+    border-color:     var(--btn-media-lck-b);
+    background-color: var(--btn-media-lck-bg);
+    color:            var(--btn-media-lck-fg);
+}
+
+/* Help Panel Buttons */
+#help button { 
+    border-color:     var(--btn-help-b);
+    background-color: var(--btn-help-bg);
+    color:            var(--btn-help-fg); }
+#help button:hover { 
+    border-color:     var(--btn-help-hov-b);
+    background-color: var(--btn-help-hov-bg);
+    color:            var(--btn-help-hov-fg); }
+#help button.active { 
+    border-color:     var(--btn-help-act-b);
+    background-color: var(--btn-help-act-bg);
+    color:            var(--btn-help-act-fg); }
+
+/* Menu Panel Buttons */
+.menu button, #modal button { 
+    border-color:     var(--btn-menu-b);
+    background-color: var(--btn-menu-bg);
+    color:            var(--btn-menu-fg); }
+.menu button:hover, #modal button:hover { 
+    border-color:     var(--btn-menu-hov-b);
+    background-color: var(--btn-menu-hov-bg);
+    color:            var(--btn-menu-hov-fg); }
+.menu button.active, #modal button:active { 
+    border-color:     var(--btn-menu-act-b);
+    background-color: var(--btn-menu-act-bg);
+    color:            var(--btn-menu-act-fg); }
+.menu span.item-pause.disabled {
+    border-color:     var(--btn-menu-lck-b);
+    background-color: var(--btn-menu-lck-bg);
+    color:            var(--btn-menu-lck-fg);
+}
+
+/* Volume Controls */
+#master-volume, #master-opacity, #media .volume-track {      
+    background-color: var(--vol-itm-media-bg);
+    border-color:     var(--vol-itm-media-b); }
+#media .volume-bar, #master-volume-bar, #master-opacity-bar {        
+    background-color: var(--vol-itm-media-fg); }
+#media .item.hovered .volume-track, #media .item:hover .volume-track,
+#master-volume:hover, #master-opacity:hover {
+    background-color: var(--vol-itm-media-hov-bg);
+    border-color:     var(--vol-itm-media-hov-b); }
+#media .item .volume-track:hover .volume-bar,
+#master-volume:hover #master-volume-bar, #master-opacity:hover #master-volume-bar {
+    background-color: var(--vol-itm-media-hov-fg); }
+
+/* Audio Progress Track */
+#media .progress-track {
+    background-color: var(--trk-itm-media-bg); }
+#media .progress-bar {
+    background-color: var(--trk-itm-media-fg); }
+#media .progress-track:hover {
+    background-color: var(--trk-itm-media-hov-bg); }
+#media .progress-track:hover .progress-bar {
+    background-color: var(--trk-itm-media-hov-fg); }
+#media .progress-track.active {
+    background-color: var(--trk-itm-media-act-bg); }
+#media .progress-track.active .progress-bar {
+    background-color: var(--trk-itm-media-act-fg); }
+
+/* Warning */
+#media .item-delete:hover,
+#modal-deleteunique-confirm:hover {
+    background-color: var(--wrn-hov-bg) !important;
+    color:            var(--wrn-hov-fg) !important;
+    border-color:     var(--wrn-hov-b) !important;
+}
 
 /* #####################
    ##### Title Bar #####
    ##################### */
 
-#titlebar{
-    background-color: var(--c1);
-    border-color: var(--c0);
-    border: 1px solid var(--c0);
-    color: var(--c6);
-}
 #titlebar .spacer {
     flex: auto;
 }
@@ -167,15 +536,11 @@ button.activated {
     display: flex;
     margin-right: 4px;
 }
-#titlebar button.adaptive.selected {
+#titlebar button.adaptive.active {
     margin-bottom: -1px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border-bottom: none;
-    background-color: var(--c2);
-}
-#titlebar button.adaptive.selected:hover {
-    background: linear-gradient(var(--c5) 4px, var(--c2) 4px)
 }
 #titlebar button.adaptive svg {
     display: inline-block;
@@ -188,7 +553,7 @@ button.activated {
     margin: 0 5px 0 0;
 }
 #titlebar {
-    height: var(--title-bar-height);
+    height: var(--tb-h);
     width: 100%;
     display: flex;
     justify-content: flex-end;
@@ -222,44 +587,24 @@ button.activated {
     align-items: center;
     height: 21px;
     width: 18px;
-    background: transparent;
+    background-color: transparent !important;
     padding: 0;
-    border: none;
+    border: none !important;
     margin: auto 6px auto 0;
 }
-.window-button .svg-outer {
-    stroke: var(--c0);
-    stroke-width: 1px;
-    fill: var(--c4);
-}
-.window-button:hover {
-    background: none;
-}
-.window-button:hover .svg-outer {
-    fill: var(--c5);
-}
-#titlebar-close:hover .svg-outer {
-    fill: var(--cF);
-}
-.window-button .svg-inner {
-    fill: var(--c6);
-}
-
+.window-button .svg-outer { stroke-width: 1px; }
 
 /* ###########################
    ##### Canvas Controls #####
    ########################### */
 
 #controls{
-    background-color: var(--c1);
-    border: 1px solid var(--c0);
-    color: var(--c6);
+    border-radius:    var(--br-l);
     position: absolute;
     top: 40px;
     left: 6px;
     font-size: 0.7rem;
     font-weight: bold;
-    border-radius: var(--br-l);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     -webkit-user-select: none;  /* Chrome all / Safari all */
@@ -299,11 +644,8 @@ button.activated {
    ##### Media Browser ##### 
    ######################### */
 
-#browser {
-    background-color: var(--c1);
-    border: 1px solid var(--c0);
-    color: var(--c6);
-    border-radius: var(--br-l);
+#media {
+    border-radius:    var(--br-l);
     z-index: 10000;
     position: absolute;
     top: 76px;
@@ -319,50 +661,44 @@ button.activated {
     max-height: calc(100% - 122px);
     overflow: scroll;
 }
-#browser::-webkit-scrollbar { background-color: transparent; }
-#browser::-webkit-scrollbar { width: 0px; }
-#browser::-webkit-scrollbar:horizontal { height: 0px; }
-#browser .heading button {
+#media::-webkit-scrollbar { background-color: transparent; }
+#media::-webkit-scrollbar { width: 0px; }
+#media::-webkit-scrollbar:horizontal { height: 0px; }
+#media .heading button {
     float:right;
-    background:none;
-    border: none;
-    padding: 0;
-    width: 14px;
-}
-#browser .heading button svg {
     height: 14px;
+    margin-bottom: 4px;
+}
+#media .heading button svg {
+    height: 12px !important;
     vertical-align: baseline;
 }
-#browser.sidebarHidden {
+#media.sidebarHidden {
     display:none;
 }
-#browser-sounds, #browser-images {
+#media-sounds, #media-images {
     display:flex;
     flex-direction: column;
     margin: 4px;
 }
-#browser .item.dragging {
+#media .item.dragging {
     opacity: 50%;
 }
-#browser .item.over.insertAbove::before {
+#media .item.over.insertAbove::before {
     content:"";
     width: 100%;
     height: 2px;
-    background-color: var(--c0);
     position:absolute;
     top: -4px;
 }
-#browser .item.over.insertBelow::before {
+#media .item.over.insertBelow::before {
     content:"";
     width: 100%;
     height: 2px;
-    background-color: var(--c0);
     position:absolute;
     bottom: -4px;
 }
-#browser .item {
-    background-color: var(--c2);
-    border: 1px solid var(--c0); 
+#media .item {
     margin: 0 0 4px 8px;
     padding: 3px;
     display: flex;
@@ -371,83 +707,68 @@ button.activated {
     position: relative;
     border-radius: 0 var(--br-m) var(--br-m) 0;
 }
-#browser .item:last-child {
+#media .item:last-child {
     margin-bottom: 0;
 }
-#browser .item.hovered,
-#browser .item.hovered .volume-track 
-#browser .item:hover,
-#browser .item:hover .volume-track {
-    background-color: var(--c3) !important;
-}
-#browser .item .volume-track:hover .volume-bar {
-    background-color: var(--c5)
-}
-#browser .item.hidden {
+#media .item.hidden {
     opacity: 0.5;
 }
-#browser .item-name {
+#media .item .item-name {
     flex: 80%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     z-index: 10;
-    background: none;
+    background: none !important;
 }
-#browser button {
+#media button {
     flex: 1;
     margin-left: 2px;
     padding: 0 1px;
     z-index: 10;
     border-radius: var(--br-s);
 }
-#browser button svg,
-#browser span svg {
+#media button svg,
+#media span svg {
     display: inline-block;
     vertical-align: middle;
     height: 12px;
     width: 12px;
 }
-#browser button.item-type {
+#media button.item-type {
     margin-left: 0;
 }
-#browser .item-pause {
+#media .item-pause {
     flex: 4;
 }
-#browser span.item-pause {
-    background-color: var(--c1);
-    border: 1px solid var(--c0);
-    border-right: none;
+#media span.item-pause {
     height: 14px;
 }
-#browser span.item-pause.activated {
-    background-color: var(--c5);
+#media span.item-pause + button {
+    border-left:none;
 }
-#browser span.item-pause span.timer:first-child {
+#media span.item-pause span.timer:first-child {
     padding-left: 5px;
 }
-#browser span.item-pause span.timer {
+#media span.item-pause span.timer {
     height:12px;
     display: inline-block;
     vertical-align: top;
     line-height: 14px;
 }
-#browser span.item-pause span.timer:hover {
-    background-color: var(--c5);
-}
-#browser span.item-pause button {
+#media span.item-pause button {
     height: 10px;
     padding: 0;
     margin-top: 1px;
 }
-#browser span.item-pause button svg {
+#media span.item-pause button svg {
     height: 8px;
     margin-top: -3px;
 }
-#browser span.item-pause span.timer .timer-divider.blink {
+#media span.item-pause span.timer .timer-divider.blink {
     opacity: 0;
 }
-#browser .progress-track {
+#media .progress-track {
     flex-basis: 100%;
     height: 6px;
     border-radius: var(--br-s);
@@ -455,39 +776,31 @@ button.activated {
     z-index: 10;
     border: none;
     padding: 0 1px;
-    background-color: var(--c0);
 }
-#browser .progress-bar {
+#media .progress-bar {
     height: 4px;
     border-radius: calc(var(--br-s) - 1px);
     min-width: 2px;
     width: 0%;
     z-index: 10;
     border: none;
-    background-color: var(--c4);
 }
-#browser .progress-track:hover .progress-bar {
-    background-color: var(--c5);
-}
-#browser .item .volume-track {
+#media .item .volume-track {
     position: absolute;
     width: 8px;
     height: calc(100% + 2px);
     top: -1px;
     left: -9px;
-    background-color: var(--c2);
-    border: 1px solid var(--c0); 
     border-right: none;
     border-radius: var(--br-m) 0 0 var(--br-m);
 }
-#browser .item .volume-bar {
+#media .item .volume-bar {
     position:absolute;
     width: 7px;
     bottom:0;
     height: 80%;
     z-index: 0;
     border-radius: var(--br-s) 0 0 var(--br-s);
-    background-color: var(--c0);
 }
 .item-name {
     background: none;
@@ -496,7 +809,6 @@ button.activated {
     text-align: left;
 }
 #master-volume, #master-opacity {
-    border: 1px solid var(--c0);
     width: 9px;
     height: 14px;
     display: inline-block;
@@ -504,30 +816,16 @@ button.activated {
     vertical-align: top;
     border-radius: var(--br-m);
     margin-bottom: 4px;
-    background: var(--c2);
 }
 #master-volume-bar, #master-opacity-bar {
     width: 100%;
     position: absolute;
     bottom: 0;
-    background-color: var(--c0);
     border-radius: var(--br-s);
 }
-#master-volume:hover, #master-opacity:hover {
-    background-color: var(--c3);
-}
-#master-volume:hover #master-volume-bar, #master-opacity:hover #master-opacity-bar {
-    background-color: var(--c5);
-}
-#browser .item.selected, #browser .item.selected .volume-track {
-    background-color: var(--c3);
-}
-#browser .item.locked {
-    border: 1px dashed var(--c0);
+#media .item.locked {
+    border-style: dashed;
     border-left-style: solid;
-}
-#browser .item-delete:hover {
-    background-color: var(--cF);
 }
 
 
@@ -536,7 +834,6 @@ button.activated {
    #################### */
 
 #help {
-    color: var(--c6);
     z-index: 100000;
     position: absolute;
     bottom: 6px;
@@ -550,39 +847,26 @@ button.activated {
     cursor: default;
     width: calc(100% - 12px);
     display: flex;
-    border-radius: var(--br-l);
 }
 #help:not(.activated) {
     box-shadow: none;
-}
-#help.activated {
-    background-color: var(--c1);
-    border: 1px solid var(--c0);
+    width: 18px;
 }
 #help.activated #help-text { 
     display:block; 
 }
-#help.activated #help-toggle {
-    box-shadow: none;
-    border-top: none;
-    border-left: none;
-    border-bottom: none;
-    border-radius: var(--br-l) 0 0 var(--br-l);
-}
 #help-toggle {
+    border-radius: var(--br-l);
     font-weight: bold;
     padding: 0;
-    flex-basis: 18px;
-    width: 18px;
-    border-radius: var(--br-l);
+    min-width: 18px;
 }
 #help-text {
     display: none;
     padding: 0 4px;
     flex-grow: 1;
-}
-#help-text strong {
-    text-transform: uppercase;
+    border-radius: var(--br-l);
+    margin-left: 4px;
 }
 
 
@@ -591,20 +875,17 @@ button.activated {
    ################# */
 
 .menu {
+    top: var(--tb-h);
+    height: calc(100% - var(--tb-h));
     z-index: 10000;
     position: absolute;
-    top: var(--title-bar-height);
     border-top: none;
     width: 100%;
-    height: calc(100% - var(--title-bar-height));
     padding: 1rem 5rem;
     display: none;
     font-size: 0.8rem;
     overflow-y: scroll;
     font-weight: bold;
-    background-color: var(--c2);
-    color: var(--c6);
-    border: 1px solid var(--c0);
     border-top: none;
 }
 .menu::-webkit-scrollbar {
@@ -617,22 +898,14 @@ button.activated {
     margin-top: 1rem;
 }
 .menu h2 {
+    border-radius:    var(--br-m);
     padding: 0 8px;
-    border-radius: var(--br-m);
-    background-color: var(--c6);
-    color: var(--c2);
 }
 .menu h3 {
     text-decoration: underline;
 }
 .menu p {
     margin-bottom: 1rem;
-}
-.menu a {
-    color: var(--c7)
-}
-.menu a:hover {
-    color: var(--cA)
 }
 .menu label {
     user-select: none;
@@ -650,37 +923,26 @@ button.activated {
 .setting+h2 {
     margin-top: 30px;
 }
-input[type=checkbox]::after, 
-input[type=checkbox]:hover::after,
-input[type=range]::-webkit-slider-thumb {
-    background-color: var(--c6); 
-    border-radius: var(--br-s);
-}
-.rangeValue {
-    background-color: var(--c6); 
-    color: var(--c2);
-    float: right;
-    margin-left: 8px;
-}
-.menu, input[type=range], 
-select { 
-    color: var(--c6);
-}
-input[type=checkbox],
-input[type=range], 
-select {
-    border: 1px solid var(--c6) !important;
-    float: right;
-}
-.rangeValue::after {
-    border-right: 3px solid var(--c6);
-}
 
 
 /* ########################
    ##### Fancy Inputs #####
    ######################## */
 
+input[type=checkbox]::after, 
+input[type=checkbox]:hover::after,
+input[type=range]::-webkit-slider-thumb {
+    border-radius: var(--br-s);
+}
+.rangeValue {
+    float: right;
+    margin-left: 8px;
+}
+input[type=checkbox],
+input[type=range], 
+select {
+    float: right;
+}
 input[type=checkbox] {
     cursor: default;
     appearance: none;
@@ -724,8 +986,6 @@ input[type=range], select {
     border-radius: var(--br-m);
 }
 .setting button {
-    border: none;
-    border: 1px solid var(--c0);
     padding: 1px 6px 1px 0;
 }
 .setting button svg {
@@ -756,8 +1016,7 @@ input[type=range]::-webkit-slider-thumb {
     width: 10px;
     margin: 0;
     cursor: default;
-  }
-
+}
 input[type=range]::-moz-range-thumb {
     appearance: none;
     height: 10px;
@@ -786,24 +1045,6 @@ input[type=range]::-moz-range-thumb {
     top: 5px;
     left: -6px;
 }
-.setting.changed{
-    color: var(--c7);
-}
-.setting.changed input {
-    border-color: var(--c7) !important;
-}
-.setting.changed input[type=checkbox]::after, 
-.setting.changed input[type=checkbox]:hover::after,
-.setting.changed input[type=range]::-webkit-slider-thumb {
-    background-color: var(--c7) !important;
-}
-
-.setting.changed .rangeValue {
-    background-color: var(--c7) !important;
-}
-.setting.changed .rangeValue::after {
-    border-right-color: var(--c7) !important;
-}
 
 /* #################
    ##### Modal #####
@@ -820,27 +1061,22 @@ input[type=range]::-moz-range-thumb {
     border-radius: var(--br-win);
 }
 #modal {
-    background-color: var(--c1);
-    border: 1px solid var(--c0);
     width: 600px;
     min-height: 200px;
     max-height: calc(100% - 104px);
     overflow: scroll;
     margin: 50px auto 0;
     border-radius: var(--br-m);
-    color: var(--c6);
     font-weight: bold;
 }
 #modal::-webkit-scrollbar { background-color: transparent; }
 #modal::-webkit-scrollbar { width: 5px; }
 #modal::-webkit-scrollbar-thumb { 
     width: 5px; 
-    background-color: var(--c0);
     border-radius: 0 var(--br-win) var(--br-win) 0; }
 #modal::-webkit-scrollbar:horizontal { height: 0px; }
 #modal::-webkit-scrollbar-corner { background-color: transparent !important; }
 #modal-title {
-    border-bottom: 1px solid var(--c0);
     padding: 4px 24px;
     font-size: 10pt;
 }
@@ -866,8 +1102,6 @@ input[type=range]::-moz-range-thumb {
 #modal h3 {
     font-size: 10pt;
     margin: 16px 24px 0;
-    color: var(--c1);
-    background-color: var(--c6);
     border-radius: var(--br-m) var(--br-m) 0 0;
     padding: 2px 8px;
 }
@@ -879,18 +1113,10 @@ input[type=range]::-moz-range-thumb {
 }
 #modal li {
     padding: 4px 8px;
-    border: 1px solid var(--c0);
     border-top: none;
-}
-#modal li:first-child {
-    border-top: 1px solid var(--c0);
 }
 #modal li:last-child {
     border-radius: 0 0 var(--br-m) var(--br-m);
-}
-#modal li.unique {
-    background-color: var(--c2);
-    color: var(--cF);
 }
 #modal .hidden {
     display: none;

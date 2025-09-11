@@ -140,7 +140,7 @@
             saveUserSettings();
             }}>
             {#each themesList as theme}
-                <option value="{theme.name}">{theme.name}</option>
+                <option value="{theme.info?.name}">{theme.info?.name}</option>
             {/each}
         </select>
     </div>

@@ -18,7 +18,7 @@
 <!-- An Image Item -->
 <div id="item-{item.uuid}" role="listitem" draggable="true" 
 class:hidden={getImagesHidden()} class:hovered={isHovered}
-class={["item image-item", item.selected && "selected", item.locked && "locked"]}
+class={["item image-item", item.selected && "active", item.locked && "locked"]}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{ setHoveredCanvasObject(null) }}

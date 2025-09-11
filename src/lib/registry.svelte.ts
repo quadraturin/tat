@@ -681,14 +681,14 @@ export function setIsInDeleteMode(b:boolean) {isInDeleteMode = b; };
 // ===== 5.9 THEME =====
 
 /** The theme. */
-export let activeTheme = $state(new AppTheme());
+export let activeTheme:AppTheme = $state(new AppTheme());
 
 /** Set the theme. @param themeName The name of the theme to set. */
 export function setTheme(themeName:string) {
     const themesList = getThemesList();
     let foundTheme = false;
     for (let i = 0; i < themesList.length; i++) {
-        if(themeName == themesList[i].name){
+        if(themeName == themesList[i].info?.name){
             activeTheme.update(themesList[i]);
             foundTheme = true;
             break;

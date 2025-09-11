@@ -61,14 +61,14 @@
 <!-- A Sound Item -->
 <div class="item sound-item" id="item-{item.uuid}"
     draggable="true"  role="listitem" class:hovered={isHovered}
-    class:selected={item.selected} class:locked={item.locked}  class:hidden={getSoundsHidden()}
+    class:active={item.selected} class:locked={item.locked}  class:hidden={getSoundsHidden()}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
     onmouseout  = {()=>{setHoveredCanvasObject(null)}}
     onmouseover = {()=>{setHoveredCanvasObject(item)}}>
 
     <!-- Volume Display -->
-    <div class="volume-track" role="heading" aria-level="4" 
+    <div class="volume-track" role="heading" aria-level="4"
         onwheel={(event) =>{ event.preventDefault(); item.changeVolume(event); }}
         onfocus     = {()=>{}} 
         onblur      = {()=>{}}
@@ -151,7 +151,7 @@
     </button>
 
     <!-- Sound Progress Track / Seek Button -->
-    <button class="progress-track" aria-label="seek"
+    <button class="progress-track" aria-label="seek" class:active={!paused}
     bind:this   = {soundTrack} 
     onmousemove = {(event:MouseEvent)=> {
 		mousePos.x = event.clientX;
@@ -215,7 +215,7 @@
 
     {#if triggerType == TriggerType.Manual}
         <!-- Sound Pause Button -->
-        <button class="item-pause m" class:activated={!paused}
+        <button class="item-pause m" class:active={!paused}
         onclick     = {()=>{item.sound.paused ? item.sound.play() : item.sound.pause()}}
         onfocus     = {()=>{}} 
         onblur      = {()=>{}}
@@ -226,7 +226,7 @@
             <span>{#if paused}<IconSoundPause/> paused{:else}<IconSoundPlay/> playing{/if}</span>
         </button>
     {:else}
-        <span class="item-pause m disabled" class:activated={!paused}>
+        <span class="item-pause m disabled" class:active={!paused}>
             {#if triggerType == TriggerType.PlayOnTimer}
                 <span class="timer" role="timer"
                     onwheel={(e)=>{e.preventDefault(); item.changeTimer(e,"h")}}
@@ -289,7 +289,7 @@
 
 
     <!-- Sound Mute Button -->
-    <button class="item-mute l" class:activated={muted} 
+    <button class="item-mute l" class:active={muted} 
     onclick     = {()=>{item.muted = !item.muted;}}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
@@ -301,7 +301,7 @@
     </button>
 
     <!-- Sound Solo Button -->
-    <button class="item-solo r" class:activated={soloed} 
+    <button class="item-solo r" class:active={soloed} 
     onclick     = {()=>{solo(item);}}
     onfocus     = {()=>{}} 
     onblur      = {()=>{}}
