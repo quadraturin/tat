@@ -296,6 +296,10 @@ button.r {
     color:            var(--anc-fg); }
 .menu a:hover, #modal a:hover {
     color:            var(--anc-hov-fg); }
+.menu label {
+    color:            var(--anc-fg); }
+.menu .changed label {
+    color:            var(--anc-hov-fg); }
 .menu input[type=checkbox]::after, 
 .menu input[type=checkbox]:hover::after,
 .menu input[type=range]::-webkit-slider-thumb {
@@ -357,6 +361,8 @@ button.r {
     color:            var(--itm-media-lck-fg); }
 #media .item.locked .item-name {
     color:            var(--itm-media-lck-fg); }  
+#media .item.locked.hovered {   
+    border-color:     var(--itm-media-hov-b); }
 
 #media .item.over.insertAbove::before,
 #media .item.over.insertBelow::before {
@@ -491,6 +497,9 @@ button.r {
 #media .item .volume-track:hover .volume-bar,
 #master-volume:hover #master-volume-bar, #master-opacity:hover #master-volume-bar {
     background-color: var(--vol-itm-media-hov-fg); }
+#media .item:hover .volume-track {
+    color:            var(--vol-itm-media-hov-b); }  
+
 
 /* Audio Progress Track */
 #media .progress-track {
