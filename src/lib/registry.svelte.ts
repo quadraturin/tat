@@ -196,7 +196,7 @@ let canvas:InfiniteCanvas;
 export function getCanvas() { return canvas; }
 
 /** Set a new infinite canvas. @param gridSize The size of the grid to display on the canvas. */
-export function setCanvas(gridSize?:number) { canvas = new InfiniteCanvas(gridSize); }
+export function setCanvas() { canvas = new InfiniteCanvas(); }
 
 
 // ===== 2.2 CANVAS OBJECT HANDLING =====
