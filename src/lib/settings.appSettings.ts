@@ -15,7 +15,5 @@ export const defaultProjectName = "new project";
 /** The default user settings. */
 export const defaultUserSettings = new UserSettings;
 
-/** Whether to show debug widgets. */
-export const debugWidgets = false;
-
+/** Baseline object fill alpha. */
 export const objectFillAlpha = 0.2;

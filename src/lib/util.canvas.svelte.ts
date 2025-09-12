@@ -2,7 +2,7 @@ import * as R from "$lib/registry.svelte";
 import type { CanvasImage } from "./classes/CanvasImage.svelte";
 import type { CanvasListener } from "./classes/CanvasListener.svelte";
 import type { CanvasSound } from "./classes/CanvasSound.svelte";
-import { debugWidgets, objectFillAlpha } from "./settings.appSettings";
+import { objectFillAlpha } from "./settings.appSettings";
 import { Vector2D } from "./util.vectors";
 
 enum ObjectType {
@@ -23,12 +23,10 @@ export class InfiniteCanvas {
     #z = 1;
     #maxZ = 50;
     #minZ = 0.05;
-    #w_offsetX = 0;
-    #w_offsetY = 0;
+    #w_offset = new Vector2D(0, 0);
     #touchMode: "single" | "double" = "single";
     #prevTouch: [Touch | null, Touch | null] = [null, null];
-    #w_velocityX = 0;
-    #w_velocityY = 0;
+    #w_velocity = new Vector2D(0, 0);
     #wrap = document.getElementById('themeWrapper');
     #debugTextLn = 0;
 
@@ -69,11 +67,11 @@ export class InfiniteCanvas {
 
     /** Convert a world x coordinate to a canvas one. 
      * @param w_x The canvas x coord to convert. @returns The window x coord. */
-    c_toX(w_x: number): number { return (w_x + this.#w_offsetX) * this.#scale * this.#z; }
+    c_toX(w_x: number): number { return (w_x + this.#w_offset.x) * this.#scale * this.#z; }
 
     /** Convert a world y coordinate to a canvas one. 
      * @param w_y The canvas y coord to convert. @returns The window y coord. */
-    c_toY(w_y: number): number { return (w_y + this.#w_offsetY) * this.#scale * this.#z; }
+    c_toY(w_y: number): number { return (w_y + this.#w_offset.y) * this.#scale * this.#z; }
 
     /** Convert a world length to a canvas one. 
      * @param w_len The canvas length to convert. @returns The window length. */
@@ -84,11 +82,11 @@ export class InfiniteCanvas {
 
     /** Convert a canvas x coordinate to a world one.  
      * @param c_x The window x  coord to convert. @returns The window x coord. */
-    w_toX(c_x: number): number { return c_x / (this.#scale * this.#z) - this.#w_offsetX; }
+    w_toX(c_x: number): number { return c_x / (this.#scale * this.#z) - this.#w_offset.x; }
 
     /** Convert a canvas y coordinate to a world one. 
      * @param c_y The canvas y coord to convert. @returns The window y coord. */
-    w_toY(c_y: number): number { return c_y / (this.#scale * this.#z) - this.#w_offsetY; }
+    w_toY(c_y: number): number { return c_y / (this.#scale * this.#z) - this.#w_offset.y; }
 
     /** Convert a canvas length to a world one. 
      * @param c_len The canvas length to convert. @returns The window length. */
@@ -109,8 +107,8 @@ export class InfiniteCanvas {
     /** Move the viewport to a point on the canvas.
      * @param w_x X coord of the destination. @param w_y Y coord of the destination. */
     flyToPoint(w_x: number, w_y: number) {
-        this.#w_offsetX = (this.c_canvasWidth() / 2) / this.#z - w_x;
-        this.#w_offsetY = (this.c_canvasHeight() / 2) / this.#z - w_y;
+        this.#w_offset.x = (this.c_canvasWidth() / 2) / this.#z - w_x;
+        this.#w_offset.y = (this.c_canvasHeight() / 2) / this.#z - w_y;
         this.#draw();
     }
 
@@ -139,35 +137,35 @@ export class InfiniteCanvas {
     // ===== CANVAS OFFSETS =====
 
     /** Get the camera offset. @returns The offset as a Vector2D. */
-    w_getOffset() { return new Vector2D(this.#w_offsetX, this.#w_offsetY) }
+    w_getOffset() { return new Vector2D(this.#w_offset.x, this.#w_offset.y) }
     
     /** Set the camera offset. @param w_x The X offset. @param w_y The Y offset.  */
     setOffset(w_x:number, w_y:number) {
-        this.#w_offsetX = w_x;
-        this.#w_offsetY = w_y;
+        this.#w_offset.x = w_x;
+        this.#w_offset.y = w_y;
     }
 
     /** Offset the canvas view from the left edge. @param w_amt Distance to offset by. */
     offsetLeft(w_amt:number) {
-        this.#w_offsetX -= w_amt;
+        this.#w_offset.x -= w_amt;
         this.#draw();
     }
 
     /** Offset the canvas view from the right edge. @param w_amt Distance to offset by. */
     offsetRight(w_amt:number) {
-        this.#w_offsetX += w_amt;
+        this.#w_offset.y += w_amt;
         this.#draw();
     }
 
     /** Offset the canvas view from the top edge. @param w_amt Distance to offset by. */
     offsetUp(w_amt:number) {
-        this.#w_offsetY -= w_amt;
+        this.#w_offset.y -= w_amt;
         this.#draw();
     }
 
     /** Offset the canvas view from the bottom edge. @param w_amt Distance to offset by. */
     offsetDown(w_amt:number) {
-        this.#w_offsetY += w_amt;
+        this.#w_offset.y += w_amt;
         this.#draw();
     }
 
@@ -224,8 +222,8 @@ export class InfiniteCanvas {
                 postZoomY = this.w_toY(y);
 
                 // Set the new viewport offsets.
-                this.#w_offsetX -= preZoomX - postZoomX;
-                this.#w_offsetY -= preZoomY - postZoomY;
+                this.#w_offset.x -= preZoomX - postZoomX;
+                this.#w_offset.y -= preZoomY - postZoomY;
             }
         } else {
             // If no zoom is specified, reset zoom to 1.
@@ -250,22 +248,25 @@ export class InfiniteCanvas {
      * @param c_y2 Y coordinate to pan to.
      */
     pan(c_x1: number, c_y1: number, c_x2: number, c_y2: number): void {
-        this.#w_velocityX = this.w_toX(c_x1) - this.w_toX(c_x2);
-        this.#w_velocityY = this.w_toY(c_y1) - this.w_toY(c_y2);
-        this.offsetLeft(this.#w_velocityX);
-        this.offsetUp(this.#w_velocityY);
+        this.#w_velocity.x = this.w_toX(c_x1) - this.w_toX(c_x2);
+        this.#w_velocity.y = this.w_toY(c_y1) - this.w_toY(c_y2);
+        this.offsetLeft(this.#w_velocity.x);
+        this.offsetUp(this.#w_velocity.y);
     }
 
     /**
      * Give panning inertia so that when you release, the canvas doesn't immediately stop.
      */
     panInertia() {
-        if (Math.abs(this.#w_velocityX) > 0.1 && Math.abs(this.#w_velocityY) > 0.1 && !R.getPanning()) {
-            this.#w_velocityX *= R.getFriction();
-            this.#w_velocityY *= R.getFriction();
-            this.offsetLeft(this.#w_velocityX);
-            this.offsetUp(this.#w_velocityY);
+        if (this.#w_velocity.magnitude > 0.01 && !R.getPanning()) {
+            this.#w_velocity.x *= R.getFriction();
+            this.#w_velocity.y *= R.getFriction();
+            this.offsetLeft(this.#w_velocity.x);
+            this.offsetUp(this.#w_velocity.y);
             this.#draw();
+        } else if (this.#w_velocity.magnitude <= 0.01) {
+            this.#w_velocity.x = 0;
+            this.#w_velocity.y = 0;
         }
     }
 
@@ -343,15 +344,19 @@ export class InfiniteCanvas {
             this.#drawListener(R.getListener(), R.getListenerRadius());
 
             // Layer 5: Draw debug info.
-            let velBar = "";
-            this.#debugText(`canvas zoom:             ${this.#z.toFixed(2)}`, this.context);
+            if (R.getShowDebug()) {
+                let velBar = "";
+                for (let i=0; i<this.#w_velocity.magnitude; i++) { velBar += "|"; }
+                this.#debugText(`canvas zoom:             ${this.#z.toFixed(2)}`, this.context);
 
-            this.#debugText(`canvas height:           ${this.c_canvasHeight().toFixed(2)}`, this.context, "yellow");
-            this.#debugText(`canvas viewport center:  ${this.c_viewportCenter().x.toFixed(2)}, ${this.c_viewportCenter().y.toFixed(2)}`, this.context, "yellow");
+                this.#debugText(`canvas dimensions:       ${this.c_canvasHeight().toFixed(2)}, ${this.c_canvasWidth().toFixed(2)}`, this.context, "yellow");
+                this.#debugText(`canvas viewport center:  ${this.c_viewportCenter().x.toFixed(2)}, ${this.c_viewportCenter().y.toFixed(2)}`, this.context, "yellow");
 
-            this.#debugText(`world viewport center:   ${this.w_viewportCenter().x.toFixed(2)}, ${this.w_viewportCenter().y.toFixed(2)}`, this.context, "green");
-            this.#debugText(`viewport offset:         ${this.#w_offsetX.toFixed(2)}, ${this.#w_offsetY.toFixed(2)}`, this.context, "green");
-            this.#debugTextLn = 0;
+                this.#debugText(`world viewport center:   ${this.w_viewportCenter().x.toFixed(2)}, ${this.w_viewportCenter().y.toFixed(2)}`, this.context, "green");
+                this.#debugText(`viewport offset:         ${this.#w_offset.x.toFixed(2)}, ${this.#w_offset.y.toFixed(2)}`, this.context, "green");
+                this.#debugText(`velocity:                ${this.#w_velocity.magnitude.toFixed(2).padStart(5, "0")} ${velBar}`, this.context, "green");
+                this.#debugTextLn = 0;
+            }
         }
     }
 
@@ -398,7 +403,7 @@ export class InfiniteCanvas {
         ctx.globalAlpha = a;
 
         // Draw vertical lines
-        for (let c_x = this.#w_offsetX % this.w_cellSize * this.#scale * this.#z - (this.w_cellSize * this.#scale * this.#z);
+        for (let c_x = this.#w_offset.x % this.w_cellSize * this.#scale * this.#z - (this.w_cellSize * this.#scale * this.#z);
             c_x <= c_width;
             c_x += c_inc) {
             const c_source = c_x;
@@ -415,7 +420,7 @@ export class InfiniteCanvas {
         }
 
         // draw horizontal lines
-        for (let y = this.#w_offsetY % this.w_cellSize * this.#scale * this.#z - (this.w_cellSize * this.#scale * this.#z);
+        for (let y = this.#w_offset.y % this.w_cellSize * this.#scale * this.#z - (this.w_cellSize * this.#scale * this.#z);
             y <= c_height;
             y += c_inc) {
             const destination = y;
@@ -624,7 +629,7 @@ export class InfiniteCanvas {
                     this.#drawHandle(midX, midY, R.getHandleSize(), false);
                 }
             }
-            if (debugWidgets) {
+            if (R.getShowDebug()) {
                 // Draw the bounds.
                 if (w_snd.areaBounds) {
                     this.#drawCircle(w_snd.areaBounds[0].x, w_snd.areaBounds[0].y, 1);
@@ -843,8 +848,8 @@ export class InfiniteCanvas {
         const panY = midY - prevMidY;
 
         // Scale this movement based on the zoom level
-        this.#w_offsetX += panX / this.#scale;
-        this.#w_offsetY += panY / this.#scale;
+        this.#w_offset.x += panX / this.#scale;
+        this.#w_offset.y += panY / this.#scale;
 
         // Get the relative position of the middle of the zoom.
         // 0, 0 would be top left.
@@ -859,8 +864,8 @@ export class InfiniteCanvas {
         const unitsAddLeft = unitsZoomedX * zoomRatioX;
         const unitsAddTop = unitsZoomedY * zoomRatioY;
 
-        this.#w_offsetX += unitsAddLeft;
-        this.#w_offsetY += unitsAddTop;
+        this.#w_offset.x += unitsAddLeft;
+        this.#w_offset.y += unitsAddTop;
     }
 
 

@@ -47,6 +47,10 @@ import { t } from '$lib/util.localization';
  */
 
 
+let showDebug = false;
+export function getShowDebug():boolean { return showDebug; }
+export function toggleDebug() { showDebug = !showDebug; }
+
 export let ctxMenuCanvas:Menu;
 export async function setupCtxMenu(e:MouseEvent) {
     ctxMenuCanvas = await Menu.new({

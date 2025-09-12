@@ -43,6 +43,8 @@
 - **Added capital letters.**
 - **Much more help text** across the app.
 - **Projects now save and load listener and view positions.**
+- **Now only using Tabler icons.** (With some modifications.)
+- **Basic debug display:** show/hide with `.
 
 ### v0.4.1: drag-and-drop (2024-12-22)
 - added drag-and-drop support for media files.

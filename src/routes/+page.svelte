@@ -144,6 +144,7 @@
         else if (e.key == 'Escape') closeAllMenus();
         else if (e.key == "h") toggleSidebar();
         else if (e.key == "c") R.getCanvas().flyToPoint(R.getListener().x, R.getListener().y);
+        else if (e.key == "`") R.toggleDebug();
         // Move the listener
         else if (e.key == "w") {
             if(!R.getListener().locked) {
