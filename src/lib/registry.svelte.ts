@@ -58,7 +58,7 @@ export async function setupCtxMenu(e:MouseEvent) {
             },
             {
                 id: 'coords',
-                text: 'Click: (' + Math.round(getCanvas().toWorldX(e.x))+ ", " + Math.round(getCanvas().toWorldY(e.y)) +")",
+                text: 'Click: (' + Math.round(getCanvas().w_toX(e.x))+ ", " + Math.round(getCanvas().w_toY(e.y)) +")",
                 enabled: false,
             }
         ]

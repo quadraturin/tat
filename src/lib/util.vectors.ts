@@ -7,5 +7,5 @@ export class Vector2D {
         this.y = y;
     }
     /** Get the magnitude of the vector. @returns The magnitude of the vector. */
-    magnitude(){ return Math.sqrt(this.x**2 + this.y**2); }
+    get magnitude(){ return Math.sqrt(this.x**2 + this.y**2); }
 }

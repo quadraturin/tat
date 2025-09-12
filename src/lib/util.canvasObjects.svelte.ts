@@ -30,12 +30,11 @@ export function canvasWheel(e:WheelEvent) {
 
 /** Handle mouse down events on the canvas. @param e Mouse down event. */
 export function canvasMouseDown(e:MouseEvent) {
-    const l = R.getListener();
     const c = R.getCanvas();
 
     R.setMouseDown(true);
-    R.setMouseDownX(c.toWorldX(e.x));
-    R.setMouseDownY(c.toWorldY(e.y));
+    R.setMouseDownX(c.w_toX(e.x));
+    R.setMouseDownY(c.w_toY(e.y));
 
     // Reset clicked on draggable state
     R.setClickedCanvasObject(null);
@@ -47,11 +46,11 @@ export function canvasMouseDown(e:MouseEvent) {
         if (obj != null) {
             // No handle: grab the object
             if (obj.hoverHandle == R.Handle.None) {
-                obj.grab(true, c.toWorldX(e.clientX), c.toWorldY(e.clientY));
+                obj.grab(true, c.w_toX(e.clientX), c.w_toY(e.clientY));
                 obj.handle = obj.hoverHandle;
                 if (obj instanceof CanvasSound && obj.soundType == R.SoundType.Area) {
-                    R.setOriginalX(c.toWorldX(e.clientX));
-                    R.setOriginalY(c.toWorldY(e.clientY));
+                    R.setOriginalX(c.w_toX(e.clientX));
+                    R.setOriginalY(c.w_toY(e.clientY));
                     obj.originalAreaCoords = [];
                     obj.areaCoords.forEach(val => obj.originalAreaCoords.push(Object.assign({}, val)));
                 }
@@ -65,7 +64,7 @@ export function canvasMouseDown(e:MouseEvent) {
                     }
                     else if (obj.hoverHandle == R.Handle.PolyEdge) {
                         const next = obj.areaHandleIndex == obj.areaCoords.length - 1 ? 0 : obj.areaHandleIndex + 1;
-                        obj.addAreaVertex(c.toWorldX(e.x), c.toWorldY(e.y), next);
+                        obj.addAreaVertex(c.w_toX(e.x), c.w_toY(e.y), next);
                         obj.hoverHandle = R.Handle.PolyVertex;
                         obj.handle = obj.hoverHandle;
                         obj.areaHandleIndex = next;
@@ -75,8 +74,8 @@ export function canvasMouseDown(e:MouseEvent) {
                 } else if (obj instanceof CanvasImage) {
                     R.setOriginalH(obj.height);
                     R.setOriginalW(obj.width);
-                    R.setOriginalX(c.toWorldX(e.x));
-                    R.setOriginalY(c.toWorldY(e.y));
+                    R.setOriginalX(c.w_toX(e.x));
+                    R.setOriginalY(c.w_toY(e.y));
                     obj.handle = obj.hoverHandle;
                 }
             }
@@ -114,8 +113,8 @@ export function canvasMouseDown(e:MouseEvent) {
 export function canvasMouseMove(e:MouseEvent) {
     const l = R.getListener();
     const c = R.getCanvas();
-    const wX = c.toWorldX(e.x);
-    const wY = c.toWorldY(e.y);
+    const wX = c.w_toX(e.x);
+    const wY = c.w_toY(e.y);
 
     // Update hover states
     if (c.canvas && !R.getDragging()) {
@@ -123,7 +122,7 @@ export function canvasMouseMove(e:MouseEvent) {
         R.setHoveredCanvasObject(null);
 
         // Get listener if under cursor
-        if (!l.locked && pointCircleCollision(c.toWorldX(e.x), c.toWorldY(e.y), l.x, l.y, c.toWorldLength(R.getListenerRadius()))){
+        if (!l.locked && pointCircleCollision(c.w_toX(e.x), c.w_toY(e.y), l.x, l.y, c.w_toLen(R.getListenerRadius()))){
             R.setHoveredCanvasObject(l);
         }
 
@@ -147,12 +146,12 @@ export function canvasMouseMove(e:MouseEvent) {
                             const midX = (coords[i].x + coords[next].x)/2;
                             const midY = (coords[i].y + coords[next].y)/2;
                             
-                            if (pointCircleCollision(wX, wY, coords[i].x, coords[i].y, c.toWorldLength(R.getHandleSize()+R.getHandleSlop()))) {
+                            if (pointCircleCollision(wX, wY, coords[i].x, coords[i].y, c.w_toLen(R.getHandleSize()+R.getHandleSlop()))) {
                                 R.setHoveredCanvasObject(snd);
                                 snd.hoverHandle = R.Handle.PolyVertex;
                                 snd.areaHandleIndex = i;
                                 break;
-                            } else if (pointCircleCollision(wX, wY, midX, midY, c.toWorldLength(R.getHandleSize()+R.getHandleSlop()))) {
+                            } else if (pointCircleCollision(wX, wY, midX, midY, c.w_toLen(R.getHandleSize()+R.getHandleSlop()))) {
                                 R.setHoveredCanvasObject(snd);
                                 snd.hoverHandle = R.Handle.PolyEdge;
                                 snd.areaHandleIndex = i;
@@ -176,7 +175,7 @@ export function canvasMouseMove(e:MouseEvent) {
                             wY, 
                             snd.x + Math.cos(snd.localHandleAngle) * snd.radius, 
                             snd.y + Math.sin(snd.localHandleAngle) * snd.radius,
-                            c.toWorldLength(R.getHandleSize()+R.getHandleSlop()))) {
+                            c.w_toLen(R.getHandleSize()+R.getHandleSlop()))) {
                         R.setHoveredCanvasObject(snd);
                         snd.hoverHandle = R.Handle.Radius;
                         break;
@@ -196,25 +195,25 @@ export function canvasMouseMove(e:MouseEvent) {
             for (let i = 0; i < R.getImages().length; i++) {
                 const img = R.getImages()[i];
                 // NW handle
-                if (pointCircleCollision(wX, wY, img.x, img.y, c.toWorldLength(R.getHandleSize()+R.getHandleSlop()))) {
+                if (pointCircleCollision(wX, wY, img.x, img.y, c.w_toLen(R.getHandleSize()+R.getHandleSlop()))) {
                     R.setHoveredCanvasObject(img);
                     img.hoverHandle = R.Handle.NW;
                     break;
                 }
                 // NE handle
-                else if (pointCircleCollision(wX, wY, img.x + img.width, img.y, c.toWorldLength(R.getHandleSize()+R.getHandleSlop()))) {
+                else if (pointCircleCollision(wX, wY, img.x + img.width, img.y, c.w_toLen(R.getHandleSize()+R.getHandleSlop()))) {
                     R.setHoveredCanvasObject(img);
                     img.hoverHandle = R.Handle.NE;
                     break;
                 }
                 // SW handle
-                else if (pointCircleCollision(wX, wY, img.x, img.y+img.height, c.toWorldLength(R.getHandleSize()+R.getHandleSlop()))) {
+                else if (pointCircleCollision(wX, wY, img.x, img.y+img.height, c.w_toLen(R.getHandleSize()+R.getHandleSlop()))) {
                     R.setHoveredCanvasObject(img);
                     img.hoverHandle = R.Handle.SW;
                     break;
                 }
                 // SE handle
-                else if (pointCircleCollision(wX, wY, img.x+img.width, img.y+img.height, c.toWorldLength(R.getHandleSize()+R.getHandleSlop()))) {
+                else if (pointCircleCollision(wX, wY, img.x+img.width, img.y+img.height, c.w_toLen(R.getHandleSize()+R.getHandleSlop()))) {
                     R.setHoveredCanvasObject(img);
                     img.hoverHandle = R.Handle.SE;
                     break;
@@ -256,16 +255,16 @@ export function canvasMouseMove(e:MouseEvent) {
             if (obj.handle != R.Handle.None && obj instanceof CanvasSound) {
                 // If a local sound handle was grabbed, resize the local sound.
                 if (obj.soundType == R.SoundType.Local && obj.handle == R.Handle.Radius) {
-                    const vertical = obj.y - c.toWorldY(e.clientY);
-                    const horizontal = obj.x - c.toWorldX(e.clientX)
+                    const vertical = obj.y - c.w_toY(e.clientY);
+                    const horizontal = obj.x - c.w_toX(e.clientX)
                     obj.radius = Math.sqrt(horizontal**2 + vertical**2);
                     obj.localHandleAngle = Math.atan2(-vertical, -horizontal);
                 } 
                 // If an area sound handle was grabbed, move the handle & recalculate bounds.
                 else if (obj.soundType == R.SoundType.Area && obj.handle == R.Handle.PolyVertex) {
                     if (obj.areaCoords.length > obj.areaHandleIndex) {
-                        obj.areaCoords[obj.areaHandleIndex].x = c.toWorldX(e.x);
-                        obj.areaCoords[obj.areaHandleIndex].y = c.toWorldY(e.y);
+                        obj.areaCoords[obj.areaHandleIndex].x = c.w_toX(e.x);
+                        obj.areaCoords[obj.areaHandleIndex].y = c.w_toY(e.y);
                         obj.setBounds();
                     }
                 }
@@ -273,88 +272,59 @@ export function canvasMouseMove(e:MouseEvent) {
 
             // If image handle grabbed.
             else if (obj.handle != R.Handle.None && obj instanceof CanvasImage) {
+
                 // Resize image with SE corner
                 if (obj.handle == R.Handle.SE) {
                     // Free scaling: Set size and position relative to mouse
-                    obj.width = c.toWorldX(e.clientX) - obj.x;
-                    obj.height = c.toWorldY(e.clientY) - obj.y;
+                    obj.width = c.w_toX(e.clientX) - obj.x;
+                    obj.height = c.w_toY(e.clientY) - obj.y;
 
                     // Proportional scaling: if on, correct image size with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
-                        // Too wide
-                         if(obj.width/obj.height > obj.originalWidth/obj.originalHeight){
-                            obj.width = obj.height * (obj.originalWidth/obj.originalHeight);
-                         }
-                         // Too tall
-                         else if(obj.width/obj.height < obj.originalWidth/obj.originalHeight){
-                            obj.height = obj.width * (obj.originalHeight/obj.originalWidth);
-                         }
+                        if (c.w_toX(R.getMouse().x) > obj.x)
+                            propScaleSE(obj);
+                        else
+                            propScaleSE(obj);
                     }
                 }
+
                 // Resize image with NE corner
                 else if (obj.handle == R.Handle.NE) {
                     // Free scaling: Set size and position relative to mouse
-                    obj.y = c.toWorldY(e.clientY);
-                    obj.width = c.toWorldX(e.clientX) - obj.x;
-                    obj.height = R.getOriginalH() - c.toWorldY(e.clientY) + R.getMouseDownY();
+                    obj.y = c.w_toY(e.clientY);
+                    obj.width = c.w_toX(e.clientX) - obj.x;
+                    obj.height = R.getOriginalH() - c.w_toY(e.clientY) + R.getMouseDownY();
 
                     // Proportional scaling: if on, correct image size and position with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
-                        // Too wide
-                        if(obj.width/obj.height > obj.originalWidth/obj.originalHeight) {
-                            obj.width = obj.height * (obj.originalWidth/obj.originalHeight);
-                            obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
-                        }
-                        // Too tall
-                        else if(obj.width/obj.height < obj.originalWidth/obj.originalHeight) {
-                            obj.height = obj.width * (obj.originalHeight/obj.originalWidth);
-                            obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
-                        }
+                        propScaleNE(obj);
                     }
                 }
+
                 // Resize image with SW corner
                 else if (obj.handle == R.Handle.SW) {
                     // Free scaling: Set size and position relative to mouse
-                    obj.x = c.toWorldX(e.clientX) + obj.grabOffsetX;
-                    obj.height = c.toWorldY(e.clientY) - obj.y;
-                    obj.width = R.getOriginalW() - c.toWorldX(e.clientX) + R.getMouseDownX();
+                    obj.x = c.w_toX(e.clientX) + obj.grabOffsetX;
+                    obj.height = c.w_toY(e.clientY) - obj.y;
+                    obj.width = R.getOriginalW() - c.w_toX(e.clientX) + R.getMouseDownX();
 
                     // Proportional scaling: if on, correct image size and position with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
-                        // Too wide
-                        if(obj.width/obj.height > obj.originalWidth/obj.originalHeight) {
-                            obj.width = obj.height * (obj.originalWidth/obj.originalHeight);
-                            obj.x = R.getOriginalX() + R.getOriginalW() - obj.width;
-                        }
-                        // Too tall
-                        else if(obj.width/obj.height < obj.originalWidth/obj.originalHeight) {
-                            obj.height = obj.width * (obj.originalHeight/obj.originalWidth);
-                            obj.x = R.getOriginalX() + R.getOriginalW() - obj.width;
-                        }
+                        propScaleSW(obj);
                     }
                 }
+
                 // Resize image with NW corner
                 else if (obj.handle == R.Handle.NW) {
                     // Free scaling: Set size and position relative to mouse
-                    obj.x = c.toWorldX(e.clientX) + obj.grabOffsetX;
-                    obj.width = R.getOriginalW() - (c.toWorldX(e.clientX) - R.getMouseDownX());
-                    obj.y = c.toWorldY(e.clientY) + obj.grabOffsetY;
-                    obj.height = R.getOriginalH() - (c.toWorldY(e.clientY) - R.getMouseDownY());
+                    obj.x = c.w_toX(e.clientX) + obj.grabOffsetX;
+                    obj.width = R.getOriginalW() - (c.w_toX(e.clientX) - R.getMouseDownX());
+                    obj.y = c.w_toY(e.clientY) + obj.grabOffsetY;
+                    obj.height = R.getOriginalH() - (c.w_toY(e.clientY) - R.getMouseDownY());
 
                     // Proportional scaling: if on, correct image size and position with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
-                        // Too wide
-                        if(obj.width/obj.height > obj.originalWidth/obj.originalHeight){
-                            obj.width = obj.height * (obj.originalWidth/obj.originalHeight);
-                            obj.x = R.getOriginalX() + R.getOriginalW() - obj.width;
-                            obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
-                        }
-                        // Too tall
-                        else if(obj.width/obj.height < obj.originalWidth/obj.originalHeight){
-                            obj.height = obj.width * (obj.originalHeight/obj.originalWidth);
-                            obj.x = R.getOriginalX() + R.getOriginalW() - obj.width;
-                            obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
-                        }
+                        propScaleNW(obj);
                     }
                 }
             }
@@ -365,14 +335,14 @@ export function canvasMouseMove(e:MouseEvent) {
                 if (    obj instanceof CanvasListener || 
                         obj instanceof CanvasImage || 
                         (obj instanceof CanvasSound && obj.soundType == R.SoundType.Local)) {
-                    obj.x = c.toWorldX(e.clientX) + obj.grabOffsetX;
-                    obj.y = c.toWorldY(e.clientY) + obj.grabOffsetY;
+                    obj.x = c.w_toX(e.clientX) + obj.grabOffsetX;
+                    obj.y = c.w_toY(e.clientY) + obj.grabOffsetY;
                 }
                 // Drag area sound 
                 else if (obj instanceof CanvasSound && obj.soundType == R.SoundType.Area) {
                     for (let i = 0; i < obj.areaCoords.length; i++) {
-                        obj.areaCoords[i].x = obj.originalAreaCoords[i].x + c.toWorldX(e.clientX) - R.getOriginalX();
-                        obj.areaCoords[i].y = obj.originalAreaCoords[i].y + c.toWorldY(e.clientY) - R.getOriginalY();
+                        obj.areaCoords[i].x = obj.originalAreaCoords[i].x + c.w_toX(e.clientX) - R.getOriginalX();
+                        obj.areaCoords[i].y = obj.originalAreaCoords[i].y + c.w_toY(e.clientY) - R.getOriginalY();
                         obj.setBounds();
                     }
                 }
@@ -392,6 +362,56 @@ export function canvasMouseMove(e:MouseEvent) {
         } 
     }
 }
+
+function propScaleSE(obj:CanvasImage){
+    // Too wide
+    if(obj.width/obj.height > obj.originalWidth/obj.originalHeight){
+    obj.width = obj.height * (obj.originalWidth/obj.originalHeight);
+    }
+    // Too tall
+    else if(obj.width/obj.height < obj.originalWidth/obj.originalHeight){
+    obj.height = obj.width * (obj.originalHeight/obj.originalWidth);
+    }
+}
+function propScaleNE(obj:CanvasImage) {
+    // Too wide
+    if(obj.width/obj.height > obj.originalWidth/obj.originalHeight) {
+        obj.width = obj.height * (obj.originalWidth/obj.originalHeight);
+        obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
+    }
+    // Too tall
+    else if(obj.width/obj.height < obj.originalWidth/obj.originalHeight) {
+        obj.height = obj.width * (obj.originalHeight/obj.originalWidth);
+        obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
+    }
+}
+function propScaleNW(obj:CanvasImage) {
+    // Too wide
+    if(obj.width/obj.height > obj.originalWidth/obj.originalHeight){
+        obj.width = obj.height * (obj.originalWidth/obj.originalHeight);
+        obj.x = R.getOriginalX() + R.getOriginalW() - obj.width;
+        obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
+    }
+    // Too tall
+    else if(obj.width/obj.height < obj.originalWidth/obj.originalHeight){
+        obj.height = obj.width * (obj.originalHeight/obj.originalWidth);
+        obj.x = R.getOriginalX() + R.getOriginalW() - obj.width;
+        obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
+    }
+}
+function propScaleSW(obj:CanvasImage) {
+    // Too wide
+    if(obj.width/obj.height > obj.originalWidth/obj.originalHeight) {
+        obj.width = obj.height * (obj.originalWidth/obj.originalHeight);
+        obj.x = R.getOriginalX() + R.getOriginalW() - obj.width;
+    }
+    // Too tall
+    else if(obj.width/obj.height < obj.originalWidth/obj.originalHeight) {
+        obj.height = obj.width * (obj.originalHeight/obj.originalWidth);
+        obj.x = R.getOriginalX() + R.getOriginalW() - obj.width;
+    }
+}
+
 
 /** Handle a mouse up event on the canvas. @param e Mouse up event. */
 export function canvasMouseUp(e:MouseEvent) {

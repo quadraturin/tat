@@ -26,8 +26,8 @@ export async function saveProject(saveAs=false): Promise<boolean>
         maps: [
             {
             view: {
-                x:R.getCanvas().viewportCenterInWorldSpace().x,
-                y:R.getCanvas().viewportCenterInWorldSpace().y,
+                x:R.getCanvas().w_viewportCenter().x,
+                y:R.getCanvas().w_viewportCenter().y,
                 z:R.getCanvas().getZoom(),
                 hideImages:R.getImagesHidden(),
                 hideSounds:R.getSoundsHidden()

@@ -181,10 +181,10 @@ export class CanvasSound extends CanvasObject{
             if (max.x < c[i].x) max.x = c[i].x;
             if (max.y < c[i].y) max.y = c[i].y;
         }
-        min.x -= getCanvas().toWorldLength(getHandleSize()*2 + getHandleSlop());
-        min.y -= getCanvas().toWorldLength(getHandleSize()*2 + getHandleSlop());
-        max.x += getCanvas().toWorldLength(getHandleSize()*2 + getHandleSlop());
-        max.y += getCanvas().toWorldLength(getHandleSize()*2 + getHandleSlop());
+        min.x -= getCanvas().w_toLen(getHandleSize()*2 + getHandleSlop());
+        min.y -= getCanvas().w_toLen(getHandleSize()*2 + getHandleSlop());
+        max.x += getCanvas().w_toLen(getHandleSize()*2 + getHandleSlop());
+        max.y += getCanvas().w_toLen(getHandleSize()*2 + getHandleSlop());
         return this.#areaBounds = [min, max];
     }
 

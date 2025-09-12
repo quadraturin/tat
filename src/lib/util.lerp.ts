@@ -1,11 +1,11 @@
 /**
- * lerp.
- * @param start the start number.
- * @param end the end number.
- * @param amt the amount to increment.
- * @returns the interpolation.
+ * Lerp.
+ * @param v0 The start number.
+ * @param v1 The end number.
+ * @param t The amount to increment (0 - 1).
+ * @returns The interpolation.
  */
-export async function lerp (start:number, end:number, amt:number) {
-    return (1 - amt) * start + amt * end
+export function lerp (v0:number, v1:number, t:number) {
+    return (1 - t) * v0 + t * v1
   }
   
