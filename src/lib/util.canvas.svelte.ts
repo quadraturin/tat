@@ -619,6 +619,7 @@ export class InfiniteCanvas {
       let imgY = this.toWindowY(img.y);
       let imgW = img.width * this.#scale * this.#z;
       let imgH = img.height * this.#scale * this.#z;
+
       this.context.save()
       if (img.width < 0) {
         this.context.scale(-1,1);
@@ -632,6 +633,7 @@ export class InfiniteCanvas {
       this.context.drawImage(img.image, imgX, imgY, imgW, imgH);
       this.context.globalAlpha = 1;
       this.context.restore();
+
       if (!img.locked) { 
         const handleSize = R.getHandleSize();
         this.#drawRect(img.x, img.y, img.width, img.height);
@@ -640,9 +642,10 @@ export class InfiniteCanvas {
         this.#drawHandle(img.x, img.y + img.height, handleSize);
         this.#drawHandle(img.x + img.width, img.y + img.height, handleSize);
         this.context.textAlign = "left";
-        this.context.fillText(img.niceName, 
-          this.toWindowX(img.x), 
-          this.toWindowY(img.y) - R.getHandleSize()*2);
+        this.context.fillText(
+          img.niceName, 
+          img.width >= 0 ? this.toWindowX(img.x) : this.toWindowX(img.x + img.width), 
+          img.height >= 0 ? this.toWindowY(img.y) - R.getHandleSize()*2 : this.toWindowY(img.y + img.height) - R.getHandleSize()*2 );
       }
       this.context.setLineDash([]);
     }
