@@ -13,7 +13,6 @@
      * @param values The values to assign.
      */
     function assignThemeValues(target:string, values:appThemeItem) {
-        console.log('assign')
         theme += target + "-b:"  + values.b  + ";";
         theme += target + "-bg:" + values.bg + ";";
         theme += target + "-fg:" + values.fg + ";";
