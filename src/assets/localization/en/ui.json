@@ -19,7 +19,12 @@
     "mediaPanel": 
     {
         "images":           "Images",
-        "sounds":           "Sounds"
+        "sounds":           "Sounds",
+        "item": 
+        {
+            "paused":       "Paused",
+            "playing":      "Playing"
+        }
     },
     "menu": 
     {

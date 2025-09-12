@@ -19,32 +19,30 @@
 <div id="item-{item.uuid}" role="listitem" draggable="true" 
 class:hidden={getImagesHidden()} class:hovered={isHovered}
 class={["item image-item", item.selected && "active", item.locked && "locked"]}
-    onfocus     = {()=>{}} 
-    onblur      = {()=>{}}
-    onmouseout  = {()=>{ setHoveredCanvasObject(null) }}
-    onmouseover = {()=>{ setHoveredCanvasObject(item) }}>
+    onfocus     = {() => {}} 
+    onblur      = {() => {}}
+    onmouseout  = {() => { setHoveredCanvasObject(null); }}
+    onmouseover = {() => { setHoveredCanvasObject(item); }}>
 
     <!-- Opacity Display -->
-    <div class="volume-track" role="heading" aria-level="4"
-        onwheel     = {(e) => { e.preventDefault(); item.changeOpacity(e)}}
-        onfocus     = {()=>{}} 
-        onblur      = {()=>{}}
-        onmouseover = {()=>{ help($t('help.mediaPanel.image.opacity')) }}
-        onmouseout  = {()=>{ help() }}>
+    <button class="volume-track" aria-label="Opacity"
+        onwheel     = {(e) => { e.preventDefault(); item.changeOpacityWheel(e); }}
+        onfocus     = {()  => {}} 
+        onblur      = {()  => {}}
+        onmousedown = {(e) => { item.changeOpacityClick(e); }}
+        onmouseover = {()  => { help($t('help.mediaPanel.image.opacity')); }}
+        onmouseout  = {()  => { help(); }}>
         <div class="volume-bar" style={"height: "+ item.opacity*100 +"%"}></div>
-    </div>
+    </button>
 
     <!-- Image Name -->
     <button class="item-name"  title="{item.niceName}"
-    onclick     = {()=>{
-        item.selected = !item.selected; }}
-    ondblclick  = {()=>{
-        item.locked = !item.locked;
-        item.selected = false; }}
-    onfocus     = {()=>{}} 
-    onblur      = {()=>{}}
-    onmouseout  = {()=>{help()}}
-    onmouseover = {()=>{
+    onclick     = {() => { item.selected = !item.selected; }}
+    ondblclick  = {() => { item.locked = !item.locked; item.selected = false; }}
+    onfocus     = {() => {}} 
+    onblur      = {() => {}}
+    onmouseout  = {() => { help(); }}
+    onmouseover = {() => {
         if (item.selected) 
             help(
                 $t('help.mediaPanel.imageTitle'),
@@ -67,21 +65,21 @@ class={["item image-item", item.selected && "active", item.locked && "locked"]}
 
     <!-- Image Add Button -->
     <button class="item-add l" title="duplicate image" 
-    onclick     = {()=>duplicateImage(item)}
-    onfocus     = {()=>{}} 
-    onblur      = {()=>{}}
-    onmouseover = {()=>{help($t('help.mediaPanel.imageDuplicate'))}}
-    onmouseout  = {()=>{help()}}>
+    onclick     = {() => { duplicateImage(item); }}
+    onfocus     = {() => {}} 
+    onblur      = {() => {}}
+    onmouseover = {() => { help($t('help.mediaPanel.imageDuplicate')); }}
+    onmouseout  = {() => { help(); }}>
         +
     </button>
 
     <!-- Image Delete Button -->
     <button class="item-delete r" title="delete image" 
-    onclick     = {()=>tryRemoveObject(item)}
-    onfocus     = {()=>{}} 
-    onmouseover = {()=>{help($t('help.mediaPanel.imageDelete'))}}
-    onmouseout  = {()=>{help()}}
-    onblur      = {()=>{}}>
+    onclick     = {() => { tryRemoveObject(item); }}
+    onfocus     = {() => {}} 
+    onmouseover = {() => { help($t('help.mediaPanel.imageDelete')); }}
+    onmouseout  = {() => { help(); }}
+    onblur      = {() => {}}>
         ×
     </button>
 </div>

@@ -26,7 +26,9 @@ export async function changeMasterVolume(event:WheelEvent) {
     // Invert based on user settings.
     if (getUserSettings().invertVolumeScroll) delta *= -1;
 
-    delta = delta < 0 ? -0.05 : 0.05;
+    delta = delta < 0 ? -0.01 : 0.01;
+    delta *= getUserSettings().uiScrollSensitivity;
+
     // Set master volume, clamped between 0 and 1.
     const val = Math.max(0, Math.min(1, getMasterGain().gain.value + delta))
     if (getMasterGain().gain.value != val) {
@@ -36,7 +38,7 @@ export async function changeMasterVolume(event:WheelEvent) {
 }
 
 /**
- * Change the master volume of the app based on a mouse wheel scroll.
+ * Change the master opacity of the app based on a mouse wheel scroll.
  * @param event A mouse wheel event.
  */
 export async function changeMasterOpacity(event:WheelEvent) {
@@ -45,8 +47,39 @@ export async function changeMasterOpacity(event:WheelEvent) {
     // invert based on user settings.
     if (getUserSettings().invertVolumeScroll) delta *= -1;
 
+    delta = delta < 0 ? -0.01 : 0.01;
+    delta *= getUserSettings().uiScrollSensitivity;
+
     // adjust and clamp volume.
-    setMasterOpacity(getMasterOpacity() + delta * 0.01 * getUserSettings().uiScrollSensitivity);
+    setMasterOpacity(getMasterOpacity() + delta);
+}
+
+
+export async function changeMasterVolumeClick(e:MouseEvent){
+    const bar = document.getElementById("master-volume");
+    if (bar) {
+        const rect = bar.getBoundingClientRect();
+        const pct = (rect.bottom - e.y) / (rect.bottom - rect.top);
+        
+        // Set master volume, clamped between 0 and 1.
+        if (getMasterGain().gain.value != pct) {
+            getMasterGain().gain.cancelScheduledValues(getAudioContext().currentTime);
+            getMasterGain().gain.setValueAtTime(pct, getAudioContext().currentTime);
+        }
+    }
+}
+
+
+
+export async function changeMasterOpacityClick(e:MouseEvent){
+    const bar = document.getElementById("master-opacity");
+    if (bar) {
+        const rect = bar.getBoundingClientRect();
+        const pct = (rect.bottom - e.y) / (rect.bottom - rect.top);
+        
+        // Set master volume, clamped between 0 and 1.
+        setMasterOpacity(pct);
+    }
 }
 
 

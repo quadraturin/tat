@@ -5,7 +5,7 @@
 	import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 	import { saveUserSettings } from '$lib/settings.saveUserSettings';
 	import { getThemesList } from '$lib/settings.theme';
-	import IconReset from '$lib/icons/iconReset.svelte';
+	import IconReset from '$lib/icons/menu/reset.svelte';
 	import { help } from '$lib/util.help';
     const appWindow = getCurrentWebviewWindow();
 

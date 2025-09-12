@@ -80,16 +80,31 @@ export class CanvasImage extends CanvasObject {
     public get originalHeight() { return this.#originalHeight; }
 
     /** Change the image opacity. @param e Mouse wheel event. */
-    public changeOpacity(e:WheelEvent) {
+    public changeOpacityWheel(e:WheelEvent) {
         try {
             let delta = e.deltaY;
             // invert based on user settings.
             if (getUserSettings().invertVolumeScroll) delta *= -1;
-            this.#opacity += delta * 0.01 * getUserSettings().uiScrollSensitivity;
+
+            delta = delta < 0 ? -0.01 : 0.01;
+            delta *= getUserSettings().uiScrollSensitivity;
+            
+            this.#opacity += delta;
+
             if (this.#opacity < 0) this.#opacity = 0;
             else if (this.#opacity > 1) this.#opacity = 1;
         } catch(err) {
             console.error(err);
         }
+    }
+
+    public changeOpacityClick(e:MouseEvent) {
+        if (e.currentTarget instanceof Element) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const pct = (rect.bottom - e.y) / (rect.bottom - rect.top);
+            this.#opacity = pct;
+            if (this.#opacity < 0) this.#opacity = 0;
+            else if (this.#opacity > 1) this.#opacity = 1;
+            }
     }
 }

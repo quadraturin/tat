@@ -299,15 +299,30 @@ export class CanvasSound extends CanvasObject{
     }
 
 
-    public changeVolume(e:WheelEvent) {
+    public changeVolumeWheel(e:WheelEvent) {
         let delta = e.deltaY;
+        
         // invert based on user settings.
         if (getUserSettings().invertVolumeScroll) delta *= -1;
-        delta = delta < 0 ? -0.05 : 0.05;
+        
+        delta = delta < 0 ? -0.01 : 0.01;
+        delta *= getUserSettings().uiScrollSensitivity;
+
         // adjust and clamp volume.
         this.volume += delta;
         if (this.volume < 0) this.volume = 0;
         else if (this.volume > 1) this.volume = 1;
+    }
+
+
+    public changeVolumeClick(e:MouseEvent) {
+        if (e.currentTarget instanceof Element) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const pct = (rect.bottom - e.y) / (rect.bottom - rect.top);
+            this.volume = pct;
+            if (this.volume < 0) this.volume = 0;
+            else if (this.volume > 1) this.volume = 1;
+            }
     }
 
 

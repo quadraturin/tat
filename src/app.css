@@ -255,196 +255,254 @@ button.r {
 
 /* Canvas */
 .container {    
-    border-color:     var(--cnv-b); }
+    border-color:       var(--cnv-b); 
+}
 
 /* Panels */
 #titlebar {
-    border-color:     var(--pnl-tb-b);
-    background-color: var(--pnl-tb-bg);
-    color:            var(--pnl-tb-fg); }
+    border-color:       var(--pnl-tb-b);
+    background-color:   var(--pnl-tb-bg);
+    color:              var(--pnl-tb-fg); 
+}
 #controls {
-    border-color:     var(--pnl-ctrl-b);
-    background-color: var(--pnl-ctrl-bg);
-    color:            var(--pnl-ctrl-fg); }
+    border-color:       var(--pnl-ctrl-b);
+    background-color:   var(--pnl-ctrl-bg);
+    color:              var(--pnl-ctrl-fg); 
+}
 #media {
-    border-color:     var(--pnl-media-b);
-    background-color: var(--pnl-media-bg);
-    color:            var(--pnl-media-fg); }
+    border-color:       var(--pnl-media-b);
+    background-color:   var(--pnl-media-bg);
+    color:              var(--pnl-media-fg); 
+}
 #help-text {
-    border-color:     var(--pnl-help-b);
-    background-color: var(--pnl-help-bg);
-    color:            var(--pnl-help-fg); }
+    border-color:       var(--pnl-help-b);
+    background-color:   var(--pnl-help-bg);
+    color:              var(--pnl-help-fg); 
+}
 .menu, #modal { 
     border-color:       var(--pnl-menu-b);
     background-color:   var(--pnl-menu-bg);
-    color:              var(--pnl-menu-fg); }
+    color:              var(--pnl-menu-fg); 
+}
 
 /* Menu Styles */
 .menu h2, #modal h3 { 
     background-color:   var(--pnl-menu-fg); 
-    color:              var(--pnl-menu-bg); }
+    color:              var(--pnl-menu-bg); 
+}
 #modal-title {
-    border-bottom: 1px solid var(--pnl-menu-b); }
+    border-bottom:      1px solid var(--pnl-menu-b); 
+}
 #modal li {
-    border: 1px solid var(--pnl-menu-b); }
+    border:             1px solid var(--pnl-menu-b); 
+}
 #modal li:first-child {
-    border-top: 1px solid var(--pnl-menu-b); }
+    border-top:         1px solid var(--pnl-menu-b); 
+}
 #modal li.unique {
-    background-color: var(--anc-act-fg);
-    color:            var(--pnl-menu-bg); }
+    background-color:   var(--anc-act-fg);
+    color:              var(--pnl-menu-bg); 
+}
 .menu a, #modal a {
-    color:            var(--anc-fg); }
+    color:              var(--anc-fg); 
+}
 .menu a:hover, #modal a:hover {
-    color:            var(--anc-hov-fg); }
+    color:              var(--anc-hov-fg); 
+}
 .menu label {
-    color:            var(--anc-fg); }
+    color:              var(--anc-fg); 
+}
 .menu .changed label {
-    color:            var(--anc-hov-fg); }
+    color:              var(--anc-hov-fg); 
+}
 .menu input[type=checkbox]::after, 
 .menu input[type=checkbox]:hover::after,
 .menu input[type=range]::-webkit-slider-thumb {
-    background-color: var(--anc-fg); }
+    background-color:   var(--anc-fg); 
+}
 .rangeValue {
-    background-color: var(--anc-fg); 
-    color: var(--pnl-menu-bg); }
+    background-color:   var(--anc-fg); 
+    color:              var(--pnl-menu-bg); 
+}
 .menu input[type=range], 
 .menu select { 
-    color: var(--anc-fg); }
+    color:              var(--anc-fg); 
+}
 .menu input[type=checkbox], 
 .menu input[type=range], select {
-    border: 1px solid var(--anc-fg) !important; }
+    border:             1px solid var(--anc-fg) !important; 
+}
 .rangeValue::after {
-    border-right: 3px solid var(--anc-fg); }
+    border-right:       3px solid var(--anc-fg); 
+}
 .setting button {
-    border-color: var(--btn-menu-b);
-    color: var(--btn-menu-fg);
-    background-color: var(--btn-menu-bg); }
+    border-color:       var(--btn-menu-b);
+    color:              var(--btn-menu-fg);
+    background-color:   var(--btn-menu-bg); 
+}
 .setting button:hover {
-    border-color: var(--btn-menu-hov-b);
-    color: var(--btn-menu-hov-fg);
-    background-color: var(--btn-menu-hov-bg); }
+    border-color:       var(--btn-menu-hov-b);
+    color:              var(--btn-menu-hov-fg);
+    background-color:   var(--btn-menu-hov-bg); 
+}
 .setting.changed{
-    color: var(--anc-act-fg); }
+    color:              var(--anc-act-fg); 
+}
 .setting.changed input {
-    border-color: var(--anc-act-fg) !important; }
+    border-color:       var(--anc-act-fg) !important; 
+}
 .setting.changed input[type=checkbox]::after, 
 .setting.changed input[type=checkbox]:hover::after,
 .setting.changed input[type=range]::-webkit-slider-thumb {
-    background-color: var(--anc-act-fg) !important; }
+    background-color:   var(--anc-act-fg) !important; 
+}
 .setting.changed .rangeValue {
-    background-color: var(--anc-act-fg) !important; }
+    background-color:   var(--anc-act-fg) !important; 
+}
 .setting.changed .rangeValue::after {
-    border-right-color: var(--anc-act-fg) !important; }
+    border-right-color: var(--anc-act-fg) !important; 
+}
 
 /* Items */
 #media .item { 
     border-color:     var(--itm-media-b);
     background-color: var(--itm-media-bg);
-    color:            var(--itm-media-fg); }
+    color:            var(--itm-media-fg); 
+}
 #media .item .item-name {
-    color:            var(--itm-media-fg); }  
+    color:            var(--itm-media-fg); 
+}  
 #media .item:hover, #media .item.hovered {    
     border-color:     var(--itm-media-hov-b);
     background-color: var(--itm-media-hov-bg);
-    color:            var(--itm-media-hov-fg); }
+    color:            var(--itm-media-hov-fg); 
+}
 #media .item:hover .item-name, #media .item.hovered .item-name {
-    color:            var(--itm-media-hov-fg); }  
+    color:            var(--itm-media-hov-fg); 
+}  
 #media .item.active { 
     border-color:     var(--itm-media-act-b);
     background-color: var(--itm-media-act-bg);
-    color:            var(--itm-media-act-fg); }
+    color:            var(--itm-media-act-fg); 
+}
 #media .item.active .item-name {
-    color:            var(--itm-media-act-fg); }  
+    color:            var(--itm-media-act-fg); 
+}  
 #media .item.locked {   
     border-color:     var(--itm-media-lck-b);
     background-color: var(--itm-media-lck-bg);
-    color:            var(--itm-media-lck-fg); }
+    color:            var(--itm-media-lck-fg); 
+}
 #media .item.locked .item-name {
-    color:            var(--itm-media-lck-fg); }  
+    color:            var(--itm-media-lck-fg); 
+}  
 #media .item.locked.hovered {   
-    border-color:     var(--itm-media-hov-b); }
+    border-color:     var(--itm-media-hov-b); 
+}
 
 #media .item.over.insertAbove::before,
 #media .item.over.insertBelow::before {
-    background-color: var(--itm-media-b); }
+    background-color: var(--itm-media-b); 
+}
 
 /* Titlebar Buttons */
 #titlebar button { 
     border-color:     var(--btn-tb-b);
     background-color: var(--btn-tb-bg);
-    color:            var(--btn-tb-fg); }
+    color:            var(--btn-tb-fg); 
+}
 #titlebar button:hover {    
     border-color:     var(--btn-tb-hov-b);
     background-color: var(--btn-tb-hov-bg);
-    color:            var(--btn-tb-hov-fg); }
+    color:            var(--btn-tb-hov-fg); 
+}
 #titlebar button.active {   
     border-color:     var(--btn-tb-act-b);
     background-color: var(--btn-tb-act-bg);
-    color:            var(--btn-tb-act-fg); }
+    color:            var(--btn-tb-act-fg); 
+}
 
 /* Titlebar Minimize Button */
 #titlebar-minimize .svg-outer {        
     stroke: var(--btn-tb-min-b);
-    fill:   var(--btn-tb-min-bg); }
+    fill:   var(--btn-tb-min-bg); 
+}
 #titlebar-minimize .svg-inner {         
-    fill:   var(--btn-tb-min-fg); }
+    fill:   var(--btn-tb-min-fg); 
+}
 #titlebar-minimize:hover .svg-outer {   
     stroke: var(--btn-tb-min-hov-b);
-    fill:   var(--btn-tb-min-hov-bg); }
+    fill:   var(--btn-tb-min-hov-bg); 
+}
 #titlebar-minimize:hover .svg-inner {   
-    fill:   var(--btn-tb-min-hov-fg); }
+    fill:   var(--btn-tb-min-hov-fg); 
+}
 
 /* Titlebar Maximize Button*/
 #titlebar-maximize .svg-outer {         
     stroke: var(--btn-tb-max-b);
-    fill:   var(--btn-tb-max-bg); }
+    fill:   var(--btn-tb-max-bg); 
+}
 #titlebar-maximize .svg-inner {         
-    fill:   var(--btn-tb-max-fg); }
+    fill:   var(--btn-tb-max-fg); 
+}
 #titlebar-maximize:hover .svg-outer {   
     stroke: var(--btn-tb-max-hov-b);
-    fill:   var(--btn-tb-max-hov-bg); }
+    fill:   var(--btn-tb-max-hov-bg); 
+}
 #titlebar-maximize:hover .svg-inner {   
-    fill:   var(--btn-tb-max-hov-fg); }
+    fill:   var(--btn-tb-max-hov-fg); 
+}
 
 /* Titlebar Quit Button */
 #titlebar-close .svg-outer {            
     stroke: var(--btn-tb-quit-b);
-    fill:   var(--btn-tb-quit-bg); }
+    fill:   var(--btn-tb-quit-bg); 
+}
 #titlebar-close .svg-inner {
-    fill:   var(--btn-tb-quit-fg); }
+    fill:   var(--btn-tb-quit-fg); 
+}
 #titlebar-close:hover .svg-outer { 
     stroke: var(--btn-tb-quit-hov-b);
-    fill:   var(--btn-tb-quit-hov-bg); }
+    fill:   var(--btn-tb-quit-hov-bg); 
+}
 #titlebar-close:hover .svg-inner { 
-    fill:   var(--btn-tb-quit-hov-fg); }
+    fill:   var(--btn-tb-quit-hov-fg); 
+}
 
 /* Controls Panel Buttons */
 #controls button { 
     border-color:     var(--btn-ctrl-b);
     background-color: var(--btn-ctrl-bg);
-    color:            var(--btn-ctrl-fg); }
+    color:            var(--btn-ctrl-fg); 
+}
 #controls button:hover {    
     border-color:     var(--btn-ctrl-hov-b);
     background-color: var(--btn-ctrl-hov-bg);
-    color:            var(--btn-ctrl-hov-fg); }
+    color:            var(--btn-ctrl-hov-fg); 
+}
 #controls button.active {   
     border-color:     var(--btn-ctrl-act-b);
     background-color: var(--btn-ctrl-act-bg);
-    color:            var(--btn-ctrl-act-fg); }
+    color:            var(--btn-ctrl-act-fg); 
+}
 
 /* Media Panel Buttons*/
 #media button {  
     border-color:     var(--btn-media-b);
     background-color: var(--btn-media-bg);
-    color:            var(--btn-media-fg); }
+    color:            var(--btn-media-fg); 
+}
 #media button:hover { 
     border-color:     var(--btn-media-hov-b);
     background-color: var(--btn-media-hov-bg);
-    color:            var(--btn-media-hov-fg); }
+    color:            var(--btn-media-hov-fg); 
+}
 #media button.active { 
     border-color:     var(--btn-media-act-b);
     background-color: var(--btn-media-act-bg);
-    color:            var(--btn-media-act-fg); }
+    color:            var(--btn-media-act-fg); 
+}
 #media span.item-pause.disabled {
     border-color:     var(--btn-media-lck-b);
     background-color: var(--btn-media-lck-bg);
@@ -455,50 +513,80 @@ button.r {
 #help button { 
     border-color:     var(--btn-help-b);
     background-color: var(--btn-help-bg);
-    color:            var(--btn-help-fg); }
+    color:            var(--btn-help-fg); 
+}
 #help button:hover { 
     border-color:     var(--btn-help-hov-b);
     background-color: var(--btn-help-hov-bg);
-    color:            var(--btn-help-hov-fg); }
+    color:            var(--btn-help-hov-fg); 
+}
 #help button.active { 
     border-color:     var(--btn-help-act-b);
     background-color: var(--btn-help-act-bg);
-    color:            var(--btn-help-act-fg); }
+    color:            var(--btn-help-act-fg); 
+}
 
 /* Menu Panel Buttons */
 .menu button, #modal button { 
     border-color:     var(--btn-menu-b);
     background-color: var(--btn-menu-bg);
-    color:            var(--btn-menu-fg); }
+    color:            var(--btn-menu-fg); 
+}
 .menu button:hover, #modal button:hover { 
     border-color:     var(--btn-menu-hov-b);
     background-color: var(--btn-menu-hov-bg);
-    color:            var(--btn-menu-hov-fg); }
+    color:            var(--btn-menu-hov-fg); 
+}
 .menu button.active, #modal button:active { 
     border-color:     var(--btn-menu-act-b);
     background-color: var(--btn-menu-act-bg);
-    color:            var(--btn-menu-act-fg); }
+    color:            var(--btn-menu-act-fg); 
+}
 .menu span.item-pause.disabled {
     border-color:     var(--btn-menu-lck-b);
     background-color: var(--btn-menu-lck-bg);
     color:            var(--btn-menu-lck-fg);
 }
 
-/* Volume Controls */
-#master-volume, #master-opacity, #media .volume-track {      
-    background-color: var(--vol-itm-media-bg);
-    border-color:     var(--vol-itm-media-b); }
-#media .volume-bar, #master-volume-bar, #master-opacity-bar {        
-    background-color: var(--vol-itm-media-fg); }
-#media .item.hovered .volume-track, #media .item:hover .volume-track,
-#master-volume:hover, #master-opacity:hover {
-    background-color: var(--vol-itm-media-hov-bg);
-    border-color:     var(--vol-itm-media-hov-b); }
-#media .item .volume-track:hover .volume-bar,
-#master-volume:hover #master-volume-bar, #master-opacity:hover #master-volume-bar {
-    background-color: var(--vol-itm-media-hov-fg); }
+
+/* Volume/Opacity Controls: Headers */
+#media .heading .volume-track {
+    background-color:   var(--vol-media-bg);
+    border-color:       var(--vol-media-b); 
+}
+#media .heading .volume-bar {
+    background-color:   var(--vol-media-fg); 
+}
+#media .heading .volume-track:hover {
+    background-color:   var(--vol-media-hov-bg);
+    border-color:       var(--vol-media-hov-b); 
+}
+#media .heading .volume-track:hover .volume-bar {
+    background-color:   var(--vol-media-hov-fg); 
+}
+
+
+/* Volume/Opacity Controls: Items */
+#media .item .volume-track {
+    background-color:   var(--vol-itm-media-bg);
+    border-color:       var(--vol-itm-media-b); 
+}
+#media .item .volume-bar {        
+    background-color:   var(--vol-itm-media-fg); 
+}
+#media .item.hovered .volume-track, 
 #media .item:hover .volume-track {
-    color:            var(--vol-itm-media-hov-b); }  
+    border-color:       var(--vol-itm-media-hov-b); 
+}
+#media .item.active .volume-track {
+    border-color:       var(--itm-media-act-b); 
+}
+#media .item .volume-track:hover {
+    background-color:   var(--vol-itm-media-hov-bg);
+}
+#media .item .volume-track:hover .volume-bar {
+    background-color:   var(--itm-media-hov-fg); 
+}
 
 
 /* Audio Progress Track */
@@ -506,14 +594,14 @@ button.r {
     background-color: var(--trk-itm-media-bg); }
 #media .progress-bar {
     background-color: var(--trk-itm-media-fg); }
-#media .progress-track:hover {
-    background-color: var(--trk-itm-media-hov-bg); }
-#media .progress-track:hover .progress-bar {
-    background-color: var(--trk-itm-media-hov-fg); }
 #media .progress-track.active {
     background-color: var(--trk-itm-media-act-bg); }
 #media .progress-track.active .progress-bar {
     background-color: var(--trk-itm-media-act-fg); }
+#media .progress-track:hover {
+    background-color: var(--trk-itm-media-hov-bg); }
+#media .progress-track:hover .progress-bar {
+    background-color: var(--trk-itm-media-hov-fg); }
 
 /* Warning */
 #media .item-delete:hover,
@@ -630,6 +718,8 @@ button.r {
 }
 #controls button svg {
     margin: 2px auto;
+    width: 14px;
+    height: 14px;
 }
 #controls .control-spacer {
     flex: 0.1;
@@ -673,17 +763,32 @@ button.r {
 #media::-webkit-scrollbar { background-color: transparent; }
 #media::-webkit-scrollbar { width: 0px; }
 #media::-webkit-scrollbar:horizontal { height: 0px; }
-#media .heading button {
+
+#media .heading {
+    margin: 0;
+}
+
+#media.empty, #media-sounds.empty, #media-images.empty {
+    display: none;
+}
+
+#media-sounds:not(.empty) + #media-images {
+    margin-top: 8px;
+}
+
+#media .heading .controls button {
     float:right;
     height: 14px;
+    width: 16px;
     margin-bottom: 4px;
 }
 #media .heading button svg {
     height: 12px !important;
+    width: 14px !important;
     vertical-align: baseline;
 }
 #media.sidebarHidden {
-    display:none;
+    display: none;
 }
 #media-sounds, #media-images {
     display:flex;
@@ -708,7 +813,7 @@ button.r {
     bottom: -4px;
 }
 #media .item {
-    margin: 0 0 4px 8px;
+    margin: 8px 0 0 8px;
     padding: 3px;
     display: flex;
     line-height: 10px;
@@ -716,8 +821,8 @@ button.r {
     position: relative;
     border-radius: 0 var(--br-m) var(--br-m) 0;
 }
-#media .item:last-child {
-    margin-bottom: 0;
+#media .item:first-child {
+    margin-top: 4px;
 }
 #media .item.hidden {
     opacity: 0.5;
@@ -730,54 +835,54 @@ button.r {
     z-index: 10;
     background: none !important;
 }
-#media button {
+#media .item button {
     flex: 1;
     margin-left: 2px;
     padding: 0 1px;
     z-index: 10;
     border-radius: var(--br-s);
 }
-#media button svg,
-#media span svg {
+#media .item button svg,
+#media .item span svg {
     display: inline-block;
     vertical-align: middle;
     height: 12px;
     width: 12px;
 }
-#media button.item-type {
+#media .item button.item-type {
     margin-left: 0;
 }
-#media .item-pause {
-    flex: 4;
+#media .item .item-pause {
+    flex: 4 !important;
 }
-#media span.item-pause {
+#media .item span.item-pause {
     height: 14px;
 }
-#media span.item-pause + button {
+#media .item span.item-pause + button {
     border-left:none;
 }
-#media span.item-pause span.timer:first-child {
+#media .item span.item-pause span.timer:first-child {
     padding-left: 5px;
 }
-#media span.item-pause span.timer {
+#media .item span.item-pause span.timer {
     height:12px;
     display: inline-block;
     vertical-align: top;
     line-height: 14px;
 }
-#media span.item-pause button {
+#media .item span.item-pause button {
     height: 10px;
     padding: 0;
     margin-top: 1px;
 }
-#media span.item-pause button svg {
+#media .item span.item-pause button svg {
     height: 8px;
     margin-top: -3px;
 }
-#media span.item-pause span.timer .timer-divider.blink {
+#media .item span.item-pause span.timer .timer-divider.blink {
     opacity: 0;
 }
-#media .progress-track {
+#media .item button.progress-track {
     flex-basis: 100%;
     height: 6px;
     border-radius: var(--br-s);
@@ -786,7 +891,7 @@ button.r {
     border: none;
     padding: 0 1px;
 }
-#media .progress-bar {
+#media .item .progress-bar {
     height: 4px;
     border-radius: calc(var(--br-s) - 1px);
     min-width: 2px;
@@ -794,7 +899,7 @@ button.r {
     z-index: 10;
     border: none;
 }
-#media .item .volume-track {
+#media .item button.volume-track {
     position: absolute;
     width: 8px;
     height: calc(100% + 2px);
@@ -802,6 +907,8 @@ button.r {
     left: -9px;
     border-right: none;
     border-radius: var(--br-m) 0 0 var(--br-m);
+    margin: 0;
+    padding: 0;
 }
 #media .item .volume-bar {
     position:absolute;
@@ -811,7 +918,7 @@ button.r {
     z-index: 0;
     border-radius: var(--br-s) 0 0 var(--br-s);
 }
-.item-name {
+#media .item .item-name {
     background: none;
     border: none;
     padding: 0;
