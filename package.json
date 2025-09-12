@@ -40,6 +40,7 @@
 		"@tauri-apps/plugin-fs": "^2.2.0",
 		"@tauri-apps/plugin-shell": "^2.2.0",
 		"@types/howler": "^2.2.12",
+		"marked": "^15.0.12",
 		"sveltekit-i18n": "^2.4.2",
 		"uint8-util": "^2.2.4"
 	}

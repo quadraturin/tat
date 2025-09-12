@@ -15,6 +15,29 @@
 	import IconYouTube from "$lib/icons/link/youtube.svelte";
     import IconParadisoWorks from '$lib/icons/link/paradisoworks.svelte';
 	import { help } from '$lib/util.help';
+	import { marked, type Tokens } from "marked";
+
+    // modified https://github.com/markedjs/marked/issues/655#issuecomment-712380889
+    const renderer = {
+    link({ href, title, text }: Tokens.Link): string {
+        const localLink = href.startsWith(
+        `${location.protocol}//${location.hostname}`
+        );
+
+        // to avoid title="null"
+        if (title === null) {
+        return localLink
+            ? `<a href="${href}">${text}</a>`
+            : `<a target="_blank" rel="noreferrer noopener" href="${href}">${text}</a>`;
+        }
+        return localLink
+        ? `<a href="${href}" title="${title}">${text}</a>`
+        : `<a target="_blank" rel="noreferrer noopener" href="${href}" title="${title}">${text}</a>`;
+    },
+    };
+
+    marked.use({ renderer });
+    
 </script>
 
 <div class="menu" id="about">
@@ -100,21 +123,21 @@
         
         <p><em>{$t('ui.menu.about.about.version')} 0.5.0</em></p>
         
-        <p>{@html $t('ui.menu.about.about.blurb')}</p>
+        {@html marked.parse($t('ui.menu.about.about.blurb'))}
         
-        <p>{@html $t('ui.menu.about.about.credits')}</p>
+        {@html marked.parse($t('ui.menu.about.about.credits'))}
         
-        <p>{@html $t('ui.menu.about.about.video')}</p>
+        {@html marked.parse($t('ui.menu.about.about.video'))}
 
         <p><a href="https://youtu.be/LQraTyCoS4E" target="_blank">https://youtu.be/LQraTyCoS4E</a></p>
 
-        <p>{@html $t('ui.menu.about.about.howToUse')}</p>
+        {@html marked.parse($t('ui.menu.about.about.howToUse'))}
 
-        <p>{@html $t('ui.menu.about.about.projectFiles')}</p>
+        {@html marked.parse($t('ui.menu.about.about.projectFiles'))}
 
         <h2>{$t('ui.menu.about.changelog.title')}</h2>
 
-       
+        {@html marked.parse($t('ui.menu.about.changelog.changelog'))}
 
         <h2>{$t('ui.menu.about.licenses.title')}</h2>
 

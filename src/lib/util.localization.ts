@@ -7,11 +7,11 @@ const config = ({
         es: { lang },
     },
     loaders: [
-        { locale: 'en', key: 'help',     loader: async () => (await import ('../assets/localization/en/help.json')).default },
-        { locale: 'en', key: 'ui',       loader: async () => (await import ('../assets/localization/en/ui.json')).default },
+        { locale: 'en', key: 'help', loader: async () => (await import ('../assets/localization/en/help.json')).default },
+        { locale: 'en', key: 'ui',   loader: async () => (await import ('../assets/localization/en/ui.json')).default },
         
-        { locale: 'es', key: 'help',     loader: async () => (await import ('../assets/localization/es/help.json')).default },
-        { locale: 'es', key: 'ui',       loader: async () => (await import ('../assets/localization/es/ui.json')).default },
+        { locale: 'es', key: 'help', loader: async () => (await import ('../assets/localization/es/help.json')).default },
+        { locale: 'es', key: 'ui',   loader: async () => (await import ('../assets/localization/es/ui.json')).default },
     ]
 });
 

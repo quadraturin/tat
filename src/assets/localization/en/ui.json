@@ -55,14 +55,15 @@
                 "title":        "About tat",
                 "version":      "Version",
                 "blurb":        "tat is a tool for easily running environmental audio during your tabletop games.",
-                "credits":      "This tool was designed and programmed by Quadra for <a href='https://www.paradiso.zone' target='_blank'>PARADISO</a>, originally as a stretch goal reward for the <a href='https://www.kickstarter.com/projects/ultraparadiso/warped-beyond-recognition' target='_blank'>Warped Beyond Recognition Kickstarter</a>. The original prototype was programmed by <a href='https://galendrew.com/' target='_blank'>Galen Drew</a>.",
+                "credits":      "This tool was designed and programmed by Quadra for [PARADISO](https://www.paradiso.zone), originally as a stretch goal reward for the [Warped Beyond Recognition](https://www.paradiso.zone/ooo-wbr/) Kickstarter. The original prototype was programmed by [Galen Drew](https://galendrew.com/).",
                 "video":        "To learn how to use tat, check out this video:",
-                "howToUse":     "Use \"add media\" to add images (maps, probably) and audio (ambience, soundtracks, etc.) to your project. You will then be able to arrange them as you like -- the assumed use is that you will overlay audio on areas of your maps that players should hear when they are in those areas. The map pin is the \"listener\": this represents where your players are. As your players move through environments in the game, drag the pin around on the map(s) you added, and the listener will automatically blend the audio sources that you have placed.",
-                "projectFiles": "When you save a project, it is saved as a folder containing a \"project.json\" file describing the project, a \"sounds\" folder, and an \"images\" folder, containing <em>copies</em> of the sounds and images you added, respectively. References to the original files are not saved."
+                "howToUse":     "Use *add media* to add images (maps, probably) and audio (ambience, soundtracks, etc.) to your project. You will then be able to arrange them as you like -- the assumed use is that you will overlay audio on areas of your maps that players should hear when they are in those areas. The map pin is the *listener:* this represents where your players are. As your players move through environments in the game, drag the pin around on the map(s) you added, and the listener will automatically blend the audio sources that you have placed.",
+                "projectFiles": "When you save a project, it is saved as a folder containing a 'project.json' file describing the project, a 'sounds' folder, and an 'images' folder, containing *copies* of the sounds and images you added, respectively. References to the original files are not saved."
             },
             "changelog":
             {
-                "title":   "Changelog"
+                "title":        "Changelog",
+                "changelog":    "View the changelog on the [tat website](https://www.paradiso.zone/ooo-tat/)."
             },
             "licenses":
             {

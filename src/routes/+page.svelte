@@ -415,8 +415,8 @@
     <!-- Project Name -->
     <h1 data-tauri-drag-region  
     onfocus     = {()=>{}} 
-    onmouseover = {()=>{isDirty ? help($t('help.titlebar.titleDirty')) : help($t('help.titlebar.title'))}}
-    onmouseout  = {()=>{help()}}
+    onmouseover = {()=>{ isDirty ? help($t('help.titlebar.titleDirty')) : help($t('help.titlebar.title')); }}
+    onmouseout  = {()=>{ help(); }}
     onblur      = {()=>{}}>
         <span data-tauri-drag-region class="project-name">{projectName}</span>
         <span data-tauri-drag-region>{#if isDirty}*{/if}</span>

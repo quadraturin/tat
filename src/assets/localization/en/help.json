@@ -3,134 +3,134 @@
     {
         "title":                "Your project has no unsaved changes.",
         "titleDirty":           "Your project has unsaved changes.",
-        "addMedia":             "<em>Add media:</em> Add images and/or audio to your project. These will be copied to your project folder when you save.",
-        "addMediaKey":          "<em>(ctrl/cmd+i)</em>",
-        "save":                 "<em>Save project:</em> Save your project.",
-        "saveKey":              "<em>(ctrl/cmd+s)</em>",
-        "saveAs":               "<em>Save project as:</em> Save a copy of your project to a new location.",
-        "saveAsKey":            "<em>(ctrl/cmd+shift+s)</em>",
-        "openProject":          "<em>Open project:</em> Open an existing project.",
-        "openProjectKey":       "<em>(ctrl/cmd+o)</em>",
-        "newProject":           "<em>New project:</em> Create a new project.",
-        "newProjectKey":        "<em>(ctrl/cmd+n)</em>",
-        "settings":             "<em>Settings:</em> View the application settings.",
-        "settingsKey":          "<em>(ctrl/cmd+1)</em>",
-        "about":                "<em>About:</em> What is this anyway?.",
-        "aboutKey":             "<em>(ctrl/cmd+2)</em>",
-        "minimize":             "<em>Minimize</em> this window.",
-        "minimizeKey":          "<em>(ctrl/cmd+m)</em>",
-        "maximize":             "<em>Maximize</em> this window.",
-        "maximizeKey":          "<em>(ctrl/cmd+shift+m)</em>",
-        "close":                "<em>Close</em> tat.",
-        "closeKey":             "<em>(ctrl/cmd+w)</em>" 
+        "addMedia":             "*Add media:* Add images and/or audio to your project. These will be copied to your project folder when you save.",
+        "addMediaKey":          "*(ctrl/cmd+i)*",
+        "save":                 "*Save project:* Save your project.",
+        "saveKey":              "*(ctrl/cmd+s)*",
+        "saveAs":               "*Save project as:* Save a copy of your project to a new location.",
+        "saveAsKey":            "*(ctrl/cmd+shift+s)*",
+        "openProject":          "*Open project:* Open an existing project.",
+        "openProjectKey":       "*(ctrl/cmd+o)*",
+        "newProject":           "*New project:* Create a new project.",
+        "newProjectKey":        "*(ctrl/cmd+n)*",
+        "settings":             "*Settings:* View the application settings.",
+        "settingsKey":          "*(ctrl/cmd+1)*",
+        "about":                "*About:* What is this anyway?.",
+        "aboutKey":             "*(ctrl/cmd+2)*",
+        "minimize":             "*Minimize* this window.",
+        "minimizeKey":          "*(ctrl/cmd+m)*",
+        "maximize":             "*Maximize* this window.",
+        "maximizeKey":          "*(ctrl/cmd+shift+m)*",
+        "close":                "*Close* tat.",
+        "closeKey":             "*(ctrl/cmd+w)*" 
     },
     "helpPanel": 
     {
-        "helpArea":             "<em>Info:</em> Mouse over things in the application to show information about them here. Click the \"i\" button to collapse." 
+        "helpArea":             "*Info:* Mouse over things in the application to show information about them here. Click the 'i' button to collapse." 
     },
     "controlsPanel": 
     {
-        "zoomIn":               "<em>Zoom in:</em> Zoom in on the map.",
-        "zoomInKey":            "<em>(Mouse wheel on canvas or + or =)</em>",
+        "zoomIn":               "*Zoom in:* Zoom in on the map.",
+        "zoomInKey":            "*(Mouse wheel on canvas or + or =)*",
         "zoomInDisabled":       "You are currently as zoomed is as you can be!",
-        "zoomOut":              "<em>Zoom out:</em> Zoom out on the map.",
-        "zoomOutKey":           "<em>(Mouse wheel on canvas or - or _)</em>",
+        "zoomOut":              "*Zoom out:* Zoom out on the map.",
+        "zoomOutKey":           "*(Mouse wheel on canvas or - or _)*",
         "zoomOutDisabled":      "You are currently as zoomed out as you can be!",
-        "recenter":             "<em>Recenter:</em> Center the view on the listener.",
-        "recenterKey":          "<em>(c)</em>",
-        "hideSidebar":          "<em>Hide sidebar:</em> Hide the sidebar interface.",
-        "showSidebar":          "<em>Show sidebar:</em> Show the sidebar interface.",
-        "toggleSidebarKey":     "<em>(h)</em>" 
+        "recenter":             "*Recenter:* Center the view on the listener.",
+        "recenterKey":          "*(c)*",
+        "hideSidebar":          "*Hide sidebar:* Hide the sidebar interface.",
+        "showSidebar":          "*Show sidebar:* Show the sidebar interface.",
+        "toggleSidebarKey":     "*(h)*" 
     },
     "mediaPanel": 
     {
         "imageList": 
         {
-            "title":          "<em>Images:</em> The list of images in your project. Images higher on the list are closer to the front.",
-            "opacity":        "<em>Master opacity:</em> Scroll or click to adjust master opacity.",
-            "hide":           "<em>Hide images:</em> Click to hide all images on the map.",
-            "show":           "<em>Show images:</em> Click to show all images on the map. (Images are currently hidden)" 
+            "title":          "*Images:* The list of images in your project. Images higher on the list are closer to the front.",
+            "opacity":        "*Master opacity:* Scroll or click to adjust master opacity.",
+            "hide":           "*Hide images:* Click to hide all images on the map.",
+            "show":           "*Show images:* Click to show all images on the map. (Images are currently hidden.)" 
         },
         "soundList": 
         {
-            "title":          "<em>Sounds:</em> The list of sounds in your project. Sounds higher on the list are closer to the front.",
-            "volume":         "<em>Master volume:</em> Scroll or click to adjust master volume.",
-            "hide":           "<em>Hide sounds:</em> Click to hide all sounds on the map. This can be useful for accessing images underneath sound areas.",
-            "show":           "<em>Show sounds:</em> Click to show all sounds on the map. (Sounds are currently hidden)" 
+            "title":          "*Sounds:* The list of sounds in your project. Sounds higher on the list are closer to the front.",
+            "volume":         "*Master volume:* Scroll or click to adjust master volume.",
+            "hide":           "*Hide sounds:* Click to hide all sounds on the map. This can be useful for accessing images underneath sound areas.",
+            "show":           "*Show sounds:* Click to show all sounds on the map. (Sounds are currently hidden.)" 
         },
         "image": 
         {
-            "title":        "<em>An image.</em>",
-            "titleKey":     "<em>Drag:</em> Reorder.",
-            "opacity":      "<em>Opacity:</em> The image opacity. <em>Scroll or click:</em> Adjust opacity.",
-            "duplicate":    "<em>Duplicate image:</em> Make a copy of this image on the map.",
-            "delete":       "<em>Delete image:</em> Delete this image from the map."
+            "title":        "*An image.*",
+            "titleKey":     "*Drag:* Reorder.",
+            "opacity":      "*Opacity:* The image opacity. *Scroll or click:* Adjust opacity.",
+            "duplicate":    "*Duplicate image:* Make a copy of this image on the map.",
+            "delete":       "*Delete image:* Delete this image from the map."
         },
         "sound": 
         {
-            "title":        "<em>A sound.</em>",
-            "titleKey":     "<em>Drag:</em> Reorder.",
-            "volume":       "<em>Volume:</em> Scroll or click to adjust volume.",
-            "pause":        "<em>Play/pause:</em> This sound is playing. <em>Click:</em> Pause this sound.",
-            "play":         "<em>Play/pause:</em> This sound is paused. <em>Click:</em> Play this sound.",
-            "mute":         "<em>Mute:</em> This sound is muted. <em>Click:</em> Unmute this sound.",
-            "unmute":       "<em>Mute:</em> This sound is not muted. <em>Click:</em> Mute this sound.",
-            "solo":         "<em>Solo:</em> This sound is not soloed. <em>Click:</em> Solo this sound. This will silence all other sounds.",
-            "unsolo":       "<em>Solo:</em> This sound is currently soloed, meaning all other sounds are silenced. <em>Click:</em> Unsolo.",
-            "duplicate":    "<em>Duplicate sound:</em> Make a copy of this sound on the map.",
-            "delete":       "<em>Delete sound:</em> Delete this sound from the map.",
-            "loop":         "<em>Loop:</em> Replay this sound after it has played. <em>Click:</em> Turn off looping.",
-            "noLoop":       "<em>No loop:</em> Stop playing after this sound has played. <em>Click:</em> Turn on looping.",
-            "loopTimer":    "<em>Timer loop:</em> Restart the timer after it has finished. <em>Click:</em> Turn off looping.",
-            "noLoopTimer":  "<em>No Timer loop:</em> Do not restart the timer after it has finished. <em>Click:</em> Turn on looping.",
-            "seek":         "<em>Seek:</em> Seek to a playback position in the sound.",
+            "title":        "*A sound.*",
+            "titleKey":     "*Drag:* Reorder.",
+            "volume":       "*Volume:* Scroll or click to adjust volume.",
+            "pause":        "*Play/pause:* This sound is playing. *Click:* Pause this sound.",
+            "play":         "*Play/pause:* This sound is paused. *Click:* Play this sound.",
+            "mute":         "*Mute:* This sound is muted. *Click:* Unmute this sound.",
+            "unmute":       "*Mute:* This sound is not muted. *Click:* Mute this sound.",
+            "solo":         "*Solo:* This sound is not soloed. *Click:* Solo this sound. This will silence all other sounds.",
+            "unsolo":       "*Solo:* This sound is currently soloed, meaning all other sounds are silenced. *Click:* Unsolo.",
+            "duplicate":    "*Duplicate sound:* Make a copy of this sound on the map.",
+            "delete":       "*Delete sound:* Delete this sound from the map.",
+            "loop":         "*Loop:* Replay this sound after it has played. *Click:* Turn off looping.",
+            "noLoop":       "*No loop:* Stop playing after this sound has played. *Click:* Turn on looping.",
+            "loopTimer":    "*Timer loop:* Restart the timer after it has finished. *Click:* Turn off looping.",
+            "noLoopTimer":  "*No Timer loop:* Do not restart the timer after it has finished. *Click:* Turn on looping.",
+            "seek":         "*Seek:* Seek to a playback position in the sound.",
             "timer": 
             {
-                "hours":    "<em>Timer hours:</em> Use the mouse wheel to set the number of hours for the timer.",
-                "minutes":  "<em>Timer minutes:</em> Use the mouse wheel to set the number of minutes for the timer.",
-                "seconds":  "<em>Timer seconds:</em> Use the mouse wheel to set the number of seconds for the timer.",
-                "start":    "<em>Start the timer:</em> The timer is currently paused. <em>Click</em> to start it.",
-                "stop":     "<em>Stop the timer:</em> The timer is currently running. <em>Click</em> to stop it." 
+                "hours":    "*Timer hours:* Use the mouse wheel to set the number of hours for the timer.",
+                "minutes":  "*Timer minutes:* Use the mouse wheel to set the number of minutes for the timer.",
+                "seconds":  "*Timer seconds:* Use the mouse wheel to set the number of seconds for the timer.",
+                "start":    "*Start the timer:* The timer is currently paused. *Click* to start it.",
+                "stop":     "*Stop the timer:* The timer is currently running. *Click* to stop it." 
             },
             "trigger": 
             {
-                "manual":           "<em>Manual trigger:</em> Control when the sound plays and pauses manually.",
-                "playOnEnter":      "<em>Play On Enter trigger:</em> The sound is paused until the listener first comes in contact with it, then it plays and reverts to Manual control.",
-                "restartOnEnter":   "<em>Restart On Enter trigger:</em> The sound is paused until the listener first comes in contact with it, then it plays from the beginning and reverts to Manual control.",
-                "playInside":       "<em>Play Inside trigger:</em> The sound is paused while the listener is not in contact with it, and plays only while the listener is in contact with it.",
-                "restartInside":    "<em>Restart Inside trigger:</em> The sound is paused while the listener is not in contact with it, plays from the beginning whenever the listener comes into contact with it, and plays only while the listener is in contact with it.",
-                "playOnTimer":      "<em>Play On Timer trigger:</em> The sound is paused until the timer counts down to 00:00:00, then the sound plays and the timer resets." 
+                "manual":           "*Manual trigger:* Control when the sound plays and pauses manually.",
+                "playOnEnter":      "*Play On Enter trigger:* The sound is paused until the listener first comes in contact with it, then it plays and reverts to Manual control.",
+                "restartOnEnter":   "*Restart On Enter trigger:* The sound is paused until the listener first comes in contact with it, then it plays from the beginning and reverts to Manual control.",
+                "playInside":       "*Play Inside trigger:* The sound is paused while the listener is not in contact with it, and plays only while the listener is in contact with it.",
+                "restartInside":    "*Restart Inside trigger:* The sound is paused while the listener is not in contact with it, plays from the beginning whenever the listener comes into contact with it, and plays only while the listener is in contact with it.",
+                "playOnTimer":      "*Play On Timer trigger:* The sound is paused until the timer counts down to 00:00:00, then the sound plays and the timer resets." 
             },
             "type": 
             {
-                "area":        "<em>Area sound:</em> Plays at a constant volume across an area.",
-                "areaKey":     "<em>Click:</em> Change to a Global sound.",
-                "global":      "<em>Global sound:</em> Plays everywhere and does not have an emitter on the map.",
-                "globalKey":   "<em>Click:</em> Change to a Local sound.",
-                "local":       "<em>Local sound:</em> Emanates from a single point on the map.",
-                "localKey":    "<em>Click:</em> Change to an Area sound." 
+                "area":        "*Area sound:* Plays at a constant volume across an area.",
+                "areaKey":     "*Click:* Change to a Global sound.",
+                "global":      "*Global sound:* Plays everywhere and does not have an emitter on the map.",
+                "globalKey":   "*Click:* Change to a Local sound.",
+                "local":       "*Local sound:* Emanates from a single point on the map.",
+                "localKey":    "*Click:* Change to an Area sound." 
             }
         }
     },
     "objects": 
     {
-        "locked":               "<em>Locked:</em> Shapes cannot be moved or edited while locked.",
-        "lockKey":              "<em>Double-click:<em> Lock.",
-        "unlockKey":            "<em>Double-click:<em> Unlock.",
-        "selected":             "<em>Selected:</em> Object is currently selected.",
-        "deselectKey":          "<em>Click:</em> Deselect. <em>Delete or backspace:</em> delete.",
-        "selectKey":            "<em>Click:</em> Select." 
+        "locked":               "*Locked:* Shapes cannot be moved or edited while locked.",
+        "lockKey":              "*Double-click:* Lock.",
+        "unlockKey":            "*Double-click:* Unlock.",
+        "selected":             "*Selected:* Object is currently selected.",
+        "deselectKey":          "*Click:* Deselect. *Delete or backspace:* delete.",
+        "selectKey":            "*Click:* Select." 
     },
     "canvas": 
     {
-        "listener":             "<em>Listener:</em> Represents the players' location. You will hear sounds when the listener is overlapping them.",
-        "listenerKey":          "<em>Drag:</em> Move. <em>W/A/S/D:</em> Move.",
-        "image":                "<em>Image:</em> Represents the game environtment. A map, or something more abstract.",
-        "imageKey":             "<em>Drag:</em> Move. <em>Drag corner:</em> Resize (<em>+shift:</em> proportional resize). <em>alt/opt+click:</em> Delete.",
-        "soundLocal":           "<em>Local sound:</em> Only audible within the radius. Volume increases towards the center.",
-        "soundArea":            "<em>Area sound:</em> Only audible inside the shape. Volume is constant throughout.",
-        "soundLocalKey":        "<em>Drag:</em> Move. <em>Drag edge handle:</em> Resize.",
-        "soundAreaKey":         "<em>Drag:</em> Move. <em>Drag corner handle:</em> reshape. <em>Click corner handle:</em> Remove corner. <em>Drag edge handle:</em> Create corner. " 
+        "listener":             "*Listener:* Represents the players' location. You will hear sounds when the listener is overlapping them.",
+        "listenerKey":          "*Drag:* Move. *W/A/S/D:* Move.",
+        "image":                "*Image:* Represents the game environtment. A map, or something more abstract.",
+        "imageKey":             "*Drag:* Move. *Drag corner:* Resize (*+shift:* proportional resize). *alt/opt+click:* Delete.",
+        "soundLocal":           "*Local sound:* Only audible within the radius. Volume increases towards the center.",
+        "soundArea":            "*Area sound:* Only audible inside the shape. Volume is constant throughout.",
+        "soundLocalKey":        "*Drag:* Move. *Drag edge handle:* Resize.",
+        "soundAreaKey":         "*Drag:* Move. *Drag corner handle:* reshape. *Click corner handle:* Remove corner. *Drag edge handle:* Create corner. " 
     },
     "menu":
     {
@@ -149,20 +149,20 @@
         {
             "follow":
             {
-                "paradisoZone":         "<em>PARADISO:</em> Get the newsletter & become a member to support my work and get nice rewards.",
-                "traaash":              "<em>TRAAASH:</em> Quadra's RPG blog.",
-                "youtube":              "<em>PARADISO on YouTube:</em> Thoughtful videos about making things.",
-                "paradisoWorks":        "<em>PARADISO WORKS:</em> Official online store for physical goods.",
-                "itchio":               "<em>PARADISO on Itch:</em> Online store for software, music, and RPG materials.",
-                "dtrpg":                "<em>PARADISO on DriveThruRPG:</em> Online store for digital RPG materials.",
-                "bsky":                 "<em>PARADISO on Bluesky.</em>",
-                "instagram":            "<em>PARADISO on Instagram.</em>",
-                "mastodon":             "<em>PARADISO on Mastodon.</em>",
-                "tiktok":               "<em>PARADISO on TikTok.</em>",
-                "tumblr":               "<em>PARADISO on Tumblr.</em>",
-                "reddit":               "<em>PARADISO on Reddit.</em>",
-                "github":               "<em>PARADISO on GitHub.</em>",
-                "discord":              "<em>PARADISO on Discord.</em>" 
+                "paradisoZone":         "*PARADISO:* Get the newsletter & become a member to support my work and get nice rewards.",
+                "traaash":              "*TRAAASH:* Quadra's RPG blog.",
+                "youtube":              "*PARADISO on YouTube:* Thoughtful videos about making things.",
+                "paradisoWorks":        "*PARADISO WORKS:* Official online store for physical goods.",
+                "itchio":               "*PARADISO on Itch:* Online store for software, music, and RPG materials.",
+                "dtrpg":                "*PARADISO on DriveThruRPG:* Online store for digital RPG materials.",
+                "bsky":                 "*PARADISO on Bluesky.*",
+                "instagram":            "*PARADISO on Instagram.*",
+                "mastodon":             "*PARADISO on Mastodon.*",
+                "tiktok":               "*PARADISO on TikTok.*",
+                "tumblr":               "*PARADISO on Tumblr.*",
+                "reddit":               "*PARADISO on Reddit.*",
+                "github":               "*PARADISO on GitHub.*",
+                "discord":              "*PARADISO on Discord.*" 
             }
         }
     }
