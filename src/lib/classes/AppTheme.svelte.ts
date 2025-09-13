@@ -15,6 +15,7 @@ type appThemeOptions = {
     btn?:           appThemeItem;
     vol?:           appThemeItem;
     trk?:           appThemeItem;
+    tmr?:           appThemeItem;
     anc?:           appThemeItem;
     cnv?:           appThemeItem;
     obj?:           appThemeItem;
@@ -48,9 +49,15 @@ type appThemeOptions = {
     // Individual track overrides
     trk_itm_media?: appThemeItem;
 
+    // Individual timer overrides
+    tmr_itm_media?: appThemeItem;
+
     // Individual object overrides
     obj_img?:       appThemeItem;
     obj_snd?:       appThemeItem;
+
+    // Selections
+    sel?:           appThemeItem;
 }
 
 /** App Theme. */
@@ -62,6 +69,7 @@ export class AppTheme {
     btn:           appThemeItem|null = $state(null);
     vol:           appThemeItem|null = $state(null);
     trk:           appThemeItem|null = $state(null);
+    tmr:           appThemeItem|null = $state(null);
     anc:           appThemeItem|null = $state(null);
     cnv:           appThemeItem|null = $state(null);
     obj:           appThemeItem|null = $state(null);
@@ -90,8 +98,12 @@ export class AppTheme {
 
     trk_itm_media: appThemeItem|null = $state(null);
 
+    tmr_itm_media: appThemeItem|null = $state(null);
+
     obj_img:       appThemeItem|null = $state(null);
     obj_snd:       appThemeItem|null = $state(null);
+
+    sel:           appThemeItem|null = $state(null);
 
     constructor(themeJSON?:appThemeOptions) {
         if (!themeJSON) this.update();
@@ -107,11 +119,13 @@ export class AppTheme {
         this.btn = "btn" in o ? o.btn as appThemeItem : { b:"", bg:"", fg:"" };
         this.vol = "vol" in o ? o.vol as appThemeItem : { b:"", bg:"", fg:"" };
         this.trk = "trk" in o ? o.trk as appThemeItem : { b:"", bg:"", fg:"" };
+        this.tmr = "tmr" in o ? o.tmr as appThemeItem : { b:"", bg:"", fg:"" };
         this.anc = "anc" in o ? o.anc as appThemeItem : { b:"", bg:"", fg:"" };
         this.cnv = "cnv" in o ? o.cnv as appThemeItem : { b:"", bg:"", fg:"" };
         this.obj = "obj" in o ? o.obj as appThemeItem : { b:"", bg:"", fg:"" };
         this.lst = "lst" in o ? o.lst as appThemeItem : { b:"", bg:"", fg:"" };
         this.wrn = "wrn" in o ? o.wrn as appThemeItem : { b:"", bg:"", fg:"" };
+        this.sel = "sel" in o ? o.sel as appThemeItem : { b:"", bg:"", fg:"" };
 
         this.pnl_tb     = "pnl_tb"    in o ? o.pnl_tb    as appThemeItem : this.pnl;
         this.pnl_ctrl   = "pnl_ctrl"  in o ? o.pnl_ctrl  as appThemeItem : this.pnl;
@@ -135,6 +149,8 @@ export class AppTheme {
         this.vol_itm_media = "vol_itm_media" in o ? o.vol_itm_media as appThemeItem : this.vol;
 
         this.trk_itm_media = "trk_itm_media" in o ? o.trk_itm_media as appThemeItem : this.trk;
+
+        this.tmr_itm_media = "tmr_itm_media" in o ? o.tmr_itm_media as appThemeItem : this.tmr;
 
         this.obj_img = "obj_img" in o ? o.obj_img as appThemeItem : this.obj;
         this.obj_snd = "obj_snd" in o ? o.obj_snd as appThemeItem : this.obj;

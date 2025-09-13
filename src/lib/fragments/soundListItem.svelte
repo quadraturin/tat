@@ -45,6 +45,26 @@
     let timerActive = $state(false);
     let isHovered = $state(false);
 
+    function timerInput(box:HTMLInputElement, timerTarget:string){
+        var input = box.value;
+        input = input.replace(/[\D\s\._\-]+/g, "").substring(input.length-2);
+        var inputInt = input ? parseInt( input, 10 ) : 0;
+        inputInt = inputInt < 0 ? 0 : inputInt;
+        if (timerTarget == "h") { 
+            inputInt = inputInt > 99 ? 99 : inputInt;
+            item.timer.setHours = inputInt;
+        } else if (timerTarget == "m") {
+            inputInt = inputInt > 59 ? 59 : inputInt;
+            item.timer.setMinutes = inputInt;
+        } else if (timerTarget == "s") {
+            inputInt = inputInt > 59 ? 59 : inputInt;
+            if (item.timer.hours == 0 && item.timer.minutes == 0 && inputInt == 0)
+                inputInt = 1;
+            item.timer.setSeconds = inputInt;
+        } 
+        box.value = inputInt.toString();
+    }
+
     setInterval(() => {
         currentTime = item.sound.currentTime;
         duration = item.sound.duration == 0 ? 1 : item.sound.duration;
@@ -230,24 +250,30 @@
     {:else}
         <span class="item-pause m disabled" class:active={!paused}>
             {#if triggerType == TriggerType.PlayOnTimer}
-                <span class="timer" role="timer"
-                    onwheel     = {(e) => { e.preventDefault(); item.changeTimer(e,"h"); }}
-                    onfocus     = {()  => {}} 
-                    onblur      = {()  => {}}
+                <input type="text" class="timer" value="{timerH.toString().padStart(2,"0")}" disabled={timerActive}
+                    onwheel     = {(e) => { if (!timerActive){ e.preventDefault(); item.changeTimerWheel(e,"h"); }}}
+                    onfocus     = {(e) => { }} 
+                    onblur      = {(e) => { e.currentTarget.value = e.currentTarget.value.padStart(2,"0"); }}
+                    onkeyup     = {(e) => { timerInput(e.currentTarget, "h"); }}
+                    onclick     = {(e) => { e.currentTarget.select(); }}
                     onmouseout  = {()  => { help(); }}
-                    onmouseover = {()  => { help($t('help.mediaPanel.sound.timer.hours')); }}>{timerH.toString().padStart(2,"0")}</span><!--
-                --><span class="timer" role="timer"
-                    onwheel     = {(e) => { e.preventDefault(); item.changeTimer(e,"m"); }}
-                    onfocus     = {()  => {}} 
-                    onblur      = {()  => {}}
+                    onmouseover = {()  => { help($t('help.mediaPanel.sound.timer.hours')); }} /><span class="timer-divider" class:blink={timerActive && timerS % 2 == 1} >:</span><!-- {timerH.toString().padStart(2,"0")}
+                --><input type="text"class="timer" value="{timerM.toString().padStart(2, "0")}" disabled={timerActive}
+                    onwheel     = {(e) => { if (!timerActive) { e.preventDefault(); item.changeTimerWheel(e, "m"); }}}
+                    onfocus     = {(e) => { }} 
+                    onblur      = {(e) => { e.currentTarget.value = e.currentTarget.value.padStart(2,"0"); }}
+                    onkeyup     = {(e) => { timerInput(e.currentTarget, "m"); }}
+                    onclick     = {(e) => { e.currentTarget.select(); }}
                     onmouseout  = {()  => { help(); }}
-                    onmouseover = {()  => { help($t('help.mediaPanel.sound.timer.minutes')); }}><span class="timer-divider" class:blink={timerActive && timerS % 2 == 1} >:</span>{timerM.toString().padStart(2,"0")}</span><!--
-                --><span class="timer" role="timer"
-                    onwheel     = {(e) => { e.preventDefault(); item.changeTimer(e,"s"); }}
-                    onfocus     = {()  => {}} 
-                    onblur      = {()  => {}}
+                    onmouseover = {()  => { help($t('help.mediaPanel.sound.timer.minutes')); }} /><span class="timer-divider" class:blink={timerActive && timerS % 2 == 1}>:</span><!-- {timerM.toString().padStart(2,"0")}
+                --><input type="text" class="timer" value="{timerS.toString().padStart(2,"0")}" disabled={timerActive}
+                    onwheel     = {(e) => { if (!timerActive) { e.preventDefault(); item.changeTimerWheel(e,"s"); }}}
+                    onfocus     = {(e) => { }} 
+                    onblur      = {(e) => { e.currentTarget.value = e.currentTarget.value.padStart(2,"0"); }}
+                    onkeyup     = {(e) => { timerInput(e.currentTarget, "s"); }}
+                    onclick     = {(e) => { e.currentTarget.select(); }}
                     onmouseout  = {()  => { help(); }}
-                    onmouseover = {()  => { help($t('help.mediaPanel.sound.timer.seconds')); }}><span class="timer-divider" class:blink={timerActive && timerS % 2 == 1}>:</span>{timerS.toString().padStart(2,"0")}</span><!--
+                    onmouseover = {()  => { help($t('help.mediaPanel.sound.timer.seconds')); }} /><!--{timerS.toString().padStart(2,"0")}
                 --><button 
                     onfocus     = {() => {}} 
                     onblur      = {() => {}}

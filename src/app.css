@@ -197,6 +197,29 @@ pre { font-size: 0.8em; }
     --trk-itm-media-bg: #fff;
     --trk-itm-media-fg: #fff;
 
+    /* Timers */
+    --tmr-bg: #fff;
+    --tmr-fg: #fff;
+    --tmr-hov-bg: #fff;
+    --tmr-hov-fg: #fff;
+    --tmr-act-bg: #fff;
+    --tmr-act-fg: #fff;
+    --tmr-lck-bg: #fff;
+    --tmr-lck-fg: #fff;
+    /* Audio Progress Track */
+    --tmr-itm-media-bg: #fff;
+    --tmr-itm-media-fg: #fff;
+    --tmr-itm-media-hov-bg: #fff;
+    --tmr-itm-media-hov-fg: #fff;
+    --tmr-itm-media-act-bg: #fff;
+    --tmr-itm-media-act-fg: #fff;
+    --tm-itm-mediar-lck-bg: #fff;
+    --tmr-itm-media-lck-fg: #fff;
+
+    /* Selection */
+    --sel-bg: #fff;
+    --sel-fg: #fff;
+
     /* Font */
     --f0: monospace;
     
@@ -274,10 +297,23 @@ button.r {
 #media span.item-pause {
     border: 1px solid white;
 }
+:focus-visible {
+    outline: none;
+}
 
 /* #################
    ##### Theme #####
    ################# */
+
+
+::selection {
+    background-color: var(--sel-bg);
+    color:            var(--sel-fg);
+}
+:focus-visible {
+    outline: 1px solid var(--sel-b);
+}
+
 
 /* Canvas */
 .container {    
@@ -426,6 +462,9 @@ button.r {
 }  
 #media .item.locked.hovered {   
     border-color:     var(--itm-media-hov-b); 
+}
+#media .item.locked.active {   
+    border-color:     var(--itm-media-act-b); 
 }
 #media .item.locked.hovered .item-name {
     color:            var(--itm-media-hov-fg); 
@@ -599,17 +638,20 @@ button.r {
 /* Volume/Opacity Controls: Items */
 #media .item .volume-track {
     background-color:   var(--vol-itm-media-bg);
-    border-color:       var(--vol-itm-media-b); 
+    border-color:       var(--itm-media-b); 
 }
 #media .item .volume-bar {        
     background-color:   var(--vol-itm-media-fg); 
 }
-#media .item.hovered .volume-track, 
-#media .item:hover .volume-track {
-    border-color:       var(--vol-itm-media-hov-b); 
-}
 #media .item.active .volume-track {
     border-color:       var(--itm-media-act-b); 
+}
+#media .item.locked .volume-track {
+    border-color:       var(--itm-media-lck-b); 
+}
+#media .item.hovered .volume-track, 
+#media .item:hover .volume-track {
+    border-color:       var(--itm-media-hov-b); 
 }
 #media .item .volume-track:hover {
     background-color:   var(--vol-itm-media-hov-bg);
@@ -632,6 +674,23 @@ button.r {
     background-color: var(--trk-itm-media-hov-bg); }
 #media .progress-track:hover .progress-bar {
     background-color: var(--trk-itm-media-hov-fg); }
+
+
+/* Timer */
+#media .item input.timer {
+    color:            var(--tmr-itm-media-fg);
+    background-color: var(--tmr-itm-media-bg); }
+#media .item input.timer:hover {
+    color:            var(--tmr-itm-media-hov-fg) !important;
+    background-color: var(--tmr-itm-media-hov-bg) !important; } 
+#media .item input.timer:focus {
+    color:            var(--tmr-itm-media-act-fg) !important;
+    background-color: var(--tmr-itm-media-act-bg) !important; } 
+#media .item input.timer:disabled {
+    color:            var(--tmr-itm-media-lck-fg) !important;
+    background-color: var(--tmr-itm-media-lck-bg) !important; }
+    #media .item input.timer:disabled + .timer-divider  {
+    color:            var(--tmr-itm-media-lck-fg) !important; }
 
 /* Warning */
 #media .item-delete:hover,
@@ -891,14 +950,20 @@ button.r {
 #media .item span.item-pause + button {
     border-left:none;
 }
-#media .item span.item-pause span.timer:first-child {
-    padding-left: 5px;
-}
-#media .item span.item-pause span.timer {
-    height:12px;
+#media .item span.item-pause input.timer {
+    height: 12px;
+    width: 15px;
+    padding: 0;
     display: inline-block;
     vertical-align: top;
     line-height: 14px;
+    border: none;
+    background: none;
+    text-align: right;
+}
+
+#media .item span.item-pause input.timer:focus-visible {
+    outline: none;
 }
 #media .item span.item-pause button {
     height: 10px;
@@ -909,7 +974,10 @@ button.r {
     height: 8px;
     margin-top: -3px;
 }
-#media .item span.item-pause span.timer .timer-divider.blink {
+#media .item .timer-divider {
+    vertical-align: top !important;
+}
+#media .item .timer-divider.blink {
     opacity: 0;
 }
 #media .item button.progress-track {

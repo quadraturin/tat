@@ -94,12 +94,17 @@
 
             { value: R.activeTheme.trk as appThemeItem,             tags: ["trk", "trk-itm-media"] },
             { value: R.activeTheme.trk_itm_media as appThemeItem,   tags: [       "trk-itm-media"] },
+
+            { value: R.activeTheme.tmr as appThemeItem,             tags: ["tmr", "tmr-itm-media"] },
+            { value: R.activeTheme.tmr_itm_media as appThemeItem,   tags: [       "tmr-itm-media"] },
             
             { value: R.activeTheme.anc as appThemeItem,             tags: ["anc"] },
 
             { value: R.activeTheme.lst as appThemeItem,             tags: ["lst"] },
 
             { value: R.activeTheme.wrn as appThemeItem,             tags: ["wrn"] },
+
+            { value: R.activeTheme.sel as appThemeItem,             tags: ["sel"] },
         ];
 
         // Blank out theme.

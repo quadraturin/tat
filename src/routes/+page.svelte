@@ -170,7 +170,6 @@
         else if (e.key == "ArrowRight") R.getCanvas().offsetLeft(10);
         else if (e.key == "-") R.getCanvas().zoom(0.95);
         else if (e.key == "=") R.getCanvas().zoom(1.05);
-        else if (e.key == "0") R.getCanvas().zoom();
     }
 
     /**

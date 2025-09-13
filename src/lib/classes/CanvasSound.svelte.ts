@@ -224,7 +224,13 @@ export class CanvasSound extends CanvasObject{
     public get timerID() { return this.#timerID; }
     public set timerID(id:number) { this.#timerID = id; }
 
-    public changeTimer(e:WheelEvent, hms:string) {
+    public setTimer(n:number, hms:string) {
+        if (hms == "h") this.timer.setHours = n;
+        if (hms == "m") this.timer.setMinutes = n;
+        if (hms == "s") this.timer.setSeconds = n;
+    }
+
+    public changeTimerWheel(e:WheelEvent, hms:string) {
         let delta = e.deltaY;
         if (getUserSettings().invertVolumeScroll) delta *= -1;
         delta = delta < 0 ? -1 : 1;
