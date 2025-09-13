@@ -20,9 +20,7 @@
 class:hidden={getImagesHidden()} class:hovered={isHovered}
 class={["item image-item", item.selected && "active", item.locked && "locked"]}
     onfocus     = {() => {}} 
-    onblur      = {() => {}}
-    onmouseout  = {() => { setHoveredCanvasObject(null); }}
-    onmouseover = {() => { setHoveredCanvasObject(item); }}>
+    onblur      = {() => {}}>
 
     <!-- Opacity Display -->
     <button class="volume-track" aria-label="Opacity"
@@ -41,8 +39,9 @@ class={["item image-item", item.selected && "active", item.locked && "locked"]}
     ondblclick  = {() => { item.locked = !item.locked; item.selected = false; }}
     onfocus     = {() => {}} 
     onblur      = {() => {}}
-    onmouseout  = {() => { help(); }}
+    onmouseout  = {() => { setHoveredCanvasObject(null); help(); }}
     onmouseover = {() => {
+        setHoveredCanvasObject(item);
         if (item.selected) 
             help(
                 $t('help.mediaPanel.image.title'),

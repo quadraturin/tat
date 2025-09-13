@@ -67,9 +67,7 @@
     draggable="true"  role="listitem" class:hovered={isHovered}
     class:active={item.selected} class:locked={item.locked}  class:hidden={getSoundsHidden()}
     onfocus     = {() => {}} 
-    onblur      = {() => {}}
-    onmouseout  = {() => { setHoveredCanvasObject(null); }}
-    onmouseover = {() => { setHoveredCanvasObject(item); }}>
+    onblur      = {() => {}}>
 
     <!-- Volume Display -->
     <button class="volume-track" aria-label="Volume"
@@ -93,8 +91,9 @@
     }}
     onfocus     = {() => {}} 
     onblur      = {() => {}}
-    onmouseout  = {() => { help(); }}
+    onmouseout  = {() => { setHoveredCanvasObject(null); help(); }}
     onmouseover = {() => {
+        setHoveredCanvasObject(item);
         if (item.soundType == SoundType.Global) {
             help(       $t('help.mediaPanel.sound.type.global'));
         } else if (item.selected) {
@@ -235,26 +234,26 @@
                     onfocus     = {()  => {}} 
                     onblur      = {()  => {}}
                     onmouseout  = {()  => { help(); }}
-                    onmouseover = {()  => { help($t('help.mediaPanel.timer.hours')); }}>{timerH.toString().padStart(2,"0")}</span><!--
+                    onmouseover = {()  => { help($t('help.mediaPanel.sound.timer.hours')); }}>{timerH.toString().padStart(2,"0")}</span><!--
                 --><span class="timer" role="timer"
                     onwheel     = {(e) => { e.preventDefault(); item.changeTimer(e,"m"); }}
                     onfocus     = {()  => {}} 
                     onblur      = {()  => {}}
                     onmouseout  = {()  => { help(); }}
-                    onmouseover = {()  => { help($t('help.mediaPanel.timer.minutes')); }}><span class="timer-divider" class:blink={timerActive && timerS % 2 == 1} >:</span>{timerM.toString().padStart(2,"0")}</span><!--
+                    onmouseover = {()  => { help($t('help.mediaPanel.sound.timer.minutes')); }}><span class="timer-divider" class:blink={timerActive && timerS % 2 == 1} >:</span>{timerM.toString().padStart(2,"0")}</span><!--
                 --><span class="timer" role="timer"
                     onwheel     = {(e) => { e.preventDefault(); item.changeTimer(e,"s"); }}
                     onfocus     = {()  => {}} 
                     onblur      = {()  => {}}
                     onmouseout  = {()  => { help(); }}
-                    onmouseover = {()  => { help($t('help.mediaPanel.timer.seconds')); }}><span class="timer-divider" class:blink={timerActive && timerS % 2 == 1}>:</span>{timerS.toString().padStart(2,"0")}</span><!--
+                    onmouseover = {()  => { help($t('help.mediaPanel.sound.timer.seconds')); }}><span class="timer-divider" class:blink={timerActive && timerS % 2 == 1}>:</span>{timerS.toString().padStart(2,"0")}</span><!--
                 --><button 
                     onfocus     = {() => {}} 
                     onblur      = {() => {}}
                     onmouseout  = {() => { help(); }}
                     onmouseover = {() => {
-                        if (item.timer.active) help($t('help.mediaPanel.timer.stop'))
-                        else help($t('help.mediaPanel.timerStart'))}}
+                        if (item.timer.active) help($t('help.mediaPanel.sound.timer.stop'))
+                        else help($t('help.mediaPanel.sound.timer.start'))}}
                     onclick     = {() => {
                         if (item.timer.active) { 
                             item.sound.pause();
