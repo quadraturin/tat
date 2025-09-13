@@ -702,11 +702,11 @@
 
 
 <!-- Help Text Display Area -->
-<div id="help" role="banner" class="shadow" class:activated={getUserSettings().helpOpen}>
+<div id="help" role="banner" class:activated={getUserSettings().helpOpen}>
     
 
     <!-- Help Text Show / Hide Toggle -->
-    <button id="help-toggle" 
+    <button id="help-toggle" class="shadow"
         onclick     = {()=>{ userSettings.helpOpen = !userSettings.helpOpen; saveUserSettings(); }}
         onfocus     = {()=>{}} 
         onmouseover = {()=>{ help($t('help.helpPanel.helpArea')); }}
@@ -714,7 +714,7 @@
         onblur      = {()=>{}}> i </button>
 
     <!-- Help Text -->
-    <span id="help-text"></span>
+    <span id="help-text" class="shadow"></span>
 </div>
 
 

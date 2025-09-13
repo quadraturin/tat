@@ -339,7 +339,7 @@ button.r {
     color:              var(--anc-fg); 
 }
 .menu .changed label {
-    color:              var(--anc-hov-fg); 
+    color:              var(--anc-act-fg); 
 }
 .menu input[type=checkbox]::after, 
 .menu input[type=checkbox]:hover::after,
@@ -371,11 +371,13 @@ button.r {
     color:              var(--btn-menu-hov-fg);
     background-color:   var(--btn-menu-hov-bg); 
 }
-.setting.changed{
+.setting.changed {
     color:              var(--anc-act-fg); 
 }
+.setting.changed select,
 .setting.changed input {
     border-color:       var(--anc-act-fg) !important; 
+    color:              var(--anc-act-fg);
 }
 .setting.changed input[type=checkbox]::after, 
 .setting.changed input[type=checkbox]:hover::after,
@@ -425,7 +427,9 @@ button.r {
 #media .item.locked.hovered {   
     border-color:     var(--itm-media-hov-b); 
 }
-
+#media .item.locked.hovered .item-name {
+    color:            var(--itm-media-hov-fg); 
+}  
 #media .item.over.insertAbove::before,
 #media .item.over.insertBelow::before {
     background-color: var(--itm-media-b); 
@@ -611,7 +615,7 @@ button.r {
     background-color:   var(--vol-itm-media-hov-bg);
 }
 #media .item .volume-track:hover .volume-bar {
-    background-color:   var(--itm-media-hov-fg); 
+    background-color:   var(--vol-itm-media-hov-fg); 
 }
 
 

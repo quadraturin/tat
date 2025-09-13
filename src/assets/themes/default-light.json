@@ -2,12 +2,37 @@
     "info": {    "name": "Light",
                  "description": "The default light theme.",
                  "author": "Quadra",
-                 "url": "https://paradiso.zone" 
+                 "url": "https://paradiso.zone" },
+                 
+    "pnl":          { "b": "#5c5b5b", "bg": "#a5a4a4", "fg": "#4d4c4c" },
+    "pnl_menu":     { "b": "#6c6a6a", "bg": "#bebdbd", "fg": "#5c5b5b" },
+    "itm":          { "b": "#6c6a6a", "bg": "#cccccb", "fg": "#6c6a6a",
+        "hov":      { "b": "#5c5b5b", "bg": "#dadada", "fg": "#5c5b5b" },
+        "act":      { "b": "#7a7a79", "bg": "#e8e9e9", "fg": "#7a7a79" },
+        "lck":      { "b": "#7a7a79", "bg": "#a5a4a4", "fg": "#7a7a79"}},
+    "anc":          {                                  "fg": "#287d7d",
+        "hov":      {                                  "fg": "#5e9998" },
+        "act":      {                                  "fg": "#5e9998" }},
+    "btn":          { "b": "#6c6a6a", "bg": "#d8d7d7", "fg": "#6c6a6a", 
+        "hov":      { "b": "#6c6a6a", "bg": "#f2f1f1", "fg": "#8d8b8b" }},
+    "btn_tb":       {
+        "act":      { "b": "#6c6a6a", "bg": "#bebdbd", "fg": "#6c6a6a" }},
+    "btn_tb_quit":  { 
+        "hov":      { "b": "#7f3836", "bg": "#f06060", "fg": "#7f3836" }},
+    "btn_media":    {
+        "act":      { "b": "#6c6a6a", "bg": "#f8f7f8", "fg": "#7a7a79" },
+        "lck":      { "b": "#6c6a6a", "bg": "#a5a4a4", "fg": "#6c6a6a" }
     },
-    "pnl": {     
-                "b": "#5c5b5b", "bg": "#a5a4a4", "fg": "#4d4c4c" 
-    },
-    "pnl_menu": {
-                "b": "#374042", "bg": "#bebdbd", "fg": "#999995" 
+    "cnv":          { "b": "#5c5b5b", "bg": "#d8d7d7", "fg": "#bebdbd" },
+    "obj":          { "b": "#2aa876", "bg": "#2aa876", "fg": "#2aa876",
+        "hov":      { "b": "#009584", "bg": "#009584", "fg": "#009584" },
+        "act":      { "b": "#00818a", "bg": "#00818a", "fg": "#00818a" },
+        "lck":      { "b": "#a7a6a6", "bg": "#a7a6a6", "fg": "#a7a6a6" }},
+    "lst":          { "b": "#6c6a6a", "bg": "#f3b562", "fg": "#bebdbd",
+        "hov":      { "b": "#6c6a6a", "bg": "#fbcd96"                  }},
+    "vol":          { "b": "#5c5b5b", "bg": "#d8d7d7", "fg": "#6c6a6a",
+        "hov":      { "b": "#5c5b5b", "bg": "#d8d7d7", "fg": "#7a7a79" }},
+    "wrn":          {
+        "hov":      { "b": "#7f3836", "bg": "#f06060", "fg": "#7f3836" }
     }
 }

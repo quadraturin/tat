@@ -1,24 +1,16 @@
-{
-    "name": "Warped Beyond Recognition",
-    "description": "The Warped Beyond Recognition theme.",
-    "author": "Quadra",
-
-    "c0": "coral",
-	"c1": "brown",
-	"c2": "black",
-	"c3": "white",
-    "c4": "black",
-    "c5": "coral",
-    "c6": "black",
-    "c7": "coral",
-    "c8": "white",
-    "c9": "white",
-    "cA": "black",
-    "cB": "coral",
-    "cC": "coral",
-    "cD": "coral",
-    "cE": "coral",
-    "cF": "coral",
-    
-    "f0": "monospace"
+{   
+    "info":         { "name": "Warped Beyond Recognition",
+                      "description": "The official Warped Beyond Recognition theme.",
+                      "author": "Quadra",
+                      "url": "https://paradiso.zone/ooo-wbr"                   },
+        
+    "pnl":          { "b": "#814530", "bg": "#F47D53", "fg": "#000000" },
+    "pnl_help":     {                                  "fg": "#814530" },
+    "cnv":          { "b": "#000000", "bg": "#000000", "fg": "#333333" },
+    "lst":          { "b": "#000000", "bg": "#EEEEEE",
+        "hov":      {                 "bg": "#FFFFFF"                  }},
+    "btn":          { "b": "#EEEEEE", "bg": "#000000", "fg": "#EEEEEE",
+        "hov":      { "b": "#FFFFFF", "bg": "#FFFFFF", "fg": "#000000" }},
+    "anc":          {                                  "fg": "#EEEEEE",
+        "hov":      {                                  "fg": "#FFFFFF" }}
 }
