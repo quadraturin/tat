@@ -217,6 +217,8 @@
         // Set minimum window size.
         appWindow.setMinSize(new LogicalSize(480,320));
 
+        document.getElementById('themeWrapper')?.addEventListener('mousemove', (e) => { R.setMouse(e.x, e.y); });
+
         // Set the native app window menu.
         setWindowMenu();
 

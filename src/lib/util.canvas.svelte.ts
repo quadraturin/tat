@@ -697,6 +697,18 @@ export class InfiniteCanvas {
                         this.c_toY(w_img.y) - R.getHandleSize() * 2 : 
                         this.c_toY(w_img.y + w_img.height) - R.getHandleSize() * 2);
             }
+            if (R.getShowDebug()) {
+                const x = this.c_toX(w_img.x);
+                const y = this.c_toY(w_img.y);
+                const w = this.c_toLen(w_img.width);
+                const h = this.c_toLen(w_img.height);
+                this.context.fillText(`NW: ${w_img.x.toFixed(2)}, ${w_img.y.toFixed(2)}`, x+10, y+10);
+                this.context.fillText(`NE: ${(w_img.x+w_img.width).toFixed(2)}, ${w_img.y.toFixed(2)}`, x+w+10, y+10);
+                this.context.fillText(`SW: ${w_img.x.toFixed(2)}, ${(w_img.y+w_img.height).toFixed(2)}`, x+10, y+h+10);
+                this.context.fillText(`SE: ${(w_img.x+w_img.width).toFixed(2)}, ${(w_img.y+w_img.height).toFixed(2)}`, x+w+10, y+h+10);
+
+                this.context.fillText(`width: ${w_img.width.toFixed(2)}, height: ${w_img.height.toFixed(2)}`, x+10, y+20);
+            }
             this.context.setLineDash([]);
         }
     }

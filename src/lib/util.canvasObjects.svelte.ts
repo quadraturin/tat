@@ -1,6 +1,6 @@
 import * as R from "$lib/registry.svelte";
 import { CanvasObject } from "./classes/CanvasObject.svelte";
-import { CanvasImage } from "./classes/CanvasImage.svelte";
+import { CanvasImage, type canvasImageOptions } from "./classes/CanvasImage.svelte";
 import { CanvasSound } from "./classes/CanvasSound.svelte";
 import { CanvasListener } from "./classes/CanvasListener.svelte";
 import { pointCircleCollision, pointRectCollision, pointPolyCollision } from "./util.collision";
@@ -281,8 +281,15 @@ export function canvasMouseMove(e:MouseEvent) {
 
                     // Proportional scaling: if on, correct image size with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
-                        if (c.w_toX(R.getMouse().x) < obj.x) console.log("SE corner west of x")
-                        propScaleSE(obj);
+                        if (c.w_toX(R.getMouse().x) < obj.x && c.w_toY(R.getMouse().y) > obj.y){
+                            //console.log(`SW QUADRANT`);
+                            propScaleInvSE(obj);
+                        } else if  (c.w_toX(R.getMouse().x) > obj.x && c.w_toY(R.getMouse().y) < obj.y){
+                            //console.log(`NE QUADRANT`);
+                            propScaleInvSE(obj);
+                        } else {
+                            propScaleSE(obj);
+                        }
                     }
                 }
 
@@ -295,7 +302,15 @@ export function canvasMouseMove(e:MouseEvent) {
 
                     // Proportional scaling: if on, correct image size and position with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
-                        propScaleNE(obj);
+                        if (c.w_toX(R.getMouse().x) > obj.x && c.w_toY((R.getMouse().y) + obj.height) < obj.y){
+                            //console.log(`SE QUADRANT`);
+                            propScaleInvNE(obj);
+                        } else if  (c.w_toX(R.getMouse().x) < obj.x && c.w_toY((R.getMouse().y) + obj.height) > obj.y){
+                            //console.log(`NW QUADRANT`);
+                            propScaleInvNE(obj);
+                        } else {
+                            propScaleNE(obj);
+                        }
                     }
                 }
 
@@ -308,7 +323,15 @@ export function canvasMouseMove(e:MouseEvent) {
 
                     // Proportional scaling: if on, correct image size and position with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
-                        propScaleSW(obj);
+                        if (c.w_toX(R.getMouse().x + obj.width) > obj.x && c.w_toY((R.getMouse().y)) < obj.y){
+                            console.log(`NW QUADRANT`);
+                            propScaleInvSW(obj);
+                        } else if  (c.w_toX(R.getMouse().x + obj.width) < obj.x && c.w_toY((R.getMouse().y)) > obj.y){
+                            console.log(`SE QUADRANT`);
+                            propScaleInvSW(obj);
+                        } else {
+                            propScaleSW(obj);
+                        }
                     }
                 }
 
@@ -322,7 +345,16 @@ export function canvasMouseMove(e:MouseEvent) {
 
                     // Proportional scaling: if on, correct image size and position with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
-                        propScaleNW(obj);
+                        //propScaleNW(obj);
+                        if (c.w_toX(R.getMouse().x) > obj.x + obj.width && c.w_toY((R.getMouse().y)) < obj.y + obj.height){
+                            console.log(`NE QUADRANT`);
+                            propScaleInvNW(obj);
+                        } else if  (c.w_toX(R.getMouse().x) < obj.x + obj.width && c.w_toY((R.getMouse().y)) > obj.y + obj.height){
+                            console.log(`SW QUADRANT`);
+                            propScaleInvNW(obj);
+                        } else {
+                            propScaleNW(obj);
+                        }
                     }
                 }
             }
@@ -361,14 +393,62 @@ export function canvasMouseMove(e:MouseEvent) {
     }
 }
 
-function propScaleSE(obj:CanvasImage){
+function propScaleInvSE(obj:CanvasImage) {
     // Too wide
-    if(obj.width/obj.height > obj.originalWidth/obj.originalHeight){
-    obj.width = obj.height * (obj.originalWidth/obj.originalHeight);
+    if(Math.abs(obj.width/obj.height) > Math.abs(obj.originalWidth/obj.originalHeight)) {
+        obj.width = -obj.height * (obj.originalWidth/obj.originalHeight);
     }
     // Too tall
-    else if(obj.width/obj.height < obj.originalWidth/obj.originalHeight){
-    obj.height = obj.width * (obj.originalHeight/obj.originalWidth);
+    else if(Math.abs(obj.width/obj.height) < Math.abs(obj.originalWidth/obj.originalHeight)) {
+        obj.height = -obj.width * (obj.originalHeight/obj.originalWidth);
+    }
+}
+function propScaleInvNE(obj:CanvasImage){
+    // Too wide
+    if(Math.abs(obj.width/obj.height) > Math.abs(obj.originalWidth/obj.originalHeight)) {
+        obj.width = -obj.height * (obj.originalWidth/obj.originalHeight);
+    }
+    // Too tall
+    else if(Math.abs(obj.width/obj.height) < Math.abs(obj.originalWidth/obj.originalHeight)) {
+        obj.height = -obj.width * (obj.originalHeight/obj.originalWidth);
+        obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
+    }
+}
+function propScaleInvSW(obj:CanvasImage){
+    // Too wide
+    if(Math.abs(obj.width/obj.height) > Math.abs(obj.originalWidth/obj.originalHeight)) {
+        obj.width = -obj.height * (obj.originalWidth/obj.originalHeight);
+        obj.x = R.getOriginalX() + R.getOriginalW() - obj.width;
+    }
+    // Too tall
+    else if(Math.abs(obj.width/obj.height) < Math.abs(obj.originalWidth/obj.originalHeight)) {
+        obj.height = -obj.width * (obj.originalHeight/obj.originalWidth);
+        //obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
+    }
+}
+function propScaleInvNW(obj:CanvasImage){
+    // Too wide
+    if(Math.abs(obj.width/obj.height) > Math.abs(obj.originalWidth/obj.originalHeight)) {
+        obj.width = -obj.height * (obj.originalWidth/obj.originalHeight);
+        obj.x = R.getOriginalX() + R.getOriginalW() - obj.width;
+        obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
+    }
+    // Too tall
+    else if(Math.abs(obj.width/obj.height) < Math.abs(obj.originalWidth/obj.originalHeight)) {
+        obj.height = -obj.width * (obj.originalHeight/obj.originalWidth);
+        obj.x = R.getOriginalX() + R.getOriginalW() - obj.width;
+        obj.y = R.getOriginalY() + R.getOriginalH() - obj.height;
+    }
+}
+
+function propScaleSE(obj:CanvasImage){
+    // Too wide
+    if(Math.abs(obj.width/obj.height) > Math.abs(obj.originalWidth/obj.originalHeight)) {
+        obj.width = obj.height * (obj.originalWidth/obj.originalHeight);
+    }
+    // Too tall
+    else if(Math.abs(obj.width/obj.height) < Math.abs(obj.originalWidth/obj.originalHeight)) {
+        obj.height = obj.width * (obj.originalHeight/obj.originalWidth);
     }
 }
 function propScaleNE(obj:CanvasImage) {
