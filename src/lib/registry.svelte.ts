@@ -207,12 +207,11 @@ export function setCanvas() { canvas = new InfiniteCanvas(); }
 
 let hoveredCanvasObject:CanvasObject|null = null;
 export function getHoveredCanvasObject() { return hoveredCanvasObject; }
-export async function setHoveredCanvasObject(obj:CanvasObject|null) { 
+export async function setHoveredCanvasObject(obj:CanvasObject|null, showHelp:boolean = true) { 
     hoveredCanvasObject = obj; 
 
     // If there's nothing or help is off, clear the help display and bail.
-    if (obj == null || !helpActive) { 
-        help();
+    if (obj == null || !helpActive || !showHelp) { 
         return;
     }
     

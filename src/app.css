@@ -56,6 +56,10 @@ pre { font-size: 0.8em; }
     --anc-lck-bg: #fff;
     --anc-lck-fg: #fff;
 
+    /* Panels */
+    --pnl-b:  #fff;
+    --pnl-bg: #fff;
+    --pnl-fg: #fff;
     /* Titlebar Panel */
     --pnl-tb-b:  #fff;
     --pnl-tb-bg: #fff;
@@ -77,6 +81,19 @@ pre { font-size: 0.8em; }
     --pnl-menu-bg: #fff;
     --pnl-menu-fg: #fff;
 
+    /* Item Panels*/
+    --itm-b:      #fff;
+    --itm-bg:     #fff;
+    --itm-fg:     #fff;
+    --itm-hov-b:  #fff;
+    --itm-hov-bg: #fff;
+    --itm-hov-fg: #fff;
+    --itm-act-b:  #fff;
+    --itm-act-bg: #fff;
+    --itm-act-fg: #fff;
+    --itm-lck-b:  #fff;
+    --itm-lck-bg: #fff;
+    --itm-lck-fg: #fff;
     /* Media Item Panel */
     --itm-media-b:      #fff;
     --itm-media-bg:     #fff;
@@ -91,6 +108,16 @@ pre { font-size: 0.8em; }
     --itm-media-lck-bg: #fff;
     --itm-media-lck-fg: #fff;
 
+    /* Buttons*/
+    --btn-b:      #fff;
+    --btn-bg:     #fff;
+    --btn-fg:     #fff;
+    --btn-hov-b:  #fff;
+    --btn-hov-bg: #fff;
+    --btn-hov-fg: #fff;
+    --btn-act-b:  #fff;
+    --btn-act-bg: #fff;
+    --btn-act-fg: #fff;
     /* Titlebar Buttons */
     --btn-tb-b:      #fff;
     --btn-tb-bg:     #fff;
@@ -101,7 +128,6 @@ pre { font-size: 0.8em; }
     --btn-tb-act-b:  #fff;
     --btn-tb-act-bg: #fff;
     --btn-tb-act-fg: #fff;
-
     /* Titlebar Minimize Button */
     --btn-tb-min-b:       #fff;
     --btn-tb-min-bg:      #fff;
@@ -109,7 +135,6 @@ pre { font-size: 0.8em; }
     --btn-tb-min-hov-b:   #fff;
     --btn-tb-min-hov-bg:  #fff;
     --btn-tb-min-hov-fg:  #fff;
-
     /* Titlebar Maximize Button */
     --btn-tb-max-b:       #fff;
     --btn-tb-max-bg:      #fff;
@@ -117,7 +142,6 @@ pre { font-size: 0.8em; }
     --btn-tb-max-hov-b:   #fff;
     --btn-tb-max-hov-bg:  #fff;
     --btn-tb-max-hov-fg:  #fff;
-
     /* Titlebar Quit Button */
     --btn-tb-quit-b:      #fff;
     --btn-tb-quit-bg:     #fff;
@@ -125,7 +149,6 @@ pre { font-size: 0.8em; }
     --btn-tb-quit-hov-b:  #fff;
     --btn-tb-quit-hov-bg: #fff;
     --btn-tb-quit-hov-fg: #fff;
-
     /* Control Panel Buttons */
     --btn-ctrl-b:      #fff;
     --btn-ctrl-bg:     #fff;
@@ -136,7 +159,6 @@ pre { font-size: 0.8em; }
     --btn-ctrl-act-b:  #fff;
     --btn-ctrl-act-bg: #fff;
     --btn-ctrl-act-fg: #fff;
-
     /* Media Panel Buttons */
     --btn-media-b:      #fff;
     --btn-media-bg:     #fff;
@@ -147,7 +169,6 @@ pre { font-size: 0.8em; }
     --btn-media-act-b:  #fff;
     --btn-media-act-bg: #fff;
     --btn-media-act-fg: #fff;
-
     /* Help Panel Buttons */
     --btn-help-b:      #fff;
     --btn-help-bg:     #fff;
@@ -158,7 +179,6 @@ pre { font-size: 0.8em; }
     --btn-help-act-b:  #fff;
     --btn-help-act-bg: #fff;
     --btn-help-act-fg: #fff;
-
     /* Menu Panel Buttons */
     --btn-menu-b:      #fff;
     --btn-menu-bg:     #fff;
@@ -170,6 +190,9 @@ pre { font-size: 0.8em; }
     --btn-menu-act-bg: #fff;
     --btn-menu-act-fg: #fff;
 
+    /* Tracks */
+    --trk-bg: #fff;
+    --trk-fg: #fff;
     /* Audio Progress Track */
     --trk-itm-media-bg: #fff;
     --trk-itm-media-fg: #fff;
@@ -177,7 +200,10 @@ pre { font-size: 0.8em; }
     /* Font */
     --f0: monospace;
     
+    /* Titlebar Height */
     --tb-h:   34px;
+
+    /* Border Radii */
     --br-m:   6px;
     --br-l:   calc(var(--br-m) + 4px);
     --br-s:   calc(var(--br-m) - 2px);

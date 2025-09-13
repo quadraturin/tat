@@ -67,7 +67,9 @@
     draggable="true"  role="listitem" class:hovered={isHovered}
     class:active={item.selected} class:locked={item.locked}  class:hidden={getSoundsHidden()}
     onfocus     = {() => {}} 
-    onblur      = {() => {}}>
+    onblur      = {() => {}}
+    onmouseout  = {() => { setHoveredCanvasObject(null); help(); }}
+    onmouseover = {() => { setHoveredCanvasObject(item, false); }}>
 
     <!-- Volume Display -->
     <button class="volume-track" aria-label="Volume"
@@ -91,9 +93,8 @@
     }}
     onfocus     = {() => {}} 
     onblur      = {() => {}}
-    onmouseout  = {() => { setHoveredCanvasObject(null); help(); }}
+    onmouseout  = {() => { help(); }}
     onmouseover = {() => {
-        setHoveredCanvasObject(item);
         if (item.soundType == SoundType.Global) {
             help(       $t('help.mediaPanel.sound.type.global'));
         } else if (item.selected) {

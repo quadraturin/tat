@@ -1,8 +1,8 @@
 export type appThemeInfo = { name:string, description: string, author:string, url:string };
-export type appThemeItem = { b:string, bg:string, fg:string,
-                     hov?: { b:string, bg:string, fg:string },
-                     act?: { b:string, bg:string, fg:string },
-                     lck?: { b:string, bg:string, fg:string } };
+export type appThemeItem = { b?:string, bg?:string, fg?:string,
+                     hov?: { b?:string, bg?:string, fg?:string },
+                     act?: { b?:string, bg?:string, fg?:string },
+                     lck?: { b?:string, bg?:string, fg?:string } };
 
 /** App theme options. */
 type appThemeOptions = {
