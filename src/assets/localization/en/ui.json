@@ -23,7 +23,9 @@
         "item": 
         {
             "paused":       "Paused",
-            "playing":      "Playing"
+            "playing":      "Playing",
+            "onEnter":      "On Enter",
+            "inside":       "Inside"
         }
     },
     "menu": 

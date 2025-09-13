@@ -45,17 +45,17 @@ class={["item image-item", item.selected && "active", item.locked && "locked"]}
     onmouseover = {() => {
         if (item.selected) 
             help(
-                $t('help.mediaPanel.imageTitle'),
+                $t('help.mediaPanel.image.title'),
                 $t('help.objects.selected'), 
                 $t('help.objects.deselectKey'));
         else if (item.locked) 
             help(
-                $t('help.mediaPanel.imageTitle'),
+                $t('help.mediaPanel.image.title'),
                 $t('help.objects.locked'), 
                 $t('help.objects.unlockKey'));
         else 
             help(
-                $t('help.mediaPanel.imageTitle'),
+                $t('help.mediaPanel.image.title'),
                 $t('help.objects.selectKey'))
     }}>
         {item.niceName}
@@ -68,7 +68,7 @@ class={["item image-item", item.selected && "active", item.locked && "locked"]}
     onclick     = {() => { duplicateImage(item); }}
     onfocus     = {() => {}} 
     onblur      = {() => {}}
-    onmouseover = {() => { help($t('help.mediaPanel.imageDuplicate')); }}
+    onmouseover = {() => { help($t('help.mediaPanel.image.duplicate')); }}
     onmouseout  = {() => { help(); }}>
         +
     </button>
@@ -77,7 +77,7 @@ class={["item image-item", item.selected && "active", item.locked && "locked"]}
     <button class="item-delete r" title="delete image" 
     onclick     = {() => { tryRemoveObject(item); }}
     onfocus     = {() => {}} 
-    onmouseover = {() => { help($t('help.mediaPanel.imageDelete')); }}
+    onmouseover = {() => { help($t('help.mediaPanel.image.delete')); }}
     onmouseout  = {() => { help(); }}
     onblur      = {() => {}}>
         ×

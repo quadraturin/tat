@@ -281,10 +281,8 @@ export function canvasMouseMove(e:MouseEvent) {
 
                     // Proportional scaling: if on, correct image size with original aspect ratio
                     if(R.getIsProportionalScaleOn()) {
-                        if (c.w_toX(R.getMouse().x) > obj.x)
-                            propScaleSE(obj);
-                        else
-                            propScaleSE(obj);
+                        if (c.w_toX(R.getMouse().x) < obj.x) console.log("SE corner west of x")
+                        propScaleSE(obj);
                     }
                 }
 
