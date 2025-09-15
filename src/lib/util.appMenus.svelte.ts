@@ -5,9 +5,11 @@ import { readFiles } from './media.readFiles';
 import { saveProject } from './project.saveProject';
 import { loadProject } from './project.loadProject';
 import { clearProject } from './project.clearProject';
-
+import { locale, platform } from '@tauri-apps/plugin-os'
 
 export async function setWindowMenu() {
+    //console.log(locale()); 
+    if (platform() != "macos") return;
     const aboutSubmenu = await Submenu.new({
         text: 'About',
         items: [
