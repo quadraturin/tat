@@ -1,6 +1,5 @@
 [package]
 name = "tat"
-version = "0.2.2"
 description = "a tabletop audio tool from paradiso"
 authors = ["quadra"]
 license = " "

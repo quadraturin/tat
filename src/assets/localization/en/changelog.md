@@ -1,6 +1,11 @@
 ## Changelog
 
-### v0.5.0: Rewrite (2025-09-09)
+### v0.5.1: OS Fixes (2025-09-14)
+- **App Verson** now displays properly on About page.
+- **macOS Intel build** now available!
+- **Native OS menus** (File, etc.) only show up on macOS, so they don't mess up the app window.
+
+### v0.5.0: Rewrite (2025-09-13)
 - **Complete rewrite of the canvas system.**
     - Removed all canvas libraries/dependencies (Leaflet and add-ons).
     - Re-implemented an infinite canvas with native Canvas element.

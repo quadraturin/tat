@@ -1,4 +1,33 @@
 {
+    "productName": "tat",
+    "mainBinaryName": "tat",
+    "version": "0.5.1",
+    "identifier": "ooo.paradiso.tat",
+    "plugins": {},
+    "app": {
+        "macOSPrivateApi": true,
+        "windows": [
+            {
+                "fullscreen": false,
+                "height": 600,
+                "resizable": true,
+                "title": "tat",
+                "width": 800,
+                "decorations": false,
+                "useHttpsScheme": true,
+                "transparent": true
+            }
+        ],
+        "security": {
+            "assetProtocol": {
+                "scope": [
+                    "**"
+                ],
+                "enable": true
+            },
+            "csp": null
+        }
+    },
     "build": {
         "beforeBuildCommand": "npm run build",
         "beforeDevCommand": "npm run dev",
@@ -38,35 +67,6 @@
             "deb": {
                 "depends": []
             }
-        }
-    },
-    "productName": "tat",
-    "mainBinaryName": "tat",
-    "version": "0.1.0",
-    "identifier": "ooo.paradiso.tat",
-    "plugins": {},
-    "app": {
-        "macOSPrivateApi": true,
-        "windows": [
-            {
-                "fullscreen": false,
-                "height": 600,
-                "resizable": true,
-                "title": "tat",
-                "width": 800,
-                "decorations": false,
-                "useHttpsScheme": true,
-                "transparent": true
-            }
-        ],
-        "security": {
-            "assetProtocol": {
-                "scope": [
-                    "**"
-                ],
-                "enable": true
-            },
-            "csp": null
         }
     }
 }

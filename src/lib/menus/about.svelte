@@ -16,6 +16,15 @@
     import IconParadisoWorks from '$lib/icons/link/paradisoworks.svelte';
 	import { help } from '$lib/util.help';
 	import { marked, type Tokens } from "marked";
+	import { getVersion } from '@tauri-apps/api/app';
+
+    let v:string = $state("");
+    ver();
+    
+    /** Sets the About page display version to the app version set in tauri.conf.json */
+    async function ver() {
+        v = await getVersion();
+    }
 
     // modified https://github.com/markedjs/marked/issues/655#issuecomment-712380889
     const renderer = {
@@ -121,7 +130,7 @@
 
         <h2>{$t('ui.menu.about.about.title')}</h2>
         
-        <p><em>{$t('ui.menu.about.about.version')} 0.5.0</em></p>
+        <p><em>{$t('ui.menu.about.about.version')} {v}</em></p>
         
         {@html marked.parse($t('ui.menu.about.about.blurb'))}
         
