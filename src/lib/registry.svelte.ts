@@ -502,15 +502,22 @@ export enum SoundType {
     Area   = "area"
 };
 
-/** Canvas sound types. Local (circle falloff), Area (polygon), Global. */
+/** Canvas sound triggers. */
 export enum TriggerType {
-    Manual        = "manual", 
-    PlayOnEnter   = "playonenter",
+    Manual         = "manual", 
+    PlayOnEnter    = "playonenter",
     RestartOnEnter = "replayonenter",
-    PlayInside    = "playinside", 
+    PlayInside     = "playinside", 
     RestartInside  = "replayinside", 
-    PlayOnTimer   = "playontimer"
+    PlayOnTimer    = "playontimer"
 };
+
+/** Timer Hours/Minutes/Seconds */
+export enum TimerHMS {
+    Hours   = "hours", 
+    Minutes = "minutes", 
+    Seconds = "seconds"
+}
 
 // ===== 3.5 EFFECTS =====
 

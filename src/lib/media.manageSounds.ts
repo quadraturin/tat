@@ -73,24 +73,24 @@ export async function manageCanvasSounds(){
             (snd.soundType == R.SoundType.Area  && pointPolyCollision(l.x, l.y, snd.areaCoords))) {
 
             // Inside PlayOnEnter trigger: play & set trigger type to PlayOnLoad.
-            if (snd.triggerType == R.TriggerType.PlayOnEnter && snd.sound.paused) {
-                snd.sound.play();
+            if (snd.triggerType == R.TriggerType.PlayOnEnter && snd.paused) {
+                snd.play();
                 snd.triggerType = R.TriggerType.Manual;
             }
             // Inside PlayInside trigger: play.
-            else if (snd.triggerType == R.TriggerType.PlayInside && snd.sound.paused) {
-                snd.sound.play();
+            else if (snd.triggerType == R.TriggerType.PlayInside && snd.paused) {
+                snd.play();
             }
             // Inside ReplayOnEnter trigger: restart, play, & set trigger type to PlayOnLoad.
-            else if (snd.triggerType == R.TriggerType.RestartOnEnter && snd.sound.paused) {
-                snd.sound.play();
-                snd.sound.fastSeek(0);
+            else if (snd.triggerType == R.TriggerType.RestartOnEnter && snd.paused) {
+                snd.seekPercent(0);
+                snd.play();
                 snd.triggerType = R.TriggerType.Manual;
             }
             // Inside ReplayInside: restart & play.
-            else if (snd.triggerType == R.TriggerType.RestartInside && snd.sound.paused) {
-                snd.sound.play();
-                snd.sound.fastSeek(0);
+            else if (snd.triggerType == R.TriggerType.RestartInside && snd.paused) {
+                snd.seekPercent(0);
+                snd.play();
             }
         }
         // If not colliding and sound is PlayInside/ReplayInside/PlayOnEnter/ReplayOnEnter: pause.
@@ -98,8 +98,8 @@ export async function manageCanvasSounds(){
                     snd.triggerType == R.TriggerType.RestartInside || 
                     snd.triggerType == R.TriggerType.PlayOnEnter || 
                     snd.triggerType == R.TriggerType.RestartOnEnter) && 
-                !snd.sound.paused) {
-            snd.sound.pause();
+                !snd.paused) {
+            snd.pause();
         }
         // Timer sound.
         else if (snd.triggerType == R.TriggerType.PlayOnTimer) {

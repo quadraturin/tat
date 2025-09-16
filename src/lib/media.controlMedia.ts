@@ -4,19 +4,6 @@ import { getUserSettings } from "./settings.userSettings.svelte";
 
 
 /**
- * Seek to a playback location in the sound by clicking on the sound's seek bar.
- * @param sound The sound to seek.
- * @param mouseX The mouse's x position.
- */
-export async function seekToByClick(sound:CanvasSound, mouseX:number) {
-    if (sound.sound) {
-        let pct = (mouseX-24)/192; // 18px from left edge of screen, 170px wide
-        let pos = sound.sound.duration * pct;
-        sound.sound.currentTime = pos;
-    }
-}
-
-/**
  * Change the master volume of the app based on a mouse wheel scroll.
  * @param event A mouse wheel event.
  */

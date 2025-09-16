@@ -2,9 +2,8 @@
     import { t } from '$lib/util.localization';
 	import { solo } from '$lib/media.controlMedia';
 	import { duplicateSound } from '$lib/media.loadSound';
-	import { seekToByClick } from '$lib/media.controlMedia'; 
 	import { help } from '$lib/util.help';
-    import { getHoveredCanvasObject, getSoundsHidden, setHoveredCanvasObject, SoundType, TriggerType } from '$lib/registry.svelte';
+    import { getHoveredCanvasObject, getSoundsHidden, setHoveredCanvasObject, SoundType, TimerHMS, TriggerType } from '$lib/registry.svelte';
 	import type { CanvasSound } from '$lib/classes/CanvasSound.svelte';
 	import { tryRemoveObject } from '$lib/media.remove';
 
@@ -66,19 +65,20 @@
     }
 
     setInterval(() => {
-        currentTime = item.sound.currentTime;
-        duration = item.sound.duration == 0 ? 1 : item.sound.duration;
-        paused = item.sound.paused;
-        soloed = item.solo;
-        muted = item.muted;
-        looped = item.loop;
-        soundType = item.soundType;
+        currentTime = item.currentPosition != null ? item.currentPosition : 0;
+        duration    = item.track.buffer?.duration as number;
+        if (duration == 0) duration = 1;
+        paused      = item.paused;
+        soloed      = item.solo;
+        muted       = item.muted;
+        looped      = item.loop;
+        soundType   = item.soundType;
         triggerType = item.triggerType;
-        timerH = item.timer.hours;
-        timerM = item.timer.minutes;
-        timerS = item.timer.seconds;
+        timerH      = item.timer.hours;
+        timerM      = item.timer.minutes;
+        timerS      = item.timer.seconds;
         timerActive = item.timer.active;
-        isHovered = (item == getHoveredCanvasObject());
+        isHovered   = (item == getHoveredCanvasObject());
     }, 15);
 </script>
 
@@ -178,17 +178,13 @@
     <!-- Sound Progress Track / Seek Button -->
     <button class="progress-track" aria-label="seek" class:active={!paused}
     bind:this   = {soundTrack} 
-    onmousedown = {(e) => { seekToByClick(item, e.x); }}
+    onmousedown = {(e) => { item.seekOnClick(e); }}
     onfocus     = {() => {}} 
     onblur      = {() => {}}
     onmouseout  = {() => { help(); }}
     onmouseover = {() => { help($t('help.mediaPanel.sound.seek')); }}>
-
         <!-- Sound Progress Bar -->
-        {#if item.sound}
-            <div class="progress-bar" 
-            style={"width: " + seek.toString()+"%"}></div>
-        {/if}
+        <div class="progress-bar" style={"width: " + seek.toString()+"%"}></div>
     </button>
 
     <!-- Sound Type Button -->
@@ -236,9 +232,9 @@
     </button>
 
     {#if triggerType == TriggerType.Manual}
-        <!-- Sound Pause Button -->
+        <!-- Sound Pause/Play Button -->
         <button class="item-pause m" class:active={!paused}
-        onclick     = {() => { item.sound.paused ? item.sound.play() : item.sound.pause(); }}
+        onclick     = {() => { item.paused ? item.play() : item.pause(); }}
         onfocus     = {() => {}} 
         onblur      = {() => {}}
         onmouseout  = {() => { help(); }}
@@ -251,7 +247,7 @@
         <span class="item-pause m disabled" class:active={!paused}>
             {#if triggerType == TriggerType.PlayOnTimer}
                 <input type="text" class="timer" value="{timerH.toString().padStart(2,"0")}" disabled={timerActive}
-                    onwheel     = {(e) => { if (!timerActive){ e.preventDefault(); item.changeTimerWheel(e,"h"); }}}
+                    onwheel     = {(e) => { if (!timerActive){ e.preventDefault(); item.changeTimerWheel(e, TimerHMS.Hours); }}}
                     onfocus     = {(e) => { }} 
                     onblur      = {(e) => { e.currentTarget.value = e.currentTarget.value.padStart(2,"0"); }}
                     onkeyup     = {(e) => { timerInput(e.currentTarget, "h"); }}
@@ -259,7 +255,7 @@
                     onmouseout  = {()  => { help(); }}
                     onmouseover = {()  => { help($t('help.mediaPanel.sound.timer.hours')); }} /><span class="timer-divider" class:blink={timerActive && timerS % 2 == 1} >:</span><!-- {timerH.toString().padStart(2,"0")}
                 --><input type="text"class="timer" value="{timerM.toString().padStart(2, "0")}" disabled={timerActive}
-                    onwheel     = {(e) => { if (!timerActive) { e.preventDefault(); item.changeTimerWheel(e, "m"); }}}
+                    onwheel     = {(e) => { if (!timerActive) { e.preventDefault(); item.changeTimerWheel(e, TimerHMS.Minutes); }}}
                     onfocus     = {(e) => { }} 
                     onblur      = {(e) => { e.currentTarget.value = e.currentTarget.value.padStart(2,"0"); }}
                     onkeyup     = {(e) => { timerInput(e.currentTarget, "m"); }}
@@ -267,7 +263,7 @@
                     onmouseout  = {()  => { help(); }}
                     onmouseover = {()  => { help($t('help.mediaPanel.sound.timer.minutes')); }} /><span class="timer-divider" class:blink={timerActive && timerS % 2 == 1}>:</span><!-- {timerM.toString().padStart(2,"0")}
                 --><input type="text" class="timer" value="{timerS.toString().padStart(2,"0")}" disabled={timerActive}
-                    onwheel     = {(e) => { if (!timerActive) { e.preventDefault(); item.changeTimerWheel(e,"s"); }}}
+                    onwheel     = {(e) => { if (!timerActive) { e.preventDefault(); item.changeTimerWheel(e, TimerHMS.Seconds); }}}
                     onfocus     = {(e) => { }} 
                     onblur      = {(e) => { e.currentTarget.value = e.currentTarget.value.padStart(2,"0"); }}
                     onkeyup     = {(e) => { timerInput(e.currentTarget, "s"); }}
@@ -279,11 +275,11 @@
                     onblur      = {() => {}}
                     onmouseout  = {() => { help(); }}
                     onmouseover = {() => {
-                        if (item.timer.active) help($t('help.mediaPanel.sound.timer.stop'))
-                        else help($t('help.mediaPanel.sound.timer.start'))}}
+                        if (item.timer.active) help($t('help.mediaPanel.sound.timer.stop'));
+                        else help($t('help.mediaPanel.sound.timer.start')); }}
                     onclick     = {() => {
                         if (item.timer.active) { 
-                            item.sound.pause();
+                            item.pause();
                             item.stopTimer(item.timerID);
                         } else {
                             item.timerID = item.startTimer();
