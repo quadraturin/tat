@@ -6,6 +6,7 @@ import { pointCircleCollision, pointPolyCollision } from "./util.collision";
  */
 export async function manageCanvasSounds(){
     const l = R.getListener();
+    
     // Check if any sound is soloed.
     let solo = false;
     for (let i = 0; i < R.getSounds().length; i++) {
@@ -14,53 +15,57 @@ export async function manageCanvasSounds(){
             break;
         }
     }
+
+    // Cycle through all sounds.
     R.getSounds().forEach(snd => {
 
         // Manage volume.
-
         if ((solo && !snd.solo) || snd.muted) {
-            snd.gain = 0;
+            snd.gainListener = 0;
         }
         else {
-            // Global sound: only modify with master volume.
+            // Global sound: Listener gain is always 1.
             if (snd.soundType == R.SoundType.Global) { 
-                if(snd.gain != snd.volume) {
-                    snd.gainNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
-                    snd.gainNode.gain.setTargetAtTime(snd.volume, R.getAudioContext().currentTime, 0.1); 
+                if(snd.gainListener != 1) {
+                    snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
+                    snd.gainListenerNode.gain.setTargetAtTime(1, R.getAudioContext().currentTime, 0.1); 
                 }
             }
-            // Area sound: only audible if listener in area, modify with master volume.
+            // Area sound: at 1 if listener in area, 0 if outside. Ramp sound up and down on enter/exit.
             else if (snd.soundType == R.SoundType.Area) {
                 if (pointPolyCollision(l.x, l.y, snd.areaCoords)){
-                    if(snd.gain != snd.volume) {
-                        snd.gainNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
-                        snd.gainNode.gain.setTargetAtTime(snd.volume, R.getAudioContext().currentTime, 0.1); 
+                    if(snd.gain != 1) {
+                        snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
+                        snd.gainListenerNode.gain.setTargetAtTime(1, R.getAudioContext().currentTime, 0.1); 
                     }
                 } else {
                     if(snd.gain != 0) {
-                        snd.gainNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
-                        snd.gainNode.gain.setTargetAtTime(0, R.getAudioContext().currentTime, 0.1); 
+                        snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
+                        snd.gainListenerNode.gain.setTargetAtTime(0, R.getAudioContext().currentTime, 0.1); 
                     }
                 }
             }
-            // Local sound: louder as listener approaches center, modify with master volume.
+            // Local sound: at 0 outside, louder approaching 1 as listener approaches center.
             else if (snd.soundType == R.SoundType.Local) {
+                // In the circle.
                 if (pointCircleCollision(l.x, l.y, snd.x, snd.y, snd.radius)) {
-                    // check listener's distance to center.
+                    // Check listener's distance to center.
                     const x = snd.x - l.x;
                     const y = snd.y - l.y;
                     const dist = Math.sqrt(x**2 + y**2);
 
-                    // set volume based on base volume and distance from center. beyond the radius is muted.
+                    // Set volume based on base volume and distance from center. beyond the radius is muted.
                     const distVolume = Math.max(0,(snd.radius - dist) / snd.radius);
-                    if(snd.gain != snd.volume * distVolume) {
-                        snd.gainNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
-                        snd.gainNode.gain.setTargetAtTime(snd.volume * distVolume, R.getAudioContext().currentTime, 0.015); 
+                    if(snd.gainListener != distVolume) {
+                        snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
+                        snd.gainListenerNode.gain.setTargetAtTime(distVolume, R.getAudioContext().currentTime, 0.015); 
                     }
-                } else {
-                    if(snd.gain != 0) {
-                        snd.gainNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
-                        snd.gainNode.gain.setTargetAtTime(0, R.getAudioContext().currentTime, 0.015); 
+                }
+                // Outside the circle. 
+                else {
+                    if(snd.gainListener != 0) {
+                        snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
+                        snd.gainListenerNode.gain.setTargetAtTime(0, R.getAudioContext().currentTime, 0.015); 
                     }
                 }
             }

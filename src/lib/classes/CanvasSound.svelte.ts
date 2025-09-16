@@ -51,8 +51,10 @@ export class CanvasSound extends CanvasObject{
     #areaHandleIndex:       number                = 0;
     /** The current AudioBufferSourceNode that plays or will play the sound. */
     #bufferNode:            AudioBufferSourceNode = new AudioBufferSourceNode(getAudioContext());
-    /** The GainNode that adjusts the sound volume. */
+    /** The GainNode that the user uses to adjust the sound volume. */
     #gain:                  GainNode              = getAudioContext().createGain();
+    /** The GainNode that the Listener affects. */
+    #gainListener:          GainNode              = getAudioContext().createGain();
     /** The angle of the resize handle on an Area sound circle. */
     #localHandleAngle:      number                = 0;
     /** The radius of the circle on a Local sound. */
@@ -132,6 +134,7 @@ export class CanvasSound extends CanvasObject{
 
         // Set up nodes.
         this.#gain.gain.value   = options.volume ? options.volume : 1;
+        this.#gainListener.gain.value = 1;
         this.#bufferNode.loop   = options.loop   ? options.loop   : true;
 
         // Set up vars for tracking state.
@@ -191,6 +194,7 @@ export class CanvasSound extends CanvasObject{
             this.#bufferNode = new AudioBufferSourceNode(getAudioContext());
             this.#bufferNode.buffer = this.#buffer;
             this.#bufferNode
+                .connect(this.#gainListener)
                 .connect(this.#gain)
                 .connect(getMasterGain());
 
@@ -480,6 +484,19 @@ export class CanvasSound extends CanvasObject{
     }
     /** Get the gain node for this sound object. @returns The gain node. */
     public get gainNode() {return this.#gain; }
+
+
+    /** Get the gain value for this sound object. @returns the gain value. */
+    public get gainListener() { return this.#gainListener.gain.value; }
+
+    /** Set the gain value for this sound object (clamped between 0 and 1). @param g The gain value. */
+    public set gainListener(g:number) { 
+        if (g<0) g=0;
+        else if (g>1) g=1;
+        this.#gainListener.gain.value = g; 
+    }
+    /** Get the gain node for this sound object. @returns The gain node. */
+    public get gainListenerNode() {return this.#gainListener; }
 
 
 
