@@ -2,6 +2,7 @@ import { extname } from '@tauri-apps/api/path';
 import { imageFileTypes, soundFileTypes } from '$lib/settings.appSettings';
 import { newSoundFromPath } from "./media.loadSound";
 import { newImageFromPath } from "./media.loadImage";
+import { setProjectDirty } from './registry.svelte';
 
 /**
  * Load a file from a file path.
@@ -16,12 +17,13 @@ export async function loadFile(filePath: string, x?:number, y?:number): Promise<
             // file is an image.
             if (typeof x != "undefined" && typeof y != "undefined") newImageFromPath(filePath, x, y);
             else newImageFromPath(filePath);
-            console.log(filePath)
+            setProjectDirty();
         }
         else if (soundFileTypes.includes(ext)) { 
             // file is a sound.
             if (typeof x != "undefined" && typeof y != "undefined") newSoundFromPath(filePath, x, y);
             else newSoundFromPath(filePath);
+            setProjectDirty();
         }
     }
     catch (err) {
