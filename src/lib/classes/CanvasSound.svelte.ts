@@ -118,24 +118,24 @@ export class CanvasSound extends CanvasObject{
 
         // Set up the audio.
         this.#src       = options.src;
-        this.niceName   = options.niceName  ? options.niceName  : niceName(this.name);
-        this.#soundType = options.soundType ? options.soundType : SoundType.Local;
-        this.#muted     = options.muted     ? options.muted     : false;
-        this.#solo      = options.solo      ? options.solo      : false;
-        this.#timer     = options.timer     ? options.timer     : {
-                                                                    setHours: 0,
-                                                                    setMinutes: 0,
-                                                                    setSeconds: 30,
-                                                                    hours: 0,
-                                                                    minutes: 0,
-                                                                    seconds: 30,
-                                                                    active: false
-                                                                };
+        this.niceName   = typeof options.niceName  != "undefined" ? options.niceName  : niceName(this.name);
+        this.#soundType = typeof options.soundType != "undefined" ? options.soundType : SoundType.Local;
+        this.#muted     = typeof options.muted     != "undefined" ? options.muted     : false;
+        this.#solo      = typeof options.solo      != "undefined" ? options.solo      : false;
+        this.#timer     = typeof options.timer     != "undefined" ? options.timer     : {
+                                                                                            setHours: 0,
+                                                                                            setMinutes: 0,
+                                                                                            setSeconds: 30,
+                                                                                            hours: 0,
+                                                                                            minutes: 0,
+                                                                                            seconds: 30,
+                                                                                            active: false
+                                                                                        };
 
         // Set up nodes.
-        this.#gain.gain.value   = options.volume ? options.volume : 1;
+        this.#gain.gain.value   = typeof options.volume != "undefined" ? options.volume : 1;
         this.#gainListener.gain.value = 1;
-        this.#bufferNode.loop   = options.loop   ? options.loop   : true;
+        this.#bufferNode.loop   = typeof options.loop != "undefined" ? options.loop : true;
 
         // Set up vars for tracking state.
         this.#volume = this.#gain.gain.value;
@@ -145,8 +145,8 @@ export class CanvasSound extends CanvasObject{
         this.setupBuffer().then(() => this.resetBufferNode());
         
         // Set up the Local sound mode.
-        this.#localRadius       = options.radius           ? options.radius           : 30;
-        this.#localHandleAngle  = options.localHandleAngle ? options.localHandleAngle : 0;
+        this.#localRadius       = typeof options.radius != "undefined" ? options.radius           : 30;
+        this.#localHandleAngle  = typeof options.localHandleAngle != "undefined" ? options.localHandleAngle : 0;
 
         // Set up the Area sound mode.
         this.#areaCoords         = options.areaCoords ? 
@@ -218,8 +218,6 @@ export class CanvasSound extends CanvasObject{
     public pause() {
         // If the track is already paused, bail.
         if (this.#paused) return;
-
-        console.log('pausing!')
 
         // Stop and reset the buffer node
         this.#paused = true;

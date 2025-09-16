@@ -188,7 +188,7 @@ async function deleteUnused(fileType:string) {
         }
         if (notInUse) {
             //console.log(fileList[i].name as string + " is not in use. deleting...")
-            remove(path + sep() + fileType + sep() + fileList[i].name as string);
+            remove(path + sep() + fileType + sep() + fileList[i].name as string, {recursive:true});
         }
     }
 }
