@@ -10,6 +10,13 @@
             "request": "launch",
             "command": "npm run tauri dev",
             "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "node-terminal",
+            "name": "Run Script: build",
+            "request": "launch",
+            "command": "npm run tauri build",
+            "cwd": "${workspaceFolder}"
         }
     ]
 }
