@@ -159,11 +159,10 @@ export class CanvasSound extends CanvasObject{
         this.#triggerType = options.triggerType ? options.triggerType : TriggerType.Manual;
 
         // debugging
-        setInterval(() => {
+        /*setInterval(() => {
             if (this.currentPositionPct != null)
             console.log(`loop: ${this.#bufferNode.loop}`);
-            this.loop = true;
-        }, 500);
+        }, 500);*/
     }
 
 
@@ -185,11 +184,18 @@ export class CanvasSound extends CanvasObject{
     /** Reset the audio buffer node. */
     private resetBufferNode() {
         try {
+            // Store the loop state of the previous buffer.
+            const loop = this.#bufferNode.loop;
+
+            // Replace the old buffer with a new one.
             this.#bufferNode = new AudioBufferSourceNode(getAudioContext());
             this.#bufferNode.buffer = this.#buffer;
             this.#bufferNode
                 .connect(this.#gain)
                 .connect(getMasterGain());
+
+            // Set the loop state to match the old one.
+            this.#bufferNode.loop = loop;
         } catch (err) {
             console.error(err);
         }
@@ -208,6 +214,8 @@ export class CanvasSound extends CanvasObject{
     public pause() {
         // If the track is already paused, bail.
         if (this.#paused) return;
+
+        console.log('pausing!')
 
         // Stop and reset the buffer node
         this.#paused = true;
@@ -231,7 +239,12 @@ export class CanvasSound extends CanvasObject{
         // Start a timer that tracks if the track has looped.
         this.#loopIntervalID = setInterval(() => {
             const ctxTime = getAudioContext().currentTime;
-            if (ctxTime >= this.startTime + this.duration) this.startTime = ctxTime;
+            if (ctxTime >= this.startTime + this.duration) {
+                this.startTime = ctxTime;
+                if (!this.#bufferNode.loop)  {
+                    this.pause();
+                }
+            }
         }, 1);
 
         // Start the track now at the pause position.
@@ -333,9 +346,12 @@ export class CanvasSound extends CanvasObject{
 
     /** Set if the sound is looped. @param loop True: looped. False: not looped. */
     public set loop(loop:boolean) { 
+        // Set the loop tracking value, used for UI and the timer.
         this.#loop = loop;
-        this.#bufferNode.loop = loop;
+        // If in timer mode, the actual track will not loop.
         if (this.#triggerType == TriggerType.PlayOnTimer) this.#bufferNode.loop = false;
+        // Otherwise it will.
+        else this.#bufferNode.loop = loop;
     }
 
     /** Get if the sound is paused. @returns If the sound is paused. */
@@ -524,18 +540,18 @@ export class CanvasSound extends CanvasObject{
 
     /** Start the timer. @returns The Timer ID. */
     public startTimer():number{
-        this.#timer.hours = this.#timer.setHours;
+        this.#timer.hours   = this.#timer.setHours;
         this.#timer.minutes = this.#timer.setMinutes;
         this.#timer.seconds = this.#timer.setSeconds;
-        this.#timer.active = true;
+        this.#timer.active  = true;
         return setInterval(()=>this.runTimer(),1000);
     }
 
     /** Stop the timer. @param id The ID of the timer to stop. */
     public stopTimer(id:number){
         clearInterval(id);
-        this.#timer.active = false;
-        this.#timer.hours = this.#timer.setHours;
+        this.#timer.active  = false;
+        this.#timer.hours   = this.#timer.setHours;
         this.#timer.minutes = this.#timer.setMinutes;
         this.#timer.seconds = this.#timer.setSeconds;
     }
@@ -545,11 +561,15 @@ export class CanvasSound extends CanvasObject{
         // If at 1s, count down to 0 and play the sound.
         if (this.timer.hours == 0 && this.timer.minutes == 0 && this.timer.seconds == 1) {
             this.timer.seconds--;
+            this.pause();
+            this.#pausePosition = 0
             this.play();
+
+            // Stop the timer.
             this.stopTimer(this.timerID);
-            if (this.loop) {
-                this.timerID = this.startTimer();
-            }
+
+            // If looping is on, start the timer again!
+            if (this.loop) this.timerID = this.startTimer();
             return;
         }
         // Seconds is over 0: decrement seconds.
@@ -557,12 +577,14 @@ export class CanvasSound extends CanvasObject{
             this.timer.seconds--;
             return;
         }
+        // Roll over seconds.
         if (this.timer.seconds == 0) {
             if (this.timer.minutes > 0) {
                 this.timer.minutes--;
                 this.timer.seconds = 59;
                 return;
             }
+            // Roll over minutes.
             if (this.timer.minutes == 0) {
                 if (this.timer.hours > 0) {
                     this.timer.hours--;
@@ -594,6 +616,7 @@ export class CanvasSound extends CanvasObject{
         this.gainNode.gain.value += delta;
         if (this.gainNode.gain.value < 0) this.gainNode.gain.value = 0;
         else if (this.gainNode.gain.value > 1) this.gainNode.gain.value = 1;
+        this.#volume = this.gainNode.gain.value;
     }
 
     /** Change the volume with a mouse click. @param e The mouse event. */
@@ -604,6 +627,7 @@ export class CanvasSound extends CanvasObject{
             this.gainNode.gain.value = pct;
             if (this.gainNode.gain.value < 0) this.gainNode.gain.value = 0;
             else if (this.gainNode.gain.value > 1) this.gainNode.gain.value = 1;
+            this.#volume = this.gainNode.gain.value;
             }
     }
 
@@ -673,10 +697,10 @@ export class CanvasSound extends CanvasObject{
             } else if (this.triggerType == TriggerType.RestartInside) {
                 this.triggerType = TriggerType.PlayOnTimer;
                 if (!this.paused) this.pause();
-                this.#bufferNode.loop = false; 
+                this.#bufferNode.loop = false; // Only unloop the node.
             } else if (this.triggerType == TriggerType.PlayOnTimer) { 
                 this.triggerType = TriggerType.Manual; 
-                this.#bufferNode.loop = this.#loop;
+                this.#bufferNode.loop = this.#loop; // Reset the node to match the visible loop state.
             }
         } 
 
@@ -691,19 +715,19 @@ export class CanvasSound extends CanvasObject{
                 if (!this.paused) this.pause();
             } else if (this.triggerType == TriggerType.RestartOnEnter) { 
                 this.triggerType = TriggerType.PlayInside;
-                this.#loop = true; 
+                this.loop = true; 
                 if (!this.paused) this.pause();
             } else if (this.triggerType == TriggerType.PlayInside) { 
                 this.triggerType = TriggerType.RestartInside;
-                this.#loop = true;
+                this.loop = true;
                 if (!this.paused) this.pause();
             } else if (this.triggerType == TriggerType.RestartInside) { 
                 this.triggerType = TriggerType.PlayOnTimer;
                 if (!this.paused) this.pause();
-                this.#bufferNode.loop = false; 
+                this.#bufferNode.loop = false; // Only unloop the node.
             } else if (this.triggerType == TriggerType.PlayOnTimer) { 
                 this.triggerType = TriggerType.Manual; 
-                this.#bufferNode.loop = this.#loop;
+                this.#bufferNode.loop = this.#loop; // Reset the node to match the visible loop state.
             }
         }
     }

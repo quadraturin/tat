@@ -15,7 +15,7 @@ export async function tryRemoveObject(obj:CanvasObject) {
 
 
 /** Try to remove all currently selected objects from the project. */
-export async function tryRemoveSelected() {
+export async function tryRemoveSelected(force = false) {
     // Get all selected sounds.
     let soundsToRemove:CanvasSound[] = [];
     for (let i = 0; i < R.getSounds().length; i++) {
@@ -27,7 +27,24 @@ export async function tryRemoveSelected() {
         if (R.getImages()[i].selected) imagesToRemove.push(R.getImages()[i]);
     }
     // Check for uniqueness.
-    tryRemoveObjects(soundsToRemove, imagesToRemove);
+    tryRemoveObjects(soundsToRemove, imagesToRemove, force);
+}
+
+
+/** Try to remove all currently selected objects from the project. */
+export async function tryRemoveAll(force = false) {
+    // Get all selected sounds.
+    let soundsToRemove:CanvasSound[] = [];
+    for (let i = 0; i < R.getSounds().length; i++) {
+        soundsToRemove.push(R.getSounds()[i]);
+    }
+    // Get all selected images.
+    let imagesToRemove:CanvasImage[] = [];
+    for (let i = 0; i < R.getImages().length; i++) {
+        imagesToRemove.push(R.getImages()[i]);
+    }
+    // Check for uniqueness.
+    tryRemoveObjects(soundsToRemove, imagesToRemove, force);
 }
 
 
@@ -35,53 +52,56 @@ export async function tryRemoveSelected() {
  * Check if any objects to be removed are unique. If any are, a modal dialog is opened.
  * @param imagesToRemove List of images to remove. 
  * @param soundsToRemove List of sounds to remove.
+ * @param [force=false] Set to true to skip dialogs.
  * */
-export async function tryRemoveObjects(soundsToRemove?:CanvasSound[]|null, imagesToRemove?:CanvasImage[]|null) {
+export async function tryRemoveObjects(soundsToRemove?:CanvasSound[]|null, imagesToRemove?:CanvasImage[]|null, force=false) {
     // Build the list of objects, marking the unique ones.
     let anyUnique = false;
     let listToRemove = "<ul>";
 
-
-    // Find sounds.
-    soundsToRemove?.forEach(obj => {
-        let unique = true;
-        for (let i=0; i<R.getSounds().length; i++) {
-            if (R.getSounds()[i].src == obj.src && !soundsToRemove.includes(R.getSounds()[i])) {
-                unique = false;
-                break;
+    if (!force){
+        // Find sounds.
+        soundsToRemove?.forEach(obj => {
+            let unique = true;
+            for (let i=0; i<R.getSounds().length; i++) {
+                if (R.getSounds()[i].src == obj.src && !soundsToRemove.includes(R.getSounds()[i])) {
+                    unique = false;
+                    break;
+                }
             }
-        }
-        if (unique) {
-            listToRemove += "<li class='unique'>" + obj.niceName + "<br /><em>(" + obj.src + ")</em></li>";
-            anyUnique = true;
-        }
-        else listToRemove += "<li>" + obj.niceName + "<br /><em>(" + obj.src + ")</em></li>"; 
-    });
-    
-    // Find images.
-    imagesToRemove?.forEach(obj => {
-        let unique = true;
-        for (let i=0; i<R.getImages().length; i++) {
-            if (R.getImages()[i].src == obj.src && !imagesToRemove.includes(R.getImages()[i])) {
-                unique = false;
-                break;
+            if (unique) {
+                listToRemove += "<li class='unique'>" + obj.niceName + "<br /><em>(" + obj.src + ")</em></li>";
+                anyUnique = true;
             }
-        }
-        if (unique) {
-            listToRemove += "<li class='unique'>" + obj.niceName + "<br /><em>(" + obj.src + ")</em></li>"; 
-            anyUnique = true;
-        }
-        else listToRemove += "<li>" + obj.niceName + "<br /><em>(" + obj.src + ")</em></li>"; 
-    });
+            else listToRemove += "<li>" + obj.niceName + "<br /><em>(" + obj.src + ")</em></li>"; 
+        });
+        
+        // Find images.
+        imagesToRemove?.forEach(obj => {
+            let unique = true;
+            for (let i=0; i<R.getImages().length; i++) {
+                if (R.getImages()[i].src == obj.src && !imagesToRemove.includes(R.getImages()[i])) {
+                    unique = false;
+                    break;
+                }
+            }
+            if (unique) {
+                listToRemove += "<li class='unique'>" + obj.niceName + "<br /><em>(" + obj.src + ")</em></li>"; 
+                anyUnique = true;
+            }
+            else listToRemove += "<li>" + obj.niceName + "<br /><em>(" + obj.src + ")</em></li>"; 
+        });
 
     // Finish building the list.
     listToRemove += "</ul>"
+
+    }
 
     if(soundsToRemove) R.setSoundsToDelete(soundsToRemove);
     if(imagesToRemove) R.setImagesToDelete(imagesToRemove);
 
     // If any are unique, populate and call the modal confirmation dialog.
-    if (anyUnique) {
+    if (anyUnique && !force) {
         let o:ModalOptions = {
             title: t.get('ui.menu.modal.deleteUnique.title'), 
             body: "<p>" + t.get('ui.menu.modal.deleteUnique.body') + "</p><h3>"+ t.get('ui.menu.modal.deleteUnique.listTitle') + "</h3>" + listToRemove,
@@ -113,12 +133,12 @@ export async function removeObject(obj:CanvasObject) {
             break;
         }
     }
-    // If the object is a sound, stop and unload the sound.
+
+    // If the object is a sound, stop it.
     if (obj instanceof CanvasSound) {
-        obj.sound.pause();
-        obj.sound.removeAttribute("src");
-        obj.sound.load();
+        obj.pause();
     }
+
     // Remove the object from the list & mark the project as changed.
     if (index != null) {
         objList.splice(index, 1);
