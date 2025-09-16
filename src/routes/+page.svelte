@@ -21,6 +21,7 @@
     import { onMount } from 'svelte'
     import { LogicalSize, Window } from '@tauri-apps/api/window'
     import { getCurrentWindow } from '@tauri-apps/api/window';
+    import { platform } from '@tauri-apps/plugin-os';
 
     // ===== Project =====
 	import { saveProject } from '$lib/project.saveProject';
@@ -216,6 +217,7 @@
         // Set minimum window size.
         appWindow.setMinSize(new LogicalSize(480,320));
 
+        document.documentElement.classList.add(platform())
         document.getElementById('themeWrapper')?.addEventListener('mousemove', (e) => { R.setMouse(e.x, e.y); });
 
         // Set the native app window menu.

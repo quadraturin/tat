@@ -231,6 +231,7 @@ pre { font-size: 0.8em; }
     --br-l:   calc(var(--br-m) + 4px);
     --br-s:   calc(var(--br-m) - 2px);
     --br-win: 12px;
+    --br-win-windows: 7px;
 }
 
 /* ###############################
@@ -242,6 +243,13 @@ body {          border-radius: calc(var(--br-win) + 1px); }
 canvas {        border-radius: var(--br-win); }
 #titlebar {     border-radius: var(--br-win) var(--br-win) 0 0; }
 .menu {         border-radius: 0 0 calc(var(--br-win) - 1px) calc(var(--br-win) - 1px); }
+
+
+html.windows body {          border-radius: calc(var(--br-win-windows) + 1px); }
+html.windows .container {    border-radius: calc(var(--br-win-windows) + 1px); }
+html.windows canvas {        border-radius: var(--br-win-windows); }
+html.windows #titlebar {     border-radius: var(--br-win-windows) var(--br-win-windows) 0 0; }
+html.windows .menu {         border-radius: 0 0 calc(var(--br-win-windows) - 1px) calc(var(--br-win-windows) - 1px); }
 
 /* #######################
    ##### Core Styles #####
