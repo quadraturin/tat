@@ -7,7 +7,9 @@ on:
       - 'v*'
   workflow_dispatch:
 
+
 jobs:
+
   create-release:
     permissions:
       contents: write
@@ -42,16 +44,83 @@ jobs:
             })
             return data.id
 
-  build-tauri:
+
+  build-macos:
     needs: create-release
     permissions:
       contents: write
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-13, macos-latest, ubuntu-22.04, windows-latest]
+        include:
+          - args: '--target aarch64-apple-darwin'
+            arch: 'silicon'
+          - args: '--target x86_64-apple-darwin'
+            arch: 'intel'
+    runs-on: macos-latest
+    env:
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
 
+    steps:
+      - name: Import Apple Developer Certificate
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          echo $APPLE_CERTIFICATE | base64 --decode > certificate.p12
+          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security set-keychain-settings -t 3600 -u build.keychain
+          security import certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" build.keychain
+          security find-identity -v -p codesigning build.keychain
+
+      - name: Verify Certificate
+        run: |
+          CERT_INFO=$(security find-identity -v -p codesigning build.keychain | grep "Apple Development")
+          CERT_ID=$(echo "$CERT_INFO" | awk -F'"' '{print $2}')
+          echo "CERT_ID=$CERT_ID" >> $GITHUB_ENV
+          echo "Certificate imported."
+
+      - uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: install frontend dependencies
+        run: npm install 
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ env.CERT_ID }}
+        with:
+          args: ${{ matrix.args }}
+          releaseId: ${{ needs.create-release.outputs.release_id }}
+          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
+          releaseName: "App v__VERSION__"
+
+
+  build-linux:
+    needs: create-release
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-22.04]
     runs-on: ${{ matrix.platform }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -63,8 +132,7 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
-      - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
+      - name: install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
@@ -80,11 +148,45 @@ jobs:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
           releaseName: "App v__VERSION__"
 
+
+  build-windows:
+    needs: create-release
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [windows-latest]
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: install frontend dependencies
+        run: npm install 
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          releaseId: ${{ needs.create-release.outputs.release_id }}
+          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
+          releaseName: "App v__VERSION__"
+
+
   publish-release:
     permissions:
       contents: write
     runs-on: ubuntu-22.04
-    needs: [create-release, build-tauri]
+    needs: [create-release, build-macos, build-linux, build-windows]
 
     steps:
       - name: publish release
