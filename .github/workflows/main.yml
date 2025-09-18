@@ -73,7 +73,7 @@ jobs:
       - name: setup keychain
         run: |
           xcrun notarytool store-credentials "tat-password-profile" --apple-id "${{ secrets.APPLE_ID }}" --team-id ${{ secrets.APPLE_TEAM_ID }} --password ${{ secrets.APPLE_ID_PASSWORD }}
-          xcrun notarytool -p "tat-password-profile"
+          xcrun notarytool --keychain-profile "tat-password-profile"
 
       - name: setup node
         uses: actions/setup-node@v4
