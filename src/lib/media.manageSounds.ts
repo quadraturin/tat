@@ -35,12 +35,12 @@ export async function manageCanvasSounds(){
             else if (snd.soundType == R.SoundType.Area) {
                 if (pointPolyCollision(l.x, l.y, snd.areaCoords)){
                     if(snd.gain != 1) {
-                        snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
+                        //snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
                         snd.gainListenerNode.gain.setTargetAtTime(1, R.getAudioContext().currentTime, 0.1); 
                     }
                 } else {
                     if(snd.gain != 0) {
-                        snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
+                        //snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
                         snd.gainListenerNode.gain.setTargetAtTime(0, R.getAudioContext().currentTime, 0.1); 
                     }
                 }
@@ -57,14 +57,14 @@ export async function manageCanvasSounds(){
                     // Set volume based on base volume and distance from center. beyond the radius is muted.
                     const distVolume = Math.max(0,(snd.radius - dist) / snd.radius);
                     if(snd.gainListener != distVolume) {
-                        snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
+                        //snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
                         snd.gainListenerNode.gain.setTargetAtTime(distVolume, R.getAudioContext().currentTime, 0.015); 
                     }
                 }
                 // Outside the circle. 
                 else {
                     if(snd.gainListener != 0) {
-                        snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
+                        //snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
                         snd.gainListenerNode.gain.setTargetAtTime(0, R.getAudioContext().currentTime, 0.015); 
                     }
                 }

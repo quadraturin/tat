@@ -6,6 +6,7 @@ import { closeAllMenus } from './ui.menus';
 import { t } from './util.localization';
 import type { CanvasImage } from './classes/CanvasImage.svelte';
 import type { CanvasSound } from './classes/CanvasSound.svelte';
+import { getVersion } from '@tauri-apps/api/app';
 
 
 /**
@@ -23,6 +24,9 @@ export async function saveProject(saveAs=false): Promise<boolean>
 
     // main project object
     let project = { 
+        info: {
+            version: await getVersion()
+        },
         maps: [
             {
             view: {

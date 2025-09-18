@@ -92,7 +92,8 @@
             "confirmDeleteSound":           "This is the only instance of this sound file in this project!\n\nIf you remove it and save the project, the sound file will be deleted from the project folder.\n\nDo you still want to remove the sound?",
             "projectSaved":                 "Project saved!",
             "closeProjectUnsavedChanges":   "Your project has unsaved changes. Are you sure you want to close this project and lose all unsaved changes?",
-            "quitUnsavedChanges":           "You have unsaved changes! are you sure you want to quit?"
+            "quitUnsavedChanges":           "You have unsaved changes! are you sure you want to quit?",
+            "openOldProjectCoords":         "This project was made with an older (pre-v0.5) version of tat.\n\nIf you save this project it will be converted to the latest format and will no longer work with old versions of tat."
         }
     }
 }

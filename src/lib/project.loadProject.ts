@@ -1,4 +1,4 @@
-import { open } from '@tauri-apps/plugin-dialog';
+import { message, open } from '@tauri-apps/plugin-dialog';
 import { projectExt } from './settings.appSettings';
 import { exists, readTextFile } from '@tauri-apps/plugin-fs';
 import { basename, join, sep } from '@tauri-apps/api/path';
@@ -7,6 +7,7 @@ import { clearProject } from './project.clearProject';
 import { closeModal } from './ui.modals';
 import { newImage } from './media.loadImage';
 import { newSound } from './media.loadSound';
+import { t } from './util.localization';
 
 /** Load a project. */
 export async function loadProject() 
@@ -43,6 +44,14 @@ export async function loadProject()
         R.setProjectName(projectName);
 
         let promises = new Array<Promise<any>>;
+
+        let oldVersion = false;
+
+        if (!project.info?.version) {
+            console.log('Project made with an older version of tat!')
+            oldVersion = true;
+            await message(t.get('ui.menu.dialog.openOldProjectCoords'));
+        }
 
         let uniqueImages:string[] = [];
         let uniqueSounds:string[] = [];
@@ -84,9 +93,18 @@ export async function loadProject()
                     x:              obj.x,
                     y:              obj.y,
                 }
-                // Take Lat, Lng from older versions of TAT and convert to X,Y.
-                if (obj.lat) options.y = obj.lat;
-                if (obj.lng) options.x = obj.lng;
+                if (oldVersion) {
+                    options.y = -options.y - options.height;
+                    // Take Lat, Lng and convert to X,Y.
+                    if (obj.lat || obj.lng){
+                        try {
+                            if (obj.lat) options.y = -obj.lat - options.height;
+                            if (obj.lng) options.x = obj.lng;
+                        } catch (err) {
+                            console.error("Could not import legacy lat/lng coordinates!", err)
+                        }
+                    }
+                }
                 newImage(options);
             }
 
@@ -113,9 +131,32 @@ export async function loadProject()
                     x:                  obj.x,
                     y:                  obj.y,
                 }
-                // Take Lat, Lng from older versions of TAT and convert to X,Y.
-                if (obj.lat) options.y = obj.lat;
-                if (obj.lng) options.x = obj.lng;
+
+                // If the project was made in an old (pre-0.5) version of TAT, we need to do a few things.
+                if (oldVersion) {
+                    options.y *= -1;
+                    // Take Lat, Lng and convert to X,Y.
+                    if (obj.lat || obj.lng){
+                        try {
+                            if (obj.lat) options.y = -obj.lat;
+                            if (obj.lng) options.x = obj.lng;
+                        } catch (err) {
+                            console.error("Could not import legacy lat/lng coordinates!", err)
+                        }
+                    }
+                    // Take Points and convert to AreaCoords.
+                    if (obj.points) {
+                        try {
+                            let coords = new Array;
+                            obj.points.forEach((point: [number, number]) => {
+                                coords.push({x:point[0], y:-point[1]});
+                            });
+                            options.areaCoords = coords;
+                        } catch (err) {
+                            console.error("Could not import legacy area points!", err)
+                        }
+                    }
+                }
                 newSound(options);
             }
 
