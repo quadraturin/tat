@@ -58,9 +58,25 @@ jobs:
           - args: '--target x86_64-apple-darwin'
             arch: 'intel'
     runs-on: macos-latest
+    env:
+      ENABLE_CODE_SIGNING: ${{ secrets.APPLE_CERTIFICATE }}
+      APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+      APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+      APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: setup keychain
+        run: |
+          xcrun notarytool store-credentials "app-password-profile"
+          --apple-id "${{ secrets.APPLE_ID }}"
+          --team-id ${{ secrets.APPLE_TEAM_ID }}
+          --password ${{ secrets.APPLE_PASSWORD }}
+          xcrun notarytool -p "app-password-profile"
 
       - name: setup node
         uses: actions/setup-node@v4
@@ -76,13 +92,6 @@ jobs:
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ENABLE_CODE_SIGNING: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
           releaseId: ${{ needs.create-release.outputs.release_id }}
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
