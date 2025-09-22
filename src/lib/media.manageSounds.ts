@@ -34,15 +34,11 @@ export async function manageCanvasSounds(){
             // Area sound: at 1 if listener in area, 0 if outside. Ramp sound up and down on enter/exit.
             else if (snd.soundType == R.SoundType.Area) {
                 if (pointPolyCollision(l.x, l.y, snd.areaCoords)){
-                    if(snd.gain != 1) {
-                        //snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
-                        snd.gainListenerNode.gain.setTargetAtTime(1, R.getAudioContext().currentTime, 0.1); 
-                    }
+                    snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
+                    snd.gainListenerNode.gain.setTargetAtTime(1, R.getAudioContext().currentTime, 0.1); 
                 } else {
-                    if(snd.gain != 0) {
-                        //snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
-                        snd.gainListenerNode.gain.setTargetAtTime(0, R.getAudioContext().currentTime, 0.1); 
-                    }
+                    snd.gainListenerNode.gain.cancelScheduledValues(R.getAudioContext().currentTime);
+                    snd.gainListenerNode.gain.setTargetAtTime(0, R.getAudioContext().currentTime, 0.1); 
                 }
             }
             // Local sound: at 0 outside, louder approaching 1 as listener approaches center.
