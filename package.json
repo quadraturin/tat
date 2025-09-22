@@ -1,6 +1,6 @@
 {
 	"name": "tat",
-	"version": "0.5.3",
+	"version": "0.5.5",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -40,6 +40,7 @@
 		"@tauri-apps/plugin-fs": "^2.2.0",
 		"@tauri-apps/plugin-os": "^2.3.1",
 		"@tauri-apps/plugin-shell": "^2.2.0",
+		"@tauri-apps/plugin-updater": "^2.9.0",
 		"@types/howler": "^2.2.12",
 		"marked": "^15.0.12",
 		"sveltekit-i18n": "^2.4.2",

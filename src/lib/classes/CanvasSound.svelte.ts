@@ -27,6 +27,8 @@ export type CanvasSoundOptions = {
     muted?:             boolean,
     name?:              string,
     niceName?:          string,
+    paused?:            boolean,
+    playbackPosition?:  number,
     radius?:            number,
     selected?:          boolean,
     solo?:              boolean,
@@ -140,12 +142,9 @@ export class CanvasSound extends CanvasObject{
         // Set up vars for tracking state.
         this.#volume = this.#gain.gain.value;
         this.#loop   = this.#bufferNode.loop;
-
-        // Set up audio buffer & initialize the buffer node.
-        this.setupBuffer().then(() => this.resetBufferNode());
         
         // Set up the Local sound mode.
-        this.#localRadius       = typeof options.radius != "undefined" ? options.radius           : 30;
+        this.#localRadius       = typeof options.radius != "undefined" ? options.radius : 30;
         this.#localHandleAngle  = typeof options.localHandleAngle != "undefined" ? options.localHandleAngle : 0;
 
         // Set up the Area sound mode.
@@ -160,6 +159,17 @@ export class CanvasSound extends CanvasObject{
 
         // Set the trigger type.
         this.#triggerType = options.triggerType ? options.triggerType : TriggerType.Manual;
+
+        // Set playback position.
+        this.#pausePosition = typeof options.playbackPosition != "undefined" ? options.playbackPosition : 0;
+
+        // Set up audio buffer, initialize the buffer node, play if not set to paused.
+        this.setupBuffer().then(() => this.resetBufferNode()).then(() => {
+            if (typeof options.paused != "undefined" && options.paused == false) {
+                this.gainListener = 0;
+                this.play(); 
+            }
+        });
 
         // debugging
         /*setInterval(() => {

@@ -121,6 +121,8 @@ export async function loadProject()
                     muted:              obj.muted,
                     name:               obj.name,
                     niceName:           obj.niceName,
+                    paused:             obj.paused,
+                    playbackPosition:   obj.playbackPosition,
                     radius:             obj.radius,
                     selected:           obj.selected,
                     solo:               obj.solo,

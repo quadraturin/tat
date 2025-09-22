@@ -1,9 +1,17 @@
 {
     "productName": "tat",
     "mainBinaryName": "tat",
-    "version": "0.5.4",
+    "version": "0.5.5",
     "identifier": "ooo.paradiso.tat",
-    "plugins": {},
+    "plugins": {
+        "updater": {
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEE4NTAwOERCQTdGQTE0MUMKUldRY0ZQcW4yd2hRcUVOZndpcFRjRTNiL0MwanhINVg5aDBkcFZKTEV1MEloSThGZkptWnZ4c1MK",
+            "endpoints": [
+                "https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}",
+                "https://github.com/user/repo/releases/latest/download/latest.json"
+            ]
+        }
+    },
     "app": {
         "macOSPrivateApi": true,
         "windows": [
@@ -37,7 +45,8 @@
     "bundle": {
         "active": true,
         "category": "DeveloperTool",
-        "copyright": "",
+        "copyright": "",    
+        "createUpdaterArtifacts": false,
         "targets": "all",
         "externalBin": [],
         "icon": [
