@@ -64,13 +64,21 @@ export async function setupCtxMenu(e:MouseEvent) {
                 id: 'coords',
                 text: 'Click: (' + Math.round(getCanvas().w_toX(e.x))+ ", " + Math.round(getCanvas().w_toY(e.y)) +")",
                 enabled: false,
+            },
+            {
+                id: 'move_listener_to_here',
+                text: 'Jump Listener to here',
+                action: () => { 
+                    getListener().x = getCanvas().w_toX(e.x); 
+                    getListener().y = getCanvas().w_toY(e.y); 
+                },
             }
         ]
     });
 }
 
 export let ctxMenuCanvasListener:Menu;
-export async function setupCtxMenuCanvasListener() {
+export async function setupCtxMenuCanvasListener(e:MouseEvent) {
     ctxMenuCanvasListener = await Menu.new({
         items: [
             {
@@ -90,14 +98,15 @@ export async function setupCtxMenuCanvasListener() {
                 action: () => { 
                     getListener().x = 0; 
                     getListener().y = 0; 
-                    getCanvas().flyToPoint(0, 0)},
+                    getCanvas().flyToPoint(0, 0)
+                },
             }
         ]
     });
 }
 
 export let ctxMenuCanvasObject:Menu;
-export async function setupCtxMenuCanvasObject() {
+export async function setupCtxMenuCanvasObject(e:MouseEvent) {
     let objTypePrefix:string = "";
     let disableToFront:boolean = false;
     let disableToBack:boolean = false;
@@ -132,6 +141,14 @@ export async function setupCtxMenuCanvasObject() {
                     enabled: !disableToBack,
                     action: () => { moveObjectToBack(hovered) }
                 },
+                {
+                    id: 'move_listener_to_here',
+                    text: 'Jump Listener to here',
+                    action: () => { 
+                        getListener().x = getCanvas().w_toX(e.x); 
+                        getListener().y = getCanvas().w_toY(e.y); 
+                    },
+                }
             ]
         });
         const menuObjectName = await ctxMenuCanvasObject.get('object_name');

@@ -247,11 +247,11 @@
         document.addEventListener("contextmenu", (e) => {
             e.preventDefault();
             if (R.getHoveredCanvasObject() instanceof CanvasListener) {
-                R.setupCtxMenuCanvasListener().then(() => {
+                R.setupCtxMenuCanvasListener(e).then(() => {
                     R.ctxMenuCanvasListener.popup();
                 });
             } else if (R.getHoveredCanvasObject()) {
-                R.setupCtxMenuCanvasObject().then(() => {
+                R.setupCtxMenuCanvasObject(e).then(() => {
                     R.ctxMenuCanvasObject.popup();
                 });
             } else {
@@ -402,7 +402,6 @@
         R.getCanvas().panInertia();
         R.getCanvas().update();
     }, 15);
-
 </script>
 
 <!-- The Window -->
