@@ -7,7 +7,6 @@
 
 <div id="modal-background">
     <div id="modal">
-        <h2 id="modal-title">{$t('ui.loading')}</h2>
         <div id="modal-body"></div>
         <div id="modal-actions">
             <button id='modal-cancel' onclick="{closeModal}">
