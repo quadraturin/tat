@@ -1,5 +1,5 @@
 import { exists, readTextFile } from "@tauri-apps/plugin-fs";
-import { appDataDir, join } from "@tauri-apps/api/path";
+import { appDataDir, join, sep } from "@tauri-apps/api/path";
 import { getUserSettings } from "./settings.userSettings.svelte";
 import { saveUserSettings } from "./settings.saveUserSettings";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
@@ -23,6 +23,7 @@ export async function loadUserSettings() {
             saveUserSettings(); // saves default settings
         }
         appWindow.setContentProtected(getUserSettings().hideWindowContentsFromStream);
+
     } catch (err) {
         console.error(err);
     }
