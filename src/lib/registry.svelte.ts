@@ -46,8 +46,19 @@ import { t } from '$lib/util.localization';
  *      6.2 Project Name
  */
 
+export type Locale = {
+    locale:string,
+    language:string,
+    author?:string,
+    authorLink?:string,
+    appVersion?:string
+}
 
-let showDebug = false;
+let locales:Array<Locale> = [];
+export function addLocale(locale:Locale) { locales.push(locale); }
+export function getLocales() { return locales; }
+
+let showDebug = $state(false);
 export function getShowDebug():boolean { return showDebug; }
 export function toggleDebug() { showDebug = !showDebug; }
 
@@ -83,7 +94,7 @@ export async function setupCtxMenuCanvasListener(e:MouseEvent) {
         items: [
             {
                 id: 'listener',
-                text: 'Listener',
+                text: `${t.get('ui.menu.context.listener')}`,
                 action: () => { getCanvas().flyToPoint(getListener().x, getListener().y)},
             },
             {
@@ -93,7 +104,7 @@ export async function setupCtxMenuCanvasListener(e:MouseEvent) {
             },
             {
                 id: 'move_listener_to_origin',
-                text: 'Move to (0, 0)',
+                text: `${t.get('ui.menu.context.moveTo')} (0, 0)`,
                 enabled: (getListener().x != 0 || getListener().y != 0),
                 action: () => { 
                     getListener().x = 0; 
@@ -113,12 +124,12 @@ export async function setupCtxMenuCanvasObject(e:MouseEvent) {
     const hovered = getHoveredCanvasObject();
     if (hovered instanceof CanvasObject) {
         if(hovered instanceof CanvasImage) {
-            objTypePrefix = "Image: ";
+            objTypePrefix = `${t.get('ui.menu.context.image')}: `;
             if (hovered == getImages()[0]) disableToFront = true;
             if (hovered == getImages()[getImages().length-1]) disableToBack = true;
         }
         else if(hovered instanceof CanvasSound){ 
-            objTypePrefix = "Sound: ";
+            objTypePrefix = `${t.get('ui.menu.context.sound')}: `;
             if (hovered == getSounds()[0]) disableToFront = true;
             if (hovered == getSounds()[getSounds().length-1]) disableToBack = true;
         }
@@ -126,24 +137,24 @@ export async function setupCtxMenuCanvasObject(e:MouseEvent) {
             items: [
                 {
                     id: 'object_name',
-                    text: 'Object name',
+                    text: '-',
                     action: () => { hovered.selected = !hovered.selected}
                 },
                 {
                     id: 'bring_to_front',
-                    text: 'Bring to front',
+                    text: `${t.get('ui.menu.context.bringToFront')}`,
                     enabled: !disableToFront,
                     action: () => { moveObjectToFront(hovered) }
                 },
                 {
                     id: 'send_to_back',
-                    text: 'Send to back',
+                    text: `${t.get('ui.menu.context.sendToBack')}`,
                     enabled: !disableToBack,
                     action: () => { moveObjectToBack(hovered) }
                 },
                 {
                     id: 'move_listener_to_here',
-                    text: 'Jump Listener to here',
+                    text: `${t.get('ui.menu.context.jumpListener')}`,
                     action: () => { 
                         getListener().x = getCanvas().w_toX(e.x); 
                         getListener().y = getCanvas().w_toY(e.y); 
