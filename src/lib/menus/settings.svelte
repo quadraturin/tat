@@ -1,4 +1,5 @@
 <script lang="ts">
+
     import { t, locales, locale } from '$lib/util.localization';
 	import * as R from '$lib/registry.svelte';
 	import { getDefaultUserSettings, getUserSettings, resetUserSettings, userSettings } from '$lib/settings.userSettings.svelte';
@@ -7,9 +8,17 @@
 	import { getThemesList } from '$lib/settings.theme';
 	import IconReset from '$lib/icons/menu/reset.svelte';
 	import { help } from '$lib/util.help';
+	import { appDataDir } from '@tauri-apps/api/path';
     const appWindow = getCurrentWebviewWindow();
 
     let themesList = $state(getThemesList());
+
+    let dir = $state("");
+    setDir();
+
+    async function setDir() {
+        dir = await appDataDir();
+    }
 
 </script>
 
@@ -22,8 +31,8 @@
         role="heading" aria-level="4"
         onfocus     = {()=>{}} 
         onblur      = {()=>{}}
-        onmouseover = {()=>{help($t('help.menu.settings.hideWindowContents'))}}
-        onmouseout  = {()=>{help()}}>
+        onmouseover = {()=>{ help($t('help.menu.settings.hideWindowContents')); }}
+        onmouseout  = {()=>{ help(); }}>
         <label for="hideWindowContentsFromStream">{$t('ui.menu.settings.hideWindowContents')}</label>
         <input type="checkbox" id="hideWindowContentsFromStream" class="fancy"
         checked={userSettings?.hideWindowContentsFromStream}
@@ -39,8 +48,8 @@
         role="heading" aria-level="4"
         onfocus     = {()=>{}} 
         onblur      = {()=>{}}
-        onmouseover = {()=>{help($t('help.menu.settings.invertScroll'))}}
-        onmouseout  = {()=>{help()}}>
+        onmouseover = {()=>{ help($t('help.menu.settings.invertScroll')); }}
+        onmouseout  = {()=>{ help(); }}>
         <label for="invertVolumeScroll">{$t('ui.menu.settings.invertScroll')}</label>
         <input type="checkbox" id="invertVolumeScroll" class="fancy" 
         checked={userSettings?.invertVolumeScroll}
@@ -55,8 +64,8 @@
         role="heading" aria-level="4"
         onfocus     = {()=>{}} 
         onblur      = {()=>{}}
-        onmouseover = {()=>{help($t('help.menu.settings.proportionalScale'))}}
-        onmouseout  = {()=>{help()}}>
+        onmouseover = {()=>{ help($t('help.menu.settings.proportionalScale')); }}
+        onmouseout  = {()=>{ help(); }}>
         <label for="proportionalScaleOnByDefault">{$t('ui.menu.settings.proportionalScale')}</label>
         <input type="checkbox" id="proportionalScaleOnByDefault" class="fancy"
         checked={userSettings?.proportionalScaleOnByDefault}
@@ -72,8 +81,8 @@
         role="heading" aria-level="4"
         onfocus     = {()=>{}} 
         onblur      = {()=>{}}
-        onmouseover = {()=>{help($t('help.menu.settings.scrollSensitivity'))}}
-        onmouseout  = {()=>{help()}}>
+        onmouseover = {()=>{ help($t('help.menu.settings.scrollSensitivity')); }}
+        onmouseout  = {()=>{ help(); }}>
         <label for="uiScrollSensitivity">
             {$t('ui.menu.settings.scrollSensitivity')}
         </label>
@@ -92,8 +101,8 @@
         role="heading" aria-level="4"
         onfocus     = {()=>{}} 
         onblur      = {()=>{}}
-        onmouseover = {()=>{help($t('help.menu.settings.listenerMoveSpeed'))}}
-        onmouseout  = {()=>{help()}}>
+        onmouseover = {()=>{ help($t('help.menu.settings.listenerMoveSpeed')); }}
+        onmouseout  = {()=>{ help(); }}>
         <label for="listenerMoveSpeed">
             {$t('ui.menu.settings.listenerMoveSpeed')}
         </label>
@@ -112,16 +121,18 @@
         role="heading" aria-level="4"
         onfocus     = {()=>{}} 
         onblur      = {()=>{}}
-        onmouseover = {()=>{help($t('help.menu.settings.language'))}}
-        onmouseout  = {()=>{help()}}>
+        onmouseover = {()=>{ help($t('help.menu.settings.language')); }}
+        onmouseout  = {()=>{ help(); }}>
         <label for="language">{$t('ui.menu.settings.language')}</label>
         <select bind:value={userSettings.language} id="language" class="fancy"
         onchange={ ()=>{ 
             locale.set(userSettings.language);
             saveUserSettings();
             }}>
-            {#each $locales as value}
-                <option value="{value}">{$t(`lang.${value}`)}</option>
+            {#each R.getLocales() as value}
+                {#if value.locale != "custom" || (value.locale == "custom" && R.getShowDebug())}
+                <option value="{value.locale}">{value.language}</option>
+                {/if}
             {/each}
         </select>
     </div>
@@ -131,8 +142,8 @@
         role="heading" aria-level="4"
         onfocus     = {()=>{}} 
         onblur      = {()=>{}}
-        onmouseover = {()=>{help($t('help.menu.settings.theme'))}}
-        onmouseout  = {()=>{help()}}>
+        onmouseover = {()=>{ help($t('help.menu.settings.theme')); }}
+        onmouseout  = {()=>{ help(); }}>
         <label for="theme">{$t('ui.menu.settings.theme')}</label>
         <select bind:value={userSettings.theme} id="theme" class="fancy"
         onchange={()=>{ 
@@ -149,12 +160,16 @@
     <div class="setting" role="heading" aria-level="4"
         onfocus     = {()=>{}} 
         onblur      = {()=>{}}
-        onmouseover = {()=>{help($t('help.menu.settings.reset'))}}
-        onmouseout  = {()=>{help()}}>
+        onmouseover = {()=>{ help($t('help.menu.settings.reset')); }}
+        onmouseout  = {()=>{ help(); }}>
         <button id="resetSettings" class="fancy"
-        onclick={()=>{ resetUserSettings() }}>
+        onclick={()=>{ resetUserSettings(); }}>
             <IconReset/><span>{$t('ui.menu.settings.reset')}</span>
         </button>
         <em>{$t('ui.menu.settings.autoSave')}</em>
     </div>
+
+    {#if R.getShowDebug()}
+    <div class="setting"><em>Your settings directory:<br/>{dir}</em></div>
+    {/if}
 </div>
