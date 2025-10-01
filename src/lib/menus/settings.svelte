@@ -170,6 +170,6 @@
     </div>
 
     {#if R.getShowDebug()}
-    <div class="setting"><em>Your settings directory:<br/>{dir}</em></div>
+    <div class="setting"><em>{$t('ui.menu.settings.settingsDir')}<br/>{dir}</em></div>
     {/if}
 </div>

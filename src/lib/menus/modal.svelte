@@ -7,6 +7,7 @@
 
 <div id="modal-background">
     <div id="modal">
+        <div id="modal-title">-</div>
         <div id="modal-body"></div>
         <div id="modal-actions">
             <button id='modal-cancel' onclick="{closeModal}">

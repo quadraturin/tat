@@ -1,11 +1,11 @@
 import I18n from "sveltekit-i18n";
 import { addLocale } from "./registry.svelte";
-import { exists, readDir, readTextFile } from "@tauri-apps/plugin-fs";
+import { exists, readTextFile } from "@tauri-apps/plugin-fs";
 import { appDataDir, join } from "@tauri-apps/api/path";
 
 // Built-in locales
 import enInfo from '../assets/localization/en/info.json'
-import esInfo from '../assets/localization/es/info.json'
+//import esInfo from '../assets/localization/es/info.json'
 
 // Set up localization config with built-in locales, use English as fallback
 let config = {
