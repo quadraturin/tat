@@ -201,7 +201,7 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-22.04
-    needs: [create-release, build-macos, build-linux, build-windows]
+    needs: [create-release, build-macos, build-macos-intel, build-linux, build-windows]
 
     steps:
       - name: publish release
