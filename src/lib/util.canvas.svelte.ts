@@ -347,7 +347,7 @@ export class InfiniteCanvas {
             if (R.getShowDebug()) {
                 let velBar = "";
                 for (let i=0; i<this.#w_velocity.magnitude; i++) { velBar += "|"; }
-                this.#debugText(`debug ON. \` (backtick) to toggle on/off.`, this.context, "red");
+                this.#debugText(`debug ON. \`/~ or ctrl/cmd+0 to toggle on/off.`, this.context, "red");
                 this.#debugText(`canvas zoom:             ${this.#z.toFixed(2)}`, this.context);
 
                 this.#debugText(`canvas dimensions:       ${this.c_canvasHeight().toFixed(2)}, ${this.c_canvasWidth().toFixed(2)}`, this.context, "yellow");
