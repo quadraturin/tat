@@ -146,6 +146,8 @@
         else if (e.key == "h") toggleSidebar();
         else if (e.key == "c") R.getCanvas().flyToPoint(R.getListener().x, R.getListener().y);
         else if (e.key == "`") R.toggleDebug();
+        else if (e.key == "~") R.toggleDebug();
+        else if (e.key == "0" && (e.metaKey || e.ctrlKey)) R.toggleDebug();
         // Move the listener
         else if (e.key == "w") {
             if(!R.getListener().locked) {
