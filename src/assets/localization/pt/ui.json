@@ -1,0 +1,114 @@
+{ 
+    "titlebar": 
+    {
+        "addMedia":         "Adicionar mídia",
+        "addMediaShort":    "Adicionar",
+        "save":             "Salvar",
+        "saveShort":        "Salvar",
+        "saveAs":           "Salvar como",
+        "saveAsShort":      "Salvar como",
+        "openProject":      "Abrir projeto",
+        "openProjectShort": "Abrir",
+        "newProject":       "Novo projeto",
+        "newProjectShort":  "Novo",
+        "about":            "Sobre",
+        "aboutShort":       "Sobre",
+        "settings":         "Configurações",
+        "settingsShort":    "Configurações"
+    },
+    "mediaPanel": 
+    {
+        "images":           "Imagens",
+        "sounds":           "Áudios",
+        "item": 
+        {
+            "paused":       "Pausado",
+            "playing":      "Tocando",
+            "onEnter":      "Ao Entrar",
+            "inside":       "Dentro"
+        }
+    },
+    "menu": 
+    {
+        "settings": 
+        {
+            "title":                "Configurações",
+            "invertScroll":         "Inverter rolagem do mouse na interface",
+            "scrollSensitivity":    "Sensibilidade da rolagem do mouse na interface",
+            "proportionalScale":    "Alteração proporcional de tamanho de imagens (shift desativa)",
+            "listenerMoveSpeed":    "Velocidade de movimento do ouvinte (teclado)",
+            "hideWindowContents":   "Ocultar conteúdo da janela em capturas de tela",
+            "language":             "Idioma",
+            "theme":                "Tema",
+            "reset":                "Restaurar padrão de configurações",
+            "autoSave":             "(Todas as alterações são aplicadas imediatamente.)",
+            "settingsDir":          "Sua pasta de configurações:"
+        },
+        "about": 
+        {
+            "follow":
+            {
+                "title":    "Siga a Paradiso",
+                "web":      "Web",
+                "shop":     "Loja",
+                "social":   "Redes etc."
+            },
+            "about": 
+            {
+                "title":        "Sobre o tat",
+                "version":      "Versão",
+                "blurb":        "tat é uma ferramenta de gerenciamento de áudio ambiental para jogos de tabuleiro.",
+                "credits":      "O design e a programação desta ferramenta foram feitos por Quadra para a [PARADISO](https://www.paradiso.zone), originalmente como uma meta estendida do financiamento coletivo de [Warped Beyond Recognition](https://www.paradiso.zone/ooo-wbr/). O protótipo original foi programado por [Galen Drew](https://galendrew.com/).",
+                "video":        "Assista ao vídeo tutorial do tat:",
+                "howToUse":     "Clique em *Adicionar mídia* para adicionar imagens (como mapas) e áudio (som ambiente, trilhas sonoras etc.) ao seu projeto. Você pode organizá-los como preferir. Esta ferramenta foi pensada para permitir que você crie camadas de áudio sobre áreas dos seus mapas, para que os jogadores escutem os sons adequados a cada seção. O marcador no mapa é o *ouvinte:* ele representa a localização dos seus jogadores. Arraste o marcador à medida que seus jogadores forem se movendo através do ambiente, e o ouvinte irá, de forma automática, mesclar os sons adequados de acordo com sua posição.",
+                "projectFiles": "Projetos salvos serão armazenados em uma pasta contendo um arquivo ‘project.json’, que possui as informações sobre o mesmo; uma pasta ‘sounds’ e uma pasta ‘images’, ambas contendo *cópias* dos áudios e imagens que foram adicionados ao projeto. Referências aos arquivos originais não serão salvas.",
+                "translations": "Traduções:"
+            },
+            "changelog":
+            {
+                "title":        "Registro de alterações",
+                "changelog":    "Confira o registro de alterações no [site do tat](https://www.paradiso.zone/ooo-tat/)."
+            },
+            "licenses":
+            {
+                "title":    "Tecnologias e licenças",
+                "blurb":    "tat usa diversas tecnologias e ferramentas como base:"
+            }    
+        },
+        "modal": 
+        {
+            "cancel":           "Cancelar",
+            "confirm":          "Confirmar",
+            "ok":               "Ok",
+            "deleteUnique":
+            {
+                "title":        "Remover objetos?",
+                "body":         "A remoção dos objetos em destaque na lista abaixo também removerá as referências aos arquivos usados no projeto! Arquivos sem referências serão deletados da pasta do projeto quando ele for salvo.",
+                "listTitle":    "Objetos a serem removidos:",
+                "confirm":      "Remover objetos"
+            }
+        },
+        "dialog": 
+        {
+            "projectSaved":                 "Projeto salvo!",
+            "closeProjectUnsavedChanges":   "Seu projeto contém alterações que não foram salvas. Tem certeza de que deseja fechar o projeto sem salvar as alterações feitas?",
+            "quitUnsavedChanges":           "Você fez alterações que não foram salvas! Tem certeza de que deseja fechar o tat?",
+            "openOldProjectCoords":         "Este projeto foi feito em uma versão antiga (anterior à v0.5) do tat.\n\nAo salvar este projeto, ele será convertido a um formato mais atual e deixará de funcionar em versões anteriores do tat."
+        },
+        "context":
+        {
+            "canvas":       "Prancheta",
+            "jumpListener": "Trazer Ouvinte até aqui",
+            "moveListener": "Mover Ouvinte até aqui",
+            "click":        "Clique",
+            "moveTo":       "Mover para",
+            "listener":     "Ouvinte",
+            "sound":        "Áudio",
+            "image":        "Imagem",
+            "bringToFront": "Mover para a frente",
+            "sendToBack":   "Mover para trás",
+            "raise":        "Mover para cima",
+            "lower":        "Mover para baixo"
+        }
+    }
+}

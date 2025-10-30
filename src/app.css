@@ -729,6 +729,8 @@ button.r {
     font-size: 10pt;
     display: flex;
     margin-right: 4px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 #titlebar button.adaptive.active {
     margin-bottom: -1px;
@@ -745,6 +747,8 @@ button.r {
     display: inline-block;
     padding: 1px 0;
     margin: 0 5px 0 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 #titlebar {
     height: var(--tb-h);
@@ -846,7 +850,7 @@ button.r {
     position: absolute;
     top: 76px;
     left: 6px;
-    width: 220px;
+    width: 240px;
     font-size: 0.7rem;
     font-weight: bold;
     -webkit-user-select: none;  /* Chrome all / Safari all */
@@ -975,6 +979,7 @@ button.r {
 }
 #media .item span.item-pause button {
     height: 10px;
+    width: 23px;
     padding: 0;
     margin-top: 1px;
 }
@@ -1218,7 +1223,7 @@ input[type=range], select {
 }
 select {
     font-family: inherit;
-    width: 150px;
+    width: 248px;
     text-align: center;
     padding: 0 10px;
 }

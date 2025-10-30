@@ -1,16 +1,114 @@
-{
-    "addMedia": "add media",
-    "addMediaShort": "add",
-    "save": "save",
-    "saveShort": "save",
-    "saveAs": "save as",
-    "saveAsShort": "save as",
-    "openProject": "open project",
-    "openProjectShort": "open",
-    "newProject": "new project",
-    "newProjectShort": "new",
-    "about": "about",
-    "aboutShort": "about",
-    "settings": "settings",
-    "settingsShort": "settings"
+{ 
+    "titlebar": 
+    {
+        "addMedia":         "Añadir medios",
+        "addMediaShort":    "Añadir",
+        "save":             "Guardar",
+        "saveShort":        "Guardar",
+        "saveAs":           "Guardar como",
+        "saveAsShort":      "Guardar como",
+        "openProject":      "Abrir proyecto",
+        "openProjectShort": "Abrir",
+        "newProject":       "Nuevo proyecto",
+        "newProjectShort":  "Nuevo",
+        "about":            "Sobre",
+        "aboutShort":       "Sobre",
+        "settings":         "Configuración",
+        "settingsShort":    "Configuración"
+    },
+    "mediaPanel": 
+    {
+        "images":           "Imágenes",
+        "sounds":           "Sonidos",
+        "item": 
+        {
+            "paused":       "Pausado",
+            "playing":      "Sonando",
+            "onEnter":      "Al Entrar",
+            "inside":       "Dentro"
+        }
+    },
+    "menu": 
+    {
+        "settings": 
+        {
+            "title":                "Configuración",
+            "invertScroll":         "Invertir dirección del desplazamiento del interfaz",
+            "scrollSensitivity":    "Sensibilidad del desplazamiento del interfaz",
+            "proportionalScale":    "Escalado proporcional de la imagen por defecto (Mayús lo apaga)",
+            "listenerMoveSpeed":    "Velocidad de movimiento del oyente (teclado)",
+            "hideWindowContents":   "Ocultar ventana de contenido del stream",
+            "language":             "Idioma",
+            "theme":                "Tema",
+            "reset":                "Resetear a la configuración por defecto",
+            "autoSave":             "(Todos los cambios de la configuración son inmediatamente aplicados.)",
+            "settingsDir":          "Tu directorio de configuraciónes:"
+        },
+        "about": 
+        {
+            "follow":
+            {
+                "title":    "Sigue a Paradiso",
+                "web":      "Web",
+                "shop":     "Tienda",
+                "social":   "Redes sociales etc."
+            },
+            "about": 
+            {
+                "title":        "Sobre tat",
+                "version":      "Versión",
+                "blurb":        "tat es una herramienta para manejar sonidos ambientales fácilmente durante tus juegos de mesa.",
+                "credits":      "Esta herramienta ha sido diseñada y programada por Quadra para [PARADISO](https://www.paradiso.zone), originalmente como una meta para el Kickstarter de [Warped Beyond Recognition](https://www.paradiso.zone/ooo-wbr/). El prototipo original fue programado por [Galen Drew](https://galendrew.com/).",
+                "video":        "Para aprender cómo usar tat, ve este vídeo:",
+                "howToUse":     "Usa *Añadir medios* para añadir imágenes (mapas, probablemente)y audio (ambiente, bandas sonoras, etc.) a tu proyecto. Puedes organizarlos como quieras -- el uso normal sería superponer audio en zonas de tu mapa para que tus jugadores las oigan cuando estén en ellas. El punto en el mapa es el *oyente:* esto representa dónde están tus jugadores. Cuando tus jugadores se muevan por los entornos de tu juego, arrastra el punto por el mapa (o los mapas) que has añadido, y el oyente automaticamente oirá las fuentes de audio que has colocado allí.",
+                "projectFiles": "Cuando guardas un proyecto, este se guarda en una carpeta que contiene un archivo 'project.json' describiendo el proyecto, una carpeta de sonidos llamada 'sounds', y una carpeta de imágenes llamada 'images', que contienen *copias* de los sonidos e imágenes que has añadido. No se guardan enlaces a los archivos originales.",
+                "translations": "Traducciones:"
+            },
+            "changelog":
+            {
+                "title":        "Registro de cambios",
+                "changelog":    "Lee el registro de cambios en la [página web del tat](https://www.paradiso.zone/ooo-tat/)."
+            },
+            "licenses":
+            {
+                "title":    "Tecnología y licencias",
+                "blurb":    "tat se ha programado usando varias tecnologías y herramientas:"
+            }    
+        },
+        "modal": 
+        {
+            "cancel":           "Cancelar",
+            "confirm":          "Confirmar",
+            "ok":               "OK",
+            "deleteUnique":
+            {
+                "title":        "¿Borrar objetos?",
+                "body":         "¡Borrar los objetos destacados en la siguiente lista resultará en la pérdida de referencia de su archivo fuente en el proyecto! Cualquier archivo fuente sin referencia será borrado del directorio del proyecto cuando lo guardes.",
+                "listTitle":    "Objectos siendo borrados:",
+                "confirm":      "Borrar objetos"
+            }
+        },
+        "dialog": 
+        {
+            "projectSaved":                 "¡Proyecto guardado!",
+            "closeProjectUnsavedChanges":   "No has guardado las últimas modificaciones de tu proyecto. ¿Estas seguro de que quieres cerrar este proyecto y perder todas las últimas modificaciones?",
+            "quitUnsavedChanges":           "¡Tienes cambios sin guardar! ¿Estas seguro de que queres cerrar?",
+            "openOldProjectCoords":         "Este proyector fue hecho con una versión antigua (pre-v0.5) del tat.\n\nSi guardas este proyecto, se convertirá a la última versión y dejará de ser compatible con versiones antiguas del tat."
+        },
+        "context":
+        {
+            "canvas":       "Lienzo",
+            "jumpListener": "Soltar al Oyente aquí",
+            "moveListener": "Mover al Oyente aquí",
+            "click":        "Clic",
+            "moveTo":       "Mover a",
+            "listener":     "Oyente",
+            "sound":        "Sonido",
+            "image":        "Imagen",
+            "bringToFront": "Traer a primer plano",
+            "sendToBack":   "Mandar atrás",
+            "raise":        "Subir",
+            "lower":        "Bajar"
+        }
+    }
 }

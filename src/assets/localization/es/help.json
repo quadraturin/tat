@@ -1,95 +1,169 @@
 {
-    "titlebar":{
-        "title": "your project has no unsaved changes.",
-        "titleDirty": "your project has unsaved changes.",
-
-        "addMedia": "<strong>add media:</strong> add images and/or audio to your project. these will be copied to your project folder when you save.",
-        "addMediaShortcut": "<strong>(ctrl/cmd+i)</strong>",
-
-        "save": "<strong>save:</strong> save your project.",
-        "saveShortcut": "<strong>(ctrl/cmd+s)</strong>",
-
-        "saveAs": "<strong>save as:</strong> save a copy of your project to a new location.",
-        "saveAsShortcut": "<strong>(ctrl/cmd+shift+s)</strong>",
-
-        "openProject": "<strong>open:</strong> open an existing project.",
-        "openProjectShortcut": "<strong>(ctrl/cmd+o)</strong>",
-
-        "newProject": "<strong>new:</strong> create a new project.",
-        "newProjectShortcut": "<strong>(ctrl/cmd+n)</strong>",
-
-        "settings": "<strong>settings:</strong>view the application settings.",
-        "settingsShortcut": "<strong>(ctrl/cmd+1)</strong>",
-
-        "about": "<strong>about:</strong> what is this anyway?.",
-        "aboutShortcut": "<strong>(ctrl/cmd+2)</strong>",
-
-        "minimize": "<strong>minimize</strong> this window.",
-        "minimizeShortcut": "<strong>ctrl/cmd+m</strong>",
-
-        "maximize": "<strong>maximize</strong> this window.",
-        "maximizeShortcut": "<strong>(ctrl/cmd+shift+m)</strong>",
-        
-        "close": "<strong>close</strong> tat.",
-        "closeShortcut": "<strong>(ctrl/cmd+w)</strong>"
+    "titlebar": 
+    {
+        "title":                "Tu proyecto no tiene cambios por guardar.",
+        "titleDirty":           "Tu proyecto tiene cambios sin guardar.",
+        "addMedia":             "*Añadir medios:* Añade imágenes y/o audio a tu proyecto. Estos se copiarán a tu carpeta de proyecto cuando guardes.",
+        "addMediaKey":          "*(ctrl/cmd+i)*",
+        "save":                 "*Guardar proyecto:* Guarda tu proyecto.",
+        "saveKey":              "*(ctrl/cmd+s)*",
+        "saveAs":               "*Guarda tu proyecto como:* Guarda una copia de tu proyecto a en una nueva localización.",
+        "saveAsKey":            "*(ctrl/cmd+shift+s)*",
+        "openProject":          "*Abrir proyecto:* Abre un proyecto existente.",
+        "openProjectKey":       "*(ctrl/cmd+o)*",
+        "newProject":           "*Nuevo proyecto:* Crea un nuevo proyecto.",
+        "newProjectKey":        "*(ctrl/cmd+n)*",
+        "settings":             "*Configuración:* Ver la configuración de la aplicación.",
+        "settingsKey":          "*(ctrl/cmd+1)*",
+        "about":                "*Sobre:* ¿Esto de qué va?.",
+        "aboutKey":             "*(ctrl/cmd+2)*",
+        "minimize":             "*Minimizar* esta ventana.",
+        "minimizeKey":          "*(ctrl/cmd+m)*",
+        "maximize":             "*Maximizar* esta ventana.",
+        "maximizeKey":          "*(ctrl/cmd+shift+m)*",
+        "close":                "*Cerrar* tat.",
+        "closeKey":             "*(ctrl/cmd+w)*" 
     },
-    "map": {
-        "helpArea": "<strong>info:</strong> mouse over things in the application to show information about them here. click the \"?\" button to collapse.",
-        
-        "zoomIn": "<strong>zoom in:</strong> zoom in on the map.",
-        "zoomInDisabled": "you are currently as zoomed is as you can be!",
-        "zoomInShortcut": "<strong>(mouse wheel or + or =)</strong>",
-
-        "zoomOut": "<strong>zoom out:</strong> zoom out on the map.",
-        "zoomOutShortcut": "<strong>(mouse wheel or - or _)</strong>",
-        "zoomOutDisabled": "you are currently as zoomed out as you can be!",
-
-        "recenter": "<strong>recenter:</strong> center the view on the listener.",
-        "recenterShortcut": "<strong>(c)</strong>",
-
-        "hideSidebar": "<strong>hide sidebar:</strong> hide the sidebar interface.",
-        "showSidebar": "<strong>show sidebar:</strong> show the sidebar interface.",
-        "toggleSidebarShortcut": "<strong>(h)</strong>",
-        
-        "listener": "<strong>listener:</strong> represents the players' location. you will hear sounds when the listener is overlapping them.",
-        "listenerActions": "<strong>drag:</strong> move. <strong>W/A/S/D:</strong> move.",
-        
-        "locked": "<strong>locked</strong>",
-        "selected": "<strong>selected</strong>",
-        "itemLocked": "map objects cannot be moved or edited while locked.",
-        "itemLockedActions": "<strong>double-click:<strong> unlock.",
-        "itemSelectedActions": "<strong>click:</strong> deselect. <strong>delete/backspace:</strong> delete.",
-        "itemUnselectedActions": "<strong>click:</strong> select.",
-
-        "imagesTitle": "<strong>images:</strong> the list of images in your project. images higher on the list are closer to the front.",
-        "imagesHide": "<strong>hide images:</strong> click to hide all images on the map.",
-        "imagesShow": "<strong>show images:</strong> click to show all images on the map. (images are currently hidden)",
-        "image": "<strong>image:</strong> represents the game environtment. a map, or something more abstract.",
-        "imageItemActions": "<strong>scroll:</strong> adjust opacity.",
-        "imageDuplicate": "<strong>duplicate image:</strong> make a copy of this image on the map.",
-        "imageDelete": "<strong>delete image:</strong> delete this image from the map.",
-        "imageActions": "<strong>drag:</strong> move. <strong>drag corner:</strong> resize (<strong>+shift:</strong> proportional resize). <strong>alt/opt+click:</strong> delete.",
-        
-        "soundsTitle": "<strong>sounds:</strong> the list of sounds in your project. sounds higher on the list are closer to the front. <strong>scroll:</strong> adjust master volume.",
-        "soundsHide": "<strong>hide sounds:</strong> click to hide all sounds on the map. this can be useful for accessing images underneath sound areas.",
-        "soundsShow": "<strong>show sounds:</strong> click to show all sounds on the map. (sounds are currently hidden)",
-        "soundTypeGlobal": "<strong>global sound:</strong> plays everywhere and does not have an emitter on the map.",
-        "soundTypeLocal": "<strong>local sound:</strong> emanates from a single point on the map.",
-        "soundTypeArea": "<strong>area sound:</strong> plays at a constant volume across an area.",
-        "soundTypeGlobalActions": "<strong>click:</strong> change to a local sound.",
-        "soundTypeLocalActions": "<strong>click:</strong> change to a area sound.",
-        "soundTypeAreaActions": "<strong>click:</strong> change to a global sound.",
-        "soundItemActions": "<strong>scroll:</strong> adjust volume.",
-        "soundPause": "<strong>play/pause:</strong> this sound is playing. <strong>click:</strong> pause this sound.",
-        "soundUnPause": "<strong>play/pause:</strong> this sound is paused. <strong>click:</strong> play this sound.",
-        "soundMute": "<strong>mute:</strong> this sound is muted. <strong>click:</strong> unmute this sound.",
-        "soundUnMute": "<strong>mute:</strong> this sound is not muted. <strong>click:</strong> mute this sound.",
-        "soundSolo": "<strong>solo:</strong> this sound is not soloed. <strong>click:</strong> solo this sound. this will silence all other sounds.",
-        "soundUnSolo": "<strong>solo:</strong> this sound is currently soloed, meaning all other sounds are silenced. <strong>click</strong> unsolo.",
-        "soundDuplicate": "<strong>duplicate sound:</strong> make a copy of this sound on the map.",
-        "soundDelete": "<strong>delete sound:</strong> delete this sound from the map.",
-        "soundSeek": "<strong>seek:</strong> seek to a playback position in the sound.",
-        "soundLocalActions": "<strong>drag:</strong> move. <strong>drag edge handle:</strong> resize. <strong>double-click:</strong> lock. <strong>alt/opt+click:</strong> delete.",
-        "soundAreaActions": "<strong>drag:</strong> move. <strong>drag corner:</strong> reshape. <strong>drag edge handle:</strong> create corner. <strong>click corner handle:</strong> remove corner."
+    "helpPanel": 
+    {
+        "helpArea":             "*Información:* Mueve el ratón sobre elementos de la aplicación para que se muestre información sobre ellos aquí. Haz Clic en el botón 'i' para colapsarla." 
+    },
+    "controlsPanel": 
+    {
+        "zoomIn":               "*Acercar zoom:* Acerca el zoom al mapa.",
+        "zoomInKey":            "*(Mueve la rueda del ratón en el lienzo, o usa + o - o =)*",
+        "zoomInDisabled":       "¡Esto es lo máximo que puedes acercarte!",
+        "zoomOut":              "*Alejar zoom:* Aleja el zoom del mapa.",
+        "zoomOutKey":           "*(Mueve la rueda del ratón en el lienzo, o usa - o _)*",
+        "zoomOutDisabled":      "¡Esto es lo máximo que puedes alejarse!",
+        "recenter":             "*Centrar:* Centra la vista en el oyente.",
+        "recenterKey":          "*(c)*",
+        "hideSidebar":          "*Ocultar barra lateral:* Oculta el interfaz de la barra lateral.",
+        "showSidebar":          "*Mostrar barra lateral:* Muestra el interfaz de la barra lateral.",
+        "toggleSidebarKey":     "*(h)*" 
+    },
+    "mediaPanel": 
+    {
+        "imageList": 
+        {
+            "title":          "*Imágenes:* La lista de imágenes en tu proyecto. Cuanto más altas en la lista, más cerca están del primer plano.",
+            "opacity":        "*Opacidad general:* Desplaza o haz clic para ajustar la opacidad general.",
+            "hide":           "*Ocultar imágenes:* Haz clic para ocultar todas las imágenes en el mapa.",
+            "show":           "*Mostrar imágenes:* Haz clic para mostrar todas las imágenes en el mapa. (Las imágenes están actualmente ocultas.)" 
+        },
+        "soundList": 
+        {
+            "title":          "*Sonidos:* La lista de sonidos en tu proyecto. Cuanto más altos en la lista, más cerca están del primer plano.",
+            "volume":         "*Volumen general:* Desplaza o haz clic para ajustar el volumen general.",
+            "hide":           "*Ocultar sonidos:* Haz clic para ocultar todos los sonidos en el mapa. Esto puede ser útil para acceder a imágenes bajo áreas de sonido.",
+            "show":           "*Mostrar sonidos:* Haz clic para mostrar todos los sonidos en el mapa. (Los sonidos están actualmente ocultos.)" 
+        },
+        "image": 
+        {
+            "title":        "*Una imagen.*",
+            "titleKey":     "*Arrastra:* Reordena.",
+            "opacity":      "*Opacidad:* La opacidad de la imagen. *Desplaza o haz clic* para ajustar la opacidad.",
+            "duplicate":    "*Duplicar imagen:* Hace una copia de esta imagen en el mapa.",
+            "delete":       "*Borrar imagen:* Borra esta imagen del mapa."
+        },
+        "sound": 
+        {
+            "title":        "*Un sonido.*",
+            "titleKey":     "*Arrastra:* Reordena.",
+            "volume":       "*Volumen:* Desplaza o haz clic para ajustar el volumen.",
+            "pause":        "*Reproducir/pausar:* Este sonido se está reproduciendo. *Clic:* Pausa este sonido.",
+            "play":         "*Reproducir/pausar:* Este sonido está pausado. *Clic:* Reproduce este sonido.",
+            "mute":         "*Silenciar:* Este sonido está silenciado. *Clic:* El sonido vuelve a escucharse.",
+            "unmute":       "*Silenciar:* Este sonido no está silenciado. *Clic:* Silencia este sonido.",
+            "solo":         "*Solo:* Este no es el único sonido reproduciéndose. *Clic:* Sólo se escucha este sonido. Esto silenciará el resto de sonidos.",
+            "unsolo":       "*Solo:* Este sonido es el único reproduciéndose, el resto de sonido están silenciados. *Clic:* Deja de ser el único reproduciéndose.",
+            "duplicate":    "*Duplicar sonido:* Hace una copia de este sonido en el mapa.",
+            "delete":       "*Borrar sonido:* Borra este sonido del mapa.",
+            "loop":         "*Bucle:* Vuelve a reproducir este sonido despues de haber terminado. *Clic:* Desactica el bucle.",
+            "noLoop":       "*Sin bucle:* Detiene el sonido tras su reproducción. *Clic:* Activa el bucle.",
+            "loopTimer":    "*Bucle cronometrado:* Reinicia el cronómetro tras haber terminado. *Clic:* Desactiva el bucle.",
+            "noLoopTimer":  "*Sin bucle cronometrado:* No reinicia el cronómetro tras haber terminado. *Clic:* Activa el bucle.",
+            "seek":         "*Busca:* Busca una posición de reproducción en el sonido.",
+            "timer": 
+            {
+                "hours":    "*Horas cronómetro:* Usa la rueda del ratón para marcar el número de horas en el cronómetro.",
+                "minutes":  "*Minutos cronómetro:* Usa la rueda del ratón para marcar el número de minutos en el cronómetro.",
+                "seconds":  "*Segundos cronómetro:* Usa la rueda del ratón para marcar el número de segundos en el cronómetro.",
+                "start":    "*Iniciar el cronómetro:* El cronómetro está pausado actualmente. Haz *Clic* para iniciarlo.",
+                "stop":     "*Detener el cronómetro:* El cronómetro está funcionando. Haz *Clic* para detenerlo." 
+            },
+            "trigger": 
+            {
+                "manual":           "*Activación manual:* Controla manualmente cuándo se reproduce o pausa.",
+                "playOnEnter":      "*Reproducir al Entrar:* El sonido permanece pausado hasta que el oyente entra en contacto con él por primera vez, a continuación se reproduce y vuelve a Contro manual.",
+                "restartOnEnter":   "*Reiniciar Activación al Entrar:* El sonido permanece pausado hasta que el oyente entra en contacto con él por primera vez, a continuación se reproduce desde el principio y vuelve a Control manual.",
+                "playInside":       "*Activar Reproducción Dentro:* El sonido permanece pausado mientras el oyente no está en contacto con este, y se reproduce únicamente cuando el oyente está en contacto con este.",
+                "restartInside":    "*Reiniciar Reproducción mediante activación Interna:* El sonido permanece pausado mientras el oyente no está en contacto con este, se reproduce desde el principio cada vez que el oyente entra en contacto con este, y se reproduce únicamente mientras el oyente esté en contacto con este.",
+                "playOnTimer":      "*Reproducir mediante activazión por Cronómetro:* El sonido permanece pausado hasta que el cronómetro marque 00:00:00, a continuación se reproduce el sonido y se reinicia el cronómetro." 
+            },
+            "type": 
+            {
+                "area":        "*Sonido de área:* Reproduce el sonido a un volumen constante a en toda el área.",
+                "areaKey":     "*Clic:* Cambia el Sonido global.",
+                "global":      "*Sonido global:* Reproduce el sonido en todas partes y no tiene un emisor en el mapa.",
+                "globalKey":   "*Clic:* Cambia a un Sonido local.",
+                "local":       "*Sonido local:* Emana de un único punto en el mapa.",
+                "localKey":    "*Clic:* Cambia a un Sonido de área." 
+            }
+        }
+    },
+    "objects": 
+    {
+        "locked":               "*Bloqueada:* Mientras están bloqueadas las formas no se puenden mover o ser editadas.",
+        "lockKey":              "*Doble clic:* Bloquear.",
+        "unlockKey":            "*Doble clic:* Desbloquear.",
+        "selected":             "*Seleccionado:* El objeto está seleccionado actualmente.",
+        "deselectKey":          "*Clic:* Deseleccionar. *Suprimir o tecla borrar:* borrar.",
+        "selectKey":            "*Clic:* Seleccionar." 
+    },
+    "canvas": 
+    {
+        "listener":             "*Oyente:* Representa la localización del jugador. Oirás los sonidos cuado el oyente los experience.",
+        "listenerKey":          "*Arrastra:* Mover. *W/A/S/D:* Mover. *Clic derecho:* Menú.",
+        "image":                "*Imagen:* Representa en entorno de jugo. Un mapa o algo más abstracto.",
+        "imageKey":             "*Arrastrar:* Mover. *Arrastrar esquina:* Cambia el tamaño (*+Mayús:* cambio de tamaño proporcional). *alt/opt+clic:* Borrar. *Clic derecho:* Menú.",
+        "soundLocal":           "*Sonido local:* Sólo audible dentro del radio. El Volumen se incrementa hacia el centro.",
+        "soundArea":            "*Sonido de área:* Sólo audible dentro de la forma. El Volumen es constante en toda el área.",
+        "soundLocalKey":        "*Arrastra:* Mover. *Arrastra el borde:* Cambia el tamaño. *Clic derecho:* Menú.",
+        "soundAreaKey":         "*Arrastra:* Mover. *Arrastra la esquina:* Cambiar la forma. *Clic en la esquina:* Elimina la esquina. *Arrastra el borde:* Crea una esquina. *Clic derecho:* Menú." 
+    },
+    "menu":
+    {
+        "settings": 
+        {
+            "hideWindowContents":   "Cuando esté activado oculta los contenidos de esta ventana de aplicaciones de captura de pantalla.",
+            "invertScroll":         "Cuando esté activado invierte la forma en la que los elementos del interfaz reaccionan al hacer scrolling. Esto no afecta al funcionamiento del zoom del mapa.",
+            "proportionalScale":    "Cuando esté activado las imágenes mantienen por defecto sus proporciones originales al cambiar de tamaño. Mantener presionado Mayús activa el cambio de tamaño libre.",
+            "scrollSensitivity":    "Este es el valor usado como multiplicador para los elementos desplazables del interfaz. Más bajo significa menos sensible, más alto más sensible.",
+            "listenerMoveSpeed":    "Este valor determina cuánto se desplaza el oyente al usar el teclado. Esto no afecta al arrastrado del oyente.",
+            "language":             "Elige el idioma que usa la aplicación.",
+            "theme":                "Elige la temática visual que usa la aplicación.",
+            "reset":                "Resetea toda las configuracines de este menú a sus valores por defecto." 
+        },
+        "about": 
+        {
+            "follow":
+            {
+                "paradisoZone":         "*PARADISO:* Recibe la newsletter y conviérte en miembro para apoyar mi trabajo y conseguir buenas recompensas.",
+                "traaash":              "*TRAAASH:* El blog de juegos de rol de Quadra.",
+                "youtube":              "*PARADISO en YouTube:* Sesudos vídeos sobre hacer cosas.",
+                "paradisoWorks":        "*PARADISO WORKS:* Tienda online oficial para productos físicos.",
+                "itchio":               "*PARADISO en Itch:* Tienda online para programas, música, y material de rol.",
+                "dtrpg":                "*PARADISO en DriveThruRPG:* Tienda online para material rolero digital.",
+                "bsky":                 "*PARADISO en Bluesky.*",
+                "instagram":            "*PARADISO en Instagram.*",
+                "mastodon":             "*PARADISO en Mastodon.*",
+                "tiktok":               "*PARADISO en TikTok.*",
+                "tumblr":               "*PARADISO en Tumblr.*",
+                "reddit":               "*PARADISO en Reddit.*",
+                "github":               "*PARADISO en GitHub.*",
+                "discord":              "*PARADISO en Discord.*" 
+            }
+        }
     }
 }

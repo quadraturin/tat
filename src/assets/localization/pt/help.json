@@ -1,0 +1,169 @@
+{
+    "titlebar": 
+    {
+        "title":                "Não há alterações não salvas em seu projeto.",
+        "titleDirty":           "Existem alterações não salvas em seu projeto.",
+        "addMedia":             "*Adicionar mídia:* Adiciona imagens e/ou áudios ao seu projeto. Os arquivos serão copiados para a pasta do projeto ao salvá-lo.",
+        "addMediaKey":          "*(ctrl/cmd+i)*",
+        "save":                 "*Salvar projeto:* Salva o seu projeto.",
+        "saveKey":              "*(ctrl/cmd+s)*",
+        "saveAs":               "*Salvar projeto como:* Salva uma cópia do seu projeto em um novo local.",
+        "saveAsKey":            "*(ctrl/cmd+shift+s)*",
+        "openProject":          "*Abrir projeto:* Abre um projeto já existente.",
+        "openProjectKey":       "*(ctrl/cmd+o)*",
+        "newProject":           "*Novo projeto:* Cria um novo projeto.",
+        "newProjectKey":        "*(ctrl/cmd+n)*",
+        "settings":             "*Configurações:* Abre as configurações do programa.",
+        "settingsKey":          "*(ctrl/cmd+1)*",
+        "about":                "*Sobre:* O que é tudo isso, afinal?",
+        "aboutKey":             "*(ctrl/cmd+2)*",
+        "minimize":             "*Minimizar* esta janela.",
+        "minimizeKey":          "*(ctrl/cmd+m)*",
+        "maximize":             "*Maximizar* esta janela.",
+        "maximizeKey":          "*(ctrl/cmd+shift+m)*",
+        "close":                "*Fechar* o tat.",
+        "closeKey":             "*(ctrl/cmd+w)*" 
+    },
+    "helpPanel": 
+    {
+        "helpArea":             "*Informações:* Arraste o mouse sobre os elementos do programa para ver suas informações relevantes aqui. Pressione o botão ‘i’ para ocultar." 
+    },
+    "controlsPanel": 
+    {
+        "zoomIn":               "*Aproximar:* Aproxima a visão do mapa.",
+        "zoomInKey":            "*(Rolagem do mouse na tela ou +/=)*",
+        "zoomInDisabled":       "Você já se aproximou ao máximo!",
+        "zoomOut":              "*Afastar:* Afasta a visão do mapa.",
+        "zoomOutKey":           "*(Rolagem do mouse na tela ou -/_)*",
+        "zoomOutDisabled":      "Você já se afastou ao máximo!",
+        "recenter":             "*Centralizar:* Centraliza a tela no ouvinte.",
+        "recenterKey":          "*(c)*",
+        "hideSidebar":          "*Ocultar barra lateral:* Oculta a interface da barra lateral.",
+        "showSidebar":          "*Exibir barra lateral:* Exibe a interface da barra lateral.",
+        "toggleSidebarKey":     "*(h)*" 
+    },
+    "mediaPanel": 
+    {
+        "imageList": 
+        {
+            "title":          "*Imagens:* Lista as imagens usadas em seu projeto. Imagens mais ao topo estão localizadas mais à frente.",
+            "opacity":        "*Opacidade geral:* Use a rolagem do mouse ou clique para ajustar a opacidade geral.",
+            "hide":           "*Ocultar imagens:* Clique para ocultar todas as imagens no mapa.",
+            "show":           "*Exibir imagens:* Clique para exibir todas as imagens no mapa. (As imagens estão ocultas no momento.)" 
+        },
+        "soundList": 
+        {
+            "title":          "*Áudios:* Lista os áudios usados em seu projeto. Áudios mais ao topo estão localizados mais à frente.",
+            "volume":         "*Volume geral:* Use a rolagem do mouse ou clique para ajustar o volume geral.",
+            "hide":           "*Ocultar áudios:* Clique para ocultar todos os áudios do mapa. Isso pode ser útil para acessar as imagens sob áreas com áudio.",
+            "show":           "*Exibir áudios:* Clique para exibir todos os áudios no mapa. (Os áudios estão ocultos no momento.)" 
+        },
+        "image": 
+        {
+            "title":        "*Uma imagem.*",
+            "titleKey":     "*Arrastar:* Reordenar.",
+            "opacity":      "*Opacidade:* A opacidade da imagem. *Rolagem do mouse ou clique:* Ajustar opacidade.",
+            "duplicate":    "*Duplicar imagem:* Cria uma cópia desta imagem no mapa.",
+            "delete":       "*Remover imagem:* Remove esta imagem do mapa."
+        },
+        "sound": 
+        {
+            "title":        "*Um áudio.*",
+            "titleKey":     "*Arrastar:* Reordenar.",
+            "volume":       "*Volume:* Use a rolagem do mouse ou clique para ajustar o volume.",
+            "pause":        "*Tocar/pausar:* O áudio está tocando. *Clique:* Pausar o áudio.",
+            "play":         "*Tocar/pausar:* O áudio está pausado. *Clique*: Tocar o áudio.",
+            "mute":         "*Silenciar:* O áudio está silenciado. *Clique:* Desativa silêncio do áudio.",
+            "unmute":       "*Silenciar:* O áudio não está silenciado. *Clique:* Silenciar o áudio.",
+            "solo":         "*Solo:* O áudio não está em modo solo. *Clique:* Ative o modo solo no áudio. Todos os outros áudios serão silenciados.",
+            "unsolo":       "*Solo:* O áudio está em modo solo, então todos os outros áudios estão silenciados. *Clique:* Desativar o modo solo.",
+            "duplicate":    "*Duplicar áudio:* Cria uma cópia deste áudio no mapa.",
+            "delete":       "*Remover áudio:* Remove este áudio do mapa.",
+            "loop":         "*Repetir:* Toca o áudio novamente depois que ele terminar. *Clique:* Desligar repetição.",
+            "noLoop":       "*Não repetir:* Para de tocar ao fim do áudio. *Clique:* Ativar repetição.",
+            "loopTimer":    "*Repetição da contagem regressiva:* Reinicia a contagem regressiva após o fim. *Clique:* Desativar repetição.",
+            "noLoopTimer":  "*Sem repetição da contagem regressiva:* Não reinicia a contagem regressiva após o fim. *Clique:* Ativar repetição.",
+            "seek":         "*Procurar:* Pula para uma posição específica do áudio.",
+            "timer": 
+            {
+                "hours":    "*Contagem regressiva (horas):* Use a rolagem do mouse para definir o número de horas da contagem regressiva.",
+                "minutes":  "*Contagem regressiva (minutos):* Use a rolagem do mouse para definir o número de minutos da contagem regressiva.",
+                "seconds":  "*Contagem regressiva (segundos):* Use a rolagem do mouse para definir o número de segundos da contagem regressiva.",
+                "start":    "*Iniciar contagem regressiva:* A contagem regressiva está pausada. *Clique* para ativá-la.",
+                "stop":     "*Parar a contagem regressiva:* A contagem regressiva está ativada. *Clique* para pará-la." 
+            },
+            "trigger": 
+            {
+                "manual":           "*Ativação manual:* Controle manualmente quando o áudio é tocado ou pausado.",
+                "playOnEnter":      "*Tocar Ao Entrar:* O áudio permanece pausado até que o ouvinte entre em contato com ele. Após começar a tocar, o controle muda para manual.",
+                "restartOnEnter":   "*Reiniciar Ao Entrar:* O áudio permanece pausado até que o ouvinte entre em contato com ele. O áudio toca desde o início e o controle muda para manual.",
+                "playInside":       "*Iniciar Dentro:* O áudio permanece pausado enquanto o ouvinte não estiver em contato com ele, e toca apenas enquanto houver contato.",
+                "restartInside":    "*Reiniciar Dentro:* O áudio permanece pausado enquanto o ouvinte não estiver em contato com ele. O áudio toca desde o início quando houver contato com o ouvinte, e toca apenas enquanto houver contato.",
+                "playOnTimer":      "*Contagem regressiva para tocar:* O áudio permanece pausado até que a contagem regressiva chegue a 00:00:00. Após isso, o áudio toca e a contagem regressiva reinicia." 
+            },
+            "type": 
+            {
+                "area":        "*Áudio em área:* Toca em volume constante através de uma área.",
+                "areaKey":     "*Clique:* Muda para áudio global.",
+                "global":      "*Áudio global:* Toca em todas as áreas e não possui representação no mapa.",
+                "globalKey":   "*Clique:* Muda para áudio local.",
+                "local":       "*Áudio local:* Emana a partir de um único ponto do mapa.",
+                "localKey":    "*Clique:* Muda para áudio em área." 
+            }
+        }
+    },
+    "objects": 
+    {
+        "locked":               "*Travado:* Objetos não podem ser movidos ou editados enquanto estiverem travados.",
+        "lockKey":              "*Clique duplo:* Travar.",
+        "unlockKey":            "*Clique duplo:* Destravar.",
+        "selected":             "*Selecionado:* O objeto está selecionado.",
+        "deselectKey":          "*Clique:* Desfazer seleção. *Delete ou Backspace:* Remover.",
+        "selectKey":            "*Clique:* Selecionar." 
+    },
+    "canvas": 
+    {
+        "listener":             "*Ouvinte:* Representa a localização dos jogadores. Os áudios tocam quando o ouvinte interage com eles.",
+        "listenerKey":          "*Arrastar:* Mover. *W/A/S/D:* Mover. *Clique com o botão direito:* Exibir menu.",
+        "image":                "*Imagem:* Representa o ambiente do jogo. Pode ser um mapa ou algo mais abstrato.",
+        "imageKey":             "*Arrastar:* Mover. *Arrastar esquinas:* Alterar tamanho (*+shift:* alteração de tamanho proporcional). *alt/opt+clique:* Remover. *Clique com o botão direito:* Exibir menu.",
+        "soundLocal":           "*Áudio local:* Pode ser ouvido apenas dentro de seu raio. O volume aumenta ao aproximar o ouvinte do centro.",
+        "soundArea":            "*Áudio em área:* Pode ser ouvido apenas dentro da área definida. O volume se mantém constante.",
+        "soundLocalKey":        "*Arrastar:* Mover. *Arrastar marcações laterais:* Alterar tamanho. *Clique com o botão direito:* Exibir menu.",
+        "soundAreaKey":         "*Arrastar:* Mover. *Arrastar marcações das esquinas:* Modificar área. *Clique nas marcações das esquinas:* Remover esquina. *Arrastar marcações laterais:* Criar esquina. *Clique com o botão direito:* Exibir menu." 
+    },
+    "menu":
+    {
+        "settings": 
+        {
+            "hideWindowContents":   "Quando ativada, esta opção oculta o conteúdo da janela de programas de captura de tela.",
+            "invertScroll":         "Quando ativada, esta opção inverte a direção da rolagem do mouse nos elementos da interface. Isso não afeta a aproximação ou o afastamento da visualização do mapa.",
+            "proportionalScale":    "Quando ativada, esta opção faz com que alterações de tamanho de imagens mantenham suas proporções originais. Segurar a tecla shift permite realizar alterações de tamanho de maneira livre.",
+            "scrollSensitivity":    "Este valor determina a sensibilidade da rolagem do mouse nos elementos da interface. Valores baixos representam menor sensibilidade que valores altos.",
+            "listenerMoveSpeed":    "Este valor determina o quanto o ouvinte se move com os comandos do teclado. Isso não afeta a função de arrastar o ouvinte com o mouse.",
+            "language":             "Define o idioma do programa.",
+            "theme":                "Define o tema visual do programa.",
+            "reset":                "Restaura todas as configurações deste menu para os padrões originais." 
+        },
+        "about": 
+        {
+            "follow":
+            {
+                "paradisoZone":         "*PARADISO:* Assine a newsletter e torne-se um membro. Apoie meu trabalho e receba ótimas recompensas.",
+                "traaash":              "*TRAAASH:* o blog de RPG de Quadra.",
+                "youtube":              "*PARADISO no YouTube:* Vídeos interessantes sobre criação de coisas.",
+                "paradisoWorks":        "*PARADISO WORKS:* A loja online oficial para produtos físicos.",
+                "itchio":               "*PARADISO no Itch:* Loja online para software, música e materiais para RPG.",
+                "dtrpg":                "*PARADISO no DriveThruRPG:* Loja online de materiais digitais para RPG.",
+                "bsky":                 "*PARADISO no Bluesky.*",
+                "instagram":            "*PARADISO no Instagram.*",
+                "mastodon":             "*PARADISO no Mastodon.*",
+                "tiktok":               "*PARADISO no TikTok.*",
+                "tumblr":               "*PARADISO no Tumblr.*",
+                "reddit":               "*PARADISO no Reddit.*",
+                "github":               "*PARADISO no GitHub.*",
+                "discord":              "*PARADISO no Discord.*" 
+            }
+        }
+    }
+}
