@@ -17,6 +17,8 @@
 	import { help } from '$lib/util.help';
 	import { marked, type Tokens } from "marked";
 	import { getVersion } from '@tauri-apps/api/app';
+    import { getLocales } from '$lib/registry.svelte';
+	import { userSettings } from '$lib/settings.userSettings.svelte';
 
     let v:string = $state("");
     ver();
@@ -135,6 +137,15 @@
         {@html marked.parse($t('ui.menu.about.about.blurb'))}
         
         {@html marked.parse($t('ui.menu.about.about.credits'))}
+
+        <ul>
+        {#each getLocales() as value}
+            {#if value.locale != "custom"}
+            <li>{value.language}{#if userSettings.language=="fr"}&nbsp;{/if}: <a href="{value.authorLink}" target="_blank">{value.author}</a></li>
+            {/if}
+        {/each}
+        </ul>
+        <br />
         
         {@html marked.parse($t('ui.menu.about.about.video'))}
 

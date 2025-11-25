@@ -1,7 +1,7 @@
 {
     "productName": "tat",
     "mainBinaryName": "tat",
-    "version": "0.5.8",
+    "version": "0.5.9",
     "identifier": "ooo.paradiso.tat",
     "plugins": {
         "updater": {

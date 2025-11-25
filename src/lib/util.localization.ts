@@ -35,10 +35,10 @@ let config = {
     ]
 };
 
-addLocale({locale:"en", language:enInfo.language});
-addLocale({locale:"es", language:esInfo.language});
-addLocale({locale:"fr", language:frInfo.language});
-addLocale({locale:"pt", language:ptInfo.language});
+addLocale({locale:"en", language:enInfo.language, author:enInfo.author, authorLink:enInfo.authorLink});
+addLocale({locale:"es", language:esInfo.language, author:esInfo.author, authorLink:esInfo.authorLink});
+addLocale({locale:"fr", language:frInfo.language, author:frInfo.author, authorLink:frInfo.authorLink});
+addLocale({locale:"pt", language:ptInfo.language, author:ptInfo.author, authorLink:ptInfo.authorLink});
 addLocale({locale:"custom", language:"Custom"});
 
 export let { t, locale, locales, loading, loadTranslations } = new I18n(config);
