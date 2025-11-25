@@ -850,7 +850,7 @@ button.r {
     position: absolute;
     top: 76px;
     left: 6px;
-    width: 240px;
+    width: 260px;
     font-size: 0.7rem;
     font-weight: bold;
     -webkit-user-select: none;  /* Chrome all / Safari all */
@@ -958,6 +958,7 @@ button.r {
 }
 #media .item span.item-pause {
     height: 14px;
+    text-align: center;
 }
 #media .item span.item-pause + button {
     border-left:none;
@@ -1350,24 +1351,85 @@ input[type=range]::-moz-range-thumb {
 }
 
 
-/* #############################
-   ##### Responsive Styles #####
-   ############################# */
+/* ##################################
+   ##### Responsive Styles - EN #####
+   ################################## */
 
-@media (min-width: 951px) {
-    button.adaptive .text-full {    display: inline-block !important; }
-    button.adaptive .text-short {   display: none !important; }
+/* Full Text Buttons */
+@media (min-width: 901px) {
+    .en button.adaptive .text-full {    display: inline-block !important; }
+    .en button.adaptive .text-short {   display: none !important; }
 }
-@media (max-width: 950px) {
-    button.adaptive .text-full {    display: none !important; }
-    button.adaptive .text-short {   display: inline-block !important; }
+/* Short Text Buttons */
+@media (max-width: 900px) {
+    .en button.adaptive .text-full {    display: none !important; }
+    .en button.adaptive .text-short {   display: inline-block !important; }
 }
-@media (max-width: 750px) {    
-    button.adaptive .text-full {    display: none !important; }
-    button.adaptive .text-short {   display: none !important; }
+/* No Text Buttons */
+@media (max-width: 720px) {    
+    .en button.adaptive .text-full {    display: none !important; }
+    .en button.adaptive .text-short {   display: none !important; }
 }
-@media (max-width: 450px) {
-    button.adaptive .text-full {    display: none !important; }
-    button.adaptive .text-short, 
-    .project-name {                 display: none !important; }
+
+/* ##################################
+   ##### Responsive Styles - ES #####
+   ################################## */
+
+/* Full Text Buttons */
+@media (min-width: 1066px) {
+    .es button.adaptive .text-full {    display: inline-block !important; }
+    .es button.adaptive .text-short {   display: none !important; }
 }
+/* Short Text Buttons */
+@media (max-width: 1065px) {
+    .es button.adaptive .text-full {    display: none !important; }
+    .es button.adaptive .text-short {   display: inline-block !important; }
+}
+/* No Text Buttons */
+@media (max-width: 865px) {    
+    .es button.adaptive .text-full {    display: none !important; }
+    .es button.adaptive .text-short {   display: none !important; }
+}
+
+
+/* ##################################
+   ##### Responsive Styles - FR #####
+   ################################## */
+
+/* Full Text Buttons */
+@media (min-width: 1210px) {
+    .fr button.adaptive .text-full {    display: inline-block !important; }
+    .fr button.adaptive .text-short {   display: none !important; }
+}
+/* Short Text Buttons */
+@media (max-width: 1209px) {
+    .fr button.adaptive .text-full {    display: none !important; }
+    .fr button.adaptive .text-short {   display: inline-block !important; }
+}
+/* No Text Buttons */
+@media (max-width: 970px) {    
+    .fr button.adaptive .text-full {    display: none !important; }
+    .fr button.adaptive .text-short {   display: none !important; }
+}
+
+
+/* ##################################
+   ##### Responsive Styles - PT #####
+   ################################## */
+
+/* Full Text Buttons */
+@media (min-width: 1050px) {
+    .pt button.adaptive .text-full {    display: inline-block !important; }
+    .pt button.adaptive .text-short {   display: none !important; }
+}
+/* Short Text Buttons */
+@media (max-width: 1049px) {
+    .pt button.adaptive .text-full {    display: none !important; }
+    .pt button.adaptive .text-short {   display: inline-block !important; }
+}
+/* No Text Buttons */
+@media (max-width: 870px) {    
+    .pt button.adaptive .text-full {    display: none !important; }
+    .pt button.adaptive .text-short {   display: none !important; }
+}
+

@@ -1,0 +1,169 @@
+{
+    "titlebar": 
+    {
+        "title":                "Votre projet n’a pas de modifications non enregistrées.",
+        "titleDirty":           "Votre projet a des modifications non enregistrées.",
+        "addMedia":             "*Ajouter un média :* ajouter des images et/ou des fichiers audio au projet. Les fichiers seront copiés dans le dossier du projet lors de l’enregistrement.",
+        "addMediaKey":          "*(ctrl/cmd+i)*",
+        "save":                 "*Enregistrer le projet :* enregistrer le projet.",
+        "saveKey":              "*(ctrl/cmd+s)*",
+        "saveAs":               "*Enregistrer le projet sous :* enregistrer une copie du projet à un nouvel emplacement.",
+        "saveAsKey":            "*(ctrl/cmd+majus+s)*",
+        "openProject":          "*Ouvrir un projet :* ouvrir un projet existant.",
+        "openProjectKey":       "*(ctrl/cmd+o)*",
+        "newProject":           "*Nouveau projet :* créer un nouveau projet.",
+        "newProjectKey":        "*(ctrl/cmd+n)*",
+        "settings":             "*Paramètres :* afficher les paramètres de l’application.",
+        "settingsKey":          "*(ctrl/cmd+1)*",
+        "about":                "*À propos de tat :* en savoir plus sur tat",
+        "aboutKey":             "*(ctrl/cmd+2)*",
+        "minimize":             "*Réduire* la fenêtre.",
+        "minimizeKey":          "*(ctrl/cmd+m)*",
+        "maximize":             "*Agrandir* la fenêtre.",
+        "maximizeKey":          "*(ctrl/cmd+majus+m)*",
+        "close":                "*Quitter* tat.",
+        "closeKey":             "*(ctrl/cmd+w)*" 
+    },
+    "helpPanel": 
+    {
+        "helpArea":             "*Infos :* pour obtenir des informations sur un élément de l’application, survolez-le avec la souris. Cliquez sur le bouton \"i\" pour réduire."
+    },
+    "controlsPanel": 
+    {
+        "zoomIn":               "*Zoom avant :* zoom avant sur la carte.",
+        "zoomInKey":            "*(Utilisez la molette de la souris sur le canevas ou + ou =)*",
+        "zoomInDisabled":       "Le zoom avant est au maximum !",
+        "zoomOut":              "*Zoom arrière :* zoom arrière sur la carte.",
+        "zoomOutKey":           "*(Utilisez la molette de la souris sur le canevas ou - ou _)*",
+        "zoomOutDisabled":      "Le zoom arrière est au maximum !",
+        "recenter":             "*Recentrer :* centrer la vue sur le pion.",
+        "recenterKey":          "*(c)*",
+        "hideSidebar":          "*Masquer la barre latérale :* masquer l’interface de la barre latérale.",
+        "showSidebar":          "*Afficher la barre latérale :* afficher l’interface de la barre latérale.",
+        "toggleSidebarKey":     "*(h)*" 
+    },
+    "mediaPanel": 
+    {
+        "imageList": 
+        {
+            "title":          "*Images :* la liste des images dans votre projet. La position dans la liste contrôle la profondeur d’affichage (haut = premier plan / bas = arrière-plan.)",
+            "opacity":        "*Modifier l’opacité :* utilisez la molette de la souris ou cliquez pour ajuster l’opacité principale.",
+            "hide":           "*Masquer les images :* cliquez pour masquer toutes les images sur la carte.",
+            "show":           "*Afficher les images :* cliquez pour afficher toutes les images sur la carte. (Les images sont actuellement masquées.)" 
+        },
+        "soundList": 
+        {
+            "title":          "*Audio :* la liste des fichiers audio dans votre projet. La position dans la liste contrôle la profondeur d’affichage (haut = premier plan / bas = arrière-plan.)",
+            "volume":         "*Volume principal :* utilisez la molette de la souris ou cliquez pour ajuster le volume principal.",
+            "hide":           "*Masquer les fichiers audio :* cliquez pour masquer tous les fichiers audio sur la carte. Cela peut être utile pour accéder aux images situées derrière des fichiers audio.",
+            "show":           "*Afficher les fichiers audio :* cliquez pour afficher tous les fichiers audio sur la carte. (Les fichiers audio sont actuellement masqués.)" 
+        },
+        "image": 
+        {
+            "title":        "*Une image.*",
+            "titleKey":     "*Glisser - déposer :* déplacer dans la liste.",
+            "opacity":      "*Opacité :* opacité de l’image. Utilisez la molette de la souris ou cliquez pour modifier l’opacité.",
+            "duplicate":    "*Dupliquer l’image :* faire une copie de cette image sur la carte.",
+            "delete":       "*Supprimer l’image :* supprimer cette image de la carte."
+        },
+        "sound": 
+        {
+            "title":        "*Un fichier audio.*",
+            "titleKey":     "*Glisser - déposer :* déplacer dans la liste.",
+            "volume":       "*Volume :* utilisez la molette de la souris ou cliquez pour régler le volume.",
+            "pause":        "*Lecture/pause :* la piste est en cours de lecture. *Clic :* mettre en pause.",
+            "play":         "*Lecture/pause :* la piste est en pause. *Clic :* lire la piste.",
+            "mute":         "*Activer le son :* le son de la piste audio est désactivé. *Clic :* réactiver le son.",
+            "unmute":       "*Désactiver le son :* le son de la piste audio est activé. *Clic :* désactiver le son.",
+            "solo":         "*Mode solo :* la piste n’est pas en mode solo. *Clic :* mettre la piste en mode solo. Cela coupera le son des autres pistes.",
+            "unsolo":       "*Mode solo :* la piste est en mode solo, ce qui signifie que le son de toutes les autres pistes est déactivé. *Clic :* désactiver le mode solo.",
+            "duplicate":    "*Dupliquer le fichier audio :* faire une copie de ce fichier audio sur la carte.",
+            "delete":       "*Supprimer le fichier audio :* supprimer le fichier audio de la carte.",
+            "loop":         "*Boucle :* lire la piste en boucle. *Clic :* désactiver la lecture en boucle.",
+            "noLoop":       "*Pas de boucle :* ne pas lire la piste en boucle. *Clic :* activer la lecture en boucle.",
+            "loopTimer":    "*Minuteur en boucle :* le minuteur redémarre quand il arrive à zéro. *Clic :* passer au mode simple.",
+            "noLoopTimer":  "*Minuteur simple :* le minuteur s’arrête quand il arrive à zéro. *Clic :* passer au mode en boucle.",
+            "seek":         "*Barre de progression de la lecture :* cliquez sur la barre de progression pour commencer la lecture à cet endroit.",
+            "timer": 
+            {
+                "hours":    "*Minuteur - heures :* utilisez la molette de la souris pour régler les heures du minuteur.",
+                "minutes":  "*Minuteur - minutes :* utilisez la molette de la souris pour régler les minutes du minuteur.",
+                "seconds":  "*Minuteur - secondes :* utilisez la molette de la souris pour régler les secondes du minuteur.",
+                "start":    "*Démarrer le minuteur :* le minuteur est en pause. *Clic :* démarrer le minuteur.",
+                "stop":     "*Arrêter le minuteur :* le minuteur est en marche. *Clic :* arrêter le minuteur."
+            },
+            "trigger": 
+            {
+                "manual":           "*Déclenchement manuel :* contrôle manuel de la lecture et de la mise en pause de la piste.",
+                "playOnEnter":      "*Lecture à l’entrée :* la lecture de la piste se déclenche quand le pion entre en contact avec le fichier audio. La piste est lue une fois, puis passe au déclenchement manuel.",
+                "restartOnEnter":   "*Redémarrer à l’entrée :* la lecture de la piste se déclenche quand le pion entre en contact avec le fichier audio. La piste est lue une fois à partir du début, puis passe au déclenchement manuel.",
+                "playInside":       "*Lecture à l’intérieur :* la lecture se déclenche quand le pion entre en contact avec le fichier audio et ne continue que tant que le pion reste en contact avec le fichier audio.",
+                "restartInside":    "*Redémarrer à l’intérieur :* la lecture se déclenche quand le pion entre en contact avec le fichier audio et ne continue que tant que le pion reste en contact avec le fichier audio. La lecture reprend au début de la piste à chaque fois que le pion entre de nouveau en contact avec le fichier audio.",
+                "playOnTimer":      "*Lecture à la fin du minuteur :* quand le minuteur atteint 00:00:00, la lecture se déclenche et le minuteur se réinitialise." 
+            },
+            "type": 
+            {
+                "area":        "*Zone :* le fichier audio est associé à une zone sur la carte. Le volume sonore est le même dans toute la zone.",
+                "areaKey":     "*Clic :* passer au mode \"global\".",
+                "global":      "*Global :* le fichier audio n’est pas associé à un endroit de la carte. L’emplacement du pion n’a pas d’importance.",
+                "globalKey":   "*Clic :* passer au mode \"endroit précis\".",
+                "local":       "*Endroit précis :* le fichier audio est associé à un point précis sur la carte.",
+                "localKey":    "*Clic :* passer au mode \"zone\"." 
+            }
+        }
+    },
+    "objects": 
+    {
+        "locked":               "*Élément verrouillé :* les éléments verrouillés ne peuvent pas être déplacés ou modifiés.",
+        "lockKey":              "*Double-clic :* verrouiller.",
+        "unlockKey":            "*Double-clic :* déverrouiller.",
+        "selected":             "*Sélectionné :* l’élément est sélectionné.",
+        "deselectKey":          "*Clic :* désélectionner. *Suppr. ou Retour Arrière :* supprimer.",
+        "selectKey":            "*Clic :* sélectionner." 
+    },
+    "canvas": 
+    {
+        "listener":             "*Pion :* représente la position des joueurs. Les fichiers audio sont lus automatiquement lorsque le pion est en contact avec eux.",
+        "listenerKey":          "*Glisser - déposer* ou *Z/Q/S/D :* Déplacer. *Clic droit :* menu.",
+        "image":                "*Image :* représente l’environnement du jeu. Une carte, un schéma ou autre.",
+        "imageKey":             "*Glisser - déposer :* Déplacer. Pour redimensionner : *sélectionner un coin et faire glisser*(maintenez la touche *majuscule* enfoncée pour conserver les proportions de l’image). *alt/opt+clic :* supprimer. *Clic droit :* menu.",
+        "soundLocal":           "*Endroit précis :* le fichier audio est audible à l’intérieur du rayon uniquement. Plus le pion est proche du centre, plus le volume sonore est élevé.",
+        "soundArea":            "*Zone :* le fichier audio est audible à l’intérieur de la zone uniquement. Le volume sonore est le même dans toute la zone.",
+        "soundLocalKey":        "*Glisser - déposer :* Déplacer. Pour redimensionner : *sélectionner un bord et faire glisser*. *Clic droit :* menu.",
+        "soundAreaKey":         "*Glisser - déposer :* Déplacer. Pour modifier la forme : *sélectionner un coin et faire glisser*. *Clic droit :* menu."
+    },
+    "menu":
+    {
+        "settings": 
+        {
+            "hideWindowContents":   "Lorsque cette option est activée, la fenêtre de l’application n’apparaît pas dans les applications de capture d’écran (streaming, partage d’écran, enregistrement, etc.).",
+            "invertScroll":         "Lorsque cette option est activée, le sens de défilement des éléments de l’application est inversé. Cela ne s’applique pas au zoom de la carte.",
+            "proportionalScale":    "Lorsque cette option est activée, les proportions des images sont conservées quand vous modifiez leur taille (maintenez la touche *majuscule* enfoncée pour redimensionner sans garder les proportions).",
+            "scrollSensitivity":    "Définit la sensibilité du défilement lors des interactions avec les éléments de l’application. Diminuez la valeur pour un défilement plus lent, augmentez-la pour un défilement plus rapide.",
+            "listenerMoveSpeed":    "Définit la vitesse de déplacement du pion avec le clavier. Cela n’affecte pas le déplacement du pion avec la souris (*glisser-déposer*).",
+            "language":             "Définit la langue de l’application.",
+            "theme":                "Définit l’apparence de l’application.",
+            "reset":                "Réinitialise tous les paramètres de cette section à leurs valeurs par défaut."
+        },
+        "about": 
+        {
+            "follow":
+            {
+                "paradisoZone":         "*PARADISO :* Abonnez-vous à la newsletter et devenez membre pour me soutenir et profiter d’avantages exclusifs.",
+                "traaash":              "*TRAAASH :* Blog de Quadra sur le thème des jeux de rôle.",
+                "youtube":              "*PARADISO sur YouTube :* Vidéos dans lesquelles je présente mes créations en détail.",
+                "paradisoWorks":        "*PARADISO WORKS :* Boutique en ligne officielle (produits physiques)",
+                "itchio":               "*PARADISO sur Itch :* Boutique en ligne (logiciels, musique et contenu relatif aux jeux de rôle).",
+                "dtrpg":                "*PARADISO sur DriveThruRPG :* Boutique en ligne (contenu numérique relatif aux jeux de rôle).",
+                "bsky":                 "*PARADISO sur Bluesky.*",
+                "instagram":            "*PARADISO sur Instagram.*",
+                "mastodon":             "*PARADISO sur Mastodon.*",
+                "tiktok":               "*PARADISO sur TikTok.*",
+                "tumblr":               "*PARADISO sur Tumblr.*",
+                "reddit":               "*PARADISO sur Reddit.*",
+                "github":               "*PARADISO sur GitHub.*",
+                "discord":              "*PARADISO sur Discord.*" 
+            }
+        }
+    }
+}

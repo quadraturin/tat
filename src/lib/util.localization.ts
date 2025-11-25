@@ -6,6 +6,7 @@ import { appDataDir, join } from "@tauri-apps/api/path";
 // Built-in locales
 import enInfo from '../assets/localization/en/info.json'
 import esInfo from '../assets/localization/es/info.json'
+import frInfo from '../assets/localization/fr/info.json'
 import ptInfo from '../assets/localization/pt/info.json'
 
 // Set up localization config with built-in locales, use English as fallback
@@ -20,6 +21,10 @@ let config = {
         { locale: 'es', key: 'help', loader: async () => (await import ('../assets/localization/es/help.json')).default },
         { locale: 'es', key: 'ui',   loader: async () => (await import ('../assets/localization/es/ui.json')).default },
 
+        { locale: 'fr', key: 'info', loader: async () => (await import ('../assets/localization/fr/info.json')).default },
+        { locale: 'fr', key: 'help', loader: async () => (await import ('../assets/localization/fr/help.json')).default },
+        { locale: 'fr', key: 'ui',   loader: async () => (await import ('../assets/localization/fr/ui.json')).default },
+
         { locale: 'pt', key: 'info', loader: async () => (await import ('../assets/localization/pt/info.json')).default },
         { locale: 'pt', key: 'help', loader: async () => (await import ('../assets/localization/pt/help.json')).default },
         { locale: 'pt', key: 'ui',   loader: async () => (await import ('../assets/localization/pt/ui.json')).default },
@@ -32,6 +37,7 @@ let config = {
 
 addLocale({locale:"en", language:enInfo.language});
 addLocale({locale:"es", language:esInfo.language});
+addLocale({locale:"fr", language:frInfo.language});
 addLocale({locale:"pt", language:ptInfo.language});
 addLocale({locale:"custom", language:"Custom"});
 

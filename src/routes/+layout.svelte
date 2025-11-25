@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { appThemeItem } from '$lib/classes/AppTheme.svelte';
     import * as R from '$lib/registry.svelte';
+	import { userSettings } from '$lib/settings.userSettings.svelte';
 
     interface Props { children?: import('svelte').Snippet; }
     let { children }: Props = $props();
@@ -125,6 +126,6 @@
     });
 </script>
 
-<div id="themeWrapper">
+<div id="themeWrapper" class="{userSettings.language}">
 {@render children?.()}
 </div>

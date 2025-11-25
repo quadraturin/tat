@@ -1,0 +1,114 @@
+{ 
+    "titlebar": 
+    {
+        "addMedia":         "Ajouter un média",
+        "addMediaShort":    "Ajouter",
+        "save":             "Enregistrer",
+        "saveShort":        "Enregistrer",
+        "saveAs":           "Enregistrer sous",
+        "saveAsShort":      "Enregistrer sous",
+        "openProject":      "Ouvrir projet",
+        "openProjectShort": "Ouvrir",
+        "newProject":       "Nouveau projet",
+        "newProjectShort":  "Nouveau",
+        "about":            "À propos de tat",
+        "aboutShort":       "À propos",
+        "settings":         "Paramètres",
+        "settingsShort":    "Paramètres"
+    },
+    "mediaPanel": 
+    {
+        "images":           "Images",
+        "sounds":           "Audio",
+        "item": 
+        {
+            "paused":       "En pause",
+            "playing":      "En lecture",
+            "onEnter":      "Entrée",
+            "inside":       "Intérieur"
+        }
+    },
+    "menu": 
+    {
+        "settings": 
+        {
+            "title":                "Paramètres",
+            "invertScroll":         "Inverser le sens de défilement",
+            "scrollSensitivity":    "Sensibilité de défilement",
+            "proportionalScale":    "Maintenir les proportions des images (majus pour désactiver)",
+            "listenerMoveSpeed":    "Vitesse de déplacement du pion (clavier)",
+            "hideWindowContents":   "Masquer la fenêtre de l’application lors des streams et captures d’écran",
+            "language":             "Langue",
+            "theme":                "Thème",
+            "reset":                "Revenir aux paramètres d’origine",
+            "autoSave":             "(Toutes les modifications des paramètres sont appliquées immédiatement.)",
+            "settingsDir":          "Votre répertoire de paramètres :"
+        },
+        "about": 
+        {
+            "follow":
+            {
+                "title":    "Suivre Paradiso",
+                "web":      "Web ",
+                "shop":     "Boutiques ",
+                "social":   "Réseaux sociaux, etc. "
+            },
+            "about": 
+            {
+                "title":        "À propos de tat",
+                "version":      "Version",
+                "blurb":        "tat vous permet de gérer facilement l’ambiance sonore de vos parties de jeux de rôle.",
+                "credits":      "Conçu et développé par Quadra pour [PARADISO](https://www.paradiso.zone), tat était à l’origine la récompense d’un objectif supplémentaire du projet [Warped Beyond Recognition](https://www.paradiso.zone/ooo-wbr/) sur Kickstarter. Le prototype initial a été programmé par [Galen Drew](https://galendrew.com/).",
+                "video":        "Pour apprendre à utiliser tat, regardez cette vidéo :",
+                "howToUse":     "Utilisez *Ajouter un média* pour ajouter des images (cartes/plans, etc.) et des fichiers audio (musique d’ambiance, effets sonores) à votre projet, puis organisez-les selon vos besoins. Choisissez quels sons ou musiques vous voulez que vos joueurs entendent à différents endroits de votre ou vos cartes, puis placez les fichiers audio correspondants à ces endroits. Le pion sur la carte représente vos joueurs : déplacez-le au fur et à mesure que vos joueurs se déplacent dans le jeu, et quand le pion se trouvera à un endroit où vous aurez placé un ou plusieurs fichiers audio, ceux-ci seront lus automatiquement.",
+                "projectFiles": "Lorsque vous enregistrez un projet, un dossier est créé. Il contient un fichier \"project.json\" qui décrit le projet, un dossier \"sounds\" (fichiers audio) et un dossier \"images\". Ces dossiers contiennent des *copies* des fichiers audios et des images que vous avez ajoutés. Les références aux fichiers originaux ne sont pas enregistrées.",
+                "translations": "Traductions :"
+            },
+            "changelog":
+            {
+                "title":        "Journal des modifications",
+                "changelog":    "Voir le journal des modifications sur le [site de tat](https://www.paradiso.zone/ooo-tat/)."
+            },
+            "licenses":
+            {
+                "title":    "Technologies et licences",
+                "blurb":    "tat est construit avec plusieurs technologies et outils :"
+            }    
+        },
+        "modal": 
+        {
+            "cancel":           "Annuler",
+            "confirm":          "Confirmer",
+            "ok":               "OK",
+            "deleteUnique":
+            {
+                "title":        "Supprimer les éléments ?",
+                "body":         "Supprimer les éléments en surbrillance dans la liste ci-dessous entraînera la désactivation de leurs fichiers source dans le projet ! Tous les fichiers sources non référencés seront supprimés du dossier du projet lorsque vous enregistrerez le projet.",
+                "listTitle":    "Éléments à supprimer :",
+                "confirm":      "Supprimer les éléments"
+            }
+        },
+        "dialog": 
+        {
+            "projectSaved":                 "Projet enregistré !",
+            "closeProjectUnsavedChanges":   "Vous avez des modifications non enregistrées. Souhaitez-vous vraiment fermer ce projet et perdre toutes les modifications non enregistrées ?",
+            "quitUnsavedChanges":           "Vous avez des modifications non enregistrées ! Souhaitez-vous vraiment quitter ?",
+            "openOldProjectCoords":         "Ce projet a été réalisé avec une ancienne version de tat (antérieure à v0.5).\n\nSi vous enregistrez ce projet, il sera converti au format le plus récent et ne fonctionnera plus avec les versions plus anciennes de tat."
+        },
+        "context":
+        {
+            "canvas":       "Canevas",
+            "jumpListener": "Déplacer le pion ici",
+            "moveListener": "Envoyer le pion ici",
+            "click":        "Clic",
+            "moveTo":       "Déplacer vers",
+            "listener":     "Pion",
+            "sound":        "Fichier audio ",
+            "image":        "Image ",
+            "bringToFront": "Mettre au premier plan",
+            "sendToBack":   "Mettre en arrière-plan",
+            "raise":        "Élever",
+            "lower":        "Baisser"
+        }
+    }
+}
