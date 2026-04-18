@@ -1,3 +1,4 @@
-# Paradiso Tabletop Audio Tool
+# tat: a Tabletop Audio Tool
+An app for running audio during tabletop games. Also available on [itch](https://ultraparadiso.itch.io/tat). Originally by [Quadra](https://paradiso.zone).
 
-SvelteKit + Tauri app for running audio during tabletop games.
+Built with Tauri and SvelteKit.
