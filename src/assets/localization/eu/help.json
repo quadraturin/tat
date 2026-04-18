@@ -1,0 +1,169 @@
+{
+    "titlebar": 
+    {
+        "title":                "Zure proiektuak ez ditu gorde gabeko aldaketarik.",
+        "titleDirty":           "Zure proiektuak gorde gabeko aldaketak ditu.",
+        "addMedia":             "*Media gehitu:* Irudiak eta/edo soinuak proiektura gehitu. Hauek zure proiektu-karpetara kopiatuko dira gordetzen duzunean.",
+        "addMediaKey":          "*(ctrl/cmd+i)*",
+        "save":                 "*Proiektua gorde:* Zure proiektua gorde.",
+        "saveKey":              "*(ctrl/cmd+s)*",
+        "saveAs":               "*Proiektua honela gorde:* Zure proiektua leku berri batean gorde.",
+        "saveAsKey":            "*(ctrl/cmd+shift+s)*",
+        "openProject":          "*Proiektua ireki:* Dagoeneko existitzen den proiektu bat ireki.",
+        "openProjectKey":       "*(ctrl/cmd+o)*",
+        "newProject":           "*Proiektu berria:* Proiektu berri bat sortu.",
+        "newProjectKey":        "*(ctrl/cmd+n)*",
+        "settings":             "*Konfigurazioa:* Aplikazioaren konfigurazioa ikusi.",
+        "settingsKey":          "*(ctrl/cmd+1)*",
+        "about":                "*Honi buruz:* Zer demontre da hau?",
+        "aboutKey":             "*(ctrl/cmd+2)*",
+        "minimize":             "*Minimizatu* lehio hau.",
+        "minimizeKey":          "*(ctrl/cmd+m)*",
+        "maximize":             "*Maximizatu* lehio hau.",
+        "maximizeKey":          "*(ctrl/cmd+shift+m)*",
+        "close":                "tat *itxi*.",
+        "closeKey":             "*(ctrl/cmd+w)*" 
+    },
+    "helpPanel": 
+    {
+        "helpArea":             "*Info:* Aplikazioan sagua gauzen gainean jarriz hemen haiei buruzko informazioa erakutziko da. Klikatu 'i' tekla kolapsatzeko." 
+    },
+    "controlsPanel": 
+    {
+        "zoomIn":               "*Zoom handitu:* mapa gerturatu.",
+        "zoomInKey":            "*(Saguaren gurpila mihisean edo + edo =)*",
+        "zoomInDisabled":       "Ezin duzu gehiago gerturatu, dagoeneko zoom maximoan zaude!",
+        "zoomOut":              "*Zoom txikitu:* mapa urrundu.",
+        "zoomOutKey":           "*(Saguaren gurpila mihisean edo - edo _)*",
+        "zoomOutDisabled":      "Ezin zara gehiago urrundu, dagoeneko zoom minimoan zaude!",
+        "recenter":             "*Erdira ekarri:* ikuspegia entzulearen gainean zentratu",
+        "recenterKey":          "*(c)*",
+        "hideSidebar":          "*Alboko barra ezkutatu:* interfazearen alboko panela ezkutatu.",
+        "showSidebar":          "*Alboko barra erakutsi:* interfazearen alboko panela erakutsi.",
+        "toggleSidebarKey":     "*(h)*" 
+    },
+    "mediaPanel": 
+    {
+        "imageList": 
+        {
+            "title":          "*Irudiak:* Zure proiektuko irudi-zerrenda. Goiko irudiak aurrealdetik hurbilago daude.",
+            "opacity":        "*Opakutasun nagusia:* Sagua korritu (scroll) edo klik egin opakutasun nagusia doitzeko.",
+            "hide":           "*Irudiak ezkutatu:* Klikatu mapako irudi guztiak ezkutatzeko.",
+            "show":           "*Irudiak erakutsi:* Klikatu mapako irudi guztiak ikuztarazteko (Irudiak ezkutaturik daude orain)." 
+        },
+        "soundList": 
+        {
+            "title":          "*Soinuak:* Zure proiektuko soinu-zerrenda. Goiko soinuak aurrealdetik hurbilago daude.",
+            "volume":         "*Bolumen nagusia:* Sagua korritu (scroll) edo klik egin bolumen nagusia doitzeko.",
+            "hide":           "*Soinuak ezkutatu:* Klikatu mapako soinu guztiak ezkutatzeko (Baliagarria izan daiteke soinu-eremuen azpiko irudiak eskuratzeko).",
+            "show":           "*Soinuak erakutsi:* Klikatu mapako soinu guztiak ikuztarazteko (Soinuak ezkutaturik daude orain)." 
+        },
+        "image": 
+        {
+            "title":        "*Irudi bat.*",
+            "titleKey":     "*Arrastratu:* berrantolatu.",
+            "opacity":      "*Opakutasuna:* Sagua korritu (scroll) edo klik egin irudiaren opakutasuna doitzeko.",
+            "duplicate":    "*Irudia bikoiztu:* Mapan irudiaren kopia bat sortu.",
+            "delete":       "*Irudia ezabatu:* Mapatik irudia ezabatu."
+        },
+        "sound": 
+        {
+            "title":        "*Soinu bat.*",
+            "titleKey":     "*Arrastratu:* berrantolatu.",
+            "volume":       "*Bolumena:* Sagua korritu (scroll) edo klik egin soinuaren bolumena doitzeko.",
+            "pause":        "*Jo/pausatu:* Soinua jotzen dago. *Klikatuz:* Soinua pausatu.",
+            "play":         "*Jo/pausatu:* Soinua pausatuta dago. *Klikatuz:* Soinua jo.",
+            "mute":         "*Mutu:* Soinua mutututa dago. *Klikatuz:* Mututasuna kendu.",
+            "unmute":       "*Mutu:* Soinua ez dago mutututa. *Klikatuz:* Soinua mututu.",
+            "solo":         "*Bakarka:* Soinua hau ez dago bakartuta. *Klikatuz:* Soinua bakartu. Beste soinu guztiak isilduko ditu.",
+            "unsolo":       "*Bakarka:* Soinua hau bakarturik dago, hau da, beste soinu guztiak isildurik daude. *Klikatuz:* Bakartasuna kendu :D.",
+            "duplicate":    "*Soinua bikoiztu:* Mapan soinuaren kopia bat sortu.",
+            "delete":       "*Soinua ezabatu:* Mapatik soinua ezabatu.",
+            "loop":         "*Begizta:* Soinua jotzen amaitu denean berriz jotzen hasi. *Klikatuz:* Begizta desaktibatu.",
+            "noLoop":       "*Begiztarik ez:* Soinua jotzen amaitzen denean ez da berriz hasiko. *Klikatuz:* Begizta aktibatu.",
+            "loopTimer":    "*Begizta-tenporizadorea:* Tenporizadorea amaitu denean berrabiarazi. *Klikatuz:* Begizta desaktibatu.",
+            "noLoopTimer":  "*Begizta-tenporizadorerik ez:* Tenporizadorea amaitu denean ez berrabiarazi. *Klikatuz:* Begizta aktibatu.",
+            "seek":         "*Bilatu:* Soinuaren erreprodukzio-posiziora joan.",
+            "timer": 
+            {
+                "hours":    "*Tenporizadore-orduak:* Saguaren gurpila erabili tenporizadorearen ordu kopurua doitzeko.",
+                "minutes":  "*Tenporizadore-minutuak:* Saguaren gurpila erabili tenporizadorearen minutuak kopurua doitzeko.",
+                "seconds":  "*Tenporizadore-segundoak:* Saguaren gurpila erabili tenporizadorearen segunduak kopurua doitzeko.",
+                "start":    "*Tenporaizadorea abiarazi:* Tenporizadorea une honetan pausatuta dago. *Klikatuz* berrabarazten da.",
+                "stop":     "*Tenporaizadorea pausatu:* Tenporizadorea une honetan marxan dago. *Klikatuz* geldiarazten da." 
+            },
+            "trigger": 
+            {
+                "manual":           "*Eskuz abiarazi:* Soinua noiz jotzen eta gelditzen den eskuz kontrolatu.",
+                "playOnEnter":      "*Sartzean abiarazlea:* Soinua pausaturik dago entzulea lehen aldiz kontaktuan egon arte, orduan jotzen ariko da eta kontrola eskuzkora itzuliko da.",
+                "restartOnEnter":   "*Sartzean berrabiarazi abiarazlea:* Soinua pausaturik dago entzulea lehen aldiz kontaktuan egon arte, orduan hasieratik jotzen ariko da eta kontrola eskuzkora itzuliko da.",
+                "playInside":       "*Barruan abiarazlea:* Soinua pausaturik dago entzulea kontaktuan ez dagoenean eta bakarrik joko da entzulea kontaktuan dagoen bitartean.",
+                "restartInside":    "*Barruan berrabiarazi abiarazlea:* Soinua pausaturik dago entzulea kontaktuan ez dagoenean eta behin kontaktuan egonda hasieratik hasiko da eta jotzen jarraituko du entzulea kontaktuan dagoen bitartean.",
+                "playOnTimer":      "*Tenporizadore-abiarazlea:* Soinua pausatuta egongo da tenporizadorea 00:00:00-ra iritsi arte; orduan soinua joko da eta tenporizadorea berrabiaraziko da." 
+            },
+            "type": 
+            {
+                "area":        "*Eremu-soinua:* Eremuaren barnean soinua bolumen berdinean jotzen du.",
+                "areaKey":     "*Klikatuz:* Soinu globalera aldatu.",
+                "global":      "*Soinu globala:* Ez du igorlerik mapan eta leku guztietan jotzen du.",
+                "globalKey":   "*Klikatuz:* Soinu lokalera aldatu.",
+                "local":       "*Local sound:* Mapako puntu batetik igortzen du soinua.",
+                "localKey":    "*Klikatuz:* Eremu-soinura aldatu." 
+            }
+        }
+    },
+    "objects": 
+    {
+        "locked":               "*Blokeatua:* Formak ezin dira mugitu edo eraldatu blokeatuta daudenean.",
+        "lockKey":              "*Birritan klikatuz:* Blokeatu.",
+        "unlockKey":            "*Birritan klikatuz:* Desblokeatu.",
+        "selected":             "*Hautatua:* Objektua une honetan hautatuta dago.",
+        "deselectKey":          "*Klikatuz:* Desautatu. *Ezabatu edo atzera teklak:* Ezabatu.",
+        "selectKey":            "*Klikatuz:* Hautatu." 
+    },
+    "canvas": 
+    {
+        "listener":             "*Entzulea:* Jokalarien kokapena adierazten du. Soinuak entzungo dituzu entzulea hauen gainean dagoenean.",
+        "listenerKey":          "*Arrastratu:* Mugitu. *W/A/S/D:* Mugitu. *Eskuin-klika:* Menua.",
+        "image":                "*Irudia:* Joko ingurunea adierazten du. Normalean mapa bat edo beste gauza abstratuago bat.",
+        "imageKey":             "*Arrastratu:* Mugitu. *Ertza arrastratu:* Tamaina aldatu (*+shift:* Proportzionalki aldatu tamaina). *alt/opt+click:* Ezabatu. *Eskuin-klika:* Menua.",
+        "soundLocal":           "*Soinu lokala:* Erradioaren barnean bakarrik entzun daiteke. Bolumena handitzen doa erdira hurbildu ahala.",
+        "soundArea":            "*Eremu-soinua:* Eremuaren barnean bakarrik entzun daiteke. Bolumena konstantea da eremu osoan.",
+        "soundLocalKey":        "*Arrastratu:* Mugitu. *Ertz-heldulekua arrastatu:* Tamaina aldatu. *Eskuin-klika:* Menua.",
+        "soundAreaKey":         "*Arrastratu:* Mugitu. *Izkina-heldulekua arrastatu:* Tamaina aldatu. *Izkina-heldulekua klikatu:* Izkina kendu. *Ertz-heldulekua arrastatu:* Izkina sortu. *Eskuin-klika:* Menua." 
+    },
+    "menu":
+    {
+        "settings": 
+        {
+            "hideWindowContents":   "Aktibatuta dagoenean, leiho honen edukia pantailak grabatzeko aplikazioetatik ezkutatzen da.",
+            "invertScroll":         "Aktibatuta dagoenean, interfazeko elementuek sagua korritzean (scroll egiterakoan) duten portaera alderantzizkatzen da. Honek ez du eraginik maparen zoom-desplazamenduan.",
+            "proportionalScale":    "Aktibatuta dagoenean, irudiak eskalatzean jatorrizko proportzioa mantentzen da. Shift sakatuta, berriz, eskala askea aktibatzen da.",
+            "scrollSensitivity":    "Balio hau elementu korritzaileen sentikortasun biderkatzaile gisa erabiltzen da. Zenbat eta txikiagoa izan, orduan eta sentikortasun txikiagoa izango da.",
+            "listenerMoveSpeed":    "Balio honek zehazten du teklatuko teklak sakatzean entzuleak zenbat mugitzen den. Ez du eraginik arrastatze (drag) bidezko mugimenduan.",
+            "language":             "Aplikazioak erabiltzen duen hizkuntza ezartzen du.",
+            "theme":                "Aplikazioak erabiltzen duen itxura-gaia ezartzen du.",
+            "reset":                "Menu honetako ezarpen guztiak jatorrizko balioetara berrezartzen ditu." 
+        },
+        "about": 
+        {
+            "follow":
+            {
+                "paradisoZone":         "*PARADISO:* Postazko buletina lortu eta egin zaitez kide nire lana babesteko eta sari politak lortzeko.",
+                "traaash":              "*TRAAASH:* Quadrarren RPG bloga.",
+                "youtube":              "*PARADISO YouTub-en:* Gauzak egiteko prozesuari buruzko bideo gogoetatsuak.",
+                "paradisoWorks":        "*PARADISO WORKS:* Ondasun fisikoentzako online denda ofiziala.",
+                "itchio":               "*PARADISO Itch-en:* Software, musika eta RPG materialentzako online denda.",
+                "dtrpg":                "*PARADISO DriveThruRPG-en:* RPG material digitalentzako online denda.",
+                "bsky":                 "*PARADISO Bluesky-en.*",
+                "instagram":            "*PARADISO Instagram-en.*",
+                "mastodon":             "*PARADISO Mastodon-en.*",
+                "tiktok":               "*PARADISO TikTok-en.*",
+                "tumblr":               "*PARADISO Tumbl-ren.*",
+                "reddit":               "*PARADISO Reddit-en.*",
+                "github":               "*PARADISO GitHub-en.*",
+                "discord":              "*PARADISO Discord-en.*" 
+            }
+        }
+    }
+}

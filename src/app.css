@@ -1393,6 +1393,27 @@ input[type=range]::-moz-range-thumb {
 
 
 /* ##################################
+   ##### Responsive Styles - EU #####
+   ################################## */
+
+/* Full Text Buttons */
+@media (min-width: 1066px) {
+    .eu button.adaptive .text-full {    display: inline-block !important; }
+    .eu button.adaptive .text-short {   display: none !important; }
+}
+/* Short Text Buttons */
+@media (max-width: 1200px) {
+    .eu button.adaptive .text-full {    display: none !important; }
+    .eu button.adaptive .text-short {   display: inline-block !important; }
+}
+/* No Text Buttons */
+@media (max-width: 940px) {    
+    .eu button.adaptive .text-full {    display: none !important; }
+    .eu button.adaptive .text-short {   display: none !important; }
+}
+
+
+/* ##################################
    ##### Responsive Styles - FR #####
    ################################## */
 

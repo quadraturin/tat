@@ -1,0 +1,114 @@
+{ 
+    "titlebar": 
+    {
+        "addMedia":         "Media gehitu",
+        "addMediaShort":    "Gehitu",
+        "save":             "Gorde",
+        "saveShort":        "Gorde",
+        "saveAs":           "Gorde honela",
+        "saveAsShort":      "Gorde honela",
+        "openProject":      "Proiektu bat zabaldu",
+        "openProjectShort": "Zabaldu",
+        "newProject":       "Proiektu berria",
+        "newProjectShort":  "Berria",
+        "about":            "tat-eri buruz",
+        "aboutShort":       "tat-eri buruz",
+        "settings":         "Konfigurazioa",
+        "settingsShort":    "Konfigurazioa"
+    },
+    "mediaPanel": 
+    {
+        "images":           "Argazkiak",
+        "sounds":           "Soinuak",
+        "item": 
+        {
+            "paused":       "Pausatua",
+            "playing":      "Jotzen",
+            "onEnter":      "Sartzean",
+            "inside":       "Barruan"
+        }
+    },
+    "menu": 
+    {
+        "settings": 
+        {
+            "title":                "Konfigurazioa",
+            "invertScroll":         "UIaren saguaren korritze- eta scroll-norabidea alderantzizkatu",
+            "scrollSensitivity":    "UIaren saguaren korritze- eta scroll-sentsibilitatea",
+            "proportionalScale":    "Defektuz irudiak proportzionalki eskalatzen dira (shift teklak deuseztatzen du)",
+            "listenerMoveSpeed":    "Entzulearen mugimendua-abiadura (teklatua)",
+            "hideWindowContents":   "Lehioko edukia ezkutatu stream-etik",
+            "language":             "Hizkuntza",
+            "theme":                "Itxura-gaia",
+            "reset":                "Balio lehenetsietara birdoitu",
+            "autoSave":             "(Aldaketa guztiak berehala aplikatzen dira.)",
+            "settingsDir":          "Zure konfigurazioa-direktorioa:"
+        },
+        "about": 
+        {
+            "follow":
+            {
+                "title":    "Paradiso jarraitu",
+                "web":      "Webguneak",
+                "shop":     "Dendak",
+                "social":   "Sare sozialak"
+            },
+            "about": 
+            {
+                "title":        "tat-eri buruz",
+                "version":      "Bertsioa",
+                "blurb":        "tat zure mahai-jokoetan ingurumen-audioa erraz barneratzeko tresna bat da.",
+                "credits":      "Tresna hau Quadrak bere [PARADISO sarerako](https://www.paradiso.zone) diseinatu eta programatu du, hasiera baten [Warped Beyond Recognition](https://www.paradiso.zone/ooo-wbr/) Kickstarterreko helburu gehigarrietako sari gisa. Jatorrizko prototipoa [Galen Drew-ek](https://galendrew.com/) programatu zuen.",
+                "video":        "tat erabiltzen ikasteko bideo hau ikusi:",
+                "howToUse":     "*Media gehitu* erabili argazkiak (ziur aski mapak) eta soinuak (giroa-soinuak, soinu-bandak, etab.) zure proiektura gehitzeko eta nahierara antolatu ahal izango dituzu. tat-ek aukera ematen du soinu-eremuak mihisean kokatzeko eta jokalariak eremu horietan sartzean soinuak jotzeko, bakarra edo hainbat soinuren konbinazioa erabiliz. Mapako puntutxoa da *entzulea:* honek adierazten du zure jokalariak non dauden. Jokalariak ingurunetik mugitzen direnean, arrastatu puntutxoa *Media gehitu* bidez proiektuan sartutako mapetan, eta entzuleak automatikoki nahastuko ditu zure kokatutako soinu-igorleak emititzen dituzten audioak.",
+                "projectFiles": "Proiektu bat gordetzean karpeta moduan gordetzen da, honen barruan 'project.json' fitxategiak proiektua deskribatzen du, 'sounds' eta 'images' azpikarpetek soinuen eta argazkien *kopiak* biltzen dituzte. Ez dira jatorrizko fitxategietarainoko erreferentziak gordetzen.",
+                "translations": "Itzulpenak:"
+            },
+            "changelog":
+            {
+                "title":        "Bertsio-oharrak",
+                "changelog":    "Bertsio-oharrak [tat webgunean](https://www.paradiso.zone/ooo-tat/) berrikusi daiteke."
+            },
+            "licenses":
+            {
+                "title":    "Teknologikoa eta lizentziak",
+                "blurb":    "tat teknologia eta tresna ugarien gainean garatu da:"
+            }    
+        },
+        "modal": 
+        {
+            "cancel":           "Ezeztatu",
+            "confirm":          "Baieztatu",
+            "ok":               "Ados",
+            "deleteUnique":
+            {
+                "title":        "Objektua ezabatu?",
+                "body":         "Hurrengo zerrendan nabarmendutako objektuak kentzeak haien jatorrizko fitxategiak proiektuan erreferentziarik gabe geratzea ekarriko du! Erreferentziarik gabeko jatorrizko fitxategiak proiektuaren karpetatik ezabatuko dira proiektua gordetzerakoan.",
+                "listTitle":    "Ezabatzear dauden objektuak:",
+                "confirm":      "Objektuak ezabatu"
+            }
+        },
+        "dialog": 
+        {
+            "projectSaved":                 "Proiektua gordeta!",
+            "closeProjectUnsavedChanges":   "Zure proiektuak gorde gabeko aldaketak ditu. Ziur zaude proiektua itxi eta salbatu gabeko aldaketa guztiak galdu nahi dituzula?",
+            "quitUnsavedChanges":           "Gorde gabeko aldaketak dituzu!. Ziur zaude atera nahi duzula?",
+            "openOldProjectCoords":         "Proiektu hau tat-eko bertsio zaharrago baten egin zen (v0.5 baino zaharragoa).\n\nGordez gero, azkenengo bertsioko formatuan gordeko da eta ezin izango da erabili hasierako tat bertsio zaharrean."
+        },
+        "context":
+        {
+            "canvas":       "Mihisea",
+            "jumpListener": "Entzulea hona salto egin",
+            "moveListener": "Entzulea honaino mugitu",
+            "click":        "Klick egin",
+            "moveTo":       "Mugitu",
+            "listener":     "Entzulea",
+            "sound":        "Soinua",
+            "image":        "Argazkia",
+            "bringToFront": "Aurrera eraman",
+            "sendToBack":   "Atzera eraman",
+            "raise":        "Igo",
+            "lower":        "Jaitsi"
+        }
+    }
+}

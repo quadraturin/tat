@@ -1,6 +1,6 @@
 {
 	"name": "tat",
-	"version": "0.5.9",
+	"version": "0.6.0",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -20,6 +20,7 @@
 		"@tauri-apps/cli": "^2.1.0",
 		"@types/leaflet": "^1.9.4",
 		"@types/leaflet-mouse-position": "^1.2.4",
+		"@types/node": "^25.6.0",
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
 		"@typescript-eslint/parser": "^6.0.0",
 		"eslint": "^8.28.0",
