@@ -1,0 +1,45 @@
+{
+    "info": {    "name": "Brou Light",
+                 "description": "A light theme by Balthazar Rouberol",
+                 "author": "Balthazar Rouberol",
+                 "url": "https://balthazar-rouberol.com" },
+
+    "pnl":          { "b": "#5c5b5b", "bg": "#fafafa", "fg": "#4d4c4c" },
+    "pnl_menu":     { "b": "#6c6a6a", "bg": "#fafafa", "fg": "#5c5b5b" },
+    "itm":          { "b": "#6c6a6a", "bg": "#6b7d8f00", "fg": "#6c6a6a",
+        "hov":      { "b": "#5c5b5b", "bg": "#ff738333", "fg": "#5c5b5b" },
+        "act":      { "b": "#ff7383", "bg": "#fafafa", "fg": "#7a7a79" },
+        "lck":      { "b": "#7a7a79", "bg": "#fafafa", "fg": "#7a7a79"}},
+    "anc":          {                                  "fg": "#686868",
+        "hov":      {                                  "fg": "#e7a100" },
+        "act":      {                                  "fg": "#e7a100" }},
+    "btn":          { "b": "#6c6a6a", "bg": "#6b7d8f12", "fg": "#6c6a6a",
+        "hov":      { "b": "#6c6a6a", "bg": "#e7a100aa", "fg": "#686868" }},
+    "btn_tb":       {
+        "act":      { "b": "#6c6a6a", "bg": "#e7a100aa", "fg": "#6c6a6a" }},
+    "btn_tb_quit":  {
+        "hov":      { "b": "#7f3836", "bg": "#e65050", "fg": "#7f3836" }},
+    "btn_media":    {
+        "act":      { "b": "#6c6a6a", "bg": "#ff7383", "fg": "#7a7a79" },
+        "lck":      { "b": "#6c6a6a", "bg": "#fafafa", "fg": "#6c6a6a" }
+    },
+    "tmr":          {                 "bg": "#6cbf43", "fg": "#6c6a6a",
+        "hov":      {                 "bg": "#e8e9e9", "fg": "#4d4c4c" },
+        "act":      {                 "bg": "#ffffff", "fg": "#4d4c4c" },
+        "lck":      {                 "bg": "#fafafa", "fg": "#ffffff" }},
+    "trk":          {                 "bg": "#fafafa", "fg": "#ff738333",
+        "hov":      {                 "bg": "#fafafa", "fg": "#ff7383" },
+        "act":      {                 "bg": "#fafafa", "fg": "#ff7383" }},
+    "cnv":          { "b": "#5c5b5b", "bg": "#f8f9fa", "fg": "#bebdbd" },
+    "obj":          { "b": "#e7a100", "bg": "#e7a100", "fg": "#000000",
+        "hov":      { "b": "#ff7383", "bg": "#ff7383", "fg": "#000000" },
+        "act":      { "b": "#e7a100", "bg": "#ff7383", "fg": "#000000" },
+        "lck":      { "b": "#828e9fb3", "bg": "#828e9fb3", "fg": "#828e9fb3" }},
+    "lst":          { "b": "#6c6a6a", "bg": "#478acc", "fg": "#bebdbd",
+        "hov":      { "b": "#6c6a6a", "bg": "#5c6166"                  }},
+    "vol":          { "b": "#5c5b5b", "bg": "#828e9f80", "fg": "#ff7383",
+        "hov":      { "b": "#5c5b5b", "bg": "#828e9f80", "fg": "#ff7383" }},
+    "wrn":          {
+        "hov":      { "b": "#7f3836", "bg": "#f06060", "fg": "#7f3836" }},
+    "sel":          { "b": "#5e9998", "bg": "#ffffff", "fg": "#4d4c4c" }
+}
