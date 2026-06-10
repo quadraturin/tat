@@ -590,6 +590,7 @@ export class InfiniteCanvas {
             // Check that the sound isn't locked.
             if (!w_snd.locked) {
                 // Draw the name.
+                this.#setTextColor(ObjectType.Image, w_snd.selected, w_snd.locked, w_snd == R.getHoveredCanvasObject() ? true : false);
                 this.context.textAlign = "center";
                 this.context.fillText(w_snd.niceName, this.c_toX(w_snd.x), this.c_toY(w_snd.y) - 4);
                 // Draw the edit handle.
@@ -617,6 +618,7 @@ export class InfiniteCanvas {
             // Check that the sound isn't locked.
             if (!w_snd.locked) {
                 // Draw the name.
+                this.#setTextColor(ObjectType.Image, w_snd.selected, w_snd.locked, w_snd == R.getHoveredCanvasObject() ? true : false);
                 this.context.textAlign = "center";
                 this.context.fillText(w_snd.niceName,
                     this.c_toX((w_snd.areaBounds[0].x + w_snd.areaBounds[1].x) / 2),
@@ -633,6 +635,7 @@ export class InfiniteCanvas {
             if (R.getShowDebug()) {
                 // Draw the bounds.
                 if (w_snd.areaBounds) {
+                    this.#setDrawColor(ObjectType.Sound, w_snd.selected, w_snd.locked, w_snd == R.getHoveredCanvasObject() ? true : false);
                     this.#drawCircle(w_snd.areaBounds[0].x, w_snd.areaBounds[0].y, 1);
                     this.#drawCircle(w_snd.areaBounds[1].x, w_snd.areaBounds[1].y, 1);
                     this.#drawCircle(w_snd.areaBounds[0].x, w_snd.areaBounds[1].y, 1);
@@ -689,6 +692,7 @@ export class InfiniteCanvas {
 
                 // Draw the text.
                 this.context.textAlign = "left";
+                this.#setTextColor(ObjectType.Image, w_img.selected, w_img.locked, w_img == R.getHoveredCanvasObject() ? true : false);
                 this.context.fillText(
                     w_img.niceName,
                     w_img.width >= 0 ? 
@@ -746,6 +750,33 @@ export class InfiniteCanvas {
                 } else {
                     this.context.strokeStyle = this.#wrap.style.getPropertyValue("--obj-snd-b");
                     this.context.fillStyle   = this.#wrap.style.getPropertyValue("--obj-snd-bg");
+                }
+            }
+        }
+    }
+    #setTextColor(objType: ObjectType, selected: boolean, locked: boolean, hovered: boolean) {
+        if (this.#wrap && this.context) {
+            if (objType == ObjectType.Image) {
+                if (locked) {
+                    this.context.fillStyle   = this.#wrap.style.getPropertyValue("--obj-img-lck-fg");
+                } else if (selected) {
+                    this.context.fillStyle   = this.#wrap.style.getPropertyValue("--obj-img-act-fg");
+                } else if (hovered) {
+                    this.context.fillStyle   = this.#wrap.style.getPropertyValue("--obj-img-hov-fg");
+                } else {
+                    this.context.fillStyle   = this.#wrap.style.getPropertyValue("--obj-img-fg");
+                }
+            }
+            else if (objType == ObjectType.Sound) {
+                if (locked) {
+                    this.context.fillStyle   = this.#wrap.style.getPropertyValue("--obj-snd-lck-fg");
+                    this.context.setLineDash([3, 3]);
+                } else if (selected) {
+                    this.context.fillStyle   = this.#wrap.style.getPropertyValue("--obj-snd-act-fg");
+                } else if (hovered) {
+                    this.context.fillStyle   = this.#wrap.style.getPropertyValue("--obj-snd-hov-fg");
+                } else {
+                    this.context.fillStyle   = this.#wrap.style.getPropertyValue("--obj-snd-fg");
                 }
             }
         }
