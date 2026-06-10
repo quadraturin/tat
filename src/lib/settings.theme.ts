@@ -4,6 +4,8 @@ import tDefaultLight from "../assets/themes/default-light.json";
 import tMothershipDark from "../assets/themes/mothership-dark.json";
 import tMothershipLight from "../assets/themes/mothership-light.json";
 import tWarped from "../assets/themes/warped-beyond-recognition.json";
+import tBrouLight from "../assets/themes/brou-light.json";
+import tBrouDark from "../assets/themes/brou-dark.json";
 import { AppTheme } from "./classes/AppTheme.svelte";
 
 export const themeDefault = new AppTheme(tDefaultDark);
@@ -19,9 +21,11 @@ export function getThemesList():AppTheme[] {
     themesList.push(
         new AppTheme(tDefaultDark), 
         new AppTheme(tDefaultLight),
-        new AppTheme(tWarped)
-        //new AppTheme(tMothershipDark), 
-        //new AppTheme(tMothershipLight), 
+        new AppTheme(tWarped),
+        // new AppTheme(tMothershipDark),
+        // new AppTheme(tMothershipLight),
+        new AppTheme(tBrouLight),
+        new AppTheme(tBrouDark),
         );
     return themesList;
 }
